@@ -1,0 +1,48 @@
+{
+  "thomas.f.w@hotmail.com": {
+    "email": "thomas.f.w@hotmail.com",
+    "passwordHash": "$2b$10$Uw04M1RsZ/Dvm33hgo1ExOP2BsWEVvkKT.8S.YXBqoEPHgSve7lXq",
+    "createdAt": 1763066267330,
+    "balanceCents": 0,
+    "totalEarnedCents": 0,
+    "completedSurveys": 0,
+    "completedOffers": 0,
+    "lastNameChangedAt": 0,
+    "lastPasswordChangedAt": 0,
+    "lastNameChangeAt": 0,
+    "lastPasswordChangeAt": 0,
+    "username": "Wulff",
+    "usernameChangedAt": 1765021366080,
+    "passwordChangedAt": 1765025639038
+  },
+  "google-demo@surveycash.local": {
+    "email": "google-demo@surveycash.local",
+    "passwordHash": null,
+    "createdAt": 1763066654665,
+    "provider": "google-demo"
+  },
+  "thomas.f.w4545@gmail.com": {
+    "email": "thomas.f.w4545@gmail.com",
+    "username": "Thomas",
+    "passwordHash": "$2b$10$CsesewiOehvke7j86BUMqOTRyQL8jeeLYdrc.ok4l3CvjIk5MFWea",
+    "createdAt": 1763226446077,
+    "balanceCents": 0,
+    "totalEarnedCents": 0,
+    "completedSurveys": 0,
+    "completedOffers": 0,
+    "usernameChangedAt": 0,
+    "passwordChangedAt": 1765027820354
+  },
+  "marcus.a.w@hotmail.com": {
+    "email": "marcus.a.w@hotmail.com",
+    "username": "Marcus",
+    "passwordHash": "$2b$10$IYkYJLwjATDD7GrbBFvYQ.l7Hfn9f3Qtgr6crUqo/FMPp68CLVS1K",
+    "createdAt": 1763226689689,
+    "balanceCents": 0,
+    "totalEarnedCents": 0,
+    "completedSurveys": 0,
+    "completedOffers": 0,
+    "usernameChangedAt": 1765027466758,
+    "passwordChangedAt": 1765027504093
+  }
+}
