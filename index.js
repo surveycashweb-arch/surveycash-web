@@ -6,30 +6,54 @@ const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+
+function md5(s) {
+  return crypto
+    .createHash('md5')
+    .update(String(s), 'utf8')
+    .digest('hex');
+}
 
 const app = express();
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 6000;
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
-const BITLABS_WEB_URL = process.env.BITLABS_WEB_URL || 'https://web.bitlabs.ai';
-const BITLABS_APP_TOKEN = process.env.BITLABS_APP_TOKEN || '';
-const BITLABS_USER_ID = process.env.BITLABS_USER_ID || 'web-user';
-const BITLABS_REDIRECT_URL =
-  process.env.BITLABS_REDIRECT_URL || `${BASE_URL}/bitlabs/callback`;
+const CPX_APP_ID = process.env.CPX_APP_ID || '30422';
+const CPX_APP_SECURE_HASH = process.env.CPX_APP_SECURE_HASH || '';
 
 const USERS_FILE = path.join(__dirname, 'users.json');
 const BCRYPT_ROUNDS = 10;
 
+const CPX_POSTBACK_FILE = path.join(__dirname, 'cpx_postbacks.json');
+
+let cpxPostbacks = {};
+try {
+  cpxPostbacks = JSON.parse(fs.readFileSync(CPX_POSTBACK_FILE, 'utf8'));
+} catch {
+  cpxPostbacks = {};
+}
+
+function saveCpxPostbacks() {
+  fs.writeFileSync(CPX_POSTBACK_FILE, JSON.stringify(cpxPostbacks, null, 2));
+}
+
+
 // (simpel valuta – vi viser nu kun tal + $ i UI)
 const CURRENCY = process.env.CURRENCY || 'USD';
 
+
 // ---------- User storage (simple fil-database) ----------
+// Vi bruger ÉN sandhed: globalt "users" objekt (key = email) + saveUsers() til at skrive filen.
+
 let users = {};
 try {
   const raw = fs.readFileSync(USERS_FILE, 'utf8');
-  users = JSON.parse(raw);
-} catch (e) {
+  users = JSON.parse(raw) || {};
+} catch {
   users = {};
 }
 
@@ -41,36 +65,52 @@ function saveUsers() {
   }
 }
 
+// Hjælper: sikrer at en user har alle felter vi forventer
+function ensureUserFields(user) {
+  let changed = false;
+
+  if (typeof user.balanceCents !== 'number') {
+    user.balanceCents = 0;
+    changed = true;
+  }
+  if (typeof user.totalEarnedCents !== 'number') {
+    user.totalEarnedCents = user.balanceCents || 0;
+    changed = true;
+  }
+  if (typeof user.completedSurveys !== 'number') {
+    user.completedSurveys = 0;
+    changed = true;
+  }
+  if (typeof user.completedOffers !== 'number') {
+    user.completedOffers = 0;
+    changed = true;
+  }
+
+  // Sørg for at user har en stabil id vi kan sende til CPX
+  // (vi bruger den senere som ext_user_id, så postbacks matcher)
+  if (!user.id) {
+    user.id = String(user.email || '').toLowerCase();
+    changed = true;
+  }
+
+  return changed;
+}
+
 function getUserFromReq(req) {
   const email = req.cookies && req.cookies.authEmail;
   if (!email) return null;
-  const user = users[email] || null;
 
-  // Sørg for nye felter findes også for gamle brugere
+  const key = String(email).toLowerCase().trim();
+  const user = users[key] || null;
+
   if (user) {
-    let changed = false;
-    if (typeof user.balanceCents !== 'number') {
-      user.balanceCents = 0;
-      changed = true;
-    }
-    if (typeof user.totalEarnedCents !== 'number') {
-      // default: livstidsindtægt = nuværende saldo (indtil videre)
-      user.totalEarnedCents = user.balanceCents || 0;
-      changed = true;
-    }
-    if (typeof user.completedSurveys !== 'number') {
-      user.completedSurveys = 0;
-      changed = true;
-    }
-    if (typeof user.completedOffers !== 'number') {
-      user.completedOffers = 0;
-      changed = true;
-    }
+    const changed = ensureUserFields(user);
     if (changed) saveUsers();
   }
 
   return user;
 }
+
 
 // -------- helpers ----------
 const isLoggedIn = (req) => !!getUserFromReq(req);
@@ -1698,19 +1738,179 @@ if (pwForm) {
 
 app.get('/surveys', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
+
   res.send(
     page(
       req,
       'Surveys — SurveyCash',
       '/surveys',
       `
-    <h1>Surveys</h1>
-    <p>Start BitLabs i browseren herunder.</p>
-    <p><a class="btn-ghost" href="/bitlabs/start">Start BitLabs</a></p>
-  `,
-    ),
+      <h1>Surveys</h1>
+      <p>Choose a survey partner to start earning.</p>
+
+      <!-- 5 kolonner -->
+      <div style="
+        margin-top:16px;
+        display:grid;
+        grid-template-columns:repeat(5, minmax(0, 1fr));
+        gap:14px;
+      ">
+
+        <!-- CPX Research -->
+        <a href="/surveys/cpx"
+           style="
+             border:1px solid rgba(255,255,255,.08);
+             border-radius:16px;
+             padding:18px;
+             min-height:100px;
+
+             display:flex;
+             align-items:center;
+             justify-content:center;
+             text-decoration:none;
+             overflow:hidden;
+
+             background-color: rgba(15,23,42,.55);
+             background-image: linear-gradient(
+               to top,
+               rgba(34,197,94,.28) 0%,
+               rgba(34,197,94,.14) 18%,
+               rgba(15,23,42,0) 55%
+             );
+             background-repeat:no-repeat;
+             background-size:100% 100%;
+             background-position:0 0;
+
+             box-shadow:
+               inset 0 1px 0 rgba(15,23,42,.90),
+               inset 0 -1px 0 rgba(34,197,94,.18);
+           ">
+          <img
+            src="/partners/cpx.png"
+            alt="CPX Research"
+            style="height:32px;width:auto;display:block;"
+          />
+        </a>
+
+        <!-- Placeholder -->
+        <div style="border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;background:rgba(15,23,42,.35);opacity:.75;">
+          <div style="font-weight:700;font-size:15px;">More partners</div>
+          <div style="opacity:.85;margin-top:6px;font-size:13px;">Coming soon…</div>
+          <div style="margin-top:10px;">
+            <span class="btn-ghost" style="pointer-events:none;opacity:.6;">Soon</span>
+          </div>
+        </div>
+
+        <div style="border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;background:rgba(15,23,42,.35);opacity:.75;">
+          <div style="font-weight:700;font-size:15px;">More partners</div>
+          <div style="opacity:.85;margin-top:6px;font-size:13px;">Coming soon…</div>
+          <div style="margin-top:10px;">
+            <span class="btn-ghost" style="pointer-events:none;opacity:.6;">Soon</span>
+          </div>
+        </div>
+
+        <div style="border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;background:rgba(15,23,42,.35);opacity:.75;">
+          <div style="font-weight:700;font-size:15px;">More partners</div>
+          <div style="opacity:.85;margin-top:6px;font-size:13px;">Coming soon…</div>
+          <div style="margin-top:10px;">
+            <span class="btn-ghost" style="pointer-events:none;opacity:.6;">Soon</span>
+          </div>
+        </div>
+
+        <div style="border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;background:rgba(15,23,42,.35);opacity:.75;">
+          <div style="font-weight:700;font-size:15px;">More partners</div>
+          <div style="opacity:.85;margin-top:6px;font-size:13px;">Coming soon…</div>
+          <div style="margin-top:10px;">
+            <span class="btn-ghost" style="pointer-events:none;opacity:.6;">Soon</span>
+          </div>
+        </div>
+
+      </div>
+      `
+    )
   );
 });
+
+
+
+app.get('/surveys/cpx', (req, res) => {
+  if (!isLoggedIn(req)) return res.redirect('/');
+
+  const user = getUserFromReq(req);
+  if (!user) return res.redirect('/');
+
+  const extUserId = String(user.id || user.email);
+
+  const secureHash = CPX_APP_SECURE_HASH
+    ? md5(`${extUserId}-${CPX_APP_SECURE_HASH}`)
+    : '';
+
+  const qs = new URLSearchParams({
+    app_id: CPX_APP_ID,
+    ext_user_id: extUserId,
+  });
+
+  if (secureHash) qs.set('secure_hash', secureHash);
+  if (user.username) qs.set('username', String(user.username));
+  if (user.email) qs.set('email', String(user.email));
+
+  const iframeUrl = `https://offers.cpx-research.com/index.php?${qs.toString()}`;
+
+  res.send(
+    page(
+      req,
+      'CPX Surveys — SurveyCash',
+      '/surveys',
+      `
+<style>
+  /* Ingen scroll */
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden !important;
+  }
+
+  /* Fjern page()-containers */
+  main, .container, .wrap, .content, .page, .inner {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  /* Fullscreen CPX med luft top + bund */
+  .cpx-fullscreen {
+    position: fixed;
+    top: calc(var(--header-height, 64px) + 16px);   /* luft under header */
+    left: 16px;                                     /* luft i siderne */
+    right: 16px;
+    bottom: 16px;                                   /* 👈 LUFT I BUND */
+    background: #0b1020;
+    border-radius: 16px;                            /* matcher dit design */
+    overflow: hidden;
+  }
+
+  .cpx-fullscreen iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    background: #fff;
+  }
+</style>
+
+<div class="cpx-fullscreen">
+  <iframe
+    src="${iframeUrl}"
+    allow="clipboard-read; clipboard-write"
+  ></iframe>
+</div>
+      `
+    )
+  );
+});
+
 
 app.get('/games', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
@@ -1726,6 +1926,109 @@ app.get('/games', (req, res) => {
     ),
   );
 });
+
+
+
+
+// --- CPX anti-duplicate log (trans_id + type) ---
+const CPX_TX_FILE = path.join(__dirname, 'cpx_transactions.json');
+
+function readJsonSafe(file, fallback) {
+  try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return fallback; }
+}
+function writeJsonSafe(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+}
+
+function findUserByIdOrEmail(userId) {
+  const id = String(userId || '').toLowerCase().trim();
+  if (!id) return null;
+
+  // users er et objekt: { "email": userObj, ... }
+  for (const emailKey of Object.keys(users)) {
+    const u = users[emailKey];
+    if (!u) continue;
+
+    const uId = String(u.id || '').toLowerCase().trim();
+    const uEmail = String(u.email || '').toLowerCase().trim();
+
+    if (uId === id || uEmail === id) return u;
+  }
+  return null;
+}
+
+app.get('/cpx/postback', (req, res) => {
+  const q = req.query || {};
+
+  const statusRaw = String(q.status || q.state || '').toLowerCase(); // "1" / "2" eller "approved"/"reversed"
+  const transId = String(q.trans_id || q.transaction_id || q.sid || q.subid || '').trim();
+  const userId = String(q.user_id || q.ext_user_id || q.uid || '').toLowerCase().trim();
+  const type = String(q.type || 'complete').toLowerCase().trim();
+
+  const amountRaw =
+    q.amount_local ?? q.amount ?? q.reward ?? q.payout ?? q.value ?? '0';
+
+  const amount = Number(String(amountRaw).replace(',', '.')) || 0;
+
+  // krav
+  if (!transId || !userId) return res.status(200).send('ok');
+
+  // status-mapping
+  const isCredit = statusRaw === '1' || statusRaw === 'approved' || statusRaw === 'completed' || statusRaw === 'ok';
+  const isReversal = statusRaw === '2' || statusRaw === 'reversed' || statusRaw === 'chargeback' || statusRaw === 'canceled' || statusRaw === 'cancelled';
+
+  const u = findUserByIdOrEmail(userId);
+  if (!u) return res.status(200).send('ok');
+
+  // sikre felter
+  ensureUserFields(u);
+
+  // anti-dublet
+  const txLog = readJsonSafe(CPX_TX_FILE, {});
+  const key = `${transId}:${type}`;
+
+  if (isCredit) {
+    if (!txLog[key]) {
+      const cents = Math.round(Math.max(0, amount) * 100);
+
+      txLog[key] = { userId, transId, type, cents, at: Date.now(), status: 1 };
+
+      if (cents > 0) {
+        u.balanceCents += cents;
+        u.totalEarnedCents += cents;
+        // tæller som survey når den er “complete”
+        if (type.includes('complete')) u.completedSurveys += 1;
+      }
+
+      saveUsers();
+      writeJsonSafe(CPX_TX_FILE, txLog);
+    }
+    return res.status(200).send('ok');
+  }
+
+  if (isReversal) {
+    // reversal trækker KUN tilbage hvis vi tidligere har credited den transaktion
+    if (txLog[key] && txLog[key].status === 1) {
+      txLog[key].status = 2;
+
+      const cents = Number(txLog[key].cents || 0);
+      if (cents > 0) {
+        u.balanceCents -= cents;
+        if (u.balanceCents < 0) u.balanceCents = 0;
+      }
+
+      saveUsers();
+      writeJsonSafe(CPX_TX_FILE, txLog);
+    }
+    return res.status(200).send('ok');
+  }
+
+  // ukendt status: svar ok
+  return res.status(200).send('ok');
+});
+
+
+
 
 app.get('/cashout', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
