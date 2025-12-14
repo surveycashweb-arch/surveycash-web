@@ -2149,56 +2149,67 @@ app.get('/support', (req, res) => {
 // --- Auth handlers (modal) — Supabase signup ---
 app.post('/signup', async (req, res) => {
   try {
-    const usernameRaw = (req.body.username || '').trim();
     const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
+    const username = String(req.body.username || '').trim();
 
-    if (!email || !email.includes('@') || password.length < 6) {
+    if (!email || !email.includes('@') || password.length < 6 || !username) {
       return res.redirect('/?authError=invalid&mode=signup');
     }
 
-    // 1) Opret bruger i Supabase Auth
-    const { data, error } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-    });
+    // 1️⃣ TJEK: er username allerede i brug?
+    const { data: existing } = await supabaseAdmin
+      .from('profiles')
+      .select('user_id')
+      .eq('username', username)
+      .maybeSingle();
 
-    if (error) {
-      // Email findes allerede
-      if (error.message && error.message.toLowerCase().includes('already')) {
-        return res.redirect('/?authError=exists&mode=signup');
-      }
-      console.error('Signup auth error:', error);
+    if (existing) {
+      // ❌ Username taget → stop FØR auth-oprettelse
+      return res.redirect('/?authError=username_taken&mode=signup');
+    }
+
+    // 2️⃣ Opret Auth-user
+    const { data: created, error: createErr } =
+      await supabaseAdmin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+      });
+
+    if (createErr || !created?.user) {
+      console.error('Signup createUser error:', createErr);
+      return res.redirect('/?authError=exists&mode=signup');
+    }
+
+    const userId = created.user.id;
+
+    // 3️⃣ Opret profile
+    const { error: profileErr } = await supabaseAdmin
+      .from('profiles')
+      .insert({
+        user_id: userId,
+        email,
+        username,
+        balance_cents: 0,
+        total_earned_cents: 0,
+        completed_surveys: 0,
+        completed_offers: 0,
+        created_at: new Date().toISOString(),
+      });
+
+    if (profileErr) {
+      console.error('Signup profile insert error:', profileErr);
       return res.redirect('/?authError=unknown&mode=signup');
     }
 
-    const userId = data.user.id;
-
-    // 2) Opdatér username i profiles (row er auto-oprettet af trigger)
-    if (usernameRaw) {
-      const username = usernameRaw.toLowerCase();
-
-      const { error: upErr } = await supabaseAdmin
-        .from('profiles')
-        .update({ username })
-        .eq('user_id', userId);
-
-      if (upErr) {
-        // Username allerede taget (unique index)
-        if (upErr.code === '23505') {
-          return res.redirect('/?authError=username_taken&mode=signup');
-        }
-        console.error('Profile update error:', upErr);
-      }
-    }
-
-    // 3) Sæt cookie (samme mønster som før)
+    // 4️⃣ Log ind
     res.cookie('authEmail', email, { httpOnly: false, sameSite: 'Lax' });
-    res.redirect('/surveys');
+    return res.redirect('/surveys');
+
   } catch (err) {
     console.error('Signup fejl:', err);
-    res.redirect('/?authError=unknown&mode=signup');
+    return res.redirect('/?authError=unknown&mode=signup');
   }
 });
 
@@ -2212,38 +2223,40 @@ app.post('/login', async (req, res) => {
       return res.redirect('/?authError=invalid&mode=login');
     }
 
-    // Verificér login mod Supabase Auth
+    // 1️⃣ TJEK: findes brugeren?
+    const { data: userData, error: userErr } =
+      await supabaseAdmin.auth.admin.getUserByEmail(email);
+
+    if (userErr || !userData?.user) {
+      // ❌ Account findes ikke
+      return res.redirect('/?authError=nouser&mode=login');
+    }
+
+    // 2️⃣ Brugeren findes → tjek password
     const supabasePublic = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_ANON_KEY
     );
 
-    const { error } = await supabasePublic.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error: signErr } =
+      await supabasePublic.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
-      // wrong credentials / user not found
-      const msg = (error.message || '').toLowerCase();
-      if (msg.includes('invalid') || msg.includes('credentials')) {
-        return res.redirect('/?authError=badpass&mode=login');
-      }
-      return res.redirect('/?authError=nouser&mode=login');
+    if (signErr) {
+      // ❌ Forkert password
+      return res.redirect('/?authError=badpass&mode=login');
     }
 
-    // Samme "session" som før: cookie med email
+    // ✅ Login OK
     res.cookie('authEmail', email, { httpOnly: false, sameSite: 'Lax' });
     return res.redirect('/surveys');
+
   } catch (err) {
     console.error('Login fejl:', err);
     return res.redirect('/?authError=unknown&mode=login');
   }
-});
-
-app.get('/logout', (req, res) => {
-  res.clearCookie('authEmail');
-  res.redirect('/');
 });
 
 // ---------- Account: change username (Supabase + 7-day cooldown + unique) ----------
