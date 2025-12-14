@@ -372,27 +372,37 @@ function layout({ title, active, bodyHtml, loggedIn }) {
   }
 
   // --- vis auth fejl fra querystring ---
-  var params = new URLSearchParams(window.location.search);
-  var err = params.get('authError');
-  var modeFromUrl = params.get('mode') || 'login';
-  if (err) {
-    setMode(modeFromUrl);
-    openAuth(modeFromUrl);
-    if (errorBox) {
-      if (err === 'nouser') {
-        errorBox.textContent = "This account doesn't exist.";
-      } else if (err === 'badpass') {
-        errorBox.textContent = "Wrong password.";
-      } else if (err === 'exists') {
-        errorBox.textContent = "This e-mail is already in use.";
-      } else {
-        errorBox.textContent = "Something went wrong. Please try again.";
-      }
-      errorBox.style.display = 'block';
+var params = new URLSearchParams(window.location.search);
+var err = params.get('authError');
+var modeFromUrl = params.get('mode') || 'login';
+
+if (err) {
+  setMode(modeFromUrl);
+  openAuth(modeFromUrl);
+
+  if (errorBox) {
+    if (err === 'nouser') {
+      errorBox.textContent = "This account doesn't exist.";
+    } else if (err === 'badpass') {
+      errorBox.textContent = "Wrong password.";
+    } else if (err === 'exists') {
+      errorBox.textContent = "This e-mail is already in use.";
+    } else if (err === 'username_taken') {
+      errorBox.textContent = "Name already in use.";
+    } else {
+      errorBox.textContent = "Something went wrong. Please try again.";
     }
-    // fjern fejl-parametre fra URL så de ikke kommer igen ved refresh
-    window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+
+    errorBox.style.display = 'block';
   }
+
+  // fjern fejl-parametre fra URL så de ikke kommer igen ved refresh
+  window.history.replaceState(
+    null,
+    '',
+    window.location.pathname + window.location.hash
+  );
+}
 
   // default-mode: login (username skjult)
   if (usernameField && modeInput.value === 'login') {
