@@ -1086,7 +1086,7 @@ function landingHtml() {
 
 
 // ---------- Routes ----------
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   // Ikke logget ind -> vis landing
   if (!isLoggedIn(req)) {
     return res.send(
@@ -1101,9 +1101,23 @@ app.get('/', (req, res) => {
 
   const user = getUserFromReq(req) || null;
 
-  const stats = aggregatePlatformStats();
-  const totalEarnedUsd = formatUsdFromCents(stats.totalEarnedCents);
-  const totalUsers = stats.totalUsers || 0;
+// ✅ Community stats fra Supabase
+let totalUsers = 0;
+let totalEarnedUsd = '0.00';
+
+try {
+  const { data, error } = await supabaseAdmin.rpc('get_community_stats');
+  if (error) throw error;
+
+  const row = Array.isArray(data) ? data[0] : data;
+
+  totalUsers = Number(row?.all_time_users || 0);
+  const communityCents = Number(row?.community_earnings_cents || 0);
+  totalEarnedUsd = formatUsdFromCents(communityCents);
+} catch (e) {
+  console.error('Home stats error:', e);
+}
+
 
   const bodyHtml = `
   <div style="
