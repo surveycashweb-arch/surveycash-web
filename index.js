@@ -2158,16 +2158,19 @@ app.get('/support', (req, res) => {
 
 // --- Auth handlers (modal) — Supabase signup ---
 app.post('/signup', async (req, res) => {
+  let createdUserId = null;
+
   try {
     const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
-    const username = String(req.body.username || '').trim();
+    const usernameRaw = String(req.body.username || '').trim();
+    const username = usernameRaw.toLowerCase();
 
     if (!email || !email.includes('@') || password.length < 6 || !username) {
       return res.redirect('/?authError=invalid&mode=signup');
     }
 
-    // 1️⃣ TJEK: er username allerede i brug?
+    // 1️⃣ Pre-check username (case-insensitive fordi vi gemmer lowercase)
     const { data: existing } = await supabaseAdmin
       .from('profiles')
       .select('user_id')
@@ -2175,7 +2178,6 @@ app.post('/signup', async (req, res) => {
       .maybeSingle();
 
     if (existing) {
-      // ❌ Username taget → stop FØR auth-oprettelse
       return res.redirect('/?authError=username_taken&mode=signup');
     }
 
@@ -2188,28 +2190,34 @@ app.post('/signup', async (req, res) => {
       });
 
     if (createErr || !created?.user) {
+      const msg = String(createErr?.message || '').toLowerCase();
+      if (msg.includes('already')) {
+        return res.redirect('/?authError=exists&mode=signup');
+      }
       console.error('Signup createUser error:', createErr);
-      return res.redirect('/?authError=exists&mode=signup');
+      return res.redirect('/?authError=unknown&mode=signup');
     }
 
-    const userId = created.user.id;
+    createdUserId = created.user.id;
 
-    // 3️⃣ Opret profile
-    const { error: profileErr } = await supabaseAdmin
+    // 3️⃣ Trigger har allerede lavet profiles-row → UPDATE den
+    const { error: upErr } = await supabaseAdmin
       .from('profiles')
-      .insert({
-        user_id: userId,
-        email,
-        username,
-        balance_cents: 0,
-        total_earned_cents: 0,
-        completed_surveys: 0,
-        completed_offers: 0,
-        created_at: new Date().toISOString(),
-      });
+      .update({ username })
+      .eq('user_id', createdUserId);
 
-    if (profileErr) {
-      console.error('Signup profile insert error:', profileErr);
+    if (upErr) {
+      // hvis username alligevel blev taget (race condition / DB index)
+      if (upErr.code === '23505') {
+        // ryd op: slet auth-user så email ikke bliver "låst"
+        await supabaseAdmin.auth.admin.deleteUser(createdUserId);
+        return res.redirect('/?authError=username_taken&mode=signup');
+      }
+
+      console.error('Signup profile update error:', upErr);
+
+      // ryd op ved alle andre update-fejl
+      await supabaseAdmin.auth.admin.deleteUser(createdUserId);
       return res.redirect('/?authError=unknown&mode=signup');
     }
 
@@ -2219,6 +2227,16 @@ app.post('/signup', async (req, res) => {
 
   } catch (err) {
     console.error('Signup fejl:', err);
+
+    // hvis der blev oprettet auth-user, men vi crasher bagefter → ryd op
+    try {
+      if (createdUserId) {
+        await supabaseAdmin.auth.admin.deleteUser(createdUserId);
+      }
+    } catch (e) {
+      console.error('Cleanup deleteUser failed:', e);
+    }
+
     return res.redirect('/?authError=unknown&mode=signup');
   }
 });
@@ -2233,36 +2251,42 @@ app.post('/login', async (req, res) => {
       return res.redirect('/?authError=invalid&mode=login');
     }
 
-    // 1️⃣ TJEK: findes brugeren?
-    const { data: userData, error: userErr } =
-      await supabaseAdmin.auth.admin.getUserByEmail(email);
+    // 1️⃣ TJEK: findes account i vores DB? (profiles)
+    const { data: profile, error: pErr } = await supabaseAdmin
+      .from('profiles')
+      .select('user_id')
+      .eq('email', email)
+      .maybeSingle();
 
-    if (userErr || !userData?.user) {
+    if (pErr) {
+      console.error('Login profile lookup error:', pErr);
+      return res.redirect('/?authError=unknown&mode=login');
+    }
+
+    if (!profile) {
       // ❌ Account findes ikke
       return res.redirect('/?authError=nouser&mode=login');
     }
 
-    // 2️⃣ Brugeren findes → tjek password
+    // 2️⃣ Account findes → tjek password via Supabase Auth
     const supabasePublic = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_ANON_KEY
     );
 
-    const { error: signErr } =
-      await supabasePublic.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const { error: signErr } = await supabasePublic.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (signErr) {
       // ❌ Forkert password
       return res.redirect('/?authError=badpass&mode=login');
     }
 
-    // ✅ Login OK
+    // ✅ Login OK (samme cookie-flow som før)
     res.cookie('authEmail', email, { httpOnly: false, sameSite: 'Lax' });
     return res.redirect('/surveys');
-
   } catch (err) {
     console.error('Login fejl:', err);
     return res.redirect('/?authError=unknown&mode=login');
@@ -2424,6 +2448,12 @@ app.post('/account/change-password', async (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({ ok: true, app: 'SurveyCash Web', ts: Date.now(), loggedIn: isLoggedIn(req) });
 });
+
+app.get('/logout', (req, res) => {
+  res.clearCookie('authEmail');
+  return res.redirect('/');
+});
+
 
 // ---------- Start ----------
 app.listen(PORT, () => {
