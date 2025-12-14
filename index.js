@@ -1,5 +1,13 @@
 // index.js — SurveyCash: grå landing + gul tema + auth-modal (login/signup)
 require('dotenv').config();
+
+const { createClient } = require('@supabase/supabase-js');
+
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -97,19 +105,9 @@ function ensureUserFields(user) {
 }
 
 function getUserFromReq(req) {
-  const email = req.cookies && req.cookies.authEmail;
-  if (!email) return null;
-
-  const key = String(email).toLowerCase().trim();
-  const user = users[key] || null;
-
-  if (user) {
-    const changed = ensureUserFields(user);
-    if (changed) saveUsers();
-  }
-
-  return user;
+  return req.user || null;
 }
+
 
 
 // -------- helpers ----------
@@ -180,6 +178,63 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// --- Auth middleware: cookie -> Supabase profile -> req.user ---
+async function loadUserFromCookie(req, res, next) {
+  try {
+    const emailRaw = req.cookies && req.cookies.authEmail;
+    if (!emailRaw) {
+      req.user = null;
+      return next();
+    }
+
+    const email = String(emailRaw).toLowerCase().trim();
+
+    const { data: profile, error } = await supabaseAdmin
+      .from('profiles')
+      .select(`
+        user_id,
+        email,
+        username,
+        created_at,
+        balance_cents,
+        total_earned_cents,
+        completed_surveys,
+        completed_offers,
+        username_changed_at,
+        password_changed_at
+      `)
+      .eq('email', email)
+      .single();
+
+    if (error || !profile) {
+      req.user = null;
+      return next();
+    }
+
+    req.user = {
+      id: profile.user_id,
+      email: profile.email,
+      username: profile.username || (profile.email ? profile.email.split('@')[0] : 'User'),
+      createdAt: profile.created_at ? new Date(profile.created_at).getTime() : Date.now(),
+      balanceCents: Number(profile.balance_cents || 0),
+      totalEarnedCents: Number(profile.total_earned_cents || 0),
+      completedSurveys: Number(profile.completed_surveys || 0),
+      completedOffers: Number(profile.completed_offers || 0),
+      usernameChangedAt: Number(profile.username_changed_at || 0),
+      passwordChangedAt: Number(profile.password_changed_at || 0),
+    };
+
+    return next();
+  } catch (e) {
+    console.error('loadUserFromCookie error:', e);
+    req.user = null;
+    return next();
+  }
+}
+
+app.use(loadUserFromCookie);
+
 
 function layout({ title, active, bodyHtml, loggedIn }) {
   const tab = (path, label) => {
@@ -1940,93 +1995,121 @@ function writeJsonSafe(file, data) {
   fs.writeFileSync(file, JSON.stringify(data, null, 2));
 }
 
-function findUserByIdOrEmail(userId) {
-  const id = String(userId || '').toLowerCase().trim();
-  if (!id) return null;
 
-  // users er et objekt: { "email": userObj, ... }
-  for (const emailKey of Object.keys(users)) {
-    const u = users[emailKey];
-    if (!u) continue;
+async function findProfileByUserIdOrEmailSupabase(userIdOrEmail) {
+  const key = String(userIdOrEmail || '').trim().toLowerCase();
+  if (!key) return null;
 
-    const uId = String(u.id || '').toLowerCase().trim();
-    const uEmail = String(u.email || '').toLowerCase().trim();
+  // 1) prøv som user_id (CPX ext_user_id)
+  let { data, error } = await supabaseAdmin
+    .from('profiles')
+    .select('user_id, email, username, balance_cents, total_earned_cents, completed_surveys, completed_offers')
+    .eq('user_id', key)
+    .maybeSingle();
 
-    if (uId === id || uEmail === id) return u;
-  }
+  if (!error && data) return data;
+
+  // 2) fallback: prøv som email
+  ({ data, error } = await supabaseAdmin
+    .from('profiles')
+    .select('user_id, email, username, balance_cents, total_earned_cents, completed_surveys, completed_offers')
+    .eq('email', key)
+    .maybeSingle());
+
+  if (!error && data) return data;
+
   return null;
 }
 
-app.get('/cpx/postback', (req, res) => {
-  const q = req.query || {};
 
-  const statusRaw = String(q.status || q.state || '').toLowerCase(); // "1" / "2" eller "approved"/"reversed"
-  const transId = String(q.trans_id || q.transaction_id || q.sid || q.subid || '').trim();
-  const userId = String(q.user_id || q.ext_user_id || q.uid || '').toLowerCase().trim();
-  const type = String(q.type || 'complete').toLowerCase().trim();
 
-  const amountRaw =
-    q.amount_local ?? q.amount ?? q.reward ?? q.payout ?? q.value ?? '0';
+app.get('/cpx/postback', async (req, res) => {
+  try {
+    const q = req.query || {};
 
-  const amount = Number(String(amountRaw).replace(',', '.')) || 0;
+    const statusRaw = String(q.status || q.state || '').toLowerCase();
+    const transId = String(q.trans_id || q.transaction_id || q.sid || q.subid || '').trim();
+    const userId = String(q.user_id || q.ext_user_id || q.uid || '').trim();
+    const type = String(q.type || 'complete').toLowerCase().trim();
 
-  // krav
-  if (!transId || !userId) return res.status(200).send('ok');
+    const amountRaw =
+      q.amount_local ?? q.amount ?? q.reward ?? q.payout ?? q.value ?? '0';
 
-  // status-mapping
-  const isCredit = statusRaw === '1' || statusRaw === 'approved' || statusRaw === 'completed' || statusRaw === 'ok';
-  const isReversal = statusRaw === '2' || statusRaw === 'reversed' || statusRaw === 'chargeback' || statusRaw === 'canceled' || statusRaw === 'cancelled';
+    const amount = Number(String(amountRaw).replace(',', '.')) || 0;
 
-  const u = findUserByIdOrEmail(userId);
-  if (!u) return res.status(200).send('ok');
+    if (!transId || !userId) return res.status(200).send('ok');
 
-  // sikre felter
-  ensureUserFields(u);
+    const isCredit =
+      statusRaw === '1' || statusRaw === 'approved' || statusRaw === 'completed' || statusRaw === 'ok';
 
-  // anti-dublet
-  const txLog = readJsonSafe(CPX_TX_FILE, {});
-  const key = `${transId}:${type}`;
+    const isReversal =
+      statusRaw === '2' || statusRaw === 'reversed' || statusRaw === 'chargeback' ||
+      statusRaw === 'canceled' || statusRaw === 'cancelled';
 
-  if (isCredit) {
-    if (!txLog[key]) {
-      const cents = Math.round(Math.max(0, amount) * 100);
+    const txLog = readJsonSafe(CPX_TX_FILE, {});
+    const key = `${transId}:${type}`;
 
-      txLog[key] = { userId, transId, type, cents, at: Date.now(), status: 1 };
+    const profile = await findProfileByUserIdOrEmailSupabase(userId);
+    if (!profile) return res.status(200).send('ok');
 
-      if (cents > 0) {
-        u.balanceCents += cents;
-        u.totalEarnedCents += cents;
-        // tæller som survey når den er “complete”
-        if (type.includes('complete')) u.completedSurveys += 1;
+    const currentBalance = Number(profile.balance_cents || 0);
+    const currentTotal   = Number(profile.total_earned_cents || 0);
+    const currentSurveys = Number(profile.completed_surveys || 0);
+
+    if (isCredit) {
+      if (!txLog[key]) {
+        const cents = Math.round(Math.max(0, amount) * 100);
+
+        txLog[key] = { userId: profile.user_id, transId, type, cents, at: Date.now(), status: 1 };
+        writeJsonSafe(CPX_TX_FILE, txLog);
+
+        if (cents > 0) {
+          const next = {
+            balance_cents: currentBalance + cents,
+            total_earned_cents: currentTotal + cents,
+          };
+
+          if (type.includes('complete')) {
+            next.completed_surveys = currentSurveys + 1;
+          }
+
+          const { error: upErr } = await supabaseAdmin
+            .from('profiles')
+            .update(next)
+            .eq('user_id', profile.user_id);
+
+          if (upErr) console.error('CPX credit update error:', upErr);
+        }
       }
-
-      saveUsers();
-      writeJsonSafe(CPX_TX_FILE, txLog);
+      return res.status(200).send('ok');
     }
+
+    if (isReversal) {
+      if (txLog[key] && txLog[key].status === 1) {
+        txLog[key].status = 2;
+        writeJsonSafe(CPX_TX_FILE, txLog);
+
+        const cents = Number(txLog[key].cents || 0);
+        if (cents > 0) {
+          const newBalance = Math.max(0, currentBalance - cents);
+
+          const { error: upErr } = await supabaseAdmin
+            .from('profiles')
+            .update({ balance_cents: newBalance })
+            .eq('user_id', profile.user_id);
+
+          if (upErr) console.error('CPX reversal update error:', upErr);
+        }
+      }
+      return res.status(200).send('ok');
+    }
+
+    return res.status(200).send('ok');
+  } catch (e) {
+    console.error('CPX postback handler error:', e);
     return res.status(200).send('ok');
   }
-
-  if (isReversal) {
-    // reversal trækker KUN tilbage hvis vi tidligere har credited den transaktion
-    if (txLog[key] && txLog[key].status === 1) {
-      txLog[key].status = 2;
-
-      const cents = Number(txLog[key].cents || 0);
-      if (cents > 0) {
-        u.balanceCents -= cents;
-        if (u.balanceCents < 0) u.balanceCents = 0;
-      }
-
-      saveUsers();
-      writeJsonSafe(CPX_TX_FILE, txLog);
-    }
-    return res.status(200).send('ok');
-  }
-
-  // ukendt status: svar ok
-  return res.status(200).send('ok');
 });
-
 
 
 
@@ -2063,71 +2146,98 @@ app.get('/support', (req, res) => {
   );
 });
 
-// --- Auth handlers (modal) ---
+// --- Auth handlers (modal) — Supabase signup ---
 app.post('/signup', async (req, res) => {
   try {
     const usernameRaw = (req.body.username || '').trim();
-    const emailRaw = (req.body.email || '').trim().toLowerCase();
+    const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
 
-    if (!emailRaw || !emailRaw.includes('@') || password.length < 6) {
-      return res.redirect('/');
+    if (!email || !email.includes('@') || password.length < 6) {
+      return res.redirect('/?authError=invalid&mode=signup');
     }
 
-    if (users[emailRaw]) {
-      return res.redirect('/?authError=exists&mode=signup');
+    // 1) Opret bruger i Supabase Auth
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+    });
+
+    if (error) {
+      // Email findes allerede
+      if (error.message && error.message.toLowerCase().includes('already')) {
+        return res.redirect('/?authError=exists&mode=signup');
+      }
+      console.error('Signup auth error:', error);
+      return res.redirect('/?authError=unknown&mode=signup');
     }
 
-    const hash = await bcrypt.hash(password, BCRYPT_ROUNDS);
-    const fallbackName = emailRaw ? emailRaw.split('@')[0] : '';
-    users[emailRaw] = {
-      email: emailRaw,
-      username: usernameRaw || fallbackName,
-      passwordHash: hash,
-      createdAt: Date.now(),
-      balanceCents: 0,          // nuværende saldo
-      totalEarnedCents: 0,      // livstidsindtægter
-      completedSurveys: 0,
-      completedOffers: 0,
-    };
-    saveUsers();
+    const userId = data.user.id;
 
-    res.cookie('authEmail', emailRaw, { httpOnly: false, sameSite: 'Lax' });
+    // 2) Opdatér username i profiles (row er auto-oprettet af trigger)
+    if (usernameRaw) {
+      const username = usernameRaw.toLowerCase();
+
+      const { error: upErr } = await supabaseAdmin
+        .from('profiles')
+        .update({ username })
+        .eq('user_id', userId);
+
+      if (upErr) {
+        // Username allerede taget (unique index)
+        if (upErr.code === '23505') {
+          return res.redirect('/?authError=username_taken&mode=signup');
+        }
+        console.error('Profile update error:', upErr);
+      }
+    }
+
+    // 3) Sæt cookie (samme mønster som før)
+    res.cookie('authEmail', email, { httpOnly: false, sameSite: 'Lax' });
     res.redirect('/surveys');
   } catch (err) {
     console.error('Signup fejl:', err);
-    res.redirect('/');
+    res.redirect('/?authError=unknown&mode=signup');
   }
 });
 
-// Login: tjek email + password
+// --- Auth handlers (modal) — Supabase login ---
 app.post('/login', async (req, res) => {
   try {
-    const emailRaw = (req.body.email || '').trim().toLowerCase();
+    const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
 
-    const user = users[emailRaw];
-    if (!user) {
+    if (!email || !email.includes('@') || password.length < 6) {
+      return res.redirect('/?authError=invalid&mode=login');
+    }
+
+    // Verificér login mod Supabase Auth
+    const supabasePublic = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    const { error } = await supabasePublic.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      // wrong credentials / user not found
+      const msg = (error.message || '').toLowerCase();
+      if (msg.includes('invalid') || msg.includes('credentials')) {
+        return res.redirect('/?authError=badpass&mode=login');
+      }
       return res.redirect('/?authError=nouser&mode=login');
     }
 
-    const ok = await bcrypt.compare(password, user.passwordHash || '');
-    if (!ok) {
-      return res.redirect('/?authError=badpass&mode=login');
-    }
-
-    // sikr at felter findes
-    if (typeof user.balanceCents !== 'number') user.balanceCents = 0;
-    if (typeof user.totalEarnedCents !== 'number') user.totalEarnedCents = user.balanceCents || 0;
-    if (typeof user.completedSurveys !== 'number') user.completedSurveys = 0;
-    if (typeof user.completedOffers !== 'number') user.completedOffers = 0;
-    saveUsers();
-
-    res.cookie('authEmail', emailRaw, { httpOnly: false, sameSite: 'Lax' });
-    res.redirect('/surveys');
+    // Samme "session" som før: cookie med email
+    res.cookie('authEmail', email, { httpOnly: false, sameSite: 'Lax' });
+    return res.redirect('/surveys');
   } catch (err) {
     console.error('Login fejl:', err);
-    res.redirect('/?authError=unknown&mode=login');
+    return res.redirect('/?authError=unknown&mode=login');
   }
 });
 
@@ -2136,38 +2246,76 @@ app.get('/logout', (req, res) => {
   res.redirect('/');
 });
 
-
-// ---------- Account: change username ----------
-app.post('/account/change-username', (req, res) => {
+// ---------- Account: change username (Supabase + 7-day cooldown + unique) ----------
+app.post('/account/change-username', async (req, res) => {
   const user = getUserFromReq(req);
   if (!user) return res.redirect('/');
 
-  const raw = (req.body.newUsername || '').trim();
+  try {
+    const raw = String(req.body.newUsername || '').trim();
 
-  // simpelt tjek: 2–24 tegn
-  if (raw.length < 2 || raw.length > 24) {
+    // simpelt tjek: 2–24 tegn
+    if (raw.length < 2 || raw.length > 24) {
+      return res.redirect('/account?unError=length');
+    }
+
+    const email = String(user.email || '').toLowerCase();
+    if (!email) return res.redirect('/account?unError=unknown');
+
+    // find profile (inkl. cooldown)
+    const { data: profile, error: pErr } = await supabaseAdmin
+      .from('profiles')
+      .select('user_id, username_changed_at')
+      .eq('email', email)
+      .single();
+
+    if (pErr || !profile) {
+      console.error('profile fetch error:', pErr);
+      return res.redirect('/account?unError=unknown');
+    }
+
+    // 7-dages cooldown
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+    const SEVEN_DAYS_MS = 7 * MS_PER_DAY;
+    const now = Date.now();
+
+    if (
+      profile.username_changed_at &&
+      now - profile.username_changed_at < SEVEN_DAYS_MS
+    ) {
+      return res.redirect('/account?unError=cooldown');
+    }
+
+    // vi gemmer lowercase, og DB håndhæver unikhed (case-insensitive index)
+    const username = raw.toLowerCase();
+
+    const { error: upErr } = await supabaseAdmin
+      .from('profiles')
+      .update({
+        username,
+        username_changed_at: now,
+      })
+      .eq('user_id', profile.user_id);
+
+    if (upErr) {
+      // username taget (unique index)
+      if (upErr.code === '23505') {
+        return res.redirect('/account?unError=taken');
+      }
+      console.error('username update error:', upErr);
+      return res.redirect('/account?unError=unknown');
+    }
+
     return res.redirect('/account');
+  } catch (err) {
+    console.error('Username change error:', err);
+    return res.redirect('/account?unError=unknown');
   }
-
-  // 7-dages regel (samme som på account-siden)
-  const MS_PER_DAY = 24 * 60 * 60 * 1000;
-  const SEVEN_DAYS_MS = 7 * MS_PER_DAY;
-  const now = Date.now();
-
-  if (user.usernameChangedAt && now - user.usernameChangedAt < SEVEN_DAYS_MS) {
-    // for tidligt → ingen ændring, bare tilbage til account
-    return res.redirect('/account');
-  }
-
-  user.username = raw;
-  user.usernameChangedAt = now;
-  saveUsers();
-
-  res.redirect('/account');
 });
 
 
-// ---------- Account: change password ----------
+
+// ---------- Account: change password (Supabase Auth + 7-day cooldown) ----------
 app.post('/account/change-password', async (req, res) => {
   const user = getUserFromReq(req);
   if (!user) return res.redirect('/');
@@ -2177,40 +2325,69 @@ app.post('/account/change-password', async (req, res) => {
     const newp  = String(req.body.newPassword  || '');
     const newp2 = String(req.body.newPassword2 || '');
 
+    if (!oldp) return res.redirect('/account?pwError=missingold');
+    if (newp.length < 6) return res.redirect('/account?pwError=short');
+    if (newp !== newp2) return res.redirect('/account?pwError=mismatch');
+
+    const email = String(user.email || '').toLowerCase();
+    if (!email) return res.redirect('/account?pwError=unknown');
+
+    // 1) Find profile + cooldown info
+    const { data: profile, error: pErr } = await supabaseAdmin
+      .from('profiles')
+      .select('user_id, password_changed_at')
+      .eq('email', email)
+      .single();
+
+    if (pErr || !profile) {
+      console.error('profile fetch error:', pErr);
+      return res.redirect('/account?pwError=unknown');
+    }
+
     // 7-dages cooldown
     const MS_PER_DAY = 24 * 60 * 60 * 1000;
     const SEVEN_DAYS_MS = 7 * MS_PER_DAY;
     const now = Date.now();
 
-    if (user.passwordChangedAt && now - user.passwordChangedAt < SEVEN_DAYS_MS) {
+    if (
+      profile.password_changed_at &&
+      now - profile.password_changed_at < SEVEN_DAYS_MS
+    ) {
       return res.redirect('/account?pwError=cooldown');
     }
 
-    // Først verificér old password
-    const okOld = await bcrypt.compare(oldp, user.passwordHash || '');
-    if (!okOld) {
+    // 2) Verificér gammelt password via sign-in
+    const { createClient } = require('@supabase/supabase-js');
+    const supabasePublic = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    const { error: signErr } = await supabasePublic.auth.signInWithPassword({
+      email,
+      password: oldp,
+    });
+
+    if (signErr) {
       return res.redirect('/account?pwError=badpass');
     }
 
-    // Hvis current password er valid → tjek resten
-    if (!oldp) {
-      return res.redirect('/account?pwError=missingold');
+    // 3) Opdatér password i Supabase Auth
+    const { error: upErr } = await supabaseAdmin.auth.admin.updateUserById(
+      profile.user_id,
+      { password: newp }
+    );
+
+    if (upErr) {
+      console.error('update password error:', upErr);
+      return res.redirect('/account?pwError=unknown');
     }
 
-    if (newp.length < 6) {
-      return res.redirect('/account?pwError=short');
-    }
-
-    if (newp !== newp2) {
-      return res.redirect('/account?pwError=mismatch');
-    }
-
-    // Alt okay → skift password
-    const hash = await bcrypt.hash(newp, BCRYPT_ROUNDS);
-    
-    user.passwordHash = hash;
-    user.passwordChangedAt = now;
-    saveUsers();
+    // 4) Opdatér cooldown timestamp i profiles
+    await supabaseAdmin
+      .from('profiles')
+      .update({ password_changed_at: now })
+      .eq('user_id', profile.user_id);
 
     return res.redirect('/account');
   } catch (err) {
@@ -2219,34 +2396,6 @@ app.post('/account/change-password', async (req, res) => {
   }
 });
 
-
-
-// ---------- BitLabs Flow ----------
-app.get('/bitlabs/start', (req, res) => {
-  if (!isLoggedIn(req)) return res.redirect('/');
-  const uid = encodeURIComponent(BITLABS_USER_ID);
-  const token = encodeURIComponent(BITLABS_APP_TOKEN);
-  const redirect = encodeURIComponent(BITLABS_REDIRECT_URL);
-  const url = `${BITLABS_WEB_URL}?uid=${uid}&token=${token}&redirect=${redirect}`;
-  res.redirect(url);
-});
-
-app.get('/bitlabs/callback', (req, res) => {
-  const q = req.query;
-  res.send(
-    page(
-      req,
-      'BitLabs Callback — SurveyCash',
-      '/surveys',
-      `
-    <h1>Tak!</h1>
-    <p>Vi har modtaget callback fra BitLabs.</p>
-    <pre>${escapeHtml(JSON.stringify(q, null, 2))}</pre>
-    <p><a class="btn-ghost" href="/surveys">Tilbage til Surveys</a></p>
-  `,
-    ),
-  );
-});
 
 // ---------- Health API ----------
 app.get('/api/health', (req, res) => {
