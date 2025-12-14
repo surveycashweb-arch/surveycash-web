@@ -2237,7 +2237,7 @@ app.post('/signup', async (req, res) => {
 
     // 4️⃣ Log ind
     res.cookie('authEmail', email, { httpOnly: false, sameSite: 'Lax' });
-    return res.redirect('/surveys');
+    return res.redirect('/');
 
   } catch (err) {
     console.error('Signup fejl:', err);
@@ -2300,7 +2300,7 @@ app.post('/login', async (req, res) => {
 
     // ✅ Login OK (samme cookie-flow som før)
     res.cookie('authEmail', email, { httpOnly: false, sameSite: 'Lax' });
-    return res.redirect('/surveys');
+    return res.redirect('/');
   } catch (err) {
     console.error('Login fejl:', err);
     return res.redirect('/?authError=unknown&mode=login');
