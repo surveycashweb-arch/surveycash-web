@@ -11,10 +11,38 @@ const supabaseAdmin = createClient(
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+
+const rateLimit = require('express-rate-limit');
+
+// Baseline limiter (fx login/signup)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 min
+  max: 20,                 // 20 requests pr. IP pr. 15 min
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many attempts. Please try again later.',
+});
+
+// Hårdere limiter kun for login (anti brute-force)
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10, // 10 login attempts pr IP pr 15 min
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many login attempts. Please try again later.',
+});
+
+
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const IS_PROD = process.env.NODE_ENV === 'production';
+
+
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
 
 function md5(s) {
   return crypto
@@ -23,7 +51,14 @@ function md5(s) {
     .digest('hex');
 }
 
+
 const app = express();
+
+app.set('trust proxy', 1);
+
+
+app.use(express.json());
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -121,6 +156,228 @@ function formatUsdFromCents(cents) {
   return ((typeof cents === 'number' ? cents : 0) / 100).toFixed(2);
 }
 
+// Cashout presets (som cards): $5, $10, $15, $25, $50, $100, $200
+const CASHOUT_DEFAULT_CENTS = 500;
+const CASHOUT_ALLOWED_CENTS = [500, 1000, 1500, 2500, 5000, 7500, 10000, 15000, 20000];
+const CASHOUT_ALLOWED_SET = new Set(CASHOUT_ALLOWED_CENTS);
+
+
+
+function isValidEmail(s) {
+  const str = String(s || '').trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str);
+}
+
+
+function createSessionToken() {
+  return crypto.randomBytes(32).toString('hex');
+}
+
+async function createSession(userId) {
+  const token = createSessionToken();
+  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30); // 30 dage
+
+  const { error } = await supabaseAdmin
+    .from('sessions')
+    .insert({
+      token,
+      user_id: userId,
+      expires_at: expiresAt,
+    });
+
+  if (error) throw error;
+
+  return { token, expiresAt };
+}
+
+
+async function getProfileByUserId(userId) {
+  const { data, error } = await supabaseAdmin
+    .from('profiles')
+    .select('user_id, balance_cents, pending_cents')
+    .eq('user_id', userId)
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+const PAYPAL_ENV = process.env.PAYPAL_ENV || 'sandbox';
+const PAYPAL_BASE =
+  PAYPAL_ENV === 'live'
+    ? 'https://api-m.paypal.com'
+    : 'https://api-m.sandbox.paypal.com';
+
+async function paypalGetAccessToken() {
+  const clientId = process.env.PAYPAL_CLIENT_ID;
+  const secret = process.env.PAYPAL_CLIENT_SECRET;
+
+  const basic = Buffer.from(`${clientId}:${secret}`).toString('base64');
+
+  const r = await fetch(`${PAYPAL_BASE}/v1/oauth2/token`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${basic}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'grant_type=client_credentials',
+  });
+
+  const data = await r.json();
+  if (!r.ok) throw new Error(JSON.stringify(data));
+  return data.access_token;
+}
+
+async function paypalCreatePayout({ receiverEmail, amountUsd, withdrawalId }) {
+  const token = await paypalGetAccessToken();
+
+  const payload = {
+    sender_batch_header: {
+      sender_batch_id: `sc_${withdrawalId}_${Date.now()}`,
+      email_subject: 'You have a payout from SurveyCash',
+    },
+    items: [
+      {
+        recipient_type: 'EMAIL',
+        receiver: receiverEmail,
+        amount: { value: amountUsd.toFixed(2), currency: 'USD' },
+        note: 'SurveyCash payout',
+        sender_item_id: String(withdrawalId),
+      },
+    ],
+  };
+
+  const r = await fetch(`${PAYPAL_BASE}/v1/payments/payouts`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await r.json();
+  if (!r.ok) throw new Error(JSON.stringify(data));
+
+  return data.batch_header.payout_batch_id;
+}
+
+async function paypalGetPayoutBatch(payoutBatchId) {
+  const token = await paypalGetAccessToken();
+
+  const r = await fetch(`${PAYPAL_BASE}/v1/payments/payouts/${payoutBatchId}`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const data = await r.json();
+  if (!r.ok) throw new Error(JSON.stringify(data));
+  return data;
+}
+
+
+// Returnerer: 'processing' | 'paid' | 'failed'
+function mapPayPalBatchStatus(batch) {
+  // 1) item status (mest præcis)
+  const itemStatus = String(
+    batch?.items?.[0]?.transaction_status ||
+    batch?.items?.[0]?.transaction_status?.status ||
+    ''
+  ).toUpperCase();
+
+  // Typiske item statuses: SUCCESS, PENDING, FAILED, RETURNED, UNCLAIMED, ONHOLD, BLOCKED, REFUNDED
+  if (itemStatus === 'SUCCESS') return 'paid';
+  if (itemStatus === 'FAILED' || itemStatus === 'RETURNED' || itemStatus === 'BLOCKED' || itemStatus === 'REFUNDED') {
+    return 'failed';
+  }
+  if (itemStatus) return 'processing';
+
+  // 2) fallback til batch header
+  const batchStatus = String(batch?.batch_header?.batch_status || '').toUpperCase();
+  if (batchStatus === 'SUCCESS') return 'paid';
+  if (batchStatus === 'DENIED' || batchStatus === 'CANCELED' || batchStatus === 'FAILED') return 'failed';
+  return 'processing';
+}
+
+// --- Background payout checker (server-side) ---
+async function processOpenWithdrawals() {
+  try {
+    // Find alle withdrawals der stadig er processing
+    const { data: list, error } = await supabaseAdmin
+      .from('withdrawals')
+      .select('*')
+      .in('status', ['pending', 'processing'])
+      .order('id', { ascending: true })
+      .limit(50);
+
+    if (error) {
+      console.error('processOpenWithdrawals list error:', error);
+      return;
+    }
+    if (!list || list.length === 0) return;
+
+    for (const w of list) {
+      try {
+        if (!w.paypal_batch_id) continue;
+
+        const batch = await paypalGetPayoutBatch(w.paypal_batch_id);
+        const nextStatus = mapPayPalBatchStatus(batch);
+
+        if (nextStatus === 'paid') {
+          // idempotent update (kun én gang)
+          const { data: upd } = await supabaseAdmin
+            .from('withdrawals')
+            .update({ status: 'paid', error_text: null })
+            .eq('id', w.id)
+            .neq('status', 'paid')
+            .select('id')
+            .maybeSingle();
+
+          if (upd) {
+            // træk pending ned
+            const { data: prof } = await supabaseAdmin
+              .from('profiles')
+              .select('pending_cents')
+              .eq('user_id', w.user_id)
+              .single();
+
+            const pendingNow = Number(prof?.pending_cents || 0);
+            const amount = Number(w.amount_cents || 0);
+
+            await supabaseAdmin
+              .from('profiles')
+              .update({ pending_cents: Math.max(0, pendingNow - amount) })
+              .eq('user_id', w.user_id);
+          }
+        }
+
+        if (nextStatus === 'failed') {
+          await supabaseAdmin
+            .from('withdrawals')
+            .update({ status: 'failed', error_text: 'PayPal payout failed/denied' })
+            .eq('id', w.id);
+
+          await supabaseAdmin.rpc('fail_cashout_return_funds', {
+            p_withdrawal_id: w.id,
+          });
+        }
+
+        // processing -> gør ingenting
+      } catch (e) {
+        console.error('processOpenWithdrawals item error:', w?.id, e);
+      }
+    }
+  } catch (e) {
+    console.error('processOpenWithdrawals fatal:', e);
+  }
+}
+
+// Kør hvert 60. sekund (i live kan du sætte 30-120s)
+setInterval(processOpenWithdrawals, 60 * 1000);
+processOpenWithdrawals();
+
+
+
 // kun brugt til statistik – uafhængig af anden user-logik
 function loadUsersForStats() {
   try {
@@ -174,40 +431,42 @@ function aggregatePlatformStats() {
   return stats;
 }
 
-app.use(cors());
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // --- Auth middleware: cookie -> Supabase profile -> req.user ---
 async function loadUserFromCookie(req, res, next) {
   try {
-    const emailRaw = req.cookies && req.cookies.authEmail;
-    if (!emailRaw) {
+    const token = req.cookies.session;
+    if (!token) {
       req.user = null;
       return next();
     }
 
-    const email = String(emailRaw).toLowerCase().trim();
+    const { data: session, error: sErr } = await supabaseAdmin
+      .from('sessions')
+      .select('user_id, expires_at')
+      .eq('token', token)
+      .maybeSingle();
 
-    const { data: profile, error } = await supabaseAdmin
+    if (sErr || !session) {
+      req.user = null;
+      return next();
+    }
+
+    if (new Date(session.expires_at) < new Date()) {
+      await supabaseAdmin.from('sessions').delete().eq('token', token);
+      req.user = null;
+      return next();
+    }
+
+    const { data: profile, error: pErr } = await supabaseAdmin
       .from('profiles')
-      .select(`
-        user_id,
-        email,
-        username,
-        created_at,
-        balance_cents,
-        total_earned_cents,
-        completed_surveys,
-        completed_offers,
-        username_changed_at,
-        password_changed_at
-      `)
-      .eq('email', email)
-      .single();
+      .select('*')
+      .eq('user_id', session.user_id)
+      .maybeSingle();
 
-    if (error || !profile) {
+    if (pErr || !profile) {
       req.user = null;
       return next();
     }
@@ -215,8 +474,8 @@ async function loadUserFromCookie(req, res, next) {
     req.user = {
       id: profile.user_id,
       email: profile.email,
-      username: profile.username || (profile.email ? profile.email.split('@')[0] : 'User'),
-      createdAt: profile.created_at ? new Date(profile.created_at).getTime() : Date.now(),
+      username: profile.username,
+      createdAt: new Date(profile.created_at).getTime(),
       balanceCents: Number(profile.balance_cents || 0),
       totalEarnedCents: Number(profile.total_earned_cents || 0),
       completedSurveys: Number(profile.completed_surveys || 0),
@@ -954,6 +1213,59 @@ document.addEventListener('click', function (e) {
     nav{ display:none; }
     .hero-title{ font-size:34px; }
     .auth-modal{ margin:0 10px; }
+  }
+
+  /* ===== Cashout UI (notice + card) ===== */
+  .notice{
+    margin: 14px 0 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(15,23,42,.55);
+  }
+  .notice.success{
+    border-color: rgba(34,197,94,.35);
+    background: rgba(34,197,94,.10);
+  }
+  .notice.error{
+    border-color: rgba(239,68,68,.35);
+    background: rgba(239,68,68,.10);
+  }
+
+  .card{
+    margin-top: 14px;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(15,23,42,.45);
+  }
+
+  .card input{
+    width: 100%;
+    padding: 12px 12px;
+    border-radius: 10px;
+    border: 1px solid #2a3240;
+    background: #131822;
+    color: #e5e7eb;
+    margin-bottom: 10px;
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  .card button{
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #d97706;
+    background: #fbbf24;
+    color: #111827;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .card button:disabled{
+    opacity: .55;
+    cursor: not-allowed;
   }
 </style>
 </head>
@@ -2010,16 +2322,6 @@ app.get('/games', (req, res) => {
 
 
 // --- CPX anti-duplicate log (trans_id + type) ---
-const CPX_TX_FILE = path.join(__dirname, 'cpx_transactions.json');
-
-function readJsonSafe(file, fallback) {
-  try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return fallback; }
-}
-function writeJsonSafe(file, data) {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2));
-}
-
-
 async function findProfileByUserIdOrEmailSupabase(userIdOrEmail) {
   const key = String(userIdOrEmail || '').trim().toLowerCase();
   if (!key) return null;
@@ -2049,6 +2351,10 @@ async function findProfileByUserIdOrEmailSupabase(userIdOrEmail) {
 
 app.get('/cpx/postback', async (req, res) => {
   try {
+ const token = String(req.query.token || '');
+    if (token !== process.env.CPX_POSTBACK_TOKEN) {
+      return res.status(200).send('ok'); // svar altid ok så angribere ikke kan se noget
+    }
     const q = req.query || {};
 
     const statusRaw = String(q.status || q.state || '').toLowerCase();
@@ -2056,9 +2362,7 @@ app.get('/cpx/postback', async (req, res) => {
     const userId = String(q.user_id || q.ext_user_id || q.uid || '').trim();
     const type = String(q.type || 'complete').toLowerCase().trim();
 
-    const amountRaw =
-      q.amount_local ?? q.amount ?? q.reward ?? q.payout ?? q.value ?? '0';
-
+    const amountRaw = q.amount_local ?? q.amount ?? q.reward ?? q.payout ?? q.value ?? '0';
     const amount = Number(String(amountRaw).replace(',', '.')) || 0;
 
     if (!transId || !userId) return res.status(200).send('ok');
@@ -2070,52 +2374,73 @@ app.get('/cpx/postback', async (req, res) => {
       statusRaw === '2' || statusRaw === 'reversed' || statusRaw === 'chargeback' ||
       statusRaw === 'canceled' || statusRaw === 'cancelled';
 
-    const txLog = readJsonSafe(CPX_TX_FILE, {});
-    const key = `${transId}:${type}`;
-
     const profile = await findProfileByUserIdOrEmailSupabase(userId);
     if (!profile) return res.status(200).send('ok');
+
+    const cents = Math.round(Math.max(0, amount) * 100);
 
     const currentBalance = Number(profile.balance_cents || 0);
     const currentTotal   = Number(profile.total_earned_cents || 0);
     const currentSurveys = Number(profile.completed_surveys || 0);
 
     if (isCredit) {
-      if (!txLog[key]) {
-        const cents = Math.round(Math.max(0, amount) * 100);
+      // insert hvis ikke allerede (UNIQUE trans_id+type stopper dupes)
+      const { error: insErr } = await supabaseAdmin
+        .from('cpx_transactions')
+        .insert({
+          user_id: profile.user_id,
+          trans_id: transId,
+          type,
+          cents,
+          status: 1,
+        });
 
-        txLog[key] = { userId: profile.user_id, transId, type, cents, at: Date.now(), status: 1 };
-        writeJsonSafe(CPX_TX_FILE, txLog);
-
-        if (cents > 0) {
-          const next = {
-            balance_cents: currentBalance + cents,
-            total_earned_cents: currentTotal + cents,
-          };
-
-          if (type.includes('complete')) {
-            next.completed_surveys = currentSurveys + 1;
-          }
-
-          const { error: upErr } = await supabaseAdmin
-            .from('profiles')
-            .update(next)
-            .eq('user_id', profile.user_id);
-
-          if (upErr) console.error('CPX credit update error:', upErr);
-        }
+      // hvis duplicate → ignorer
+      if (insErr && insErr.code !== '23505') {
+        console.error('cpx_transactions insert error:', insErr);
+        return res.status(200).send('ok');
       }
+
+      // kun credit hvis insert lykkedes (ikke duplicate)
+      if (!insErr && cents > 0) {
+        const next = {
+          balance_cents: currentBalance + cents,
+          total_earned_cents: currentTotal + cents,
+        };
+
+        if (type.includes('complete')) {
+          next.completed_surveys = currentSurveys + 1;
+        }
+
+        const { error: upErr } = await supabaseAdmin
+          .from('profiles')
+          .update(next)
+          .eq('user_id', profile.user_id);
+
+        if (upErr) console.error('CPX credit update error:', upErr);
+      }
+
       return res.status(200).send('ok');
     }
 
     if (isReversal) {
-      if (txLog[key] && txLog[key].status === 1) {
-        txLog[key].status = 2;
-        writeJsonSafe(CPX_TX_FILE, txLog);
+      // find transaction, og kun reverse 1 gang
+      const { data: tx } = await supabaseAdmin
+        .from('cpx_transactions')
+        .select('id, cents, status')
+        .eq('trans_id', transId)
+        .eq('type', type)
+        .maybeSingle();
 
-        const cents = Number(txLog[key].cents || 0);
-        if (cents > 0) {
-          const newBalance = Math.max(0, currentBalance - cents);
+      if (tx && Number(tx.status) === 1) {
+        await supabaseAdmin
+          .from('cpx_transactions')
+          .update({ status: 2 })
+          .eq('id', tx.id);
+
+        const revCents = Number(tx.cents || 0);
+        if (revCents > 0) {
+          const newBalance = Math.max(0, currentBalance - revCents);
 
           const { error: upErr } = await supabaseAdmin
             .from('profiles')
@@ -2125,6 +2450,7 @@ app.get('/cpx/postback', async (req, res) => {
           if (upErr) console.error('CPX reversal update error:', upErr);
         }
       }
+
       return res.status(200).send('ok');
     }
 
@@ -2135,22 +2461,228 @@ app.get('/cpx/postback', async (req, res) => {
   }
 });
 
-
-
-app.get('/cashout', (req, res) => {
+app.get('/cashout', async (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
-  res.send(
-    page(
-      req,
-      'Cash Out — SurveyCash',
-      '/cashout',
-      `
-    <h1>Cash Out</h1>
-    <p>Udbetal dine point til MobilePay, PayPal eller gavekort (kommer snart).</p>
-  `,
-    ),
+
+  const user = req.user;
+  if (!user?.id) return res.redirect('/');
+
+  const ok = req.query.ok === '1';
+  const paid = req.query.paid === '1';
+  const err = String(req.query.err || '');
+  const wIdFromQuery = Number(req.query.w || 0);
+
+  // 1) Hent profil (balance + pending)
+  let profile;
+  try {
+    profile = await getProfileByUserId(user.id);
+  } catch (e) {
+    console.error('getProfileByUserId error:', e);
+    return res.redirect('/');
+  }
+
+  const balanceCents = Number(profile.balance_cents || 0);
+  const pendingCents = Number(profile.pending_cents || 0);
+
+  // 2) Tjek om der allerede er en aktiv cashout (pending/processing)
+  let hasOpenWithdrawal = false;
+  let openWithdrawalId = 0;
+
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('withdrawals')
+      .select('id,status')
+      .eq('user_id', user.id)
+      .in('status', ['pending', 'processing'])
+      .order('id', { ascending: false })
+      .limit(1);
+
+    if (!error && Array.isArray(data) && data.length > 0) {
+      hasOpenWithdrawal = true;
+      openWithdrawalId = Number(data[0].id || 0);
+    }
+  } catch (e) {
+    console.error('open withdrawal check (GET /cashout) failed:', e);
+  }
+
+  // 3) Find hvilket withdrawal-id vi skal auto-checke
+  const wId = wIdFromQuery || openWithdrawalId;
+
+  const autoCheckScript = wId
+    ? `
+    <script>
+    (async function () {
+      const id = ${wId};
+      const maxTries = 20;
+      const delayMs = 2000;
+
+      for (let i = 0; i < maxTries; i++) {
+        try {
+          const r = await fetch('/withdrawals/' + id + '/check', { method: 'POST' });
+          const data = await r.json();
+
+          if (data && data.status === 'paid') {
+            window.location.href = '/cashout?paid=1';
+            return;
+          }
+          if (data && data.status === 'failed') {
+            window.location.href = '/cashout?err=server';
+            return;
+          }
+        } catch (e) {}
+
+        await new Promise(r => setTimeout(r, delayMs));
+      }
+    })();
+    </script>
+    `
+    : '';
+
+  // 4) Beskeder
+  let msg = '';
+  if (paid) {
+    msg = `<div class="notice success">Cash out status: <b>PAID</b> ✅</div>`;
+  } else if (err === 'open') {
+    msg = `<div class="notice error">You already have a cashout in progress. Please wait until it is paid.</div>`;
+  } else if (ok || wId || hasOpenWithdrawal) {
+    msg = `<div class="notice success">Cash out status: <b>PROCESSING</b>…</div>`;
+  } else if (err) {
+    msg = `<div class="notice error">Cash out failed.</div>`;
+  }
+
+  // 5) Cards
+  const cardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
+    const usd = (cents / 100).toFixed(2);
+    const can = !hasOpenWithdrawal && balanceCents >= cents;
+    const needUsd = ((cents - balanceCents) / 100).toFixed(2);
+
+    return `
+      <button
+        type="button"
+        class="cash-card ${can ? '' : 'disabled'}"
+        data-cents="${cents}"
+        ${can ? '' : 'disabled'}
+      >
+        <div class="cash-card-top">$${usd}</div>
+        <div class="cash-card-mid">
+          <div class="cash-card-logo">PayPal</div>
+        </div>
+        <div class="cash-card-bottom">
+          ${can ? `Available` : `Need $${needUsd}`}
+        </div>
+      </button>
+    `;
+  }).join('');
+
+  // 6) Render
+  return res.send(
+    layout({
+      title: 'Cash Out — SurveyCash',
+      active: '/cashout',
+      loggedIn: user,
+      bodyHtml: `
+        <style>
+          .cash-grid{
+            margin-top:14px;
+            display:grid;
+            grid-template-columns:repeat(3,minmax(0,1fr));
+            gap:14px;
+            max-width:820px;
+          }
+          .cash-card{
+            border:1px solid rgba(255,255,255,.10);
+            background: rgba(15,23,42,.40);
+            border-radius:16px;
+            padding:14px;
+            cursor:pointer;
+            text-align:left;
+            transition: transform .12s ease, border-color .12s ease, background .12s ease;
+          }
+          .cash-card:hover{ transform: translateY(-2px); border-color: rgba(251,191,36,.45); }
+          .cash-card.selected{ border-color: rgba(251,191,36,.9); box-shadow: 0 0 0 1px rgba(251,191,36,.35) inset; }
+          .cash-card.disabled{ opacity:.45; cursor:not-allowed; }
+          .cash-card-top{ font-weight:900; font-size:18px; margin-bottom:8px; }
+          .cash-card-mid{
+            height:86px;
+            border-radius:12px;
+            background: rgba(255,255,255,.06);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+          }
+          .cash-card-logo{ font-weight:900; font-size:22px; letter-spacing:.2px; }
+          .cash-card-bottom{ margin-top:10px; font-size:12px; color:#cbd5e1; }
+
+          .cashout-form{ margin-top:14px; max-width:820px; display:none; }
+          .cashout-form.open{ display:block; }
+        </style>
+
+        <h1>Cash Out</h1>
+        <p>Choose an amount, then enter your PayPal email.</p>
+
+        ${msg}
+
+        <div class="card" style="max-width:820px;">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;">
+            <div><b>Available:</b> $${formatUsdFromCents(balanceCents)}</div>
+            <div><b>Pending:</b> $${formatUsdFromCents(pendingCents)}</div>
+          </div>
+
+          <div class="cash-grid" id="cash-grid">
+            ${cardsHtml}
+          </div>
+
+          <form id="cashout-form" class="cashout-form" method="POST" action="/cashout/paypal">
+            <input type="hidden" name="amountCents" id="amountCents" value="" />
+
+            <div style="margin-top:12px;">
+              <input name="paypalEmail" type="email" placeholder="PayPal email" required />
+            </div>
+
+            <button id="cashout-btn" disabled style="margin-top:10px;">
+              Choose an amount
+            </button>
+          </form>
+        </div>
+
+        <script>
+          (function(){
+            var grid = document.getElementById('cash-grid');
+            var form = document.getElementById('cashout-form');
+            var amountInp = document.getElementById('amountCents');
+            var btn = document.getElementById('cashout-btn');
+            if (!grid || !form || !amountInp || !btn) return;
+
+            grid.addEventListener('click', function(e){
+              var card = e.target.closest('.cash-card');
+              if (!card) return;
+              if (card.disabled) return;
+
+              Array.from(grid.querySelectorAll('.cash-card.selected')).forEach(function(x){
+                x.classList.remove('selected');
+              });
+
+              card.classList.add('selected');
+
+              var selected = card.getAttribute('data-cents');
+              amountInp.value = selected;
+              form.classList.add('open');
+
+              var usd = (Number(selected || 0)/100).toFixed(2);
+              btn.disabled = false;
+              btn.textContent = 'Cash out $' + usd;
+            });
+          })();
+        </script>
+
+        ${autoCheckScript}
+      `,
+    })
   );
 });
+
+
+
 
 app.get('/support', (req, res) => {
   res.send(
@@ -2171,7 +2703,7 @@ app.get('/support', (req, res) => {
 });
 
 // --- Auth handlers (modal) — Supabase signup ---
-app.post('/signup', async (req, res) => {
+app.post('/signup', authLimiter, async (req, res) => {
   let createdUserId = null;
 
   try {
@@ -2236,7 +2768,18 @@ app.post('/signup', async (req, res) => {
     }
 
     // 4️⃣ Log ind
-    res.cookie('authEmail', email, { httpOnly: false, sameSite: 'Lax' });
+const { token, expiresAt } = await createSession(createdUserId);
+
+res.cookie('session', token, {
+  httpOnly: true,
+  secure: IS_PROD,
+  sameSite: 'Lax',
+  expires: expiresAt,
+  path: '/',
+});
+
+
+
     return res.redirect('/');
 
   } catch (err) {
@@ -2256,7 +2799,7 @@ app.post('/signup', async (req, res) => {
 });
 
 // --- Auth handlers (modal) — Supabase login ---
-app.post('/login', async (req, res) => {
+app.post('/login', loginLimiter, async (req, res) => {
   try {
     const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
@@ -2299,8 +2842,19 @@ app.post('/login', async (req, res) => {
     }
 
     // ✅ Login OK (samme cookie-flow som før)
-    res.cookie('authEmail', email, { httpOnly: false, sameSite: 'Lax' });
-    return res.redirect('/');
+const { token, expiresAt } = await createSession(profile.user_id);
+
+res.cookie('session', token, {
+  httpOnly: true,
+  secure: IS_PROD,
+  sameSite: 'Lax',
+  expires: expiresAt,
+  path: '/',
+});
+
+
+
+        return res.redirect('/');
   } catch (err) {
     console.error('Login fejl:', err);
     return res.redirect('/?authError=unknown&mode=login');
@@ -2458,13 +3012,229 @@ app.post('/account/change-password', async (req, res) => {
 });
 
 
+// ---------- Cashout (POST) ----------
+app.post('/cashout/paypal', async (req, res) => {
+  if (!isLoggedIn(req)) return res.redirect('/');
+
+  try {
+    const user = req.user;
+    if (!user?.id) return res.redirect('/');
+
+   const amountCents = Number(req.body.amountCents || 0);
+if (!CASHOUT_ALLOWED_SET.has(amountCents)) {
+  return res.redirect('/cashout?err=amount');
+}
+
+    const paypalEmail = String(req.body.paypalEmail || '').trim().toLowerCase();
+    if (!isValidEmail(paypalEmail)) {
+      return res.redirect('/cashout?err=email');
+    }
+
+    // ✅ 0) STOP hvis der allerede er en åben cashout (pending/processing)
+    const { data: openWs, error: openErr } = await supabaseAdmin
+      .from('withdrawals')
+      .select('id,status')
+      .eq('user_id', user.id)
+      .in('status', ['pending', 'processing'])
+      .order('id', { ascending: false })
+      .limit(1);
+
+    if (openErr) {
+      console.error('open withdrawal check error:', openErr);
+      return res.redirect('/cashout?err=server');
+    }
+
+    if (Array.isArray(openWs) && openWs.length > 0) {
+      // allerede en igang
+      return res.redirect(`/cashout?err=open&w=${openWs[0].id}`);
+    }
+
+    // 1) Lav withdrawal + flyt balance -> pending (DB/RPC)
+    const { error } = await supabaseAdmin.rpc('request_cashout', {
+      p_user_id: user.id,
+      p_amount_cents: amountCents,
+      p_paypal_email: paypalEmail,
+    });
+
+    if (error) {
+      console.error('cashout rpc error:', error);
+      return res.redirect('/cashout?err=balance');
+    }
+
+    // 2) Find PRÆCIS den nyeste pending withdrawal for denne request
+    const { data: newestW, error: newestErr } = await supabaseAdmin
+      .from('withdrawals')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('status', 'pending')
+      .eq('amount_cents', amountCents)
+      .eq('paypal_email', paypalEmail)
+      .order('id', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (newestErr || !newestW) {
+      console.error('Could not find pending withdrawal after request:', newestErr);
+      return res.redirect('/cashout?err=server');
+    }
+
+    // 3) Send PayPal payout nu (pending -> processing + batch id)
+    try {
+      const amountUsd = Number(newestW.amount_cents || 0) / 100;
+
+      const payoutBatchId = await paypalCreatePayout({
+        receiverEmail: newestW.paypal_email,
+        amountUsd,
+        withdrawalId: newestW.id,
+      });
+
+      await supabaseAdmin
+        .from('withdrawals')
+        .update({ paypal_batch_id: payoutBatchId, status: 'processing' })
+        .eq('id', newestW.id);
+    } catch (e) {
+      console.error('paypal payout failed right after request:', e);
+
+      await supabaseAdmin
+        .from('withdrawals')
+        .update({ status: 'failed', error_text: String(e.message || e) })
+        .eq('id', newestW.id);
+
+      await supabaseAdmin.rpc('fail_cashout_return_funds', {
+        p_withdrawal_id: newestW.id,
+      });
+
+      return res.redirect('/cashout?err=server');
+    }
+
+    return res.redirect(`/cashout?w=${newestW.id}`);
+  } catch (e) {
+    console.error('cashout error:', e);
+    return res.redirect('/cashout?err=server');
+  }
+});
+
+
+app.post('/withdrawals/:id/check', async (req, res) => {
+  if (!isLoggedIn(req)) return res.sendStatus(401);
+
+  const id = Number(req.params.id);
+  const userId = req.user.id;
+
+  // 1) hent withdrawal
+  const { data: w, error: wErr } = await supabaseAdmin
+    .from('withdrawals')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (wErr || !w) return res.sendStatus(404);
+  if (w.user_id !== userId) return res.sendStatus(403);
+
+  // skal have batch_id for at kunne checke
+  if (!w.paypal_batch_id) {
+    return res.status(400).json({ ok: false, error: 'missing_paypal_batch_id' });
+  }
+
+  // hvis allerede færdig, gør intet
+  if (w.status === 'paid' || w.status === 'failed') {
+    return res.json({ ok: true, status: w.status, note: 'already_final' });
+  }
+
+  try {
+    // 2) spørg PayPal
+    const batch = await paypalGetPayoutBatch(w.paypal_batch_id);
+    const nextStatus = mapPayPalBatchStatus(batch);
+
+if (nextStatus === 'paid') {
+  // 1) markér kun som paid hvis den ikke allerede er paid (idempotent)
+  const { data: upd, error: updErr } = await supabaseAdmin
+    .from('withdrawals')
+    .update({ status: 'paid', error_text: null })
+    .eq('id', w.id)
+    .neq('status', 'paid')
+    .select('id')
+    .maybeSingle();
+
+  if (updErr) {
+    return res.status(500).json({ ok: false, error: String(updErr.message || updErr) });
+  }
+
+  // 2) træk kun pending ned hvis vi faktisk ændrede status til paid
+  if (upd) {
+    const { data: prof, error: pErr } = await supabaseAdmin
+      .from('profiles')
+      .select('pending_cents')
+      .eq('user_id', w.user_id)
+      .single();
+
+    if (!pErr && prof) {
+      const pendingNow = Number(prof.pending_cents || 0);
+      const amount = Number(w.amount_cents || 0);
+
+      await supabaseAdmin
+        .from('profiles')
+        .update({
+          pending_cents: Math.max(0, pendingNow - amount),
+        })
+        .eq('user_id', w.user_id);
+    }
+  }
+
+  return res.json({ ok: true, status: 'paid' });
+}
+
+
+    if (nextStatus === 'failed') {
+      await supabaseAdmin
+        .from('withdrawals')
+        .update({ status: 'failed', error_text: 'PayPal payout failed/denied' })
+        .eq('id', w.id);
+
+      // refund pending -> balance
+      await supabaseAdmin.rpc('fail_cashout_return_funds', {
+        p_withdrawal_id: w.id,
+      });
+
+      return res.json({ ok: true, status: 'failed' });
+    }
+
+    // stadig processing
+    await supabaseAdmin
+      .from('withdrawals')
+      .update({ status: 'processing' })
+      .eq('id', w.id);
+
+    return res.json({ ok: true, status: 'processing' });
+  } catch (e) {
+    console.error('check payout error:', e);
+    return res.status(500).json({ ok: false, error: String(e.message || e) });
+  }
+});
+
+
 // ---------- Health API ----------
 app.get('/api/health', (req, res) => {
   res.json({ ok: true, app: 'SurveyCash Web', ts: Date.now(), loggedIn: isLoggedIn(req) });
 });
 
-app.get('/logout', (req, res) => {
-  res.clearCookie('authEmail');
+app.get('/logout', async (req, res) => {
+  const token = req.cookies.session;
+
+  if (token) {
+    await supabaseAdmin
+      .from('sessions')
+      .delete()
+      .eq('token', token);
+  }
+
+  res.clearCookie('session', {
+    httpOnly: true,
+    secure: IS_PROD,
+    sameSite: 'Lax',
+path: '/',
+  });
+
   return res.redirect('/');
 });
 
