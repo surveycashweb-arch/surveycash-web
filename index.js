@@ -1360,11 +1360,13 @@ document.addEventListener('click', function (e) {
         <span><span id="auth-switch-text">Don't have an account?</span><a href="#" id="auth-switch-link"> Sign up</a></span>
       </div>
 
-      <div class="fineprint">
-        By using SurveyCash you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
-      </div>
-    </div>
-  </div>
+<div class="fineprint">
+  By using SurveyCash you agree to our
+  <a href="/terms" target="_blank">Terms</a>
+  and
+  <a href="/privacy" target="_blank">Privacy Policy</a>.
+</div>
+
 
   ${clientScript}
 </body>
@@ -2125,6 +2127,83 @@ if (pwForm) {
     )
   );
 });
+
+
+
+// ---------- Privacy Policy ----------
+app.get('/privacy', (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>Privacy Policy - SurveyCash</title>
+        <style>
+          body { font-family: Arial; padding: 40px; background:#0f172a; color:#e5e7eb; }
+          h1 { color:#facc15; }
+        </style>
+      </head>
+      <body>
+        <h1>Privacy Policy</h1>
+
+        <p>SurveyCash respects your privacy.</p>
+
+        <p>
+          We may collect basic information such as IP address, device data,
+          and usage data to prevent fraud and ensure proper reward attribution.
+        </p>
+
+        <p>
+          SurveyCash uses third-party survey and offer providers.
+          These partners may collect additional data according to their own privacy policies.
+        </p>
+
+        <p>We do not sell personal data.</p>
+
+        <p>By using SurveyCash, you agree to this Privacy Policy.</p>
+
+        <p>Contact: surveycashweb@gmail.com</p>
+      </body>
+    </html>
+  `);
+});
+
+// ---------- Terms of Service ----------
+app.get('/terms', (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>Terms of Service - SurveyCash</title>
+        <style>
+          body { font-family: Arial; padding: 40px; background:#0f172a; color:#e5e7eb; }
+          h1 { color:#facc15; }
+        </style>
+      </head>
+      <body>
+        <h1>Terms of Service</h1>
+
+        <p>By using SurveyCash, you agree to use the platform fairly and honestly.</p>
+
+        <p>
+          Rewards are granted only after confirmation from our partners.
+        </p>
+
+        <p>
+          Fraud, abuse, or manipulation may result in account suspension
+          and loss of rewards.
+        </p>
+
+        <p>
+          SurveyCash is not responsible for third-party survey availability
+          or disqualifications.
+        </p>
+
+        <p>Terms may be updated at any time.</p>
+
+        <p>Contact: surveycashweb@gmail.com</p>
+      </body>
+    </html>
+  `);
+});
+
 
 
 app.get('/surveys', (req, res) => {
