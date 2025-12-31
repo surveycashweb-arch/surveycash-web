@@ -2781,7 +2781,7 @@ app.get('/support', (req, res) => {
   );
 });
 
-// --- Auth handlers (modal) — Supabase signup + email verify ---
+// --- Auth handlers (modal) — Supabase signup ---
 app.post('/signup', authLimiter, async (req, res) => {
   let createdUserId = null;
 
@@ -2806,51 +2806,65 @@ app.post('/signup', authLimiter, async (req, res) => {
       return res.redirect('/?authError=username_taken&mode=signup');
     }
 
-    // 2️⃣ Opret bruger via "normal" signUp → Supabase sender verify-mail
-    const { data: signData, error: signErr } =
-      await supabasePublic.auth.signUp({
+    // 2️⃣ Opret Auth-user
+    const { data: created, error: createErr } =
+      await supabaseAdmin.auth.admin.createUser({
         email,
         password,
+        email_confirm: true,
       });
 
-    if (signErr || !signData?.user) {
-      const msg = String(signErr?.message || '').toLowerCase();
-      console.error('Signup signUp error:', signErr);
-
+    if (createErr || !created?.user) {
+      const msg = String(createErr?.message || '').toLowerCase();
       if (msg.includes('already')) {
         return res.redirect('/?authError=exists&mode=signup');
       }
-
+      console.error('Signup createUser error:', createErr);
       return res.redirect('/?authError=unknown&mode=signup');
     }
 
-    createdUserId = signData.user.id;
+    createdUserId = created.user.id;
 
-    // 3️⃣ Trigger har lavet profiles-row → UPDATE username
+    // 3️⃣ Trigger har allerede lavet profiles-row → UPDATE den
     const { error: upErr } = await supabaseAdmin
       .from('profiles')
       .update({ username })
       .eq('user_id', createdUserId);
 
     if (upErr) {
+      // hvis username alligevel blev taget (race condition / DB index)
       if (upErr.code === '23505') {
-        // username alligevel taget → ryd user op
+        // ryd op: slet auth-user så email ikke bliver "låst"
         await supabaseAdmin.auth.admin.deleteUser(createdUserId);
         return res.redirect('/?authError=username_taken&mode=signup');
       }
 
       console.error('Signup profile update error:', upErr);
+
+      // ryd op ved alle andre update-fejl
       await supabaseAdmin.auth.admin.deleteUser(createdUserId);
       return res.redirect('/?authError=unknown&mode=signup');
     }
 
-    // 4️⃣ VIGTIGT: INGEN login-cookie her.
-    // Brugeren skal først verificere deres e-mail.
-    return res.redirect('/?authError=verify&mode=login');
+    // 4️⃣ Log ind
+const { token, expiresAt } = await createSession(createdUserId);
+
+res.cookie('session', token, {
+  httpOnly: true,
+  secure: IS_PROD,
+  sameSite: 'Lax',
+  expires: expiresAt,
+  path: '/',
+});
+
+
+
+    return res.redirect('/');
 
   } catch (err) {
     console.error('Signup fejl:', err);
 
+    // hvis der blev oprettet auth-user, men vi crasher bagefter → ryd op
     try {
       if (createdUserId) {
         await supabaseAdmin.auth.admin.deleteUser(createdUserId);
