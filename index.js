@@ -2783,8 +2783,6 @@ app.get('/support', (req, res) => {
 
 // --- Auth handlers (modal) — Supabase signup ---
 app.post('/signup', authLimiter, async (req, res) => {
-  let createdUserId = null;
-
   try {
     const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
@@ -2795,7 +2793,7 @@ app.post('/signup', authLimiter, async (req, res) => {
       return res.redirect('/?authError=invalid&mode=signup');
     }
 
-    // 1️⃣ Pre-check username (case-insensitive fordi vi gemmer lowercase)
+    // 1️⃣ Tjek om username allerede findes (i profiles)
     const { data: existing } = await supabaseAdmin
       .from('profiles')
       .select('user_id')
@@ -2806,76 +2804,52 @@ app.post('/signup', authLimiter, async (req, res) => {
       return res.redirect('/?authError=username_taken&mode=signup');
     }
 
-    // 2️⃣ Opret Auth-user
-    const { data: created, error: createErr } =
-      await supabaseAdmin.auth.admin.createUser({
-        email,
-        password,
-        email_confirm: true,
-      });
+    // 2️⃣ Normal signup via ANON client → sender verify-email
+    const { data, error: signErr } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        // hvor de lander efter de klikker på email-linket
+        emailRedirectTo: `${BASE_URL}/`,
+      },
+    });
 
-    if (createErr || !created?.user) {
-      const msg = String(createErr?.message || '').toLowerCase();
+    if (signErr || !data?.user) {
+      const msg = String(signErr?.message || '').toLowerCase();
       if (msg.includes('already')) {
         return res.redirect('/?authError=exists&mode=signup');
       }
-      console.error('Signup createUser error:', createErr);
+      console.error('Signup signUp error:', signErr);
       return res.redirect('/?authError=unknown&mode=signup');
     }
 
-    createdUserId = created.user.id;
+    const userId = data.user.id;
 
-    // 3️⃣ Trigger har allerede lavet profiles-row → UPDATE den
+    // 3️⃣ Opdatér profil med username
     const { error: upErr } = await supabaseAdmin
       .from('profiles')
       .update({ username })
-      .eq('user_id', createdUserId);
+      .eq('user_id', userId);
 
     if (upErr) {
-      // hvis username alligevel blev taget (race condition / DB index)
+      // hvis username alligevel blev taget (race condition)
       if (upErr.code === '23505') {
-        // ryd op: slet auth-user så email ikke bliver "låst"
-        await supabaseAdmin.auth.admin.deleteUser(createdUserId);
         return res.redirect('/?authError=username_taken&mode=signup');
       }
-
       console.error('Signup profile update error:', upErr);
-
-      // ryd op ved alle andre update-fejl
-      await supabaseAdmin.auth.admin.deleteUser(createdUserId);
       return res.redirect('/?authError=unknown&mode=signup');
     }
 
-    // 4️⃣ Log ind
-const { token, expiresAt } = await createSession(createdUserId);
+    // 4️⃣ VIGTIGT: Vi logger IKKE ind her.
+    // Brugeren skal først klikke på email-linket, og derefter logge ind.
 
-res.cookie('session', token, {
-  httpOnly: true,
-  secure: IS_PROD,
-  sameSite: 'Lax',
-  expires: expiresAt,
-  path: '/',
-});
-
-
-
-    return res.redirect('/');
-
+    return res.redirect('/?authError=verify&mode=login');
   } catch (err) {
     console.error('Signup fejl:', err);
-
-    // hvis der blev oprettet auth-user, men vi crasher bagefter → ryd op
-    try {
-      if (createdUserId) {
-        await supabaseAdmin.auth.admin.deleteUser(createdUserId);
-      }
-    } catch (e) {
-      console.error('Cleanup deleteUser failed:', e);
-    }
-
     return res.redirect('/?authError=unknown&mode=signup');
   }
 });
+
 
 // --- Auth handlers (modal) — Supabase login ---
 app.post('/login', loginLimiter, async (req, res) => {
