@@ -2216,7 +2216,7 @@ app.get('/terms', (req, res) => {
   `);
 });
 
-// ---------- Email verified landing ----------
+// ---------- Email verified landing (auto-login) ----------
 app.get('/verified', (req, res) => {
   res.send(
     page(
@@ -2226,15 +2226,63 @@ app.get('/verified', (req, res) => {
       `
       <div style="max-width:720px;margin:40px auto;text-align:center;">
         <h1>Email verified ✅</h1>
-        <p>Your email has been confirmed. You can now log in.</p>
-        <button type="button" class="btn btn-signup" onclick="openAuth('login')">
-          Log in
+        <p class="muted" id="status" style="opacity:.85;">Logging you in…</p>
+        <p class="muted" id="hint" style="display:none;opacity:.85;">If nothing happens, go to the homepage and log in.</p>
+        <button type="button" class="btn btn-signup" id="goHome" style="display:none;" onclick="location.href='/'">
+          Go to Home
         </button>
       </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <script>
+        (async function () {
+          const statusEl = document.getElementById('status');
+          const hintEl = document.getElementById('hint');
+          const btnEl = document.getElementById('goHome');
+
+          try {
+            const supabase = window.supabase.createClient(
+              ${JSON.stringify(process.env.SUPABASE_URL || '')},
+              ${JSON.stringify(process.env.SUPABASE_ANON_KEY || '')}
+            );
+
+            const url = window.location.href;
+
+            if (url.includes('code=')) {
+              await supabase.auth.exchangeCodeForSession(url);
+            } else if (supabase.auth.getSessionFromUrl) {
+              await supabase.auth.getSessionFromUrl({ storeSession: true });
+            }
+
+            const { data } = await supabase.auth.getSession();
+            const access_token = data?.session?.access_token;
+            if (!access_token) throw new Error('No session token after verify');
+
+            const r = await fetch('/auth/finish', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'same-origin',
+              body: JSON.stringify({ access_token })
+            });
+
+            const j = await r.json().catch(() => null);
+            if (!r.ok || !j?.ok) throw new Error('Server finish failed');
+
+            statusEl.textContent = 'Done! Redirecting…';
+            location.href = '/';
+          } catch (e) {
+            console.error(e);
+            statusEl.textContent = 'Verified, but could not auto-log in.';
+            hintEl.style.display = 'block';
+            btnEl.style.display = 'inline-flex';
+          }
+        })();
+      </script>
       `
     )
   );
 });
+
 
 
 app.get('/surveys', (req, res) => {
@@ -2811,6 +2859,43 @@ app.get('/support', (req, res) => {
     ),
   );
 });
+
+
+
+// ---------- Auth: finish login after email verification ----------
+app.post('/auth/finish', async (req, res) => {
+  try {
+    const accessToken = String(req.body.access_token || '').trim();
+    if (!accessToken) return res.status(400).json({ ok: false });
+
+    // Verificér token hos Supabase (så folk ikke kan fake)
+    const { data, error } = await supabaseAdmin.auth.getUser(accessToken);
+    if (error || !data?.user?.id) {
+      return res.status(401).json({ ok: false });
+    }
+
+    const userId = data.user.id;
+
+    // Lav din egen cookie-session (samme flow som login)
+    const { token, expiresAt } = await createSession(userId);
+
+    res.cookie('session', token, {
+      httpOnly: true,
+      secure: IS_PROD,
+      sameSite: 'Lax',
+      expires: expiresAt,
+      path: '/',
+    });
+
+    return res.json({ ok: true });
+  } catch (e) {
+    console.error('auth finish error:', e);
+    return res.status(500).json({ ok: false });
+  }
+});
+
+
+
 
 // --- Auth handlers (modal) — Signup with email verification ---
 app.post('/signup', authLimiter, async (req, res) => {
