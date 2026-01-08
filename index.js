@@ -8,6 +8,12 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+const supabasePublic = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
+
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -630,7 +636,7 @@ function layout({ title, active, bodyHtml, loggedIn }) {
     updateAgeState();
   }
 
-  // --- vis auth fejl fra querystring ---
+// --- vis auth fejl fra querystring ---
 var params = new URLSearchParams(window.location.search);
 var err = params.get('authError');
 var modeFromUrl = params.get('mode') || 'login';
@@ -648,6 +654,12 @@ if (err) {
       errorBox.textContent = "This e-mail is already in use.";
     } else if (err === 'username_taken') {
       errorBox.textContent = "Name already in use.";
+    } else if (err === 'checkemail') {
+      errorBox.textContent = "Check your inbox to confirm your e-mail, then log in.";
+    } else if (err === 'notconfirmed') {
+      errorBox.textContent = "Please confirm your e-mail before logging in.";
+    } else if (err === 'invalid') {
+      errorBox.textContent = "Please enter a valid e-mail, password and username.";
     } else {
       errorBox.textContent = "Something went wrong. Please try again.";
     }
@@ -2204,6 +2216,25 @@ app.get('/terms', (req, res) => {
   `);
 });
 
+// ---------- Email verified landing ----------
+app.get('/verified', (req, res) => {
+  res.send(
+    page(
+      req,
+      'Email verified — SurveyCash',
+      '/',
+      `
+      <div style="max-width:720px;margin:40px auto;text-align:center;">
+        <h1>Email verified ✅</h1>
+        <p>Your email has been confirmed. You can now log in.</p>
+        <button type="button" class="btn btn-signup" onclick="openAuth('login')">
+          Log in
+        </button>
+      </div>
+      `
+    )
+  );
+});
 
 
 app.get('/surveys', (req, res) => {
@@ -2781,7 +2812,7 @@ app.get('/support', (req, res) => {
   );
 });
 
-// --- Auth handlers (modal) — Supabase signup ---
+// --- Auth handlers (modal) — Signup with email verification ---
 app.post('/signup', authLimiter, async (req, res) => {
   let createdUserId = null;
 
@@ -2791,11 +2822,11 @@ app.post('/signup', authLimiter, async (req, res) => {
     const usernameRaw = String(req.body.username || '').trim();
     const username = usernameRaw.toLowerCase();
 
-    if (!email || !email.includes('@') || password.length < 6 || !username) {
+    if (!isValidEmail(email) || password.length < 6 || !username) {
       return res.redirect('/?authError=invalid&mode=signup');
     }
 
-    // 1️⃣ Pre-check username (case-insensitive fordi vi gemmer lowercase)
+    // 1️⃣ Pre-check username (vi gemmer lowercase)
     const { data: existing } = await supabaseAdmin
       .from('profiles')
       .select('user_id')
@@ -2806,76 +2837,61 @@ app.post('/signup', authLimiter, async (req, res) => {
       return res.redirect('/?authError=username_taken&mode=signup');
     }
 
-    // 2️⃣ Opret Auth-user
-    const { data: created, error: createErr } =
-      await supabaseAdmin.auth.admin.createUser({
-        email,
-        password,
-        email_confirm: true,
-      });
+    // 2️⃣ Sign up via PUBLIC client → Supabase sender verify-mail
+    const { data: signData, error: signErr } = await supabasePublic.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: 'https://surveycash.website/verified',
+      },
+    });
 
-    if (createErr || !created?.user) {
-      const msg = String(createErr?.message || '').toLowerCase();
-      if (msg.includes('already')) {
+    if (signErr) {
+      const msg = String(signErr.message || '').toLowerCase();
+      if (msg.includes('already') || msg.includes('registered')) {
         return res.redirect('/?authError=exists&mode=signup');
       }
-      console.error('Signup createUser error:', createErr);
+      console.error('Signup signUp error:', signErr);
       return res.redirect('/?authError=unknown&mode=signup');
     }
 
-    createdUserId = created.user.id;
+    if (!signData?.user?.id) {
+      return res.redirect('/?authError=unknown&mode=signup');
+    }
 
-    // 3️⃣ Trigger har allerede lavet profiles-row → UPDATE den
+    createdUserId = signData.user.id;
+
+    // 3️⃣ Update profile username (trigger laver typisk row når auth user oprettes)
     const { error: upErr } = await supabaseAdmin
       .from('profiles')
       .update({ username })
       .eq('user_id', createdUserId);
 
     if (upErr) {
-      // hvis username alligevel blev taget (race condition / DB index)
       if (upErr.code === '23505') {
-        // ryd op: slet auth-user så email ikke bliver "låst"
         await supabaseAdmin.auth.admin.deleteUser(createdUserId);
         return res.redirect('/?authError=username_taken&mode=signup');
       }
-
       console.error('Signup profile update error:', upErr);
-
-      // ryd op ved alle andre update-fejl
       await supabaseAdmin.auth.admin.deleteUser(createdUserId);
       return res.redirect('/?authError=unknown&mode=signup');
     }
 
-    // 4️⃣ Log ind
-const { token, expiresAt } = await createSession(createdUserId);
-
-res.cookie('session', token, {
-  httpOnly: true,
-  secure: IS_PROD,
-  sameSite: 'Lax',
-  expires: expiresAt,
-  path: '/',
-});
-
-
-
-    return res.redirect('/');
-
+    // 4️⃣ IKKE log ind – bed brugeren tjekke mail
+    return res.redirect('/?authError=checkemail&mode=login');
   } catch (err) {
-    console.error('Signup fejl:', err);
+    console.error('Signup fatal:', err);
 
-    // hvis der blev oprettet auth-user, men vi crasher bagefter → ryd op
     try {
       if (createdUserId) {
         await supabaseAdmin.auth.admin.deleteUser(createdUserId);
       }
-    } catch (e) {
-      console.error('Cleanup deleteUser failed:', e);
-    }
+    } catch {}
 
     return res.redirect('/?authError=unknown&mode=signup');
   }
 });
+
 
 // --- Auth handlers (modal) — Supabase login ---
 app.post('/login', loginLimiter, async (req, res) => {
@@ -2904,21 +2920,26 @@ app.post('/login', loginLimiter, async (req, res) => {
       return res.redirect('/?authError=nouser&mode=login');
     }
 
-    // 2️⃣ Account findes → tjek password via Supabase Auth
-    const supabasePublic = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
-
     const { error: signErr } = await supabasePublic.auth.signInWithPassword({
-      email,
-      password,
-    });
+  email,
+  password,
+});
 
-    if (signErr) {
-      // ❌ Forkert password
-      return res.redirect('/?authError=badpass&mode=login');
-    }
+if (signErr) {
+  const msg = String(signErr.message || '').toLowerCase();
+
+  if (
+    msg.includes('not confirmed') ||
+    msg.includes('email not confirmed') ||
+    msg.includes('confirm') ||
+    msg.includes('verified')
+  ) {
+    return res.redirect('/?authError=notconfirmed&mode=login');
+  }
+
+  return res.redirect('/?authError=badpass&mode=login');
+}
+
 
     // ✅ Login OK (samme cookie-flow som før)
 const { token, expiresAt } = await createSession(profile.user_id);
