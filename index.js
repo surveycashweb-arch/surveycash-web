@@ -675,10 +675,18 @@ if (err) {
   );
 }
 
-  // default-mode: login (username skjult)
+   // default-mode: login (username skjult)
   if (usernameField && modeInput.value === 'login') {
     usernameField.style.display = 'none';
   }
+
+  // --- Sync login/logout mellem faner ---
+  window.addEventListener('storage', function (e) {
+    if (e.key === 'surveycash:login' || e.key === 'surveycash:logout') {
+      window.location.reload();
+    }
+  });
+
 })();
 
 // --- profil-menu til avatar i header ---
@@ -2268,8 +2276,9 @@ app.get('/verified', (req, res) => {
             const j = await r.json().catch(() => null);
             if (!r.ok || !j?.ok) throw new Error('Server finish failed');
 
-            statusEl.textContent = 'Done! Redirecting…';
-            location.href = '/';
+           statusEl.textContent = 'Done! Redirecting…';
+localStorage.setItem('surveycash:login', String(Date.now())); // 👈 HER
+location.href = '/';
           } catch (e) {
             console.error(e);
             statusEl.textContent = 'Verified, but could not auto-log in.';
