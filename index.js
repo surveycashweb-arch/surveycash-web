@@ -3426,10 +3426,16 @@ app.get('/logout', async (req, res) => {
     httpOnly: true,
     secure: IS_PROD,
     sameSite: 'Lax',
-path: '/',
+    path: '/',
   });
 
-  return res.redirect('/');
+  // 🔔 fortæl ALLE faner at logout skete
+  return res.send(`
+    <script>
+      localStorage.setItem('surveycash:logout', Date.now());
+      location.href = '/';
+    </script>
+  `);
 });
 
 
