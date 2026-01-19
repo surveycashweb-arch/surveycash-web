@@ -550,10 +550,32 @@ function layout({ title, active, bodyHtml, loggedIn }) {
 
   if (!backdrop) return;
 
+  var infoPop = document.getElementById('auth-info-pop');
+
+  function clearInfo() {
+    if (!infoPop) return;
+    infoPop.style.display = 'none';
+    infoPop.innerHTML = '';
+  }
+
+  function showInfoPopup(title, text) {
+    if (!infoPop) return;
+    infoPop.innerHTML =
+      '<div class="auth-info-title">' + title + '</div>' +
+      '<div class="auth-info-text">' + text + '</div>' +
+      '<div class="auth-info-actions">' +
+        '<button type="button" class="auth-info-btn" onclick="window.location.reload()">Refresh</button>' +
+        '<button type="button" class="auth-info-btn primary" onclick="closeAuth()">OK</button>' +
+      '</div>';
+    infoPop.style.display = 'block';
+  }
+
   function clearError() {
-    if (!errorBox) return;
-    errorBox.style.display = 'none';
-    errorBox.textContent = '';
+    if (errorBox) {
+      errorBox.style.display = 'none';
+      errorBox.textContent = '';
+    }
+    clearInfo();
   }
 
   function resetAgeGate() {
@@ -645,7 +667,17 @@ if (err) {
   setMode(modeFromUrl);
   openAuth(modeFromUrl);
 
-  if (errorBox) {
+  // reset visning
+  clearError();
+
+  if (err === 'checkemail') {
+    // ✅ Stor popup i stedet for rød boks
+    showInfoPopup(
+      'Email verification',
+      "We’ve sent you a verification email. Open your inbox and click the link to confirm your account. After that, come back and log in."
+    );
+  } else if (errorBox) {
+    // 🔴 Almindelige fejl bliver stadig vist som rød boks
     if (err === 'nouser') {
       errorBox.textContent = "This account doesn't exist.";
     } else if (err === 'badpass') {
@@ -654,8 +686,6 @@ if (err) {
       errorBox.textContent = "This e-mail is already in use.";
     } else if (err === 'username_taken') {
       errorBox.textContent = "Name already in use.";
-    } else if (err === 'checkemail') {
-      errorBox.textContent = "Check your inbox to confirm your e-mail, then log in.";
     } else if (err === 'notconfirmed') {
       errorBox.textContent = "Please confirm your e-mail before logging in.";
     } else if (err === 'invalid') {
@@ -1157,6 +1187,62 @@ document.addEventListener('click', function (e) {
     text-align:center;
   }
 
+  /* ✅ BIG info popup (email verification) */
+  .auth-info-pop{
+    display:none;
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid rgba(251,191,36,.35);
+    color: #e5e7eb;
+    padding: 16px 16px;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    text-align: left;
+    box-shadow: 0 18px 55px rgba(0,0,0,.55);
+  }
+  .auth-info-title{
+    font-weight: 900;
+    font-size: 14px;
+    color: #fbbf24;
+    margin-bottom: 6px;
+    letter-spacing: .2px;
+  }
+  .auth-info-text{
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.5;
+  }
+  .auth-info-actions{
+    display:flex;
+    gap:10px;
+    margin-top:12px;
+  }
+  .auth-info-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 12px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.06);
+    color:#e5e7eb;
+    font-weight:800;
+    font-size:12px;
+    cursor:pointer;
+    text-decoration:none;
+  }
+  .auth-info-btn:hover{
+    background: rgba(255,255,255,.10);
+  }
+  .auth-info-btn.primary{
+    background:#fbbf24;
+    border-color:#d97706;
+    color:#111827;
+  }
+  .auth-info-btn.primary:hover{
+    background:#f59e0b;
+  }
+
+
   .field input{
     width:100%;
     padding:12px 14px;
@@ -1349,6 +1435,10 @@ document.addEventListener('click', function (e) {
       <div id="auth-title" class="auth-title">Log in</div>
 
       <div id="auth-error" class="auth-error"></div>
+
+
+<!-- ✅ BIG popup (email verification) -->
+<div id="auth-info-pop" class="auth-info-pop" style="display:none;"></div>
 
       <form id="auth-form" action="/login" method="POST">
         <input type="hidden" id="auth-mode" name="_mode" value="login"/>
@@ -3028,7 +3118,7 @@ if (signErr) {
     msg.includes('confirm') ||
     msg.includes('verified')
   ) {
-    return res.redirect('/?authError=notconfirmed&mode=login');
+    return res.redirect('/?authError=checkemail');
   }
 
   return res.redirect('/?authError=badpass&mode=login');
