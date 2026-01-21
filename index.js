@@ -550,33 +550,43 @@ function layout({ title, active, bodyHtml, loggedIn }) {
 
   if (!backdrop) return;
 
-  var infoPop = document.getElementById('auth-info-pop');
+var infoPop = document.getElementById('auth-info-pop');
+var infoTextEl = document.getElementById('auth-info-text');
+var infoOk = document.getElementById('auth-info-ok');
+var infoRefresh = document.getElementById('auth-info-refresh');
 
-  function clearInfo() {
-    if (!infoPop) return;
-    infoPop.style.display = 'none';
-    infoPop.innerHTML = '';
-  }
+function closeInfo() {
+  if (!infoPop) return;
+  infoPop.classList.remove('open');
+  infoPop.setAttribute('aria-hidden', 'true');
+}
 
-  function showInfoPopup(title, text) {
-    if (!infoPop) return;
-    infoPop.innerHTML =
-      '<div class="auth-info-title">' + title + '</div>' +
-      '<div class="auth-info-text">' + text + '</div>' +
-      '<div class="auth-info-actions">' +
-        '<button type="button" class="auth-info-btn" onclick="window.location.reload()">Refresh</button>' +
-        '<button type="button" class="auth-info-btn primary" onclick="closeAuth()">OK</button>' +
-      '</div>';
-    infoPop.style.display = 'block';
-  }
+function openInfo(text) {
+  if (!infoPop) return;
+  if (infoTextEl && text) infoTextEl.textContent = text;
+  infoPop.classList.add('open');
+  infoPop.setAttribute('aria-hidden', 'false');
+}
 
-  function clearError() {
-    if (errorBox) {
-      errorBox.style.display = 'none';
-      errorBox.textContent = '';
-    }
-    clearInfo();
+infoOk?.addEventListener('click', function () {
+  closeInfo();
+  // vi bliver i login modal – ikke luk hele modal hvis du ikke vil
+  // closeAuth(); // hvis du hellere vil lukke hele modal, så fjern kommentaren
+});
+
+infoRefresh?.addEventListener('click', function () {
+  window.location.reload();
+});
+
+
+function clearError() {
+  if (errorBox) {
+    errorBox.style.display = 'none';
+    errorBox.textContent = '';
   }
+  closeInfo();
+}
+
 
   function resetAgeGate() {
     if (!ageCheck || !submitLabel) return;
@@ -670,12 +680,10 @@ if (err) {
   // reset visning
   clearError();
 
-  if (err === 'checkemail') {
-    // ✅ Stor popup i stedet for rød boks
-    showInfoPopup(
-      'Email verification',
-      "We’ve sent you a verification email. Open your inbox and click the link to confirm your account. After that, come back and log in."
-    );
+if (err === 'checkemail') {
+  openInfo("We’ve sent you a verification email. Open your inbox and click the link to confirm your account. After that, come back and log in.");
+}
+
   } else if (errorBox) {
     // 🔴 Almindelige fejl bliver stadig vist som rød boks
     if (err === 'nouser') {
@@ -1187,60 +1195,90 @@ document.addEventListener('click', function (e) {
     text-align:center;
   }
 
-  /* ✅ BIG info popup (email verification) */
-  .auth-info-pop{
-    display:none;
-    background: rgba(15, 23, 42, 0.88);
-    border: 1px solid rgba(251,191,36,.35);
-    color: #e5e7eb;
-    padding: 16px 16px;
-    border-radius: 16px;
-    margin-bottom: 12px;
-    text-align: left;
-    box-shadow: 0 18px 55px rgba(0,0,0,.55);
-  }
-  .auth-info-title{
-    font-weight: 900;
-    font-size: 14px;
-    color: #fbbf24;
-    margin-bottom: 6px;
-    letter-spacing: .2px;
-  }
-  .auth-info-text{
-    font-size: 13px;
-    color: #cbd5e1;
-    line-height: 1.5;
-  }
-  .auth-info-actions{
-    display:flex;
-    gap:10px;
-    margin-top:12px;
-  }
-  .auth-info-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding:8px 12px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.06);
-    color:#e5e7eb;
-    font-weight:800;
-    font-size:12px;
-    cursor:pointer;
-    text-decoration:none;
-  }
-  .auth-info-btn:hover{
-    background: rgba(255,255,255,.10);
-  }
-  .auth-info-btn.primary{
-    background:#fbbf24;
-    border-color:#d97706;
-    color:#111827;
-  }
-  .auth-info-btn.primary:hover{
-    background:#f59e0b;
-  }
+ /* ✅ FULL overlay popup (email verification) – dækker hele auth-modal */
+.auth-info-pop{
+  position:absolute;
+  inset:0;
+  display:none;
+  z-index:6;              /* over alt i modal */
+  border-radius:24px;     /* samme som .auth-modal */
+  padding:0;
+
+  background:
+    radial-gradient(circle at 10% 10%, rgba(251,191,36,.14), transparent 55%),
+    rgba(12,16,28,.92);
+
+  border:1px solid rgba(251,191,36,.22);
+  box-shadow:0 32px 90px rgba(0,0,0,.75);
+}
+
+.auth-info-pop.open{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.auth-info-pop .auth-info-inner{
+  width:100%;
+  padding:26px 24px;
+  text-align:left;
+}
+
+.auth-info-title{
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color:#fbbf24;
+  margin-bottom:10px;
+}
+
+.auth-info-headline{
+  font-weight: 900;
+  font-size: 22px;
+  color:#ffffff;
+  margin-bottom:10px;
+}
+
+.auth-info-text{
+  font-size: 14px;
+  color: #cbd5e1;
+  line-height: 1.55;
+  margin-bottom:16px;
+  max-width:360px;
+}
+
+.auth-info-actions{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+}
+
+.auth-info-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color:#e5e7eb;
+  font-weight:800;
+  font-size:12px;
+  cursor:pointer;
+  text-decoration:none;
+}
+.auth-info-btn:hover{
+  background: rgba(255,255,255,.10);
+}
+.auth-info-btn.primary{
+  background:#fbbf24;
+  border-color:#d97706;
+  color:#111827;
+}
+.auth-info-btn.primary:hover{
+  background:#f59e0b;
+}
 
 
   .field input{
@@ -1438,7 +1476,21 @@ document.addEventListener('click', function (e) {
 
 
 <!-- ✅ BIG popup (email verification) -->
-<div id="auth-info-pop" class="auth-info-pop" style="display:none;"></div>
+<div id="auth-info-pop" class="auth-info-pop" aria-hidden="true">
+  <div class="auth-info-inner">
+    <div class="auth-info-title">Email verification</div>
+    <div class="auth-info-headline">Check your inbox ✅</div>
+    <div class="auth-info-text" id="auth-info-text">
+      We’ve sent you a verification email. Open your inbox and click the link to confirm your account.
+      After that, come back and log in.
+    </div>
+
+    <div class="auth-info-actions">
+      <button type="button" class="auth-info-btn" id="auth-info-refresh">Refresh</button>
+      <button type="button" class="auth-info-btn primary" id="auth-info-ok">OK</button>
+    </div>
+  </div>
+</div>
 
       <form id="auth-form" action="/login" method="POST">
         <input type="hidden" id="auth-mode" name="_mode" value="login"/>
@@ -3118,7 +3170,7 @@ if (signErr) {
     msg.includes('confirm') ||
     msg.includes('verified')
   ) {
-    return res.redirect('/?authError=checkemail');
+    return res.redirect('/?authError=checkemail&mode=login');
   }
 
   return res.redirect('/?authError=badpass&mode=login');
