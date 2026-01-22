@@ -663,12 +663,31 @@ var params = new URLSearchParams(window.location.search);
 var err = params.get('authError');
 var modeFromUrl = params.get('mode') || 'login';
 
+/* ✅ INDSÆT DETTE LIGE HER */
+var verifyBackdrop = document.getElementById('verifyBackdrop');
+var verifyOkBtn = document.getElementById('verifyOkBtn');
+
+if (err === 'checkemail' && verifyBackdrop) {
+  verifyBackdrop.classList.add('open');
+}
+
+if (verifyOkBtn) {
+  verifyOkBtn.onclick = function () {
+    verifyBackdrop.classList.remove('open');
+  };
+}
+/* ✅ SLUT */
+
 if (err) {
   setMode(modeFromUrl);
   openAuth(modeFromUrl);
 
   // reset visning
   clearError();
+
+  // resten af din eksisterende error-håndtering
+}
+
 
   if (err === 'checkemail') {
     // ✅ Stor popup i stedet for rød boks
@@ -741,19 +760,21 @@ document.addEventListener('click', function (e) {
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>${title}</title>
+
 <style>
   :root { color-scheme: dark; }
+
   * {
     box-sizing: border-box;
     -webkit-user-select: none;
     -ms-user-select: none;
-    user-select: none;       /* ALT tekst kan ikke markeres som standard */
+    user-select: none;
   }
 
   body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #111827; /* mørk grå */
+    background: #111827;
     color: #e5e7eb;
   }
 
@@ -761,7 +782,7 @@ document.addEventListener('click', function (e) {
   header {
     position: sticky;
     top: 0;
-    background: #151c2e; /* lidt lysere end baggrund */
+    background: #151c2e;
     border-bottom: 1px solid #1f2937;
     padding: 12px 20px;
     z-index: 20;
@@ -825,9 +846,57 @@ document.addEventListener('click', function (e) {
     color:#111827;
   }
 
-  .btn-logout {
-    text-decoration:none;
+  /* ===== Email verification overlay ===== */
+  .verify-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(8,12,22,.85);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
   }
+  .verify-backdrop.open{ display:flex; }
+
+  .verify-modal{
+    width:100%;
+    max-width:520px;
+    background:#ffffff;
+    color:#111827;
+    border-radius:20px;
+    padding:36px 32px;
+    text-align:center;
+    box-shadow:0 40px 120px rgba(0,0,0,.6);
+  }
+  .verify-modal h2{
+    font-size:26px;
+    font-weight:800;
+    margin-bottom:12px;
+  }
+  .verify-text{
+    font-size:15px;
+    color:#374151;
+    margin-bottom:22px;
+    line-height:1.6;
+  }
+  .verify-btn{
+    background:#1f2937;
+    color:white;
+    border:none;
+    padding:14px 26px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .verify-btn:hover{ background:#111827; }
+  .verify-small{
+    font-size:12px;
+    color:#6b7280;
+    margin-top:14px;
+  }
+</style>
+
 
   /* ===== Header: saldo + klokke + profil ===== */
   .profile-wrap {
@@ -1428,17 +1497,13 @@ document.addEventListener('click', function (e) {
 
   <main>${bodyHtml}</main>
 
-  <!-- Auth modal -->
+<!-- Auth modal -->
   <div id="auth-backdrop" class="auth-backdrop">
     <div class="auth-modal">
       <button id="auth-close" class="auth-close" type="button">×</button>
       <div id="auth-title" class="auth-title">Log in</div>
 
       <div id="auth-error" class="auth-error"></div>
-
-
-<!-- ✅ BIG popup (email verification) -->
-<div id="auth-info-pop" class="auth-info-pop" style="display:none;"></div>
 
       <form id="auth-form" action="/login" method="POST">
         <input type="hidden" id="auth-mode" name="_mode" value="login"/>
@@ -1467,16 +1532,38 @@ document.addEventListener('click', function (e) {
 
       <div class="top-links">
         <a href="#">Forgot your password?</a>
-        <span><span id="auth-switch-text">Don't have an account?</span><a href="#" id="auth-switch-link"> Sign up</a></span>
+        <span>
+          <span id="auth-switch-text">Don't have an account?</span>
+          <a href="#" id="auth-switch-link"> Sign up</a>
+        </span>
       </div>
 
-<div class="fineprint">
-  By using SurveyCash you agree to our
-  <a href="/terms" target="_blank">Terms</a>
-  and
-  <a href="/privacy" target="_blank">Privacy Policy</a>.
-</div>
+      <div class="fineprint">
+        By using SurveyCash you agree to our
+        <a href="/terms" target="_blank">Terms</a>
+        and
+        <a href="/privacy" target="_blank">Privacy Policy</a>.
+      </div>
+    </div>
+  </div>
 
+  <!-- BIG Email Verification Overlay (udenfor auth modal) -->
+  <div class="verify-backdrop" id="verifyBackdrop">
+    <div class="verify-modal">
+      <h2>Verify your email</h2>
+
+      <p class="verify-text">
+        We’ve sent a verification email to your inbox.<br>
+        Please click the link in the email to confirm your account.
+      </p>
+
+      <button class="verify-btn" id="verifyOkBtn" type="button">OK</button>
+
+      <p class="verify-small">
+        Didn’t receive the email? Check spam or try again.
+      </p>
+    </div>
+  </div>
 
   ${clientScript}
 </body>
