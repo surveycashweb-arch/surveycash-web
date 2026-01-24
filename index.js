@@ -622,6 +622,20 @@ function layout({ title, active, bodyHtml, loggedIn }) {
   window.openAuth = openAuth;
   window.closeAuth = closeAuth;
 
+  // ✅ VERIFY OVERLAY FUNCTIONS (indsæt her)
+  function openVerify() {
+    var vb = document.getElementById('verify-backdrop');
+    if (vb) vb.classList.add('open');
+  }
+
+  function closeVerify() {
+    var vb = document.getElementById('verify-backdrop');
+    if (vb) vb.classList.remove('open');
+  }
+
+window.openVerify = openVerify;
+  window.closeVerify = closeVerify;
+
   // VI LUKKER IKKE LÆNGERE MODAL VED KLIK UDENFOR
   // backdrop.addEventListener('click', function (e) {
   //   if (e.target === backdrop) closeAuth();
@@ -664,20 +678,27 @@ var err = params.get('authError');
 var modeFromUrl = params.get('mode') || 'login';
 
 if (err) {
-  setMode(modeFromUrl);
-  openAuth(modeFromUrl);
-
   // reset visning
   clearError();
 
+  // ✅ CHECKEMAIL: kun verify overlay (ingen auth modal bagved)
   if (err === 'checkemail') {
-    // ✅ Stor popup i stedet for rød boks
-    showInfoPopup(
-      'Email verification',
-      "We’ve sent you a verification email. Open your inbox and click the link to confirm your account. After that, come back and log in."
+    openVerify();
+
+    // fjern fejl-parametre fra URL så den ikke kommer igen ved refresh
+    window.history.replaceState(
+      null,
+      '',
+      window.location.pathname + window.location.hash
     );
-  } else if (errorBox) {
-    // 🔴 Almindelige fejl bliver stadig vist som rød boks
+    return;
+  }
+
+  // ✅ Alle andre errors: åbn auth modal og vis rød boks
+  setMode(modeFromUrl);
+  openAuth(modeFromUrl);
+
+  if (errorBox) {
     if (err === 'nouser') {
       errorBox.textContent = "This account doesn't exist.";
     } else if (err === 'badpass') {
@@ -1187,61 +1208,80 @@ document.addEventListener('click', function (e) {
     text-align:center;
   }
 
-  /* ✅ BIG info popup (email verification) */
-  .auth-info-pop{
-    display:none;
-    background: rgba(15, 23, 42, 0.88);
-    border: 1px solid rgba(251,191,36,.35);
-    color: #e5e7eb;
-    padding: 16px 16px;
-    border-radius: 16px;
-    margin-bottom: 12px;
-    text-align: left;
-    box-shadow: 0 18px 55px rgba(0,0,0,.55);
-  }
-  .auth-info-title{
-    font-weight: 900;
-    font-size: 14px;
-    color: #fbbf24;
-    margin-bottom: 6px;
-    letter-spacing: .2px;
-  }
-  .auth-info-text{
-    font-size: 13px;
-    color: #cbd5e1;
-    line-height: 1.5;
-  }
-  .auth-info-actions{
-    display:flex;
-    gap:10px;
-    margin-top:12px;
-  }
-  .auth-info-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding:8px 12px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.06);
-    color:#e5e7eb;
-    font-weight:800;
-    font-size:12px;
-    cursor:pointer;
-    text-decoration:none;
-  }
-  .auth-info-btn:hover{
-    background: rgba(255,255,255,.10);
-  }
-  .auth-info-btn.primary{
-    background:#fbbf24;
-    border-color:#d97706;
-    color:#111827;
-  }
-  .auth-info-btn.primary:hover{
-    background:#f59e0b;
-  }
+  /* ===== Verify your email overlay (GUI only) ===== */
+.verify-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(8,12,22,.70);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.verify-backdrop.open{ display:flex; }
 
+.verify-modal{
+  width:100%;
+  max-width:520px;
+  background:#ffffff;
+  color:#111827;
+  border-radius:18px;
+  padding:28px 24px;
+  text-align:center;
+  box-shadow:0 40px 120px rgba(0,0,0,.60);
+  position:relative;
+}
+
+.verify-modal h2{
+  margin:0 0 10px;
+  font-size:22px;
+  font-weight:900;
+}
+
+.verify-modal p{
+  margin:0 0 16px;
+  font-size:13px;
+  line-height:1.5;
+  color:#475569;
+}
+
+.verify-actions{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+}
+
+.verify-btn{
+  border-radius:999px;
+  padding:10px 14px;
+  font-weight:800;
+  font-size:13px;
+  cursor:pointer;
+  border:1px solid rgba(15,23,42,.16);
+  background:rgba(15,23,42,.06);
+  color:#0f172a;
+}
+
+.verify-btn.primary{
+  background:#0f172a;
+  border-color:#0f172a;
+  color:#ffffff;
+}
+
+.verify-close{
+  position:absolute;
+  right:12px;
+  top:12px;
+  width:30px;
+  height:30px;
+  border-radius:999px;
+  border:1px solid #e2e8f0;
+  background:#ffffff;
+  color:#0f172a;
+  font-size:18px;
+  line-height:1;
+  cursor:pointer;
+}
 
   .field input{
     width:100%;
@@ -1428,6 +1468,27 @@ document.addEventListener('click', function (e) {
 
   <main>${bodyHtml}</main>
 
+
+  <!-- Verify Email Overlay -->
+  <div id="verify-backdrop" class="verify-backdrop">
+    <div class="verify-modal">
+      <button class="verify-close" type="button" onclick="closeVerify()">×</button>
+
+      <h2>Verify your email</h2>
+      <p>
+        We’ve sent you a verification email.<br/>
+        Please open your inbox and click the link to confirm your account.
+      </p>
+
+      <div class="verify-actions">
+        <button type="button" class="verify-btn" onclick="location.reload()">Refresh</button>
+        <button type="button" class="verify-btn primary" onclick="closeVerify()">OK</button>
+      </div>
+    </div>
+  </div>
+
+
+
   <!-- Auth modal -->
   <div id="auth-backdrop" class="auth-backdrop">
     <div class="auth-modal">
@@ -1437,8 +1498,8 @@ document.addEventListener('click', function (e) {
       <div id="auth-error" class="auth-error"></div>
 
 
+
 <!-- ✅ BIG popup (email verification) -->
-<div id="auth-info-pop" class="auth-info-pop" style="display:none;"></div>
 
       <form id="auth-form" action="/login" method="POST">
         <input type="hidden" id="auth-mode" name="_mode" value="login"/>
@@ -3118,8 +3179,8 @@ if (signErr) {
     msg.includes('confirm') ||
     msg.includes('verified')
   ) {
-    return res.redirect('/?authError=checkemail');
-  }
+return res.redirect('/?authError=checkemail&mode=login');
+      }
 
   return res.redirect('/?authError=badpass&mode=login');
 }
