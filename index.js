@@ -1208,11 +1208,11 @@ document.addEventListener('click', function (e) {
     text-align:center;
   }
 
-  /* ===== Verify your email overlay (GUI only) ===== */
+/* ===== Verify your email overlay (GUI only) ===== */
 .verify-backdrop{
   position:fixed;
   inset:0;
-  background:rgba(8,12,22,.70);
+  background:rgba(8,12,22,.78);
   display:none;
   align-items:center;
   justify-content:center;
@@ -1222,44 +1222,50 @@ document.addEventListener('click', function (e) {
 
 .verify-modal{
   width:100%;
-  max-width:520px;
+  max-width:680px;              /* ✅ større bredde */
   background:#ffffff;
   color:#111827;
-  border-radius:18px;
-  padding:28px 24px;
+  border-radius:22px;           /* ✅ passer til resten */
+  padding:36px 34px;            /* ✅ mere luft */
   text-align:center;
-  box-shadow:0 40px 120px rgba(0,0,0,.60);
+  box-shadow:0 50px 140px rgba(0,0,0,.65);
   position:relative;
 }
 
 .verify-modal h2{
-  margin:0 0 10px;
-  font-size:22px;
+  margin:0 0 12px;
+  font-size:28px;               /* ✅ større titel */
   font-weight:900;
 }
 
 .verify-modal p{
-  margin:0 0 16px;
-  font-size:13px;
-  line-height:1.5;
+  margin:0 0 22px;
+  font-size:15px;               /* ✅ større tekst */
+  line-height:1.55;
   color:#475569;
 }
 
 .verify-actions{
   display:flex;
-  gap:10px;
+  gap:12px;
   justify-content:center;
 }
 
 .verify-btn{
   border-radius:999px;
-  padding:10px 14px;
+  padding:12px 18px;            /* ✅ større buttons */
   font-weight:800;
-  font-size:13px;
+  font-size:14px;
   cursor:pointer;
-  border:1px solid rgba(15,23,42,.16);
+  border:1px solid rgba(15,23,42,.18);
   background:rgba(15,23,42,.06);
   color:#0f172a;
+  transition: transform .12s ease, background .12s ease;
+}
+
+.verify-btn:hover{
+  transform: translateY(-1px);
+  background:rgba(15,23,42,.10);
 }
 
 .verify-btn.primary{
@@ -1268,20 +1274,25 @@ document.addEventListener('click', function (e) {
   color:#ffffff;
 }
 
+.verify-btn.primary:hover{
+  background:#111827;
+}
+
 .verify-close{
   position:absolute;
-  right:12px;
-  top:12px;
-  width:30px;
-  height:30px;
+  right:14px;
+  top:14px;
+  width:36px;                   /* ✅ større close */
+  height:36px;
   border-radius:999px;
   border:1px solid #e2e8f0;
   background:#ffffff;
   color:#0f172a;
-  font-size:18px;
+  font-size:20px;
   line-height:1;
   cursor:pointer;
 }
+
 
   .field input{
     width:100%;
