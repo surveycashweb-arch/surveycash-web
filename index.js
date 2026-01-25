@@ -1208,11 +1208,13 @@ document.addEventListener('click', function (e) {
     text-align:center;
   }
 
-/* ===== Verify your email overlay (GUI only) ===== */
+/* ===== Verify your email overlay (DARK, taller, not wide) ===== */
 .verify-backdrop{
   position:fixed;
   inset:0;
-  background:rgba(8,12,22,.78);
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display:none;
   align-items:center;
   justify-content:center;
@@ -1222,29 +1224,36 @@ document.addEventListener('click', function (e) {
 
 .verify-modal{
   width:100%;
-  max-width:680px;              /* ✅ større bredde */
-  background:#ffffff;
-  color:#111827;
-  border-radius:22px;           /* ✅ passer til resten */
-  padding:36px 34px;            /* ✅ mere luft */
+  max-width:520px;              /* ✅ normal bredde */
+  min-height:260px;             /* ✅ gør den højere */
+  background: #1a1f2b;          /* ✅ dark design */
+  color: #e5e7eb;
+  border-radius: 22px;
+  padding: 40px 32px;           /* ✅ mere vertical space */
   text-align:center;
-  box-shadow:0 50px 140px rgba(0,0,0,.65);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 40px 120px rgba(0,0,0,.70);
   position:relative;
 }
 
+/* titel */
 .verify-modal h2{
-  margin:0 0 12px;
-  font-size:28px;               /* ✅ større titel */
+  margin:0 0 14px;
+  font-size:28px;
   font-weight:900;
+  color:#ffffff;
 }
 
+/* tekst */
 .verify-modal p{
-  margin:0 0 22px;
-  font-size:15px;               /* ✅ større tekst */
-  line-height:1.55;
-  color:#475569;
+  margin:0 auto 26px;
+  font-size:14px;
+  line-height:1.6;
+  color:#cbd5e1;
+  max-width:420px;
 }
 
+/* knapper */
 .verify-actions{
   display:flex;
   gap:12px;
@@ -1253,44 +1262,51 @@ document.addEventListener('click', function (e) {
 
 .verify-btn{
   border-radius:999px;
-  padding:12px 18px;            /* ✅ større buttons */
+  padding:11px 18px;
   font-weight:800;
   font-size:14px;
   cursor:pointer;
-  border:1px solid rgba(15,23,42,.18);
-  background:rgba(15,23,42,.06);
-  color:#0f172a;
-  transition: transform .12s ease, background .12s ease;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color:#e5e7eb;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
 }
 
 .verify-btn:hover{
   transform: translateY(-1px);
-  background:rgba(15,23,42,.10);
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.20);
 }
 
+/* primary = gul SurveyCash vibe */
 .verify-btn.primary{
-  background:#0f172a;
-  border-color:#0f172a;
-  color:#ffffff;
+  background:#fbbf24;
+  border-color:#d97706;
+  color:#111827;
 }
 
 .verify-btn.primary:hover{
-  background:#111827;
+  background:#f59e0b;
 }
 
+/* close icon */
 .verify-close{
   position:absolute;
-  right:14px;
-  top:14px;
-  width:36px;                   /* ✅ større close */
-  height:36px;
+  right:16px;
+  top:16px;
+  width:34px;
+  height:34px;
   border-radius:999px;
-  border:1px solid #e2e8f0;
-  background:#ffffff;
-  color:#0f172a;
-  font-size:20px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(15,23,42,.55);
+  color:#ffffff;
+  font-size:18px;
   line-height:1;
   cursor:pointer;
+}
+
+.verify-close:hover{
+  background: rgba(15,23,42,.80);
 }
 
 
