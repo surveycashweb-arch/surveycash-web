@@ -622,19 +622,104 @@ function layout({ title, active, bodyHtml, loggedIn }) {
   window.openAuth = openAuth;
   window.closeAuth = closeAuth;
 
-  // ✅ VERIFY OVERLAY FUNCTIONS (indsæt her)
-  function openVerify() {
-    var vb = document.getElementById('verify-backdrop');
-    if (vb) vb.classList.add('open');
-  }
 
-  function closeVerify() {
-    var vb = document.getElementById('verify-backdrop');
-    if (vb) vb.classList.remove('open');
-  }
+ 
+// ✅ resend verify email + cooldown
+var resendBtn = null;
+var resendHint = null;
+var resendSecsEl = null;
+
+var resendCooldown = 0;
+var resendTimer = null;
+
+// ✅ VERIFY OVERLAY FUNCTIONS
+function openVerify() {
+  var vb = document.getElementById('verify-backdrop');
+  if (vb) vb.classList.add('open');
+
+  // ✅ find elements hver gang overlay åbnes
+  resendBtn = document.getElementById('verify-resend-btn');
+  resendHint = document.getElementById('verify-resend-hint');
+  resendSecsEl = document.getElementById('verify-resend-secs');
+
+  // ✅ start cooldown med det samme (anti spam)
+  startResendCooldown(60);
+}
+
+function closeVerify() {
+  var vb = document.getElementById('verify-backdrop');
+  if (vb) vb.classList.remove('open');
+}
 
 window.openVerify = openVerify;
-  window.closeVerify = closeVerify;
+window.closeVerify = closeVerify;
+
+function startResendCooldown(seconds) {
+  resendCooldown = seconds || 60;
+  if (!resendBtn) return;
+
+  // ✅ stop gammel timer så den ikke kører dobbelt
+  if (resendTimer) {
+    clearInterval(resendTimer);
+    resendTimer = null;
+  }
+
+  resendBtn.disabled = true;
+  if (resendHint) resendHint.style.display = 'block';
+
+  function tick() {
+    if (!resendBtn) return;
+    if (resendSecsEl) resendSecsEl.textContent = String(resendCooldown);
+
+    if (resendCooldown <= 0) {
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Resend email';
+      if (resendHint) resendHint.style.display = 'none';
+      clearInterval(resendTimer);
+      resendTimer = null;
+      return;
+    }
+
+    resendBtn.textContent = 'Resend in ' + resendCooldown + 's';
+    resendCooldown--;
+  }
+
+  tick();
+  resendTimer = setInterval(tick, 1000);
+}
+
+window.resendVerifyEmail = async function () {
+  if (!resendBtn || resendBtn.disabled) return;
+
+  resendBtn.disabled = true;
+  resendBtn.textContent = 'Sending...';
+
+  try {
+    const r = await fetch('/auth/resend-verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({}),
+    });
+
+    const j = await r.json().catch(() => null);
+
+    if (!r.ok || !j?.ok) {
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Resend email';
+      alert('Could not resend email. Please try again later.');
+      return;
+    }
+
+    // ✅ start cooldown 60 sek
+    startResendCooldown(60);
+  } catch (e) {
+    resendBtn.disabled = false;
+    resendBtn.textContent = 'Resend email';
+    alert('Network error. Please try again.');
+  }
+};
+
 
   // VI LUKKER IKKE LÆNGERE MODAL VED KLIK UDENFOR
   // backdrop.addEventListener('click', function (e) {
@@ -1256,11 +1341,16 @@ document.addEventListener('click', function (e) {
 /* knapper */
 .verify-actions{
   display:flex;
-  gap:12px;
+  flex-direction:column;
+  gap:10px;
   justify-content:center;
+  align-items:center;
+  margin-top: 6px;
 }
 
+
 .verify-btn{
+  min-width: 210px;
   border-radius:999px;
   padding:11px 18px;
   font-weight:800;
@@ -1271,6 +1361,7 @@ document.addEventListener('click', function (e) {
   color:#e5e7eb;
   transition: transform .12s ease, background .12s ease, border-color .12s ease;
 }
+
 
 .verify-btn:hover{
   transform: translateY(-1px);
@@ -1288,6 +1379,16 @@ document.addEventListener('click', function (e) {
 .verify-btn.primary:hover{
   background:#f59e0b;
 }
+
+.verify-btn.primary:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  transform:none;
+}
+.verify-btn.primary:disabled:hover{
+  background:#fbbf24; /* hold samme farve */
+}
+
 
 /* close icon */
 .verify-close{
@@ -1507,13 +1608,25 @@ document.addEventListener('click', function (e) {
         Please open your inbox and click the link to confirm your account.
       </p>
 
-      <div class="verify-actions">
-        <button type="button" class="verify-btn" onclick="location.reload()">Refresh</button>
-        <button type="button" class="verify-btn primary" onclick="closeVerify()">OK</button>
-      </div>
-    </div>
-  </div>
 
+<div class="verify-actions">
+  <button
+    type="button"
+    id="verify-resend-btn"
+    class="verify-btn primary"
+    onclick="resendVerifyEmail()"
+  >
+    Resend email
+  </button>
+
+  <div id="verify-resend-hint" style="
+    font-size:12px;
+    color:#9ca3af;
+    display:none;
+  ">
+    You can resend again in <span id="verify-resend-secs">60</span>s
+  </div>
+</div>
 
 
   <!-- Auth modal -->
@@ -3055,7 +3168,6 @@ app.post('/auth/finish', async (req, res) => {
     const accessToken = String(req.body.access_token || '').trim();
     if (!accessToken) return res.status(400).json({ ok: false });
 
-    // Verificér token hos Supabase (så folk ikke kan fake)
     const { data, error } = await supabaseAdmin.auth.getUser(accessToken);
     if (error || !data?.user?.id) {
       return res.status(401).json({ ok: false });
@@ -3063,7 +3175,7 @@ app.post('/auth/finish', async (req, res) => {
 
     const userId = data.user.id;
 
-    // Lav din egen cookie-session (samme flow som login)
+    // Lav din egen cookie-session
     const { token, expiresAt } = await createSession(userId);
 
     res.cookie('session', token, {
@@ -3074,6 +3186,14 @@ app.post('/auth/finish', async (req, res) => {
       path: '/',
     });
 
+    // ✅ HER: ryd pending email når user er verified/logged in
+    res.clearCookie('pending_email', {
+      httpOnly: true,
+      secure: IS_PROD,
+      sameSite: 'Lax',
+      path: '/',
+    });
+
     return res.json({ ok: true });
   } catch (e) {
     console.error('auth finish error:', e);
@@ -3081,6 +3201,36 @@ app.post('/auth/finish', async (req, res) => {
   }
 });
 
+
+
+// ---------- Auth: resend verification email ----------
+app.post('/auth/resend-verify', authLimiter, async (req, res) => {
+  try {
+    const pendingEmail = String(req.cookies.pending_email || '').trim().toLowerCase();
+
+    if (!pendingEmail) {
+      return res.status(400).json({ ok: false, error: 'missing_email' });
+    }
+
+    const { error } = await supabasePublic.auth.resend({
+      type: 'signup',
+      email: pendingEmail,
+      options: {
+        emailRedirectTo: 'https://surveycash.website/verified',
+      },
+    });
+
+    if (error) {
+      console.error('resend verify error:', error);
+      return res.status(500).json({ ok: false });
+    }
+
+    return res.json({ ok: true });
+  } catch (e) {
+    console.error('resend fatal:', e);
+    return res.status(500).json({ ok: false });
+  }
+});
 
 
 
@@ -3150,6 +3300,16 @@ app.post('/signup', authLimiter, async (req, res) => {
     }
 
     // 4️⃣ IKKE log ind – bed brugeren tjekke mail
+
+// ✅ gem email midlertidigt så resend-knappen ved hvilken email den skal sende til
+res.cookie('pending_email', email, {
+  httpOnly: true,
+  secure: IS_PROD,
+  sameSite: 'Lax',
+  maxAge: 1000 * 60 * 30, // 30 min
+  path: '/',
+});
+
     return res.redirect('/?authError=checkemail&mode=login');
   } catch (err) {
     console.error('Signup fatal:', err);
