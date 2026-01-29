@@ -1608,26 +1608,27 @@ document.addEventListener('click', function (e) {
         Please open your inbox and click the link to confirm your account.
       </p>
 
+      <div class="verify-actions">
+        <button
+          type="button"
+          id="verify-resend-btn"
+          class="verify-btn primary"
+          onclick="resendVerifyEmail()"
+        >
+          Resend email
+        </button>
 
-<div class="verify-actions">
-  <button
-    type="button"
-    id="verify-resend-btn"
-    class="verify-btn primary"
-    onclick="resendVerifyEmail()"
-  >
-    Resend email
-  </button>
+        <div id="verify-resend-hint" style="
+          font-size:12px;
+          color:#9ca3af;
+          display:none;
+        ">
+          You can resend again in <span id="verify-resend-secs">60</span>s
+        </div>
+      </div>
 
-  <div id="verify-resend-hint" style="
-    font-size:12px;
-    color:#9ca3af;
-    display:none;
-  ">
-    You can resend again in <span id="verify-resend-secs">60</span>s
+    </div>
   </div>
-</div>
-
 
   <!-- Auth modal -->
   <div id="auth-backdrop" class="auth-backdrop">
