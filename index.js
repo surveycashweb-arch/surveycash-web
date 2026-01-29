@@ -1348,6 +1348,12 @@ document.addEventListener('click', function (e) {
   margin-top: 6px;
 }
 
+.verify-note{
+  margin-top:10px;
+  font-size:12px;
+  color:#9ca3af;
+}
+
 
 .verify-btn{
   min-width: 210px;
@@ -1622,7 +1628,6 @@ document.addEventListener('click', function (e) {
     It can take up to 15 minutes to receive the email.
   </div>
 </div>
-
 
     </div>
   </div>
