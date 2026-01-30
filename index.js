@@ -1155,14 +1155,22 @@ document.addEventListener('click', function (e) {
   margin-top: 12px;
 }
 
+/* ✅ clean boxes (ingen fade/glow) */
 .hiw-card{
   text-align: left;
   padding: 16px 16px 14px;
   border-radius: 16px;
-  background: rgba(15,23,42,.50);   /* ✅ fade fjernet */
-  border: 1px solid rgba(255,255,255,.10);
-  box-shadow: 0 18px 55px rgba(0,0,0,.55);
+  background: rgba(15,23,42,.35);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 14px 40px rgba(0,0,0,.55);
   min-height: 96px;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.hiw-card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.14);
+  background: rgba(15,23,42,.42);
 }
 
 .hiw-num{
@@ -1203,8 +1211,18 @@ document.addEventListener('click', function (e) {
   gap: 14px;
   border-radius: 18px;
   padding: 14px 16px;
-  background: rgba(15,23,42,.45);   /* ✅ fade fjernet */
-  border: 1px solid rgba(255,255,255,.10);
+
+  /* ✅ clean, ingen fade */
+  background: rgba(15,23,42,.35);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 14px 40px rgba(0,0,0,.55);
+
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.tp-card:hover{
+  border-color: rgba(255,255,255,.14);
+  background: rgba(15,23,42,.42);
 }
 
 .tp-left{
@@ -1234,6 +1252,7 @@ document.addEventListener('click', function (e) {
   border-radius: 14px;
   padding: 10px 16px;
 }
+
 
 /* responsive */
 @media (max-width: 900px){
