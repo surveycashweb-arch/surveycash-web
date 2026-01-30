@@ -1155,20 +1155,18 @@ document.addEventListener('click', function (e) {
   margin-top: 12px;
 }
 
-/* ✅ mørkere bokse end baggrund */
+/* ✅ soft transparent fade + glow (som reference billedet) */
 .hiw-card{
   text-align: left;
   padding: 16px 16px 14px;
   border-radius: 18px;
 
-  /* vigtig: mørkere end baggrund */
-  background: rgba(10, 14, 26, 0.88);
+  background:
+    radial-gradient(1200px 340px at 18% 12%, rgba(255,255,255,.06), transparent 60%),
+    linear-gradient(180deg, rgba(10,14,26,.92), rgba(10,14,26,.55));
 
-  /* ingen grå outline */
   border: 0;
-
-  /* lille blød shadow (ikke hård kant) */
-  box-shadow: 0 20px 60px rgba(0,0,0,.45);
+  box-shadow: 0 22px 70px rgba(0,0,0,.55);
 
   min-height: 96px;
   transition: transform .15s ease, background .15s ease;
@@ -1176,7 +1174,9 @@ document.addEventListener('click', function (e) {
 
 .hiw-card:hover{
   transform: translateY(-2px);
-  background: rgba(12, 16, 30, 0.92);
+  background:
+    radial-gradient(1200px 340px at 18% 12%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(180deg, rgba(12,16,30,.95), rgba(12,16,30,.62));
 }
 
 .hiw-num{
@@ -1218,17 +1218,22 @@ document.addEventListener('click', function (e) {
   border-radius: 18px;
   padding: 14px 16px;
 
-  /* samme stil som how-it-works */
-  background: rgba(10, 14, 26, 0.80);
+  /* matcher hiw-card fade */
+  background:
+    radial-gradient(1200px 340px at 18% 12%, rgba(255,255,255,.05), transparent 60%),
+    linear-gradient(180deg, rgba(10,14,26,.86), rgba(10,14,26,.50));
 
   border: 0;
-  box-shadow: 0 20px 60px rgba(0,0,0,.40);
+  box-shadow: 0 22px 70px rgba(0,0,0,.50);
 
-  transition: background .15s ease;
+  transition: background .15s ease, transform .15s ease;
 }
 
 .tp-card:hover{
-  background: rgba(12, 16, 30, 0.86);
+  transform: translateY(-2px);
+  background:
+    radial-gradient(1200px 340px at 18% 12%, rgba(255,255,255,.07), transparent 60%),
+    linear-gradient(180deg, rgba(12,16,30,.90), rgba(12,16,30,.58));
 }
 
 .tp-left{
