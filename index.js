@@ -1099,84 +1099,84 @@ document.addEventListener('click', function (e) {
     overflow:auto;
   }
 
-/* ===== Landing: How it works (FIXED) ===== */
+/* Landing hero */
+.hero-wrap{
+  max-width:900px;
+  margin:45px auto 0;
+  text-align:center;
+}
+
+.hero-title{
+  font-size:44px;
+  font-weight:900;
+  line-height:1.15;
+  margin-bottom:10px;
+}
+.hero-title .green{ color:#fbbf24; }
+
+.hero-sub{
+  color:#cbd5e1;
+  margin-bottom:18px;
+  font-size:15px;
+}
+
+.hero-cta{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+.hero-cta .btn{
+  padding:10px 26px;
+  border-radius:18px;
+}
+
+
+/* ===== Landing: How it works ===== */
 .hiw-wrap{
-  position: relative;
-  margin-top: 78px;
+  margin-top: 95px;
   max-width: 1050px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-  padding: 0 6px;
-  overflow: hidden;
-}
-
-/* ✅ Glow/fade i sektionen (det mangler på dit billede) */
-.hiw-wrap::before{
-  content:"";
-  position:absolute;
-  inset:-30% -15% -15% -15%;
-  background:
-    radial-gradient(800px 280px at 50% 112%,
-      rgba(250, 204, 21, .16),
-      rgba(250, 204, 21, 0) 62%),
-    linear-gradient(to top,
-      rgba(2, 6, 23, .92) 0%,
-      rgba(2, 6, 23, .60) 45%,
-      rgba(2, 6, 23, 0) 100%);
-  pointer-events:none;
-  z-index:0;
 }
 
 .hiw-title{
-  position: relative;
-  z-index: 1;
-  margin: 0 0 16px;
-  font-size: 30px;
+  margin: 0 0 14px;
+  font-size: 28px;
   font-weight: 900;
   color: #ffffff;
-  letter-spacing: .2px;
 }
 
 .hiw-grid{
-  position: relative;
-  z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   margin-top: 12px;
 }
 
-/* ✅ Cards: mindre, lysere, “glass” */
+/* ✅ mørkere bokse end baggrund */
 .hiw-card{
   text-align: left;
-  padding: 18px 18px 16px;
-  border-radius: 20px;
-  min-height: 112px; /* <<< før var 150px, alt for stort */
+  padding: 16px 16px 14px;
+  border-radius: 18px;
 
-  background:
-    radial-gradient(circle at 50% 0%,
-      rgba(255,255,255,.08),
-      rgba(255,255,255,0) 55%),
-    linear-gradient(to top,
-      rgba(0,0,0,.42) 0%,
-      rgba(0,0,0,0) 70%),
-    rgba(255,255,255,.06);
+  /* vigtig: mørkere end baggrund */
+  background: rgba(10, 14, 26, 0.88);
 
-  border: 1px solid rgba(255,255,255,.10);
+  /* ingen grå outline */
+  border: 0;
 
-  box-shadow:
-    0 18px 60px rgba(0,0,0,.40);
+  /* lille blød shadow (ikke hård kant) */
+  box-shadow: 0 20px 60px rgba(0,0,0,.45);
 
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  transition: transform .15s ease, border-color .15s ease;
+  min-height: 96px;
+  transition: transform .15s ease, background .15s ease;
 }
 
 .hiw-card:hover{
   transform: translateY(-2px);
-  border-color: rgba(250,204,21,.24);
+  background: rgba(12, 16, 30, 0.92);
 }
 
 .hiw-num{
@@ -1184,82 +1184,74 @@ document.addEventListener('click', function (e) {
   font-weight: 900;
   color: #fbbf24;
   line-height: 1;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .hiw-head{
   font-size: 15px;
   font-weight: 800;
   color: #ffffff;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .hiw-text{
-  font-size: 13px;
-  color: rgba(226,232,240,.86);
+  font-size: 12px;
+  color: #cbd5e1;
   line-height: 1.5;
 }
 
 
-/* ===== Landing: Trustpilot footer strip (FIXED) ===== */
+/* ===== Landing: Trustpilot footer strip ===== */
 .tp-wrap{
-  margin-top: 70px;
+  margin-top: 85px;
   max-width: 1050px;
   margin-left: auto;
   margin-right: auto;
-  padding-bottom: 34px;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-bottom: 30px;
 }
 
 .tp-card{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-radius: 18px;
+  padding: 14px 16px;
 
-  border-radius:22px;
-  padding:16px 18px;
+  /* samme stil som how-it-works */
+  background: rgba(10, 14, 26, 0.80);
 
-  background:
-    radial-gradient(circle at 50% 0%,
-      rgba(255,255,255,.07),
-      rgba(255,255,255,0) 56%),
-    linear-gradient(to top,
-      rgba(0,0,0,.44) 0%,
-      rgba(0,0,0,0) 70%),
-    rgba(255,255,255,.05);
+  border: 0;
+  box-shadow: 0 20px 60px rgba(0,0,0,.40);
 
-  border: 1px solid rgba(255,255,255,.10);
+  transition: background .15s ease;
+}
 
-  box-shadow:
-    0 18px 70px rgba(0,0,0,.45);
-
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+.tp-card:hover{
+  background: rgba(12, 16, 30, 0.86);
 }
 
 .tp-left{
-  display:flex;
-  align-items:center;
-  gap:14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .tp-logo{
-  width:120px;
-  height:auto;
-  opacity:.95;
+  width: 130px;
+  height: auto;
+  opacity: .95;
 }
 
 .tp-title{
-  font-weight:900;
-  color:#ffffff;
-  margin-bottom:2px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 2px;
 }
 
 .tp-sub{
-  font-size:12px;
-  color: rgba(226,232,240,.78);
+  font-size: 12px;
+  color: #cbd5e1;
 }
 
 .tp-btn{
@@ -1274,6 +1266,7 @@ document.addEventListener('click', function (e) {
   .tp-card{ flex-direction: column; align-items: flex-start; }
   .tp-btn{ width: 100%; text-align: center; }
 }
+
 
 
   /* ===== Account / profil layout ===== */
