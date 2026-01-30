@@ -1131,6 +1131,122 @@ document.addEventListener('click', function (e) {
     border-radius:18px;
   }
 
+
+ /* ===== Landing: How it works ===== */
+  .hiw-wrap{
+    margin-top: 110px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .hiw-title{
+    margin: 0 0 18px;
+    font-size: 30px;
+    font-weight: 900;
+    color: #ffffff;
+  }
+
+  .hiw-grid{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 14px;
+  }
+
+  .hiw-card{
+    text-align: left;
+    padding: 20px 20px 18px;
+    border-radius: 18px;
+    background:
+      radial-gradient(circle at 0 0, rgba(251, 191, 36, 0.10), transparent 55%),
+      rgba(15,23,42,.45);
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 18px 55px rgba(0,0,0,.55);
+    min-height: 120px;
+  }
+
+  .hiw-num{
+    font-size: 34px;
+    font-weight: 900;
+    color: #fbbf24;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .hiw-head{
+    font-size: 16px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 4px;
+  }
+
+  .hiw-text{
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.5;
+  }
+
+  /* ===== Landing: Trustpilot footer strip ===== */
+  .tp-wrap{
+    margin-top: 130px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 40px;
+  }
+
+  .tp-card{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    border-radius: 18px;
+    padding: 16px 18px;
+    background:
+      radial-gradient(circle at 0 0, rgba(251, 191, 36, 0.08), transparent 55%),
+      rgba(15,23,42,.40);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+
+  .tp-left{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .tp-logo{
+    width: 140px;
+    height: auto;
+    opacity: .95;
+  }
+
+  .tp-title{
+    font-weight: 900;
+    color: #ffffff;
+    margin-bottom: 2px;
+  }
+
+  .tp-sub{
+    font-size: 13px;
+    color: #cbd5e1;
+  }
+
+  .tp-btn{
+    border-radius: 14px;
+    padding: 10px 16px;
+  }
+
+  /* responsive */
+  @media (max-width: 900px){
+    .hiw-grid{ grid-template-columns: 1fr; }
+    .tp-card{ flex-direction: column; align-items: flex-start; }
+    .tp-btn{ width: 100%; text-align: center; }
+  }
+
+
+
   /* ===== Account / profil layout ===== */
   .account-wrap {
     margin-top: 40px;
@@ -1708,7 +1824,50 @@ function landingHtml() {
       <button type="button" class="btn" onclick="openAuth('login')">Log in</button>
       <button type="button" class="btn btn-signup" onclick="openAuth('signup')">Sign up</button>
     </div>
-  </section>`;
+
+    <!-- How it works -->
+    <div class="hiw-wrap">
+      <h2 class="hiw-title">How it works</h2>
+
+      <div class="hiw-grid">
+        <div class="hiw-card">
+          <div class="hiw-num">1</div>
+          <div class="hiw-head">Sign up</div>
+          <div class="hiw-text">Create your free account.</div>
+        </div>
+
+        <div class="hiw-card">
+          <div class="hiw-num">2</div>
+          <div class="hiw-head">Complete tasks</div>
+          <div class="hiw-text">Earn money by completing surveys & offers.</div>
+        </div>
+
+        <div class="hiw-card">
+          <div class="hiw-num">3</div>
+          <div class="hiw-head">Cash out</div>
+          <div class="hiw-text">Withdraw your earnings via PayPal.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trustpilot (bottom) -->
+    <div class="tp-wrap">
+      <div class="tp-card">
+        <div class="tp-left">
+          <img src="/trustpilot-logo.png" alt="Trustpilot" class="tp-logo" />
+          <div class="tp-text">
+            <div class="tp-title">Trustpilot</div>
+            <div class="tp-sub">Rate your experience with SurveyCash.</div>
+          </div>
+        </div>
+
+        <a class="btn btn-signup tp-btn" href="https://www.trustpilot.com" target="_blank" rel="noreferrer">
+          View on Trustpilot
+        </a>
+      </div>
+    </div>
+  </section>
+  `;
 }
 
 
