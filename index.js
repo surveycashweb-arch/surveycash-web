@@ -1099,10 +1099,10 @@ document.addEventListener('click', function (e) {
     overflow:auto;
   }
 
-  /* Landing hero */
+/* Landing hero */
 .hero-wrap{
   max-width:900px;
-  margin:45px auto 0;   /* før: 60px */
+  margin:45px auto 0;
   text-align:center;
 }
 
@@ -1116,7 +1116,7 @@ document.addEventListener('click', function (e) {
 
 .hero-sub{
   color:#cbd5e1;
-  margin-bottom:18px;  /* før: 22px */
+  margin-bottom:18px;
   font-size:15px;
 }
 
@@ -1134,16 +1134,16 @@ document.addEventListener('click', function (e) {
 
 /* ===== Landing: How it works ===== */
 .hiw-wrap{
-  margin-top: 70px;     /* før: 110px */
-  max-width: 1100px;
+  margin-top: 95px;          /* ✅ ryk lidt længere NED */
+  max-width: 1050px;         /* lidt mere samlet */
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
 
 .hiw-title{
-  margin: 0 0 18px;
-  font-size: 30px;
+  margin: 0 0 14px;          /* mindre */
+  font-size: 28px;           /* lidt mindre */
   font-weight: 900;
   color: #ffffff;
 }
@@ -1151,39 +1151,39 @@ document.addEventListener('click', function (e) {
 .hiw-grid{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 14px;
+  gap: 14px;                 /* lidt mindre gap */
+  margin-top: 12px;
 }
 
 .hiw-card{
   text-align: left;
-  padding: 20px 20px 18px;
-  border-radius: 18px;
+  padding: 16px 16px 14px;   /* ✅ mindre padding */
+  border-radius: 16px;       /* lidt mindre runding */
   background:
     radial-gradient(circle at 0 0, rgba(251, 191, 36, 0.10), transparent 55%),
     rgba(15,23,42,.45);
   border: 1px solid rgba(255,255,255,.08);
   box-shadow: 0 18px 55px rgba(0,0,0,.55);
-  min-height: 120px;
+  min-height: 96px;          /* ✅ lavere bokse */
 }
 
 .hiw-num{
-  font-size: 34px;
+  font-size: 30px;           /* ✅ mindre */
   font-weight: 900;
   color: #fbbf24;
   line-height: 1;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .hiw-head{
-  font-size: 16px;
+  font-size: 15px;           /* ✅ mindre */
   font-weight: 800;
   color: #ffffff;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .hiw-text{
-  font-size: 13px;
+  font-size: 12px;           /* ✅ mindre */
   color: #cbd5e1;
   line-height: 1.5;
 }
@@ -1191,11 +1191,11 @@ document.addEventListener('click', function (e) {
 
 /* ===== Landing: Trustpilot footer strip ===== */
 .tp-wrap{
-  margin-top: 70px;     /* før: 130px */
-  max-width: 1100px;
+  margin-top: 85px;          /* ✅ lidt længere NED */
+  max-width: 1050px;
   margin-left: auto;
   margin-right: auto;
-  padding-bottom: 30px; /* før: 40px */
+  padding-bottom: 30px;
 }
 
 .tp-card{
@@ -1204,7 +1204,7 @@ document.addEventListener('click', function (e) {
   justify-content: space-between;
   gap: 14px;
   border-radius: 18px;
-  padding: 16px 18px;
+  padding: 14px 16px;        /* ✅ lidt mindre */
   background:
     radial-gradient(circle at 0 0, rgba(251, 191, 36, 0.08), transparent 55%),
     rgba(15,23,42,.40);
@@ -1218,7 +1218,7 @@ document.addEventListener('click', function (e) {
 }
 
 .tp-logo{
-  width: 140px;
+  width: 130px;              /* ✅ lidt mindre */
   height: auto;
   opacity: .95;
 }
@@ -1230,7 +1230,7 @@ document.addEventListener('click', function (e) {
 }
 
 .tp-sub{
-  font-size: 13px;
+  font-size: 12px;           /* ✅ lidt mindre */
   color: #cbd5e1;
 }
 
