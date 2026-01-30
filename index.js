@@ -1155,24 +1155,28 @@ document.addEventListener('click', function (e) {
   margin-top: 12px;
 }
 
-/* ✅ clean transparent boxes (ingen outline/shadow) */
+/* ✅ mørkere bokse end baggrund */
 .hiw-card{
   text-align: left;
   padding: 16px 16px 14px;
   border-radius: 18px;
 
-  /* ✅ transparent */
-  background: rgba(15,23,42,.38);
+  /* vigtig: mørkere end baggrund */
+  background: rgba(10, 14, 26, 0.88);
 
-  /* ✅ fjern outline & shadow */
-  border: none;
-  box-shadow: none;
+  /* ingen grå outline */
+  border: 0;
 
-  /* ✅ glass feel */
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  /* lille blød shadow (ikke hård kant) */
+  box-shadow: 0 20px 60px rgba(0,0,0,.45);
 
   min-height: 96px;
+  transition: transform .15s ease, background .15s ease;
+}
+
+.hiw-card:hover{
+  transform: translateY(-2px);
+  background: rgba(12, 16, 30, 0.92);
 }
 
 .hiw-num{
@@ -1214,14 +1218,17 @@ document.addEventListener('click', function (e) {
   border-radius: 18px;
   padding: 14px 16px;
 
-  /* ✅ samme look som hiw */
-  background: rgba(15,23,42,.38);
+  /* samme stil som how-it-works */
+  background: rgba(10, 14, 26, 0.80);
 
-  border: none;
-  box-shadow: none;
+  border: 0;
+  box-shadow: 0 20px 60px rgba(0,0,0,.40);
 
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  transition: background .15s ease;
+}
+
+.tp-card:hover{
+  background: rgba(12, 16, 30, 0.86);
 }
 
 .tp-left{
