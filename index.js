@@ -1155,30 +1155,28 @@ document.addEventListener('click', function (e) {
   margin-top: 12px;
 }
 
-/* ✅ mørkere bokse + fade fra bunden (som billede 2) */
+/* ✅ bokse som billede: mørkere end bg + fade fra bunden */
 .hiw-card{
-  text-align: left;
-  padding: 18px 18px 16px;
-  border-radius: 22px;
+  text-align:left;
+  padding:22px 22px 20px;
+  border-radius:24px;
 
-  /* mørkere end baggrunden */
+  /* top glow + fade from bottom */
   background:
-    linear-gradient(to top, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 70%),
-    rgba(10, 14, 26, 0.88);
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 72%),
+    rgba(9, 12, 20, 0.90);
 
   border: 0;
-  box-shadow: 0 28px 90px rgba(0,0,0,.55);
 
-  min-height: 120px;
+  box-shadow: 0 40px 120px rgba(0,0,0,.55);
+  min-height: 150px;
 
-  transition: transform .15s ease, background .15s ease;
+  transition: transform .15s ease;
 }
 
 .hiw-card:hover{
   transform: translateY(-2px);
-  background:
-    linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 70%),
-    rgba(10, 14, 26, 0.92);
 }
 
 .hiw-num{
@@ -1186,12 +1184,12 @@ document.addEventListener('click', function (e) {
   font-weight: 900;
   color: #fbbf24;
   line-height: 1;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .hiw-head{
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 800;
   color: #ffffff;
   margin-bottom: 4px;
 }
@@ -1199,7 +1197,7 @@ document.addEventListener('click', function (e) {
 .hiw-text{
   font-size: 13px;
   color: #cbd5e1;
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
 
@@ -1212,57 +1210,51 @@ document.addEventListener('click', function (e) {
   padding-bottom: 30px;
 }
 
-/* samme fade-look */
+/* samme mørke fade look */
 .tp-card{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  border-radius: 22px;
-  padding: 16px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+
+  border-radius:24px;
+  padding:18px 20px;
 
   background:
-    linear-gradient(to top, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 72%),
-    rgba(10, 14, 26, 0.78);
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.05), transparent 55%),
+    linear-gradient(to top, rgba(0,0,0,.50) 0%, rgba(0,0,0,0) 75%),
+    rgba(9, 12, 20, 0.88);
 
-  border: 0;
-  box-shadow: 0 28px 90px rgba(0,0,0,.45);
-
-  transition: background .15s ease, transform .15s ease;
-}
-
-.tp-card:hover{
-  background:
-    linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 72%),
-    rgba(10, 14, 26, 0.84);
+  border:0;
+  box-shadow: 0 40px 120px rgba(0,0,0,.55);
 }
 
 .tp-left{
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  display:flex;
+  align-items:center;
+  gap:14px;
 }
 
 .tp-logo{
-  width: 130px;
-  height: auto;
-  opacity: .95;
+  width:130px;
+  height:auto;
+  opacity:.95;
 }
 
 .tp-title{
-  font-weight: 900;
-  color: #ffffff;
-  margin-bottom: 2px;
+  font-weight:900;
+  color:#ffffff;
+  margin-bottom:2px;
 }
 
 .tp-sub{
-  font-size: 12px;
-  color: #cbd5e1;
+  font-size:12px;
+  color:#cbd5e1;
 }
 
 .tp-btn{
-  border-radius: 14px;
-  padding: 10px 16px;
+  border-radius:14px;
+  padding:10px 16px;
 }
 
 
