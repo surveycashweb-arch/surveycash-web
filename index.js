@@ -1155,32 +1155,34 @@ document.addEventListener('click', function (e) {
   margin-top: 12px;
 }
 
-/* ✅ soft transparent fade + glow (som reference billedet) */
+/* ✅ mørkere bokse + fade fra bunden (som billede 2) */
 .hiw-card{
   text-align: left;
-  padding: 16px 16px 14px;
-  border-radius: 18px;
+  padding: 18px 18px 16px;
+  border-radius: 22px;
 
+  /* mørkere end baggrunden */
   background:
-    radial-gradient(1200px 340px at 18% 12%, rgba(255,255,255,.06), transparent 60%),
-    linear-gradient(180deg, rgba(10,14,26,.92), rgba(10,14,26,.55));
+    linear-gradient(to top, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 70%),
+    rgba(10, 14, 26, 0.88);
 
   border: 0;
-  box-shadow: 0 22px 70px rgba(0,0,0,.55);
+  box-shadow: 0 28px 90px rgba(0,0,0,.55);
 
-  min-height: 96px;
+  min-height: 120px;
+
   transition: transform .15s ease, background .15s ease;
 }
 
 .hiw-card:hover{
   transform: translateY(-2px);
   background:
-    radial-gradient(1200px 340px at 18% 12%, rgba(255,255,255,.08), transparent 60%),
-    linear-gradient(180deg, rgba(12,16,30,.95), rgba(12,16,30,.62));
+    linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 70%),
+    rgba(10, 14, 26, 0.92);
 }
 
 .hiw-num{
-  font-size: 30px;
+  font-size: 34px;
   font-weight: 900;
   color: #fbbf24;
   line-height: 1;
@@ -1188,16 +1190,16 @@ document.addEventListener('click', function (e) {
 }
 
 .hiw-head{
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 900;
   color: #ffffff;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 
 .hiw-text{
-  font-size: 12px;
+  font-size: 13px;
   color: #cbd5e1;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 
@@ -1210,30 +1212,29 @@ document.addEventListener('click', function (e) {
   padding-bottom: 30px;
 }
 
+/* samme fade-look */
 .tp-card{
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  border-radius: 18px;
-  padding: 14px 16px;
+  border-radius: 22px;
+  padding: 16px 18px;
 
-  /* matcher hiw-card fade */
   background:
-    radial-gradient(1200px 340px at 18% 12%, rgba(255,255,255,.05), transparent 60%),
-    linear-gradient(180deg, rgba(10,14,26,.86), rgba(10,14,26,.50));
+    linear-gradient(to top, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 72%),
+    rgba(10, 14, 26, 0.78);
 
   border: 0;
-  box-shadow: 0 22px 70px rgba(0,0,0,.50);
+  box-shadow: 0 28px 90px rgba(0,0,0,.45);
 
   transition: background .15s ease, transform .15s ease;
 }
 
 .tp-card:hover{
-  transform: translateY(-2px);
   background:
-    radial-gradient(1200px 340px at 18% 12%, rgba(255,255,255,.07), transparent 60%),
-    linear-gradient(180deg, rgba(12,16,30,.90), rgba(12,16,30,.58));
+    linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 72%),
+    rgba(10, 14, 26, 0.84);
 }
 
 .tp-left{
