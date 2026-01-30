@@ -1155,22 +1155,24 @@ document.addEventListener('click', function (e) {
   margin-top: 12px;
 }
 
-/* ✅ clean boxes (ingen fade/glow) */
+/* ✅ clean transparent boxes (ingen outline/shadow) */
 .hiw-card{
   text-align: left;
   padding: 16px 16px 14px;
-  border-radius: 16px;
-  background: rgba(15,23,42,.35);
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 14px 40px rgba(0,0,0,.55);
-  min-height: 96px;
-  transition: transform .15s ease, border-color .15s ease, background .15s ease;
-}
+  border-radius: 18px;
 
-.hiw-card:hover{
-  transform: translateY(-2px);
-  border-color: rgba(255,255,255,.14);
-  background: rgba(15,23,42,.42);
+  /* ✅ transparent */
+  background: rgba(15,23,42,.38);
+
+  /* ✅ fjern outline & shadow */
+  border: none;
+  box-shadow: none;
+
+  /* ✅ glass feel */
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  min-height: 96px;
 }
 
 .hiw-num{
@@ -1212,17 +1214,14 @@ document.addEventListener('click', function (e) {
   border-radius: 18px;
   padding: 14px 16px;
 
-  /* ✅ clean, ingen fade */
-  background: rgba(15,23,42,.35);
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 14px 40px rgba(0,0,0,.55);
+  /* ✅ samme look som hiw */
+  background: rgba(15,23,42,.38);
 
-  transition: border-color .15s ease, background .15s ease;
-}
+  border: none;
+  box-shadow: none;
 
-.tp-card:hover{
-  border-color: rgba(255,255,255,.14);
-  background: rgba(15,23,42,.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .tp-left{
@@ -1260,7 +1259,6 @@ document.addEventListener('click', function (e) {
   .tp-card{ flex-direction: column; align-items: flex-start; }
   .tp-btn{ width: 100%; text-align: center; }
 }
-
 
 
   /* ===== Account / profil layout ===== */
