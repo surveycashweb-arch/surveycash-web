@@ -1099,88 +1099,88 @@ document.addEventListener('click', function (e) {
     overflow:auto;
   }
 
-/* Landing hero */
-.hero-wrap{
-  max-width:900px;
-  margin:45px auto 0;
-  text-align:center;
-}
-
-.hero-title{
-  font-size:44px;
-  font-weight:900;
-  line-height:1.15;
-  margin-bottom:10px;
-}
-.hero-title .green{ color:#fbbf24; }
-
-.hero-sub{
-  color:#cbd5e1;
-  margin-bottom:18px;
-  font-size:15px;
-}
-
-.hero-cta{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-}
-
-.hero-cta .btn{
-  padding:10px 26px;
-  border-radius:18px;
-}
-
-
-/* ===== Landing: How it works ===== */
+/* ===== Landing: How it works (FIXED) ===== */
 .hiw-wrap{
-  margin-top: 95px;
+  position: relative;
+  margin-top: 78px;
   max-width: 1050px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+  padding: 0 6px;
+  overflow: hidden;
+}
+
+/* ✅ Glow/fade i sektionen (det mangler på dit billede) */
+.hiw-wrap::before{
+  content:"";
+  position:absolute;
+  inset:-30% -15% -15% -15%;
+  background:
+    radial-gradient(800px 280px at 50% 112%,
+      rgba(250, 204, 21, .16),
+      rgba(250, 204, 21, 0) 62%),
+    linear-gradient(to top,
+      rgba(2, 6, 23, .92) 0%,
+      rgba(2, 6, 23, .60) 45%,
+      rgba(2, 6, 23, 0) 100%);
+  pointer-events:none;
+  z-index:0;
 }
 
 .hiw-title{
-  margin: 0 0 14px;
-  font-size: 28px;
+  position: relative;
+  z-index: 1;
+  margin: 0 0 16px;
+  font-size: 30px;
   font-weight: 900;
   color: #ffffff;
+  letter-spacing: .2px;
 }
 
 .hiw-grid{
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   margin-top: 12px;
 }
 
-/* ✅ bokse som billede: mørkere end bg + fade fra bunden */
+/* ✅ Cards: mindre, lysere, “glass” */
 .hiw-card{
-  text-align:left;
-  padding:22px 22px 20px;
-  border-radius:24px;
+  text-align: left;
+  padding: 18px 18px 16px;
+  border-radius: 20px;
+  min-height: 112px; /* <<< før var 150px, alt for stort */
 
-  /* top glow + fade from bottom */
   background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 72%),
-    rgba(9, 12, 20, 0.90);
+    radial-gradient(circle at 50% 0%,
+      rgba(255,255,255,.08),
+      rgba(255,255,255,0) 55%),
+    linear-gradient(to top,
+      rgba(0,0,0,.42) 0%,
+      rgba(0,0,0,0) 70%),
+    rgba(255,255,255,.06);
 
-  border: 0;
+  border: 1px solid rgba(255,255,255,.10);
 
-  box-shadow: 0 40px 120px rgba(0,0,0,.55);
-  min-height: 150px;
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.40);
 
-  transition: transform .15s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  transition: transform .15s ease, border-color .15s ease;
 }
 
 .hiw-card:hover{
   transform: translateY(-2px);
+  border-color: rgba(250,204,21,.24);
 }
 
 .hiw-num{
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 900;
   color: #fbbf24;
   line-height: 1;
@@ -1188,45 +1188,55 @@ document.addEventListener('click', function (e) {
 }
 
 .hiw-head{
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
   color: #ffffff;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
 .hiw-text{
   font-size: 13px;
-  color: #cbd5e1;
+  color: rgba(226,232,240,.86);
   line-height: 1.5;
 }
 
 
-/* ===== Landing: Trustpilot footer strip ===== */
+/* ===== Landing: Trustpilot footer strip (FIXED) ===== */
 .tp-wrap{
-  margin-top: 85px;
+  margin-top: 70px;
   max-width: 1050px;
   margin-left: auto;
   margin-right: auto;
-  padding-bottom: 30px;
+  padding-bottom: 34px;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
-/* samme mørke fade look */
 .tp-card{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:14px;
 
-  border-radius:24px;
-  padding:18px 20px;
+  border-radius:22px;
+  padding:16px 18px;
 
   background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.05), transparent 55%),
-    linear-gradient(to top, rgba(0,0,0,.50) 0%, rgba(0,0,0,0) 75%),
-    rgba(9, 12, 20, 0.88);
+    radial-gradient(circle at 50% 0%,
+      rgba(255,255,255,.07),
+      rgba(255,255,255,0) 56%),
+    linear-gradient(to top,
+      rgba(0,0,0,.44) 0%,
+      rgba(0,0,0,0) 70%),
+    rgba(255,255,255,.05);
 
-  border:0;
-  box-shadow: 0 40px 120px rgba(0,0,0,.55);
+  border: 1px solid rgba(255,255,255,.10);
+
+  box-shadow:
+    0 18px 70px rgba(0,0,0,.45);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .tp-left{
@@ -1236,7 +1246,7 @@ document.addEventListener('click', function (e) {
 }
 
 .tp-logo{
-  width:130px;
+  width:120px;
   height:auto;
   opacity:.95;
 }
@@ -1249,12 +1259,12 @@ document.addEventListener('click', function (e) {
 
 .tp-sub{
   font-size:12px;
-  color:#cbd5e1;
+  color: rgba(226,232,240,.78);
 }
 
 .tp-btn{
-  border-radius:14px;
-  padding:10px 16px;
+  border-radius: 14px;
+  padding: 10px 16px;
 }
 
 
