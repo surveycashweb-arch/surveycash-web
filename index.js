@@ -1132,16 +1132,16 @@ document.addEventListener('click', function (e) {
 }
 
 
-/* ===== Landing: How it works + Trustpilot (DARK BLUE / NO SHADOW) ===== */
+/* ===== Landing: How it works + Trustpilot (DARK BLUE / NO SHADOW / NO OUTLINE) ===== */
 :root{
   /* ✅ mørkeblå cards (ikke grå) - kun lidt mørkere end baggrund */
   --bg-card: rgba(8, 12, 22, .55);
   --bg-card-hover: rgba(8, 12, 22, .68);
 
-  /* ✅ subtil kant så de ikke flyder sammen */
-  --card-border: rgba(255,255,255,.06);
+  /* ❌ ingen kant */
+  --card-border: transparent;
 
-  /* ✅ INGEN shadow */
+  /* ❌ ingen shadow */
   --card-shadow: none;
 }
 
@@ -1170,7 +1170,7 @@ document.addEventListener('click', function (e) {
   margin-top: 14px;
 }
 
-/* ✅ Cards: samme farve overalt + ingen shadow */
+/* ✅ Cards: ingen outline / ingen hover outline */
 .hiw-card{
   text-align:left;
   padding: 18px 18px 16px;
@@ -1178,15 +1178,15 @@ document.addEventListener('click', function (e) {
   min-height: 108px;
 
   background: var(--bg-card);
-  border: 1px solid var(--card-border);
+  border: 0 !important;
+  outline: none !important;
   box-shadow: none;
 
-  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  transition: transform .15s ease, background .15s ease;
 }
 
 .hiw-card:hover{
   transform: translateY(-2px);
-  border-color: rgba(251,191,36,.18);
   background: var(--bg-card-hover);
 }
 
@@ -1232,17 +1232,16 @@ document.addEventListener('click', function (e) {
   border-radius: 18px;
   padding: 14px 16px;
 
-  /* ✅ samme card-look */
   background: var(--bg-card);
-  border: 1px solid var(--card-border);
+  border: 0 !important;
+  outline: none !important;
   box-shadow: none;
 
-  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  transition: transform .15s ease, background .15s ease;
 }
 
 .tp-card:hover{
   transform: translateY(-1px);
-  border-color: rgba(251,191,36,.14);
   background: var(--bg-card-hover);
 }
 
@@ -1281,6 +1280,7 @@ document.addEventListener('click', function (e) {
   .tp-card{ flex-direction: column; align-items: flex-start; }
   .tp-btn{ width: 100%; text-align: center; }
 }
+
 
 
   /* ===== Account / profil layout ===== */
