@@ -1132,13 +1132,17 @@ document.addEventListener('click', function (e) {
 }
 
 
-/* ===== Landing: How it works + Trustpilot (SAME COLOR) ===== */
+/* ===== Landing: How it works + Trustpilot (DARK BLUE / NO SHADOW) ===== */
 :root{
-  /* ✅ 1 fælles card-look til alle bokse */
-  --bg-card: rgba(255,255,255,.045);       /* kun lidt mørkere end baggrund */
-  --bg-card-hover: rgba(255,255,255,.055); /* hover lysere */
+  /* ✅ mørkeblå cards (ikke grå) - kun lidt mørkere end baggrund */
+  --bg-card: rgba(8, 12, 22, .55);
+  --bg-card-hover: rgba(8, 12, 22, .68);
+
+  /* ✅ subtil kant så de ikke flyder sammen */
   --card-border: rgba(255,255,255,.06);
-  --card-shadow: 0 16px 60px rgba(0,0,0,.35);
+
+  /* ✅ INGEN shadow */
+  --card-shadow: none;
 }
 
 /* ===== Landing: How it works ===== */
@@ -1166,7 +1170,7 @@ document.addEventListener('click', function (e) {
   margin-top: 14px;
 }
 
-/* ✅ Cards: samme farve overalt */
+/* ✅ Cards: samme farve overalt + ingen shadow */
 .hiw-card{
   text-align:left;
   padding: 18px 18px 16px;
@@ -1175,7 +1179,7 @@ document.addEventListener('click', function (e) {
 
   background: var(--bg-card);
   border: 1px solid var(--card-border);
-  box-shadow: var(--card-shadow);
+  box-shadow: none;
 
   transition: transform .15s ease, border-color .15s ease, background .15s ease;
 }
@@ -1231,7 +1235,7 @@ document.addEventListener('click', function (e) {
   /* ✅ samme card-look */
   background: var(--bg-card);
   border: 1px solid var(--card-border);
-  box-shadow: var(--card-shadow);
+  box-shadow: none;
 
   transition: transform .15s ease, border-color .15s ease, background .15s ease;
 }
@@ -1277,7 +1281,6 @@ document.addEventListener('click', function (e) {
   .tp-card{ flex-direction: column; align-items: flex-start; }
   .tp-btn{ width: 100%; text-align: center; }
 }
-
 
 
   /* ===== Account / profil layout ===== */
