@@ -1132,82 +1132,91 @@ document.addEventListener('click', function (e) {
 }
 
 
+/* ===== Landing: How it works + Trustpilot (SAME COLOR) ===== */
+:root{
+  /* ✅ 1 fælles card-look til alle bokse */
+  --bg-card: rgba(255,255,255,.045);       /* kun lidt mørkere end baggrund */
+  --bg-card-hover: rgba(255,255,255,.055); /* hover lysere */
+  --card-border: rgba(255,255,255,.06);
+  --card-shadow: 0 16px 60px rgba(0,0,0,.35);
+}
+
 /* ===== Landing: How it works ===== */
 .hiw-wrap{
-  margin-top: 95px;
+  margin-top: 78px;
   max-width: 1050px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+  padding: 0 10px;
 }
 
 .hiw-title{
-  margin: 0 0 14px;
-  font-size: 28px;
+  margin: 0 0 18px;
+  font-size: 32px;
   font-weight: 900;
   color: #ffffff;
+  letter-spacing: .2px;
 }
 
 .hiw-grid{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 12px;
+  gap: 16px;
+  margin-top: 14px;
 }
 
-/* ✅ mørkere bokse end baggrund */
+/* ✅ Cards: samme farve overalt */
 .hiw-card{
-  text-align: left;
-  padding: 16px 16px 14px;
+  text-align:left;
+  padding: 18px 18px 16px;
   border-radius: 18px;
+  min-height: 108px;
 
-  /* vigtig: mørkere end baggrund */
-  background: rgba(10, 14, 26, 0.88);
+  background: var(--bg-card);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
 
-  /* ingen grå outline */
-  border: 0;
-
-  /* lille blød shadow (ikke hård kant) */
-  box-shadow: 0 20px 60px rgba(0,0,0,.45);
-
-  min-height: 96px;
-  transition: transform .15s ease, background .15s ease;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
 }
 
 .hiw-card:hover{
   transform: translateY(-2px);
-  background: rgba(12, 16, 30, 0.92);
+  border-color: rgba(251,191,36,.18);
+  background: var(--bg-card-hover);
 }
 
 .hiw-num{
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 900;
   color: #fbbf24;
   line-height: 1;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .hiw-head{
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 850;
   color: #ffffff;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
 .hiw-text{
-  font-size: 12px;
-  color: #cbd5e1;
+  font-size: 12.5px;
+  color: rgba(203,213,225,.92);
   line-height: 1.5;
 }
 
 
 /* ===== Landing: Trustpilot footer strip ===== */
 .tp-wrap{
-  margin-top: 85px;
+  margin-top: 55px;
   max-width: 1050px;
   margin-left: auto;
   margin-right: auto;
   padding-bottom: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .tp-card{
@@ -1215,20 +1224,22 @@ document.addEventListener('click', function (e) {
   align-items: center;
   justify-content: space-between;
   gap: 14px;
+
   border-radius: 18px;
   padding: 14px 16px;
 
-  /* samme stil som how-it-works */
-  background: rgba(10, 14, 26, 0.80);
+  /* ✅ samme card-look */
+  background: var(--bg-card);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
 
-  border: 0;
-  box-shadow: 0 20px 60px rgba(0,0,0,.40);
-
-  transition: background .15s ease;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
 }
 
 .tp-card:hover{
-  background: rgba(12, 16, 30, 0.86);
+  transform: translateY(-1px);
+  border-color: rgba(251,191,36,.14);
+  background: var(--bg-card-hover);
 }
 
 .tp-left{
@@ -1251,7 +1262,7 @@ document.addEventListener('click', function (e) {
 
 .tp-sub{
   font-size: 12px;
-  color: #cbd5e1;
+  color: rgba(203,213,225,.92);
 }
 
 .tp-btn{
