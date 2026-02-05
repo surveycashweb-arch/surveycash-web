@@ -843,10 +843,20 @@ document.addEventListener('click', function (e) {
 
   return `<!doctype html>
 <html lang="en">
+
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>${title}</title>
+
+<!-- TrustBox script -->
+<script
+  type="text/javascript"
+  src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js"
+  async>
+</script>
+<!-- End TrustBox script -->
+
 <style>
   :root { color-scheme: dark; }
   * {
@@ -1281,6 +1291,28 @@ document.addEventListener('click', function (e) {
   .tp-btn{ width: 100%; text-align: center; }
 }
 
+/* ===== REAL Trustpilot widget style ===== */
+.tp-wrap{
+  margin-top:55px;
+  max-width:1050px;
+  margin-left:auto;
+  margin-right:auto;
+  padding:0 10px 30px;
+}
+
+.tp-card{
+  background: rgba(8,12,22,.55);
+  border-radius:18px;
+  padding:14px 16px;
+
+  border:0 !important;
+  outline:none !important;
+  box-shadow:none !important;
+}
+
+.tp-card:hover{
+  background: rgba(8,12,22,.68);
+}
 
 
   /* ===== Account / profil layout ===== */
@@ -1886,22 +1918,27 @@ function landingHtml() {
       </div>
     </div>
 
-    <!-- Trustpilot (bottom) -->
-    <div class="tp-wrap">
-      <div class="tp-card">
-        <div class="tp-left">
-          <img src="/trustpilot-logo.png" alt="Trustpilot" class="tp-logo" />
-          <div class="tp-text">
-            <div class="tp-title">Trustpilot</div>
-            <div class="tp-sub">Rate your experience with SurveyCash.</div>
-          </div>
-        </div>
+<!-- ===== Trustpilot (Official Widget) ===== -->
+<div class="tp-wrap">
+  <div class="tp-card">
 
-        <a class="btn btn-signup tp-btn" href="https://www.trustpilot.com" target="_blank" rel="noreferrer">
-          View on Trustpilot
-        </a>
-      </div>
+    <div class="trustpilot-widget"
+         data-locale="en-US"
+         data-template-id="56278e9abfbbba0bdcd568bc"
+         data-businessunit-id="697f86a921eb9b696d2c7a57"
+         data-style-height="52px"
+         data-style-width="100%"
+         data-token="c56d54e8-ef19-4f94-aa85-f2358fbae09e">
+      <a href="https://www.trustpilot.com/review/surveycash.website"
+         target="_blank"
+         rel="noopener">
+        Trustpilot
+      </a>
     </div>
+
+  </div>
+</div>
+<!-- ===== End Trustpilot ===== -->
   </section>
   `;
 }
