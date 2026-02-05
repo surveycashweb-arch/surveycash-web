@@ -1291,27 +1291,38 @@ document.addEventListener('click', function (e) {
   .tp-btn{ width: 100%; text-align: center; }
 }
 
-/* ===== REAL Trustpilot widget style ===== */
+/* ===== Trustpilot strip (PRO, dark, clean) ===== */
 .tp-wrap{
-  margin-top:55px;
-  max-width:1050px;
-  margin-left:auto;
-  margin-right:auto;
-  padding:0 10px 30px;
+  margin-top: 55px;
+  max-width: 1050px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 10px 30px;
 }
 
 .tp-card{
-  background: rgba(8,12,22,.55);
-  border-radius:18px;
-  padding:14px 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(8,12,22,.75),
+    rgba(8,12,22,.55)
+  );
+  border-radius: 18px;
+  padding: 18px 18px;
 
-  border:0 !important;
-  outline:none !important;
-  box-shadow:none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255,255,255,.05);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
 }
 
 .tp-card:hover{
-  background: rgba(8,12,22,.68);
+  background: linear-gradient(
+    180deg,
+    rgba(8,12,22,.85),
+    rgba(8,12,22,.65)
+  );
 }
 
 
