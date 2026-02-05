@@ -1357,13 +1357,20 @@ document.addEventListener('click', function (e) {
 
 /* right button */
 .tp-pill{
-  background:#fbbf24;
-  color:#111827;
+  background:#22c55e;        /* Trustpilot grøn */
+  color:#ffffff;             /* hvid tekst */
   font-weight:800;
   padding:10px 16px;
   border-radius:14px;
   font-size:13px;
+  transition: all .15s ease;
 }
+
+.tp-pill:hover{
+  background:#16a34a;        /* mørkere grøn hover */
+  transform: translateY(-1px);
+}
+
 
 /* mobile */
 @media (max-width:900px){
