@@ -1291,7 +1291,7 @@ document.addEventListener('click', function (e) {
   .tp-btn{ width: 100%; text-align: center; }
 }
 
-/* ===== Trustpilot (custom bar, matches SurveyCash) ===== */
+/* ===== Trustpilot (custom bar – matcher SurveyCash) ===== */
 .tp-wrap{
   margin-top: 55px;
   max-width: 1050px;
@@ -1300,7 +1300,6 @@ document.addEventListener('click', function (e) {
   padding: 0 10px 30px;
 }
 
-/* hele baren er et link */
 .tp-bar{
   display:flex;
   align-items:center;
@@ -1308,53 +1307,54 @@ document.addEventListener('click', function (e) {
   gap:14px;
 
   text-decoration:none;
-  border-radius:18px;
-  padding:16px 18px;
+  border-radius: 18px;
+  padding: 16px 18px;
 
-  background: rgba(8, 12, 22, .55);
-  border: 0;
-  outline: none;
-  box-shadow: none;
+  background: rgba(8,12,22,.55);
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
 
   transition: transform .15s ease, background .15s ease;
 }
 
 .tp-bar:hover{
   transform: translateY(-1px);
-  background: rgba(8, 12, 22, .68);
+  background: rgba(8,12,22,.68);
 }
 
 .tp-bar-left{
   display:flex;
   align-items:center;
   gap:14px;
-  min-width: 0;
+  min-width:0;
 }
 
 .tp-mark{
   width: 34px;
   height: 34px;
   opacity: .95;
+  flex: 0 0 auto;
 }
 
 .tp-bar-text{
   display:flex;
   flex-direction:column;
   gap:4px;
-  min-width: 0;
+  min-width:0;
 }
 
-.tp-bar-top{
+.tp-bar-title{
   font-weight: 900;
   color:#fff;
   line-height:1.1;
 }
 
-.tp-bar-bottom{
+.tp-bar-sub{
   display:flex;
   align-items:center;
   gap:10px;
-  flex-wrap: wrap;
+  flex-wrap:wrap;
 }
 
 .tp-stars{
@@ -1363,10 +1363,24 @@ document.addEventListener('click', function (e) {
   transform: translateY(-1px);
 }
 
+/* 5 små grønne “Trustpilot-style” stjerner */
 .tp-star{
-  font-size: 16px;
-  line-height: 1;
-  color: #22c55e; /* Trustpilot grøn vibe */
+  width: 14px;
+  height: 14px;
+  display:inline-block;
+  background: #22c55e;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
 }
 
 .tp-copy{
@@ -1375,10 +1389,10 @@ document.addEventListener('click', function (e) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 520px;
+  max-width: 560px;
 }
 
-/* knappen til højre */
+/* højre “knap” */
 .tp-pill{
   display:inline-flex;
   align-items:center;
@@ -1398,7 +1412,7 @@ document.addEventListener('click', function (e) {
 /* mobil */
 @media (max-width: 900px){
   .tp-bar{ flex-direction: column; align-items: flex-start; }
-  .tp-pill{ width:100%; }
+  .tp-pill{ width:100%; text-align:center; }
   .tp-copy{ max-width: 100%; }
 }
 
@@ -2012,10 +2026,15 @@ function landingHtml() {
     <div class="tp-bar-left">
       <img src="/trustpilot-mark.svg" alt="Trustpilot" class="tp-mark" />
       <div class="tp-bar-text">
-        <div class="tp-bar-top">Trustpilot</div>
-        <div class="tp-bar-bottom">
-          <span class="tp-stars" aria-label="5 out of 5 stars">
-            <span class="tp-star">★</span><span class="tp-star">★</span><span class="tp-star">★</span><span class="tp-star">★</span><span class="tp-star">★</span>
+        <div class="tp-bar-title">Trustpilot</div>
+
+        <div class="tp-bar-sub">
+          <span class="tp-stars" aria-hidden="true">
+            <span class="tp-star"></span>
+            <span class="tp-star"></span>
+            <span class="tp-star"></span>
+            <span class="tp-star"></span>
+            <span class="tp-star"></span>
           </span>
           <span class="tp-copy">See our reviews on Trustpilot</span>
         </div>
