@@ -1291,7 +1291,7 @@ document.addEventListener('click', function (e) {
   .tp-btn{ width: 100%; text-align: center; }
 }
 
-/* ===== Trustpilot bar (stars first layout) ===== */
+/* ===== Trustpilot bar (NO STARS / clean layout) ===== */
 
 .tp-wrap{
   margin-top:55px;
@@ -1324,40 +1324,35 @@ document.addEventListener('click', function (e) {
 .tp-bar-left{
   display:flex;
   align-items:center;
-  gap:18px;
-}
-
-/* stars */
-.tp-stars{
-  display:flex;
-  gap:6px;
-}
-
-.tp-star{
-  font-size:18px;
-  color:#22c55e;
+  gap:14px;
 }
 
 /* text + logo inline */
 .tp-bar-bottom{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:10px;
 }
 
+/* større tekst */
 .tp-copy{
-  font-size:13px;
-  color:rgba(203,213,225,.9);
+  font-size:15px;
+  color:rgba(203,213,225,.95);
+  font-weight:500;
 }
 
+/* Trustpilot logo */
 .tp-mark-inline{
-  width:16px;
-  height:16px;
+  width:18px;
+  height:18px;
 }
 
+/* TRUSTPILOT ord */
 .tp-brand{
-  font-weight:800;
-  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  color:#ffffff;
+  letter-spacing:.2px;
 }
 
 /* right button */
@@ -1382,6 +1377,7 @@ document.addEventListener('click', function (e) {
     text-align:center;
   }
 }
+
 
 
   /* ===== Account / profil layout ===== */
@@ -1993,16 +1989,6 @@ function landingHtml() {
 
     <div class="tp-bar-left">
 
-      <!-- STJERNER FØRST -->
-      <div class="tp-stars" aria-label="5 out of 5 stars">
-        <span class="tp-star">★</span>
-        <span class="tp-star">★</span>
-        <span class="tp-star">★</span>
-        <span class="tp-star">★</span>
-        <span class="tp-star">★</span>
-      </div>
-
-      <!-- TEXT + LOGO -->
       <div class="tp-bar-text">
         <div class="tp-bar-bottom">
           <span class="tp-copy">See our reviews on</span>
@@ -2013,11 +1999,11 @@ function landingHtml() {
 
     </div>
 
-    <!-- KNAP -->
     <span class="tp-pill">View on Trustpilot</span>
 
   </a>
 </div>
+
 <!-- End Trustpilot -->
   </section>
   `;
