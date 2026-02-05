@@ -1291,7 +1291,7 @@ document.addEventListener('click', function (e) {
   .tp-btn{ width: 100%; text-align: center; }
 }
 
-/* ===== Trustpilot strip (PRO, dark, clean) ===== */
+/* ===== Trustpilot (custom bar, matches SurveyCash) ===== */
 .tp-wrap{
   margin-top: 55px;
   max-width: 1050px;
@@ -1300,29 +1300,106 @@ document.addEventListener('click', function (e) {
   padding: 0 10px 30px;
 }
 
-.tp-card{
-  background: linear-gradient(
-    180deg,
-    rgba(8,12,22,.75),
-    rgba(8,12,22,.55)
-  );
-  border-radius: 18px;
-  padding: 18px 18px;
+/* hele baren er et link */
+.tp-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-decoration:none;
+  border-radius:18px;
+  padding:16px 18px;
 
-  border: 1px solid rgba(255,255,255,.05);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  background: rgba(8, 12, 22, .55);
+  border: 0;
+  outline: none;
+  box-shadow: none;
+
+  transition: transform .15s ease, background .15s ease;
 }
 
-.tp-card:hover{
-  background: linear-gradient(
-    180deg,
-    rgba(8,12,22,.85),
-    rgba(8,12,22,.65)
-  );
+.tp-bar:hover{
+  transform: translateY(-1px);
+  background: rgba(8, 12, 22, .68);
+}
+
+.tp-bar-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-width: 0;
+}
+
+.tp-mark{
+  width: 34px;
+  height: 34px;
+  opacity: .95;
+}
+
+.tp-bar-text{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width: 0;
+}
+
+.tp-bar-top{
+  font-weight: 900;
+  color:#fff;
+  line-height:1.1;
+}
+
+.tp-bar-bottom{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap: wrap;
+}
+
+.tp-stars{
+  display:inline-flex;
+  gap:4px;
+  transform: translateY(-1px);
+}
+
+.tp-star{
+  font-size: 16px;
+  line-height: 1;
+  color: #22c55e; /* Trustpilot grøn vibe */
+}
+
+.tp-copy{
+  font-size: 12.5px;
+  color: rgba(203,213,225,.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 520px;
+}
+
+/* knappen til højre */
+.tp-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:10px 16px;
+  border-radius:14px;
+
+  background:#fbbf24;
+  color:#111827;
+  font-weight:800;
+  font-size: 13px;
+
+  white-space: nowrap;
+}
+
+/* mobil */
+@media (max-width: 900px){
+  .tp-bar{ flex-direction: column; align-items: flex-start; }
+  .tp-pill{ width:100%; }
+  .tp-copy{ max-width: 100%; }
 }
 
 
@@ -1929,27 +2006,26 @@ function landingHtml() {
       </div>
     </div>
 
-<!-- ===== Trustpilot (Official Widget) ===== -->
+<!-- Trustpilot (custom bar) -->
 <div class="tp-wrap">
-  <div class="tp-card">
-
-    <div class="trustpilot-widget"
-         data-locale="en-US"
-         data-template-id="56278e9abfbbba0bdcd568bc"
-         data-businessunit-id="697f86a921eb9b696d2c7a57"
-         data-style-height="52px"
-         data-style-width="100%"
-         data-token="c56d54e8-ef19-4f94-aa85-f2358fbae09e">
-      <a href="https://www.trustpilot.com/review/surveycash.website"
-         target="_blank"
-         rel="noopener">
-        Trustpilot
-      </a>
+  <a class="tp-bar" href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener">
+    <div class="tp-bar-left">
+      <img src="/trustpilot-mark.svg" alt="Trustpilot" class="tp-mark" />
+      <div class="tp-bar-text">
+        <div class="tp-bar-top">Trustpilot</div>
+        <div class="tp-bar-bottom">
+          <span class="tp-stars" aria-label="5 out of 5 stars">
+            <span class="tp-star">★</span><span class="tp-star">★</span><span class="tp-star">★</span><span class="tp-star">★</span><span class="tp-star">★</span>
+          </span>
+          <span class="tp-copy">See our reviews on Trustpilot</span>
+        </div>
+      </div>
     </div>
 
-  </div>
+    <span class="tp-pill">View on Trustpilot</span>
+  </a>
 </div>
-<!-- ===== End Trustpilot ===== -->
+<!-- End Trustpilot -->
   </section>
   `;
 }
