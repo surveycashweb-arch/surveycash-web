@@ -1291,31 +1291,28 @@ document.addEventListener('click', function (e) {
   .tp-btn{ width: 100%; text-align: center; }
 }
 
-/* ===== Trustpilot (custom bar – matcher SurveyCash) ===== */
+/* ===== Trustpilot bar (stars first layout) ===== */
+
 .tp-wrap{
-  margin-top: 55px;
-  max-width: 1050px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 10px 30px;
+  margin-top:55px;
+  max-width:1050px;
+  margin-left:auto;
+  margin-right:auto;
+  padding:0 10px 30px;
 }
 
 .tp-bar{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:14px;
+  gap:16px;
 
   text-decoration:none;
-  border-radius: 18px;
-  padding: 16px 18px;
+  border-radius:18px;
+  padding:18px 20px;
 
   background: rgba(8,12,22,.55);
-  border: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
-
-  transition: transform .15s ease, background .15s ease;
+  transition: all .15s ease;
 }
 
 .tp-bar:hover{
@@ -1323,97 +1320,67 @@ document.addEventListener('click', function (e) {
   background: rgba(8,12,22,.68);
 }
 
+/* left area */
 .tp-bar-left{
   display:flex;
   align-items:center;
-  gap:14px;
-  min-width:0;
+  gap:18px;
 }
 
-.tp-mark{
-  width: 34px;
-  height: 34px;
-  opacity: .95;
-  flex: 0 0 auto;
-}
-
-.tp-bar-text{
+/* stars */
+.tp-stars{
   display:flex;
-  flex-direction:column;
-  gap:4px;
-  min-width:0;
+  gap:6px;
 }
 
-.tp-bar-title{
-  font-weight: 900;
-  color:#fff;
-  line-height:1.1;
+.tp-star{
+  font-size:18px;
+  color:#22c55e;
 }
 
-.tp-bar-sub{
+/* text + logo inline */
+.tp-bar-bottom{
   display:flex;
   align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.tp-stars{
-  display:inline-flex;
-  gap:4px;
-  transform: translateY(-1px);
-}
-
-/* 5 små grønne “Trustpilot-style” stjerner */
-.tp-star{
-  width: 14px;
-  height: 14px;
-  display:inline-block;
-  background: #22c55e;
-  clip-path: polygon(
-    50% 0%,
-    61% 35%,
-    98% 35%,
-    68% 57%,
-    79% 91%,
-    50% 70%,
-    21% 91%,
-    32% 57%,
-    2% 35%,
-    39% 35%
-  );
+  gap:8px;
 }
 
 .tp-copy{
-  font-size: 12.5px;
-  color: rgba(203,213,225,.92);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 560px;
+  font-size:13px;
+  color:rgba(203,213,225,.9);
 }
 
-/* højre “knap” */
+.tp-mark-inline{
+  width:16px;
+  height:16px;
+}
+
+.tp-brand{
+  font-weight:800;
+  color:#fff;
+}
+
+/* right button */
 .tp-pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
-  padding:10px 16px;
-  border-radius:14px;
-
   background:#fbbf24;
   color:#111827;
   font-weight:800;
-  font-size: 13px;
-
-  white-space: nowrap;
+  padding:10px 16px;
+  border-radius:14px;
+  font-size:13px;
 }
 
-/* mobil */
-@media (max-width: 900px){
-  .tp-bar{ flex-direction: column; align-items: flex-start; }
-  .tp-pill{ width:100%; text-align:center; }
-  .tp-copy{ max-width: 100%; }
+/* mobile */
+@media (max-width:900px){
+  .tp-bar{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .tp-pill{
+    width:100%;
+    text-align:center;
+  }
 }
 
 
@@ -2023,25 +1990,32 @@ function landingHtml() {
 <!-- Trustpilot (custom bar) -->
 <div class="tp-wrap">
   <a class="tp-bar" href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener">
-    <div class="tp-bar-left">
-      <img src="/trustpilot-mark.svg" alt="Trustpilot" class="tp-mark" />
-      <div class="tp-bar-text">
-        <div class="tp-bar-title">Trustpilot</div>
 
-        <div class="tp-bar-sub">
-          <span class="tp-stars" aria-hidden="true">
-            <span class="tp-star"></span>
-            <span class="tp-star"></span>
-            <span class="tp-star"></span>
-            <span class="tp-star"></span>
-            <span class="tp-star"></span>
-          </span>
-          <span class="tp-copy">See our reviews on Trustpilot</span>
+    <div class="tp-bar-left">
+
+      <!-- STJERNER FØRST -->
+      <div class="tp-stars" aria-label="5 out of 5 stars">
+        <span class="tp-star">★</span>
+        <span class="tp-star">★</span>
+        <span class="tp-star">★</span>
+        <span class="tp-star">★</span>
+        <span class="tp-star">★</span>
+      </div>
+
+      <!-- TEXT + LOGO -->
+      <div class="tp-bar-text">
+        <div class="tp-bar-bottom">
+          <span class="tp-copy">See our reviews on</span>
+          <img src="/trustpilot-mark.svg" alt="Trustpilot" class="tp-mark-inline" />
+          <span class="tp-brand">Trustpilot</span>
         </div>
       </div>
+
     </div>
 
+    <!-- KNAP -->
     <span class="tp-pill">View on Trustpilot</span>
+
   </a>
 </div>
 <!-- End Trustpilot -->
