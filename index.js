@@ -62,17 +62,10 @@ const app = express();
 app.set('trust proxy', 1);
 
 
-// --- body parsers (skal være før routes/postbacks) ---
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// --- cookies + cors (hvis du bruger cookies/session) ---
-app.use(cookieParser());
-app.use(cors());
 
-// --- static files ---
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 const PORT = process.env.PORT || 6000;
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
@@ -3075,62 +3068,19 @@ app.get('/surveys/cpx', (req, res) => {
 });
 
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
-});
-
-app.get('/surveys', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/surveys.html'));
-});
-
-
-// 👇 INDSÆT GAMES HER
-app.get('/games', async (req, res) => {
-  try {
-    if (!isLoggedIn(req)) return res.redirect('/?login=1');
-
-    // Find bruger-id via din eksisterende session-cookie (du bruger den allerede i isLoggedIn)
-    // Jeg gætter cookie-navnet er "sid" eller "session". Vi prøver begge:
-    const sid = req.cookies.sid || req.cookies.session || req.cookies.session_id || null;
-    if (!sid) return res.redirect('/?login=1');
-
-    // Hent user_id fra sessions tabellen (du har public.sessions)
-    const { data: sess, error: sessErr } = await supabaseAdmin
-      .from('sessions')
-      .select('user_id')
-      .eq('id', sid)
-      .maybeSingle();
-
-    if (sessErr || !sess?.user_id) return res.redirect('/?login=1');
-
-    const apiKey = process.env.WANNADS_API_KEY;
-    if (!apiKey) return res.status(500).send('Missing WANNADS_API_KEY');
-
-    const wallUrl =
-      `https://earn.wannads.com/wall?apiKey=${encodeURIComponent(apiKey)}&userId=${encodeURIComponent(sess.user_id)}`;
-
-    return res.send(
-      page(
-        req,
-        'Games — SurveyCash',
-        '/games',
-        `
-          <h1>Play Games & Earn</h1>
-          <p>Complete offers and earn rewards instantly.</p>
-          <div style="margin-top:16px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08)">
-            <iframe
-              src="${wallUrl}"
-              style="width:100%;height:800px;border:0;display:block"
-              scrolling="yes"
-            ></iframe>
-          </div>
-        `
-      )
-    );
-  } catch (e) {
-    console.error('games route error', e);
-    return res.status(500).send('error loading games: ' + (e?.message || String(e)));
-  }
+app.get('/games', (req, res) => {
+  if (!isLoggedIn(req)) return res.redirect('/');
+  res.send(
+    page(
+      req,
+      'Games — SurveyCash',
+      '/games',
+      `
+    <h1>Games</h1>
+    <p>Snart kan du spille mini-games og optjene rewards.</p>
+  `,
+    ),
+  );
 });
 
 
@@ -3275,76 +3225,6 @@ app.get('/cpx/postback', async (req, res) => {
     return res.status(200).send('ok');
   }
 });
-
-
-
-app.all('/postback/wannads', async (req, res) => {
-  try {
-    const q = { ...req.query, ...req.body };
-
-    // wannads kan bruge forskellige param navne, vi tager de mest normale
-    const transId = String(q.trans_id || q.transaction_id || q.txid || q.click_id || q.conversion_id || q.id || '').trim();
-    const userId  = String(q.userId || q.userid || q.subid || q.user_id || q.uid || '').trim();
-
-    const amountRaw = q.amount ?? q.reward ?? q.payout ?? q.value ?? '0';
-    const amount = Number(String(amountRaw).replace(',', '.')) || 0;
-
-    if (!userId) return res.status(200).send('ok');
-
-    // find profil på samme måde som CPX (user_id eller email)
-    const profile = await findProfileByUserIdOrEmailSupabase(userId);
-    if (!profile) return res.status(200).send('ok');
-
-    const cents = Math.round(Math.max(0, amount) * 100);
-    if (cents <= 0) return res.status(200).send('ok');
-
-    // --- anti-duplicate (anbefalet): kræv transId hvis wannads sender den ---
-    if (transId) {
-      const { error: insErr } = await supabaseAdmin
-        .from('wannads_transactions')
-        .insert({
-          user_id: profile.user_id,
-          trans_id: transId,
-          cents,
-          status: 1,
-        });
-
-      // duplicate => ignore
-      if (insErr && insErr.code === '23505') {
-        return res.status(200).send('ok');
-      }
-      if (insErr) {
-        console.error('wannads_transactions insert error:', insErr);
-        return res.status(200).send('ok');
-      }
-    }
-
-    const currentBalance = Number(profile.balance_cents || 0);
-    const currentTotal   = Number(profile.total_earned_cents || 0);
-    const currentOffers  = Number(profile.completed_offers || 0);
-
-    const { error: upErr } = await supabaseAdmin
-      .from('profiles')
-      .update({
-        balance_cents: currentBalance + cents,
-        total_earned_cents: currentTotal + cents,
-        completed_offers: currentOffers + 1,
-      })
-      .eq('user_id', profile.user_id);
-
-    if (upErr) console.error('Wannads credit update error:', upErr);
-
-    console.log('Wannads reward:', profile.user_id, transId || '-', cents);
-    return res.status(200).send('ok');
-
-  } catch (err) {
-    console.error('Wannads error:', err);
-    return res.status(200).send('ok');
-  }
-});
-
-
-
 
 app.get('/cashout', async (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
