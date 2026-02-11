@@ -3089,19 +3089,25 @@ app.get('/games', async (req, res) => {
   try {
     if (!isLoggedIn(req)) return res.redirect('/?login=1');
 
-    // ✅ Brug din eksisterende helper til at få current user
-    // Du har typisk en af de her i din kode:
-    // - getCurrentUser(req)
-    // - requireUser(req)
-    // - sessionUser(req)
-    // Find hvad du bruger på /cashout eller /wallet.
-    const me = await getMe(req); // <-- SKIFT til din rigtige helper (se nedenfor)
-    const userId = me?.user_id || me?.id;
+    // Find bruger-id via din eksisterende session-cookie (du bruger den allerede i isLoggedIn)
+    // Jeg gætter cookie-navnet er "sid" eller "session". Vi prøver begge:
+    const sid = req.cookies.sid || req.cookies.session || req.cookies.session_id || null;
+    if (!sid) return res.redirect('/?login=1');
 
-    if (!userId) return res.redirect('/?login=1');
+    // Hent user_id fra sessions tabellen (du har public.sessions)
+    const { data: sess, error: sessErr } = await supabaseAdmin
+      .from('sessions')
+      .select('user_id')
+      .eq('id', sid)
+      .maybeSingle();
+
+    if (sessErr || !sess?.user_id) return res.redirect('/?login=1');
 
     const apiKey = process.env.WANNADS_API_KEY;
-    const wallUrl = `https://earn.wannads.com/wall?apiKey=${encodeURIComponent(apiKey)}&userId=${encodeURIComponent(userId)}`;
+    if (!apiKey) return res.status(500).send('Missing WANNADS_API_KEY');
+
+    const wallUrl =
+      `https://earn.wannads.com/wall?apiKey=${encodeURIComponent(apiKey)}&userId=${encodeURIComponent(sess.user_id)}`;
 
     return res.send(
       page(
@@ -3123,11 +3129,9 @@ app.get('/games', async (req, res) => {
     );
   } catch (e) {
     console.error('games route error', e);
-    return res.status(500).send('error loading games');
+    return res.status(500).send('error loading games: ' + (e?.message || String(e)));
   }
 });
-
-
 
 
 
