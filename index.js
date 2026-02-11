@@ -3087,41 +3087,46 @@ app.get('/surveys', (req, res) => {
 // 👇 INDSÆT GAMES HER
 app.get('/games', async (req, res) => {
   try {
-    const token = req.cookies['sb-access-token'];
-    if (!token) return res.redirect('/?login=1');
+    if (!isLoggedIn(req)) return res.redirect('/?login=1');
 
-    const { data: { user } } = await supabasePublic.auth.getUser(token);
-    if (!user) return res.redirect('/?login=1');
+    // ✅ Brug din eksisterende helper til at få current user
+    // Du har typisk en af de her i din kode:
+    // - getCurrentUser(req)
+    // - requireUser(req)
+    // - sessionUser(req)
+    // Find hvad du bruger på /cashout eller /wallet.
+    const me = await getMe(req); // <-- SKIFT til din rigtige helper (se nedenfor)
+    const userId = me?.user_id || me?.id;
+
+    if (!userId) return res.redirect('/?login=1');
 
     const apiKey = process.env.WANNADS_API_KEY;
+    const wallUrl = `https://earn.wannads.com/wall?apiKey=${encodeURIComponent(apiKey)}&userId=${encodeURIComponent(userId)}`;
 
-    const wallUrl =
-      `https://earn.wannads.com/wall?apiKey=${apiKey}&userId=${user.id}`;
-
-    res.send(`
-      <html>
-        <head>
-          <title>Games</title>
-          <style>
-            body{margin:0;background:#0f172a;color:white;font-family:system-ui}
-            .wrap{max-width:1100px;margin:30px auto;padding:0 20px}
-            iframe{width:100%;height:800px;border:0;border-radius:14px}
-          </style>
-        </head>
-        <body>
-          <div class="wrap">
-            <h1>Play Games & Earn</h1>
-            <iframe src="${wallUrl}"></iframe>
+    return res.send(
+      page(
+        req,
+        'Games — SurveyCash',
+        '/games',
+        `
+          <h1>Play Games & Earn</h1>
+          <p>Complete offers and earn rewards instantly.</p>
+          <div style="margin-top:16px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08)">
+            <iframe
+              src="${wallUrl}"
+              style="width:100%;height:800px;border:0;display:block"
+              scrolling="yes"
+            ></iframe>
           </div>
-        </body>
-      </html>
-    `);
-
-  } catch (err) {
-    console.error(err);
-    res.send('error loading games');
+        `
+      )
+    );
+  } catch (e) {
+    console.error('games route error', e);
+    return res.status(500).send('error loading games');
   }
 });
+
 
 
 
