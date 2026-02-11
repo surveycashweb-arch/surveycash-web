@@ -3070,18 +3070,105 @@ app.get('/surveys/cpx', (req, res) => {
 
 app.get('/games', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
+
   res.send(
     page(
       req,
       'Games — SurveyCash',
       '/games',
       `
-    <h1>Games</h1>
-    <p>Snart kan du spille mini-games og optjene rewards.</p>
-  `,
+      <h1>Games</h1>
+      <p>Play partner game offers and earn rewards.</p>
+
+      <div class="games-grid">
+
+        <a href="/games/wannads" class="game-card wannads">
+          <div class="logo">🎮</div>
+          <h3>Game Offers</h3>
+          <p>Play games and earn rewards instantly</p>
+        </a>
+
+      </div>
+
+      <style>
+        .games-grid{
+          margin-top:30px;
+          display:grid;
+          grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+          gap:18px;
+        }
+
+        .game-card{
+          background:#111827;
+          border-radius:16px;
+          padding:22px;
+          text-decoration:none;
+          color:#fff;
+          border:1px solid rgba(255,255,255,.06);
+          transition:.15s ease;
+        }
+
+        .game-card:hover{
+          transform:translateY(-3px);
+          border-color:#fbbf24;
+        }
+
+        .game-card .logo{
+          font-size:32px;
+          margin-bottom:10px;
+        }
+
+        .game-card h3{
+          margin:0 0 6px 0;
+          font-size:18px;
+        }
+
+        .game-card p{
+          margin:0;
+          font-size:13px;
+          color:#9ca3af;
+        }
+      </style>
+      `,
     ),
   );
 });
+
+
+// ===== WANNADS GAME OFFERS =====
+app.get('/games/wannads', (req, res) => {
+
+  if (!isLoggedIn(req)) return res.redirect('/');
+
+  const userId = req.session?.user?.id || 'guest';
+
+  const wannadsUrl =
+    `https://earn.wannads.com/wall?apiKey=${process.env.WANNADS_API_KEY}&userId=${userId}`;
+
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Game Offers</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style>
+          body{
+            margin:0;
+            background:#0f172a;
+            font-family:system-ui;
+          }
+        </style>
+      </head>
+      <body>
+        <iframe
+          src="${wannadsUrl}"
+          style="width:100%; height:100vh; border:0;">
+        </iframe>
+      </body>
+    </html>
+  `);
+});
+
 
 
 
