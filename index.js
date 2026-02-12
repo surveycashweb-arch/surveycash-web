@@ -3128,10 +3128,12 @@ app.get('/games', (req, res) => {
 
 // ===== WANNADS GAME OFFERS =====
 app.get('/games/wannads', (req, res) => {
-  if (!isLoggedIn(req)) return res.redirect('/');
 
-  const userId = req.session?.user?.id;
-if (!userId) return res.redirect('/');
+  // brug samme login-check som resten af sitet
+  if (!req.session?.user) return res.redirect('/');
+
+  const userId = req.session.user.id;
+  if (!userId) return res.redirect('/');
 
   const wannadsUrl =
     `https://earn.wannads.com/wall?apiKey=${process.env.WANNADS_API_KEY}&userId=${encodeURIComponent(userId)}`;
