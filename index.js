@@ -3137,36 +3137,44 @@ app.get('/games', (req, res) => {
 
 // ===== WANNADS GAME OFFERS =====
 app.get('/games/wannads', (req, res) => {
-
   if (!isLoggedIn(req)) return res.redirect('/');
 
   const userId = req.session?.user?.id || 'guest';
 
   const wannadsUrl =
-    `https://earn.wannads.com/wall?apiKey=${process.env.WANNADS_API_KEY}&userId=${userId}`;
+    `https://earn.wannads.com/wall?apiKey=${process.env.WANNADS_API_KEY}&userId=${encodeURIComponent(userId)}`;
 
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Game Offers</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <style>
-          body{
-            margin:0;
-            background:#0f172a;
-            font-family:system-ui;
-          }
-        </style>
-      </head>
-      <body>
-        <iframe
-          src="${wannadsUrl}"
-          style="width:100%; height:100vh; border:0;">
-        </iframe>
-      </body>
-    </html>
-  `);
+  // CSP kun til denne side (så offerwall ikke bliver blokeret)
+  res.setHeader(
+    "Content-Security-Policy",
+    [
+      "default-src 'self' https: data:;",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:;",
+      "style-src 'self' 'unsafe-inline' https:;",
+      "img-src 'self' https: data:;",
+      "connect-src 'self' https:;",
+      "frame-src https://earn.wannads.com https:;",
+    ].join(" ")
+  );
+
+  res.send(`<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Game Offers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+      body{ margin:0; background:#0f172a; font-family:system-ui; }
+    </style>
+  </head>
+  <body>
+    <iframe
+      src="${wannadsUrl}"
+      style="width:100%; height:100vh; border:0;"
+      allow="clipboard-write; fullscreen"
+    ></iframe>
+  </body>
+</html>`);
 });
 
 
