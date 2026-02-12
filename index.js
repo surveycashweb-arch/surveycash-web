@@ -3068,71 +3068,42 @@ app.get('/surveys/cpx', (req, res) => {
 });
 
 
+
 app.get('/games', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
-  res.send(
-    page(
-      req,
-      'Games — SurveyCash',
-      '/games',
-      `
-      <h1>Games</h1>
-      <p>Play partner game offers and earn rewards.</p>
+  res.send(`<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Games</title>
+  <style>
+    body{ margin:0; background:#0f172a; color:#e5e7eb; font-family:system-ui; }
+    .wrap{ max-width:980px; margin:40px auto; padding:0 16px; }
+    .card{ background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+           border-radius:18px; padding:18px; }
+    .btn{ display:inline-block; padding:12px 18px; border-radius:14px;
+          background:#fbbf24; color:#111827; font-weight:800; text-decoration:none; }
+    .muted{ color:#94a3b8; margin-top:6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Games</h1>
 
-      <div class="games-grid">
-
-        <a href="/games/wannads" class="game-card wannads">
-          <div class="logo">🎮</div>
-          <h3>Game Offers</h3>
-          <p>Play games and earn rewards instantly</p>
-        </a>
-
+    <div class="card">
+      <h2 style="margin:0 0 8px;">Wannads Offerwall</h2>
+      <div class="muted">Play & complete offers to earn coins.</div>
+      <div style="margin-top:14px;">
+        <a class="btn" href="/games/wannads">Open Offerwall</a>
       </div>
-
-      <style>
-        .games-grid{
-          margin-top:30px;
-          display:grid;
-          grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-          gap:18px;
-        }
-
-        .game-card{
-          background:#111827;
-          border-radius:16px;
-          padding:22px;
-          text-decoration:none;
-          color:#fff;
-          border:1px solid rgba(255,255,255,.06);
-          transition:.15s ease;
-        }
-
-        .game-card:hover{
-          transform:translateY(-3px);
-          border-color:#fbbf24;
-        }
-
-        .game-card .logo{
-          font-size:32px;
-          margin-bottom:10px;
-        }
-
-        .game-card h3{
-          margin:0 0 6px 0;
-          font-size:18px;
-        }
-
-        .game-card p{
-          margin:0;
-          font-size:13px;
-          color:#9ca3af;
-        }
-      </style>
-      `,
-    ),
-  );
+    </div>
+  </div>
+</body>
+</html>`);
 });
+
 
 
 // ===== WANNADS GAME OFFERS =====
@@ -3144,7 +3115,7 @@ app.get('/games/wannads', (req, res) => {
   const wannadsUrl =
     `https://earn.wannads.com/wall?apiKey=${process.env.WANNADS_API_KEY}&userId=${encodeURIComponent(userId)}`;
 
-  // CSP kun til denne side (så offerwall ikke bliver blokeret)
+  // CSP kun til denne side (så Wannads scripts ikke blokeres)
   res.setHeader(
     "Content-Security-Policy",
     [
@@ -3159,24 +3130,38 @@ app.get('/games/wannads', (req, res) => {
 
   res.send(`<!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Game Offers</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <style>
-      body{ margin:0; background:#0f172a; font-family:system-ui; }
-    </style>
-  </head>
-  <body>
-    <iframe
-      src="${wannadsUrl}"
-      style="width:100%; height:100vh; border:0;"
-      allow="clipboard-write; fullscreen"
-    ></iframe>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wannads Offerwall</title>
+  <style>
+    body{ margin:0; background:#0f172a; }
+    .top{
+      position:fixed; top:0; left:0; right:0; height:56px;
+      display:flex; align-items:center; gap:12px;
+      padding:0 14px; background:rgba(15,23,42,.92);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      color:#e5e7eb; font-family:system-ui; z-index:10;
+      backdrop-filter: blur(8px);
+    }
+    .back{ color:#fbbf24; text-decoration:none; font-weight:800; }
+    iframe{ position:fixed; top:56px; left:0; width:100%; height:calc(100vh - 56px); border:0; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <a class="back" href="/games">← Back</a>
+    <div style="font-weight:800">Wannads Offerwall</div>
+  </div>
+
+  <iframe
+    src="${wannadsUrl}"
+    scrolling="yes"
+    allow="clipboard-write; fullscreen"
+  ></iframe>
+</body>
 </html>`);
 });
-
 
 
 
