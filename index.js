@@ -3128,17 +3128,17 @@ app.get('/games', (req, res) => {
 
 // ===== WANNADS GAME OFFERS =====
 app.get('/games/wannads', (req, res) => {
+  if (!isLoggedIn(req)) return res.redirect('/');
 
-  // brug samme login-check som resten af sitet
-  if (!req.session?.user) return res.redirect('/');
+  const user = getUserFromReq(req);
+  if (!user) return res.redirect('/');
 
-  const userId = req.session.user.id;
+  const userId = String(user.id || user.email || '').trim();
   if (!userId) return res.redirect('/');
 
   const wannadsUrl =
     `https://earn.wannads.com/wall?apiKey=${process.env.WANNADS_API_KEY}&userId=${encodeURIComponent(userId)}`;
 
-  // CSP kun til denne side (så Wannads scripts ikke blokeres)
   res.setHeader(
     "Content-Security-Policy",
     [
