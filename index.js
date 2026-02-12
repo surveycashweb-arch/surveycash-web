@@ -3072,36 +3072,56 @@ app.get('/surveys/cpx', (req, res) => {
 app.get('/games', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
-  res.send(`<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Games</title>
-  <style>
-    body{ margin:0; background:#0f172a; color:#e5e7eb; font-family:system-ui; }
-    .wrap{ max-width:980px; margin:40px auto; padding:0 16px; }
-    .card{ background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
-           border-radius:18px; padding:18px; }
-    .btn{ display:inline-block; padding:12px 18px; border-radius:14px;
-          background:#fbbf24; color:#111827; font-weight:800; text-decoration:none; }
-    .muted{ color:#94a3b8; margin-top:6px; }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>Games</h1>
+  res.send(
+    page(
+      req,
+      'Games — SurveyCash',
+      '/games',
+      `
+      <div class="wrap">
+        <h1>Games</h1>
 
-    <div class="card">
-      <h2 style="margin:0 0 8px;">Wannads Offerwall</h2>
-      <div class="muted">Play & complete offers to earn coins.</div>
-      <div style="margin-top:14px;">
-        <a class="btn" href="/games/wannads">Open Offerwall</a>
+        <div class="card">
+          <h2 style="margin:0 0 8px;">Wannads Offerwall</h2>
+          <div class="muted">Play & complete offers to earn coins.</div>
+          <div style="margin-top:14px;">
+            <a class="btn" href="/games/wannads">Open Offerwall</a>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</body>
-</html>`);
+
+      <style>
+        .wrap{
+          max-width:980px;
+          margin:40px auto;
+          padding:0 16px;
+        }
+
+        .card{
+          background:rgba(255,255,255,.04);
+          border:1px solid rgba(255,255,255,.08);
+          border-radius:18px;
+          padding:18px;
+        }
+
+        .btn{
+          display:inline-block;
+          padding:12px 18px;
+          border-radius:14px;
+          background:#fbbf24;
+          color:#111827;
+          font-weight:800;
+          text-decoration:none;
+        }
+
+        .muted{
+          color:#94a3b8;
+          margin-top:6px;
+        }
+      </style>
+      `
+    )
+  );
 });
 
 
