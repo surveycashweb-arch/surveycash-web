@@ -3130,7 +3130,8 @@ app.get('/games', (req, res) => {
 app.get('/games/wannads', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
-  const userId = req.session?.user?.id || 'guest';
+  const userId = req.session?.user?.id;
+if (!userId) return res.redirect('/');
 
   const wannadsUrl =
     `https://earn.wannads.com/wall?apiKey=${process.env.WANNADS_API_KEY}&userId=${encodeURIComponent(userId)}`;
@@ -3325,6 +3326,59 @@ app.get('/cpx/postback', async (req, res) => {
     return res.status(200).send('ok');
   }
 });
+
+
+
+// ===== WANNADS POSTBACK =====
+app.get('/postback/wannads', async (req, res) => {
+  try {
+    console.log('Wannads postback:', req.query);
+
+    const userId = req.query.userId;
+    const amount = Number(req.query.amount || req.query.payout || 0);
+    const status = req.query.status || 'completed';
+
+    if (!userId) {
+      console.log('No userId in postback');
+      return res.status(200).send('Missing userId');
+    }
+
+    if (amount <= 0) {
+      console.log('Zero payout, skipping');
+      return res.status(200).send('No reward');
+    }
+
+    // Hent bruger
+    const { data: profile, error: profErr } = await supabaseAdmin
+      .from('profiles')
+      .select('balance_cents')
+      .eq('user_id', userId)
+      .single();
+
+    if (profErr || !profile) {
+      console.log('User not found:', userId);
+      return res.status(200).send('User not found');
+    }
+
+    const newBalance = Number(profile.balance_cents || 0) + Math.round(amount * 100);
+
+    // Opdater balance
+    await supabaseAdmin
+      .from('profiles')
+      .update({ balance_cents: newBalance })
+      .eq('user_id', userId);
+
+    console.log('Credited user:', userId, 'amount:', amount);
+
+    return res.status(200).send('OK');
+  } catch (err) {
+    console.error('Wannads postback error:', err);
+    return res.status(200).send('Error handled');
+  }
+});
+
+
+
 
 app.get('/cashout', async (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
