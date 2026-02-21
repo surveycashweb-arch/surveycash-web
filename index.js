@@ -3606,23 +3606,17 @@ app.get('/cashout', async (req, res) => {
 
 
 app.get('/support', (req, res) => {
+  if (!isLoggedIn(req)) return res.redirect('/');
+
   res.send(
     page(
       req,
       'Support — SurveyCash',
       '/support',
-      `
-    <h1>Support</h1>
-    <p>Har du problemer? Kontakt os på
-      <a href="mailto:support@surveycash.dk" style="color:#fbbf24;text-decoration:none;">
-        support@surveycash.dk
-      </a>
-    </p>
-  `,
-    ),
+      ``
+    )
   );
 });
-
 
 
 // ---------- Auth: finish login after email verification ----------
