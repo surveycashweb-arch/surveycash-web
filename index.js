@@ -3663,14 +3663,23 @@ app.get('/cashout', async (req, res) => {
           .fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
           .need{ margin-top:8px; color:#b8c4d6; font-size:12px; min-height:16px; }
 
-          /* Actions tighter */
-          .co-actions{
-            display:grid;
-            grid-template-columns:1fr 200px;
-            gap:10px;
-            align-items:end;
-          }
-          @media (max-width: 760px){ .co-actions{ grid-template-columns:1fr; } }
+        /* Actions: input + button ALWAYS side-by-side */
+.co-actions{
+  display:grid;
+  grid-template-columns: 1fr 220px;   /* input | button */
+  gap:12px;
+  align-items:end;
+}
+
+/* Gør at hint stadig ligger under begge */
+.co-small{
+  grid-column: 1 / -1;
+}
+
+/* Kun på meget små skærme må den stacke */
+@media (max-width: 520px){
+  .co-actions{ grid-template-columns: 1fr; }
+}
 
           .field label{ display:block; font-size:12px; color:#b8c4d6; margin-bottom:6px; }
           .field input{
