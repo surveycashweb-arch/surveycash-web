@@ -3573,115 +3573,156 @@ app.get('/cashout', async (req, res) => {
           }
           .co-backdrop.open{ display:flex; }
 
-          /* Freecash-ish: small modal */
-          .co-modal{
-            width:min(640px, 100%);
-            background:#0b1220;
-            border:1px solid rgba(255,255,255,.08);
-            border-radius:18px;
-            padding:14px;
-            box-shadow:0 40px 140px rgba(0,0,0,.65);
-            position:relative;
-          }
+.co-backdrop.open{ display:flex; }
 
-          .co-close{
-            position:absolute; top:12px; right:12px;
-            width:38px; height:38px;
-            border-radius:999px;
-            background:rgba(255,255,255,.06);
-            border:1px solid rgba(255,255,255,.10);
-            color:#fff; cursor:pointer;
-          }
+/* ===== Compact Freecash-style modal ===== */
+.co-modal{
+  width:min(640px, 100%);
+  background:#0b1220;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:14px 14px 10px;   /* mindre bund-padding */
+  box-shadow:0 40px 140px rgba(0,0,0,.65);
+  position:relative;
+}
 
-          .co-header{
-            display:flex; gap:10px; align-items:center;
-            padding:4px 4px 10px;
-          }
-          .co-icon{
-            width:34px; height:34px;
-            display:flex; align-items:center; justify-content:center;
-          }
-          .co-icon img{ width:34px; height:auto; display:block; }
-          .co-title{ font-weight:900; font-size:18px; }
+.co-close{
+  position:absolute; top:10px; right:10px;
+  width:36px; height:36px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:#fff; cursor:pointer;
+}
 
-          .co-divider{ height:1px; background:rgba(255,255,255,.08); margin:10px 0; }
-          .co-block-title{ font-weight:800; margin:2px 0 10px; }
+.co-header{
+  display:flex; gap:10px; align-items:center;
+  padding:4px 4px 8px;   /* mindre luft */
+}
 
-          /* ===== Amount grid (tighter) ===== */
-          .amount-grid{
-            display:grid;
-            grid-template-columns:repeat(3, minmax(0, 1fr));
-            gap:10px;
-          }
-          @media (max-width: 760px){
-            .amount-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-          }
+.co-icon{
+  width:32px; height:32px;
+  display:flex; align-items:center; justify-content:center;
+}
+.co-icon img{ width:32px; height:auto; display:block; }
 
-          /* Smaller cards like Freecash */
-          .amount-card{
-            text-align:left; cursor:pointer;
-            border-radius:16px;
-            padding:10px;
-            background:rgba(255,255,255,.03);
-            border:1px solid rgba(255,255,255,.08);
-            color:#fff;
-            transition:.12s ease;
-            min-height:132px;
-          }
-          .amount-card:hover{ border-color:rgba(255,255,255,.14); transform:translateY(-1px); }
-          .amount-card.active{
-            border-color:rgba(59,130,246,.55);
-            box-shadow:0 18px 60px rgba(59,130,246,.18);
-          }
-          .amount-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
+.co-title{ font-weight:900; font-size:17px; }
 
-          .amount-card .amt{ font-weight:900; font-size:16px; }
+.co-divider{
+  height:1px;
+  background:rgba(255,255,255,.08);
+  margin:8px 0;   /* mindre spacing */
+}
 
-          /* Logo bigger */
-          .amount-card .brand{
-            margin-top:8px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            min-height:70px;
-          }
-          .amount-card .brand img{
-            width:200px;
-            max-width:100%;
-            height:auto;
-            display:block;
-            opacity:.98;
-          }
+.co-block-title{
+  font-weight:800;
+  margin:2px 0 8px;
+}
 
-          /* Slimmer bar */
-          .bar{
-            margin-top:10px;
-            height:6px; border-radius:999px;
-            background:rgba(255,255,255,.08);
-            overflow:hidden;
-          }
-          .fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
-          .need{ margin-top:8px; color:#b8c4d6; font-size:12px; min-height:16px; }
+/* ===== Amount grid tighter ===== */
+.amount-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:10px;
+}
 
-/* Actions: input + button side-by-side som Freecash */
+@media (max-width: 760px){
+  .amount-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+.amount-card{
+  text-align:left;
+  cursor:pointer;
+  border-radius:16px;
+  padding:10px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  color:#fff;
+  transition:.12s ease;
+  min-height:124px;   /* mindre */
+}
+
+.amount-card:hover{
+  border-color:rgba(255,255,255,.14);
+  transform:translateY(-1px);
+}
+
+.amount-card.active{
+  border-color:rgba(59,130,246,.55);
+  box-shadow:0 18px 60px rgba(59,130,246,.18);
+}
+
+.amount-card.disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  transform:none !important;
+}
+
+.amount-card .amt{
+  font-weight:900;
+  font-size:15px;
+}
+
+/* Bigger logo without wasting space */
+.amount-card .brand{
+  margin-top:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:64px;
+}
+
+.amount-card .brand img{
+  width:190px;
+  max-width:100%;
+  height:auto;
+  display:block;
+  opacity:.98;
+}
+
+/* Slim bar */
+.bar{
+  margin-top:8px;
+  height:6px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+  border-radius:999px;
+  background:#22c55e;
+  width:0%;
+}
+
+.need{
+  margin-top:6px;
+  color:#b8c4d6;
+  font-size:12px;
+}
+
+/* ===== Input + button tight ===== */
 .co-actions{
   display:grid;
-  grid-template-columns: 1fr 220px;   /* input | button */
-  gap:12px;
-  align-items:center;   /* gør dem helt lige på samme linje */
+  grid-template-columns: 1fr 210px;
+  gap:10px;
+  align-items:center;
 }
 
-/* Hint under begge */
 .co-small{
-  grid-column: 1 / -1;
+  grid-column:1 / -1;
+  font-size:12px;
+  margin-top:4px;
 }
 
-/* Kun mobil må stacke */
+/* Mobile only stacks */
 @media (max-width: 520px){
   .co-actions{
-    grid-template-columns: 1fr;
+    grid-template-columns:1fr;
   }
 }
+
           .field label{ display:block; font-size:12px; color:#b8c4d6; margin-bottom:6px; }
           .field input{
             width:100%;
