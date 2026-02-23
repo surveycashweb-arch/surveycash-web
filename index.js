@@ -3555,14 +3555,13 @@ app.get('/cashout', async (req, res) => {
             justify-content:center;
             padding:18px;
           }
-          .method-logo img{
-            width:160px;
-            max-width:100%;
-            height:auto;
-            display:block;
-            opacity:.98;
-          }
-
+        .method-logo img{
+  width:200px;
+  max-width:100%;
+  height:auto;
+  display:block;
+  opacity:.98;
+}
           /* ===== Modal ===== */
           .co-backdrop{
             position:fixed; inset:0;
@@ -3633,12 +3632,22 @@ app.get('/cashout', async (req, res) => {
             justify-content:center;
             min-height:62px;
           }
-          .amount-card .brand img{
-            width:120px;
-            height:auto;
-            display:block;
-            opacity:.98;
-          }
+         
+.amount-card .brand{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:88px;   /* mere plads */
+}
+
+.amount-card .brand img{
+  width:170px;       /* større logo */
+  max-width:100%;
+  height:auto;
+  display:block;
+  opacity:.98;
+}
 
           .bar{
             margin-top:14px;
