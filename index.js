@@ -3707,18 +3707,20 @@ app.get('/cashout', async (req, res) => {
               <span class="pill">Fast payouts</span>
             </div>
 
-            <div class="method-grid">
-              <button class="method-card ${hasOpenWithdrawal ? 'disabled' : ''}" id="openPayPal" type="button" ${hasOpenWithdrawal ? 'disabled' : ''}>
-<button class="method-card ${hasOpenWithdrawal ? 'disabled' : ''}" id="openPayPal" type="button" ${hasOpenWithdrawal ? 'disabled' : ''}>
-  <div class="method-top">
-    <div class="method-name">PayPal</div>
-  </div>
+<div class="method-grid">
+  <button class="method-card ${hasOpenWithdrawal ? 'disabled' : ''}"
+          id="openPayPal"
+          type="button"
+          ${hasOpenWithdrawal ? 'disabled' : ''}>
+    <div class="method-top">
+      <div class="method-name">PayPal</div>
+    </div>
 
-  <div class="method-logo paypal-logo">
-    <span class="pp">P</span><span>PayPal</span>
-  </div>
-</button>
-            </div>
+    <div class="method-logo paypal-logo">
+      <span class="pp">P</span><span>PayPal</span>
+    </div>
+  </button>
+</div>
           </div>
         </div>
 
