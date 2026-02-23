@@ -3765,7 +3765,7 @@ app.get('/cashout', async (req, res) => {
                 <div class="amt">$${usd}</div>
                 <div class="brand">PayPal</div>
                 <div class="bar"><div class="fill" style="width:0%"></div></div>
-                <div class="need">${can ? 'Available' : `Need $${needUsd}`}</div>
+<div class="need">${can ? 'Available' : 'Need $' + needUsd}</div>
               </button>
             `;
           }).join('')}
