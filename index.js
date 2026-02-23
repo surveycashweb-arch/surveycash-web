@@ -3663,24 +3663,25 @@ app.get('/cashout', async (req, res) => {
           .fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
           .need{ margin-top:8px; color:#b8c4d6; font-size:12px; min-height:16px; }
 
-        /* Actions: input + button ALWAYS side-by-side */
+/* Actions: input + button side-by-side som Freecash */
 .co-actions{
   display:grid;
   grid-template-columns: 1fr 220px;   /* input | button */
   gap:12px;
-  align-items:end;
+  align-items:center;   /* gør dem helt lige på samme linje */
 }
 
-/* Gør at hint stadig ligger under begge */
+/* Hint under begge */
 .co-small{
   grid-column: 1 / -1;
 }
 
-/* Kun på meget små skærme må den stacke */
+/* Kun mobil må stacke */
 @media (max-width: 520px){
-  .co-actions{ grid-template-columns: 1fr; }
+  .co-actions{
+    grid-template-columns: 1fr;
+  }
 }
-
           .field label{ display:block; font-size:12px; color:#b8c4d6; margin-bottom:6px; }
           .field input{
             width:100%;
