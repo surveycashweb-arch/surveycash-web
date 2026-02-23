@@ -3702,43 +3702,39 @@ app.get('/cashout', async (req, res) => {
   font-size:12px;
 }
 
-/* ===== Input + button tight (Freecash alignment) ===== */
+/* ===== Input + button perfectly aligned ===== */
 .co-actions{
   display:grid;
   grid-template-columns: 1fr 210px;
   gap:10px;
-  align-items:center;
+  align-items:center;   /* centrerer vertikalt */
 }
 
-/* gør at input + label ikke skubber knappen ned */
-.field{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-/* samme visuelle højde og alignment */
+/* ingen offset på knappen */
 .withdraw-btn{
   height:46px;
-  margin-top:18px; /* matcher label + input */
+  margin-top:0;
 }
 
+/* label + input må ikke skubbe */
+.field{
+  margin:0;
+}
+
+/* hint under begge */
 .co-small{
   grid-column:1 / -1;
   font-size:12px;
   margin-top:4px;
 }
 
-/* Mobile only stacks */
+/* Mobile only */
 @media (max-width:520px){
   .co-actions{
     grid-template-columns:1fr;
   }
-
-  .withdraw-btn{
-    margin-top:8px;
-  }
 }
+
           .field label{ display:block; font-size:12px; color:#b8c4d6; margin-bottom:6px; }
           .field input{
             width:100%;
