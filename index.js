@@ -3471,7 +3471,7 @@ app.get('/cashout', async (req, res) => {
     msg = `<div class="notice error">Cash out failed.</div>`;
   }
 
-  // PayPal logo path (du har public/img/paypal.jpg)
+  // PayPal logo path (public/img/paypal.png)
   const paypalImg = '/img/paypal.png';
 
   // ✅ Build amount cards OUTSIDE bodyHtml (no nested template strings)
@@ -3491,9 +3491,7 @@ app.get('/cashout', async (req, res) => {
         <div class="amt">$${usd}</div>
 
         <div class="brand">
-          <div class="brand-box">
-            <img src="${paypalImg}" alt="PayPal" />
-          </div>
+          <img src="${paypalImg}" alt="PayPal" />
         </div>
 
         <div class="bar"><div class="fill" style="width:0%"></div></div>
@@ -3502,7 +3500,6 @@ app.get('/cashout', async (req, res) => {
     `;
   }).join('');
 
-  // 6) Render
   return res.send(
     layout({
       title: 'Cash Out — SurveyCash',
@@ -3530,7 +3527,7 @@ app.get('/cashout', async (req, res) => {
             color:#cbd5e1;
           }
 
-          /* ===== Method card (Freecash-ish tile) ===== */
+          /* ===== Method card (Freecash style: logo direkte på card) ===== */
           .method-grid{ display:flex; gap:16px; }
           .method-card{
             width:320px;
@@ -3556,28 +3553,14 @@ app.get('/cashout', async (req, res) => {
             display:flex;
             align-items:center;
             justify-content:center;
-            padding:16px;
+            padding:18px;
           }
-
-          /* Kvadrat-ish logo tile (ingen hvid baggrund) */
-          .method-logo .logo-box{
-            width:170px;
-            height:110px;
-            border-radius:18px;
-            background:rgba(255,255,255,.06);
-            border:1px solid rgba(255,255,255,.08);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:14px;
-          }
-
           .method-logo img{
+            width:160px;
             max-width:100%;
-            max-height:74px;
-            width:auto;
             height:auto;
             display:block;
+            opacity:.98;
           }
 
           /* ===== Modal ===== */
@@ -3609,17 +3592,12 @@ app.get('/cashout', async (req, res) => {
             color:#fff; cursor:pointer;
           }
 
-          .co-header{ display:flex; gap:14px; align-items:center; padding:6px 6px 10px; }
+          .co-header{ display:flex; gap:12px; align-items:center; padding:6px 6px 10px; }
           .co-icon{
-            width:64px; height:64px;
-            border-radius:16px;
-            background:rgba(255,255,255,.06);   /* ikke hvid */
-            border:1px solid rgba(255,255,255,.08);
+            width:40px; height:40px;
             display:flex; align-items:center; justify-content:center;
-            padding:10px;
           }
-          .co-icon img{ max-height:38px; width:auto; display:block; }
-
+          .co-icon img{ width:38px; height:auto; display:block; }
           .co-title{ font-weight:900; font-size:20px; }
 
           .co-divider{ height:1px; background:rgba(255,255,255,.08); margin:12px 0; }
@@ -3647,29 +3625,19 @@ app.get('/cashout', async (req, res) => {
 
           .amount-card .amt{ font-weight:900; font-size:18px; }
 
-          /* Kvadrat-ish logo tile i modal */
+          /* Freecash style: ingen boks, bare logo */
           .amount-card .brand{
-            margin-top:12px;
-            display:flex;
-            justify-content:center;
-          }
-          .amount-card .brand-box{
-            width:140px;
-            height:100px;
-            border-radius:16px;
-            background:rgba(255,255,255,.06);   /* ikke hvid */
-            border:1px solid rgba(255,255,255,.08);
+            margin-top:14px;
             display:flex;
             align-items:center;
             justify-content:center;
-            padding:12px;
+            min-height:62px;
           }
-          .amount-card .brand-box img{
-            max-width:100%;
-            max-height:70px;
-            width:auto;
+          .amount-card .brand img{
+            width:120px;
             height:auto;
             display:block;
+            opacity:.98;
           }
 
           .bar{
@@ -3746,9 +3714,7 @@ app.get('/cashout', async (req, res) => {
                 <div class="method-name">PayPal</div>
 
                 <div class="method-logo">
-                  <div class="logo-box">
-                    <img src="${paypalImg}" alt="PayPal" />
-                  </div>
+                  <img src="${paypalImg}" alt="PayPal" />
                 </div>
               </button>
             </div>
@@ -3911,7 +3877,6 @@ app.get('/cashout', async (req, res) => {
     })
   );
 });
-
 
 app.get('/support', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
