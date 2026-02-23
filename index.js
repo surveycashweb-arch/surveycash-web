@@ -3702,23 +3702,48 @@ app.get('/cashout', async (req, res) => {
   font-size:12px;
 }
 
-/* ===== Input + button perfectly aligned ===== */
+/* ===== Input + button PERFECT Freecash alignment ===== */
 .co-actions{
   display:grid;
   grid-template-columns: 1fr 210px;
   gap:10px;
-  align-items:center;   /* centrerer vertikalt */
+  align-items:stretch; /* samme højde */
 }
 
-/* ingen offset på knappen */
-.withdraw-btn{
-  height:46px;
-  margin-top:0;
-}
-
-/* label + input må ikke skubbe */
+/* input wrapper */
 .field{
   margin:0;
+}
+
+/* input */
+.field input{
+  height:46px;
+  padding:0 14px;
+  border-radius:14px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.10);
+  color:#fff;
+  outline:none;
+}
+
+/* button */
+.withdraw-btn{
+  height:46px;
+  margin:0;
+  border-radius:14px;
+  border:1px solid rgba(251,191,36,.25);
+  background:#fbbf24;
+  color:#0b1220;
+  font-weight:900;
+  cursor:pointer;
+}
+
+/* disabled */
+.withdraw-btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  background:rgba(251,191,36,.18);
+  color:#fbbf24;
 }
 
 /* hint under begge */
@@ -3728,7 +3753,7 @@ app.get('/cashout', async (req, res) => {
   margin-top:4px;
 }
 
-/* Mobile only */
+/* mobile only */
 @media (max-width:520px){
   .co-actions{
     grid-template-columns:1fr;
@@ -3828,11 +3853,15 @@ app.get('/cashout', async (req, res) => {
               <input type="hidden" name="amountCents" id="amountCents" value="" />
 
               <div class="co-actions">
-                <div class="field">
-                  <label>PayPal email</label>
-                  <input id="paypalEmail" name="paypalEmail" type="email" placeholder="you@example.com" autocomplete="email" required />
-                </div>
-
+               <div class="field">
+  <label>PayPal email</label>
+  <input id="paypalEmail"
+         name="paypalEmail"
+         type="email"
+         placeholder="you@example.com"
+         autocomplete="email"
+         required />
+</div>
                 <button class="withdraw-btn" id="withdrawBtn" type="submit" disabled>
                   Choose an amount
                 </button>
