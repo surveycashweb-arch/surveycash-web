@@ -3471,8 +3471,8 @@ app.get('/cashout', async (req, res) => {
     msg = `<div class="notice error">Cash out failed.</div>`;
   }
 
-  // ✅ Real PayPal image path (public/img/paypal.jpg)
-  const paypalImg = '/img/paypal.jpg';
+  // PayPal logo path (du har public/img/paypal.jpg)
+  const paypalImg = '/img/paypal.png';
 
   // ✅ Build amount cards OUTSIDE bodyHtml (no nested template strings)
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
@@ -3530,10 +3530,10 @@ app.get('/cashout', async (req, res) => {
             color:#cbd5e1;
           }
 
-          /* ===== Method card ===== */
+          /* ===== Method card (Freecash-ish tile) ===== */
           .method-grid{ display:flex; gap:16px; }
           .method-card{
-            width:340px;
+            width:320px;
             text-align:left; cursor:pointer;
             background:rgba(255,255,255,.03);
             border:1px solid rgba(255,255,255,.08);
@@ -3545,11 +3545,10 @@ app.get('/cashout', async (req, res) => {
           .method-card:hover{ transform:translateY(-2px); border-color:rgba(255,255,255,.14); }
           .method-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
 
-          .method-top{ display:flex; align-items:center; justify-content:space-between; }
           .method-name{ font-weight:800; font-size:16px; }
 
           .method-logo{
-            height:120px;
+            height:140px;
             margin-top:12px;
             border-radius:16px;
             background:rgba(255,255,255,.05);
@@ -3557,24 +3556,27 @@ app.get('/cashout', async (req, res) => {
             display:flex;
             align-items:center;
             justify-content:center;
-            padding:14px;
+            padding:16px;
           }
 
-          .brand-box,
+          /* Kvadrat-ish logo tile (ingen hvid baggrund) */
           .method-logo .logo-box{
-            width:100%;
-            height:100%;
-            border-radius:14px;
-            background:#fff;
+            width:170px;
+            height:110px;
+            border-radius:18px;
+            background:rgba(255,255,255,.06);
+            border:1px solid rgba(255,255,255,.08);
             display:flex;
             align-items:center;
             justify-content:center;
-            padding:18px;
+            padding:14px;
           }
 
           .method-logo img{
-            max-height:56px;
+            max-width:100%;
+            max-height:74px;
             width:auto;
+            height:auto;
             display:block;
           }
 
@@ -3611,7 +3613,8 @@ app.get('/cashout', async (req, res) => {
           .co-icon{
             width:64px; height:64px;
             border-radius:16px;
-            background:#fff;
+            background:rgba(255,255,255,.06);   /* ikke hvid */
+            border:1px solid rgba(255,255,255,.08);
             display:flex; align-items:center; justify-content:center;
             padding:10px;
           }
@@ -3644,19 +3647,28 @@ app.get('/cashout', async (req, res) => {
 
           .amount-card .amt{ font-weight:900; font-size:18px; }
 
-          .amount-card .brand{ margin-top:12px; }
+          /* Kvadrat-ish logo tile i modal */
+          .amount-card .brand{
+            margin-top:12px;
+            display:flex;
+            justify-content:center;
+          }
           .amount-card .brand-box{
-            height:86px;
-            border-radius:14px;
-            background:#fff;
+            width:140px;
+            height:100px;
+            border-radius:16px;
+            background:rgba(255,255,255,.06);   /* ikke hvid */
+            border:1px solid rgba(255,255,255,.08);
             display:flex;
             align-items:center;
             justify-content:center;
-            padding:16px;
+            padding:12px;
           }
           .amount-card .brand-box img{
-            max-height:46px;
+            max-width:100%;
+            max-height:70px;
             width:auto;
+            height:auto;
             display:block;
           }
 
@@ -3731,9 +3743,7 @@ app.get('/cashout', async (req, res) => {
                       id="openPayPal"
                       type="button"
                       ${hasOpenWithdrawal ? 'disabled' : ''}>
-                <div class="method-top">
-                  <div class="method-name">PayPal</div>
-                </div>
+                <div class="method-name">PayPal</div>
 
                 <div class="method-logo">
                   <div class="logo-box">
