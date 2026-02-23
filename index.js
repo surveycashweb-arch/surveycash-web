@@ -3706,14 +3706,14 @@ app.get('/cashout', async (req, res) => {
 .co-actions{
   display:grid;
   grid-template-columns: 1fr 210px;
-  gap:10px;
-  align-items:center;   /* centrerer vertikalt */
+  gap:12px;
+  align-items:start;   /* ← DET HER ER NØGLEN */
 }
 
 /* ingen offset på knappen */
 .withdraw-btn{
   height:46px;
-  margin-top:0;
+  margin:0;
 }
 
 /* label + input må ikke skubbe */
