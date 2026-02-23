@@ -3471,7 +3471,10 @@ app.get('/cashout', async (req, res) => {
     msg = `<div class="notice error">Cash out failed.</div>`;
   }
 
-  // ✅ Build amount cards OUTSIDE bodyHtml (so we avoid nested template strings)
+  // ✅ Real PayPal image path (public/img/paypal.jpg)
+  const paypalImg = '/img/paypal.jpg';
+
+  // ✅ Build amount cards OUTSIDE bodyHtml (no nested template strings)
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
     const can = !hasOpenWithdrawal && balanceCents >= cents;
@@ -3486,7 +3489,13 @@ app.get('/cashout', async (req, res) => {
         ${can ? '' : 'disabled'}
       >
         <div class="amt">$${usd}</div>
-        <div class="brand">PayPal</div>
+
+        <div class="brand">
+          <div class="brand-box">
+            <img src="${paypalImg}" alt="PayPal" />
+          </div>
+        </div>
+
         <div class="bar"><div class="fill" style="width:0%"></div></div>
         <div class="need">${can ? 'Available' : ('Need $' + needUsd)}</div>
       </button>
@@ -3514,9 +3523,17 @@ app.get('/cashout', async (req, res) => {
             background:rgba(34,197,94,.12); color:#22c55e; border:1px solid rgba(34,197,94,.18);
           }
 
-          .method-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; }
+          .balance-row{
+            margin-top:14px;
+            max-width:820px;
+            display:flex; gap:16px; flex-wrap:wrap;
+            color:#cbd5e1;
+          }
 
+          /* ===== Method card ===== */
+          .method-grid{ display:flex; gap:16px; }
           .method-card{
+            width:340px;
             text-align:left; cursor:pointer;
             background:rgba(255,255,255,.03);
             border:1px solid rgba(255,255,255,.08);
@@ -3529,48 +3546,36 @@ app.get('/cashout', async (req, res) => {
           .method-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
 
           .method-top{ display:flex; align-items:center; justify-content:space-between; }
-          .method-name{ font-weight:800; }
-          .method-badge{
-            font-size:12px; color:#cbd5e1;
-            background:rgba(255,255,255,.06);
-            border:1px solid rgba(255,255,255,.08);
-            border-radius:999px; padding:6px 10px;
-          }
+          .method-name{ font-weight:800; font-size:16px; }
 
           .method-logo{
-            height:110px;
+            height:120px;
             margin-top:12px;
-            border-radius:14px;
-            display:flex; align-items:center; justify-content:center;
-            font-size:34px; font-weight:900;
+            border-radius:16px;
             background:rgba(255,255,255,.05);
             border:1px solid rgba(255,255,255,.06);
-          }
-          .paypal-logo .pp{
-            display:inline-flex; align-items:center; justify-content:center;
-            width:44px; height:44px; border-radius:12px;
-            background:rgba(59,130,246,.18);
-            border:1px solid rgba(59,130,246,.22);
-            margin-right:10px;
-            font-weight:900;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:14px;
           }
 
-          .method-foot{ margin-top:12px; display:flex; align-items:center; justify-content:space-between; }
-          .minline{ color:#b8c4d6; font-size:13px; }
-          .cta{
-            font-weight:800;
-            padding:8px 12px;
-            border-radius:12px;
-            background:rgba(251,191,36,.14);
-            border:1px solid rgba(251,191,36,.20);
-            color:#fbbf24;
+          .brand-box,
+          .method-logo .logo-box{
+            width:100%;
+            height:100%;
+            border-radius:14px;
+            background:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:18px;
           }
 
-          .balance-row{
-            margin-top:14px;
-            max-width:820px;
-            display:flex; gap:16px; flex-wrap:wrap;
-            color:#cbd5e1;
+          .method-logo img{
+            max-height:56px;
+            width:auto;
+            display:block;
           }
 
           /* ===== Modal ===== */
@@ -3606,14 +3611,13 @@ app.get('/cashout', async (req, res) => {
           .co-icon{
             width:64px; height:64px;
             border-radius:16px;
+            background:#fff;
             display:flex; align-items:center; justify-content:center;
-            font-weight:900; font-size:26px;
-            background:rgba(59,130,246,.18);
-            border:1px solid rgba(59,130,246,.22);
+            padding:10px;
           }
+          .co-icon img{ max-height:38px; width:auto; display:block; }
+
           .co-title{ font-weight:900; font-size:20px; }
-          .co-sub{ color:#b8c4d6; margin-top:2px; font-size:13px; }
-          .co-note{ color:#b8c4d6; margin-top:6px; font-size:13px; opacity:.9; }
 
           .co-divider{ height:1px; background:rgba(255,255,255,.08); margin:12px 0; }
           .co-block-title{ font-weight:800; margin:2px 0 12px; }
@@ -3629,7 +3633,7 @@ app.get('/cashout', async (req, res) => {
             border:1px solid rgba(255,255,255,.08);
             color:#fff;
             transition:.12s ease;
-            min-height:150px;
+            min-height:160px;
           }
           .amount-card:hover{ border-color:rgba(255,255,255,.14); transform:translateY(-1px); }
           .amount-card.active{
@@ -3639,10 +3643,25 @@ app.get('/cashout', async (req, res) => {
           .amount-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
 
           .amount-card .amt{ font-weight:900; font-size:18px; }
-          .amount-card .brand{ margin-top:18px; font-weight:900; font-size:26px; opacity:.95; }
+
+          .amount-card .brand{ margin-top:12px; }
+          .amount-card .brand-box{
+            height:86px;
+            border-radius:14px;
+            background:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:16px;
+          }
+          .amount-card .brand-box img{
+            max-height:46px;
+            width:auto;
+            display:block;
+          }
 
           .bar{
-            margin-top:18px;
+            margin-top:14px;
             height:8px; border-radius:999px;
             background:rgba(255,255,255,.08);
             overflow:hidden;
@@ -3707,20 +3726,22 @@ app.get('/cashout', async (req, res) => {
               <span class="pill">Fast payouts</span>
             </div>
 
-<div class="method-grid">
-  <button class="method-card ${hasOpenWithdrawal ? 'disabled' : ''}"
-          id="openPayPal"
-          type="button"
-          ${hasOpenWithdrawal ? 'disabled' : ''}>
-    <div class="method-top">
-      <div class="method-name">PayPal</div>
-    </div>
+            <div class="method-grid">
+              <button class="method-card ${hasOpenWithdrawal ? 'disabled' : ''}"
+                      id="openPayPal"
+                      type="button"
+                      ${hasOpenWithdrawal ? 'disabled' : ''}>
+                <div class="method-top">
+                  <div class="method-name">PayPal</div>
+                </div>
 
-    <div class="method-logo paypal-logo">
-      <span class="pp">P</span><span>PayPal</span>
-    </div>
-  </button>
-</div>
+                <div class="method-logo">
+                  <div class="logo-box">
+                    <img src="${paypalImg}" alt="PayPal" />
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -3730,11 +3751,11 @@ app.get('/cashout', async (req, res) => {
             <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
 
             <div class="co-header">
-              <div class="co-icon">P</div>
+              <div class="co-icon">
+                <img src="${paypalImg}" alt="PayPal" />
+              </div>
               <div>
                 <div class="co-title" id="coTitle">PayPal</div>
-                <div class="co-sub">Currency: USD</div>
-                <div class="co-note">Note: This method is available for residents in DK.</div>
               </div>
             </div>
 
@@ -3880,7 +3901,6 @@ app.get('/cashout', async (req, res) => {
     })
   );
 });
-
 
 
 app.get('/support', (req, res) => {
