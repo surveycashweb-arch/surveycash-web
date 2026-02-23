@@ -3471,8 +3471,8 @@ app.get('/cashout', async (req, res) => {
     msg = `<div class="notice error">Cash out failed.</div>`;
   }
 
-  // 5) Cards
-  const cardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
+  // ✅ Build amount cards OUTSIDE bodyHtml (so we avoid nested template strings)
+  const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
     const can = !hasOpenWithdrawal && balanceCents >= cents;
     const needUsd = ((cents - balanceCents) / 100).toFixed(2);
@@ -3480,17 +3480,15 @@ app.get('/cashout', async (req, res) => {
     return `
       <button
         type="button"
-        class="cash-card ${can ? '' : 'disabled'}"
+        class="amount-card ${can ? '' : 'disabled'}"
         data-cents="${cents}"
+        data-usd="${usd}"
         ${can ? '' : 'disabled'}
       >
-        <div class="cash-card-top">$${usd}</div>
-        <div class="cash-card-mid">
-          <div class="cash-card-logo">PayPal</div>
-        </div>
-        <div class="cash-card-bottom">
-          ${can ? `Available` : `Need $${needUsd}`}
-        </div>
+        <div class="amt">$${usd}</div>
+        <div class="brand">PayPal</div>
+        <div class="bar"><div class="fill" style="width:0%"></div></div>
+        <div class="need">${can ? 'Available' : ('Need $' + needUsd)}</div>
       </button>
     `;
   }).join('');
@@ -3501,406 +3499,390 @@ app.get('/cashout', async (req, res) => {
       title: 'Cash Out — SurveyCash',
       active: '/cashout',
       loggedIn: user,
-    bodyHtml: `
-  <style>
-    /* ===== Cashout page layout ===== */
-    .cashout-page{ max-width:1100px; margin:40px auto 0; padding:0 18px 60px; }
-    .cashout-head h1{ font-size:40px; margin:0 0 8px; }
-    .cashout-head p{ margin:0; color:#b8c4d6; }
+      bodyHtml: `
+        <style>
+          /* ===== Cashout page layout ===== */
+          .cashout-page{ max-width:1100px; margin:40px auto 0; padding:0 18px 60px; }
+          .cashout-head h1{ font-size:40px; margin:0 0 8px; }
+          .cashout-head p{ margin:0; color:#b8c4d6; }
 
-    .cashout-section{ margin-top:22px; }
-    .section-title{ display:flex; align-items:center; gap:12px; margin:0 0 14px; }
-    .section-title h2{ margin:0; font-size:18px; }
-    .pill{
-      font-size:12px; padding:6px 10px; border-radius:999px;
-      background:rgba(34,197,94,.12); color:#22c55e; border:1px solid rgba(34,197,94,.18);
-    }
+          .cashout-section{ margin-top:22px; }
+          .section-title{ display:flex; align-items:center; gap:12px; margin:0 0 14px; }
+          .section-title h2{ margin:0; font-size:18px; }
+          .pill{
+            font-size:12px; padding:6px 10px; border-radius:999px;
+            background:rgba(34,197,94,.12); color:#22c55e; border:1px solid rgba(34,197,94,.18);
+          }
 
-    .method-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; }
+          .method-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; }
 
-    .method-card{
-      text-align:left; cursor:pointer;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:16px;
-      color:#fff;
-      transition:.15s ease;
-    }
-    .method-card:hover{ transform:translateY(-2px); border-color:rgba(255,255,255,.14); }
-    .method-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
+          .method-card{
+            text-align:left; cursor:pointer;
+            background:rgba(255,255,255,.03);
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:18px;
+            padding:16px;
+            color:#fff;
+            transition:.15s ease;
+          }
+          .method-card:hover{ transform:translateY(-2px); border-color:rgba(255,255,255,.14); }
+          .method-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
 
-    .method-top{ display:flex; align-items:center; justify-content:space-between; }
-    .method-name{ font-weight:800; }
-    .method-badge{
-      font-size:12px; color:#cbd5e1;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:999px; padding:6px 10px;
-    }
+          .method-top{ display:flex; align-items:center; justify-content:space-between; }
+          .method-name{ font-weight:800; }
+          .method-badge{
+            font-size:12px; color:#cbd5e1;
+            background:rgba(255,255,255,.06);
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:999px; padding:6px 10px;
+          }
 
-    .method-logo{
-      height:110px;
-      margin-top:12px;
-      border-radius:14px;
-      display:flex; align-items:center; justify-content:center;
-      font-size:34px; font-weight:900;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.06);
-    }
-    .paypal-logo .pp{
-      display:inline-flex; align-items:center; justify-content:center;
-      width:44px; height:44px; border-radius:12px;
-      background:rgba(59,130,246,.18);
-      border:1px solid rgba(59,130,246,.22);
-      margin-right:10px;
-      font-weight:900;
-    }
+          .method-logo{
+            height:110px;
+            margin-top:12px;
+            border-radius:14px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:34px; font-weight:900;
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.06);
+          }
+          .paypal-logo .pp{
+            display:inline-flex; align-items:center; justify-content:center;
+            width:44px; height:44px; border-radius:12px;
+            background:rgba(59,130,246,.18);
+            border:1px solid rgba(59,130,246,.22);
+            margin-right:10px;
+            font-weight:900;
+          }
 
-    .method-foot{ margin-top:12px; display:flex; align-items:center; justify-content:space-between; }
-    .minline{ color:#b8c4d6; font-size:13px; }
-    .cta{
-      font-weight:800;
-      padding:8px 12px;
-      border-radius:12px;
-      background:rgba(251,191,36,.14);
-      border:1px solid rgba(251,191,36,.20);
-      color:#fbbf24;
-    }
+          .method-foot{ margin-top:12px; display:flex; align-items:center; justify-content:space-between; }
+          .minline{ color:#b8c4d6; font-size:13px; }
+          .cta{
+            font-weight:800;
+            padding:8px 12px;
+            border-radius:12px;
+            background:rgba(251,191,36,.14);
+            border:1px solid rgba(251,191,36,.20);
+            color:#fbbf24;
+          }
 
-    .balance-row{
-      margin-top:14px;
-      max-width:820px;
-      display:flex; gap:16px; flex-wrap:wrap;
-      color:#cbd5e1;
-    }
+          .balance-row{
+            margin-top:14px;
+            max-width:820px;
+            display:flex; gap:16px; flex-wrap:wrap;
+            color:#cbd5e1;
+          }
 
-    /* ===== Modal ===== */
-    .co-backdrop{
-      position:fixed; inset:0;
-      background:rgba(0,0,0,.55);
-      display:none; align-items:center; justify-content:center;
-      z-index:9999;
-      padding:18px;
-    }
-    .co-backdrop.open{ display:flex; }
+          /* ===== Modal ===== */
+          .co-backdrop{
+            position:fixed; inset:0;
+            background:rgba(0,0,0,.55);
+            display:none; align-items:center; justify-content:center;
+            z-index:9999;
+            padding:18px;
+          }
+          .co-backdrop.open{ display:flex; }
 
-    .co-modal{
-      width:min(860px, 100%);
-      background:#0b1220;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:22px;
-      padding:18px;
-      box-shadow:0 40px 140px rgba(0,0,0,.65);
-      position:relative;
-    }
+          .co-modal{
+            width:min(860px, 100%);
+            background:#0b1220;
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:22px;
+            padding:18px;
+            box-shadow:0 40px 140px rgba(0,0,0,.65);
+            position:relative;
+          }
 
-    .co-close{
-      position:absolute; top:14px; right:14px;
-      width:38px; height:38px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      color:#fff; cursor:pointer;
-    }
+          .co-close{
+            position:absolute; top:14px; right:14px;
+            width:38px; height:38px;
+            border-radius:999px;
+            background:rgba(255,255,255,.06);
+            border:1px solid rgba(255,255,255,.10);
+            color:#fff; cursor:pointer;
+          }
 
-    .co-header{ display:flex; gap:14px; align-items:center; padding:6px 6px 10px; }
-    .co-icon{
-      width:64px; height:64px;
-      border-radius:16px;
-      display:flex; align-items:center; justify-content:center;
-      font-weight:900; font-size:26px;
-      background:rgba(59,130,246,.18);
-      border:1px solid rgba(59,130,246,.22);
-    }
-    .co-title{ font-weight:900; font-size:20px; }
-    .co-sub{ color:#b8c4d6; margin-top:2px; font-size:13px; }
-    .co-note{ color:#b8c4d6; margin-top:6px; font-size:13px; opacity:.9; }
+          .co-header{ display:flex; gap:14px; align-items:center; padding:6px 6px 10px; }
+          .co-icon{
+            width:64px; height:64px;
+            border-radius:16px;
+            display:flex; align-items:center; justify-content:center;
+            font-weight:900; font-size:26px;
+            background:rgba(59,130,246,.18);
+            border:1px solid rgba(59,130,246,.22);
+          }
+          .co-title{ font-weight:900; font-size:20px; }
+          .co-sub{ color:#b8c4d6; margin-top:2px; font-size:13px; }
+          .co-note{ color:#b8c4d6; margin-top:6px; font-size:13px; opacity:.9; }
 
-    .co-divider{ height:1px; background:rgba(255,255,255,.08); margin:12px 0; }
-    .co-block-title{ font-weight:800; margin:2px 0 12px; }
+          .co-divider{ height:1px; background:rgba(255,255,255,.08); margin:12px 0; }
+          .co-block-title{ font-weight:800; margin:2px 0 12px; }
 
-    .amount-grid{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; }
-    @media (max-width: 760px){ .amount-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+          .amount-grid{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; }
+          @media (max-width: 760px){ .amount-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 
-    .amount-card{
-      text-align:left; cursor:pointer;
-      border-radius:18px;
-      padding:14px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.08);
-      color:#fff;
-      transition:.12s ease;
-      min-height:150px;
-    }
-    .amount-card:hover{ border-color:rgba(255,255,255,.14); transform:translateY(-1px); }
-    .amount-card.active{
-      border-color:rgba(59,130,246,.55);
-      box-shadow:0 18px 60px rgba(59,130,246,.18);
-    }
-    .amount-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
+          .amount-card{
+            text-align:left; cursor:pointer;
+            border-radius:18px;
+            padding:14px;
+            background:rgba(255,255,255,.03);
+            border:1px solid rgba(255,255,255,.08);
+            color:#fff;
+            transition:.12s ease;
+            min-height:150px;
+          }
+          .amount-card:hover{ border-color:rgba(255,255,255,.14); transform:translateY(-1px); }
+          .amount-card.active{
+            border-color:rgba(59,130,246,.55);
+            box-shadow:0 18px 60px rgba(59,130,246,.18);
+          }
+          .amount-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
 
-    .amount-card .amt{ font-weight:900; font-size:18px; }
-    .amount-card .brand{ margin-top:18px; font-weight:900; font-size:26px; opacity:.95; }
+          .amount-card .amt{ font-weight:900; font-size:18px; }
+          .amount-card .brand{ margin-top:18px; font-weight:900; font-size:26px; opacity:.95; }
 
-    .bar{
-      margin-top:18px;
-      height:8px; border-radius:999px;
-      background:rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-    .fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
-    .need{ margin-top:10px; color:#b8c4d6; font-size:12px; min-height:16px; }
+          .bar{
+            margin-top:18px;
+            height:8px; border-radius:999px;
+            background:rgba(255,255,255,.08);
+            overflow:hidden;
+          }
+          .fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
+          .need{ margin-top:10px; color:#b8c4d6; font-size:12px; min-height:16px; }
 
-    .co-actions{ display:grid; grid-template-columns:1fr 220px; gap:12px; align-items:end; }
-    @media (max-width: 760px){ .co-actions{ grid-template-columns:1fr; } }
+          .co-actions{ display:grid; grid-template-columns:1fr 220px; gap:12px; align-items:end; }
+          @media (max-width: 760px){ .co-actions{ grid-template-columns:1fr; } }
 
-    .field label{ display:block; font-size:12px; color:#b8c4d6; margin-bottom:6px; }
-    .field input{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.10);
-      color:#fff;
-      outline:none;
-    }
-    .field input:focus{ border-color:rgba(251,191,36,.45); box-shadow:0 0 0 3px rgba(251,191,36,.12); }
+          .field label{ display:block; font-size:12px; color:#b8c4d6; margin-bottom:6px; }
+          .field input{
+            width:100%;
+            padding:12px 12px;
+            border-radius:14px;
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(255,255,255,.10);
+            color:#fff;
+            outline:none;
+          }
+          .field input:focus{ border-color:rgba(251,191,36,.45); box-shadow:0 0 0 3px rgba(251,191,36,.12); }
 
-    .withdraw-btn{
-      height:44px;
-      border-radius:14px;
-      border:1px solid rgba(251,191,36,.25);
-      background:#fbbf24;
-      color:#0b1220;
-      font-weight:900;
-      cursor:pointer;
-    }
-    .withdraw-btn:disabled{
-      opacity:.45; cursor:not-allowed;
-      background:rgba(251,191,36,.18);
-      color:#fbbf24;
-    }
+          .withdraw-btn{
+            height:44px;
+            border-radius:14px;
+            border:1px solid rgba(251,191,36,.25);
+            background:#fbbf24;
+            color:#0b1220;
+            font-weight:900;
+            cursor:pointer;
+          }
+          .withdraw-btn:disabled{
+            opacity:.45; cursor:not-allowed;
+            background:rgba(251,191,36,.18);
+            color:#fbbf24;
+          }
 
-    .co-small{ grid-column:1 / -1; color:#b8c4d6; font-size:12px; min-height:16px; }
-  </style>
+          .co-small{ grid-column:1 / -1; color:#b8c4d6; font-size:12px; min-height:16px; }
+        </style>
 
-  <script>
-    window.AVAILABLE_USD = ${formatUsdFromCents(balanceCents)};
-    window.HAS_OPEN_WITHDRAWAL = ${hasOpenWithdrawal ? 'true' : 'false'};
-  </script>
+        <script>
+          window.AVAILABLE_USD = ${formatUsdFromCents(balanceCents)};
+          window.HAS_OPEN_WITHDRAWAL = ${hasOpenWithdrawal ? 'true' : 'false'};
+        </script>
 
-  <div class="cashout-page">
-    <div class="cashout-head">
-      <h1>Cash Out</h1>
-      <p>Choose a method, then pick an amount.</p>
-    </div>
-
-    ${msg}
-
-    <div class="balance-row">
-      <div><b>Available:</b> $${formatUsdFromCents(balanceCents)}</div>
-      <div><b>Pending:</b> $${formatUsdFromCents(pendingCents)}</div>
-    </div>
-
-    <div class="cashout-section">
-      <div class="section-title">
-        <h2>Most popular</h2>
-        <span class="pill">Fast payouts</span>
-      </div>
-
-      <div class="method-grid">
-        <button class="method-card ${hasOpenWithdrawal ? 'disabled' : ''}" id="openPayPal" type="button" ${hasOpenWithdrawal ? 'disabled' : ''}>
-          <div class="method-top">
-            <div class="method-name">PayPal</div>
-            <div class="method-badge">USD</div>
+        <div class="cashout-page">
+          <div class="cashout-head">
+            <h1>Cash Out</h1>
+            <p>Choose a method, then pick an amount.</p>
           </div>
 
-          <div class="method-logo paypal-logo">
-            <span class="pp">P</span><span>PayPal</span>
+          ${msg}
+
+          <div class="balance-row">
+            <div><b>Available:</b> $${formatUsdFromCents(balanceCents)}</div>
+            <div><b>Pending:</b> $${formatUsdFromCents(pendingCents)}</div>
           </div>
 
-          <div class="method-foot">
-            <div class="minline">Minimum <b>$5</b></div>
-            <div class="cta">${hasOpenWithdrawal ? 'In progress' : 'Open'}</div>
-          </div>
-        </button>
-      </div>
-    </div>
-  </div>
+          <div class="cashout-section">
+            <div class="section-title">
+              <h2>Most popular</h2>
+              <span class="pill">Fast payouts</span>
+            </div>
 
-  <!-- ===== PayPal Modal ===== -->
-  <div class="co-backdrop" id="coBackdrop" aria-hidden="true">
-    <div class="co-modal" role="dialog" aria-modal="true" aria-labelledby="coTitle">
-      <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
+            <div class="method-grid">
+              <button class="method-card ${hasOpenWithdrawal ? 'disabled' : ''}" id="openPayPal" type="button" ${hasOpenWithdrawal ? 'disabled' : ''}>
+                <div class="method-top">
+                  <div class="method-name">PayPal</div>
+                  <div class="method-badge">USD</div>
+                </div>
 
-      <div class="co-header">
-        <div class="co-icon">P</div>
-        <div>
-          <div class="co-title" id="coTitle">PayPal</div>
-          <div class="co-sub">Currency: USD</div>
-          <div class="co-note">Note: This method is available for residents in DK.</div>
-        </div>
-      </div>
+                <div class="method-logo paypal-logo">
+                  <span class="pp">P</span><span>PayPal</span>
+                </div>
 
-      <div class="co-divider"></div>
-
-      <div class="co-block">
-        <div class="co-block-title">Choose amount</div>
-
-        <div class="amount-grid" id="amountGrid">
-          ${CASHOUT_ALLOWED_CENTS.map((cents) => {
-            const usd = (cents / 100).toFixed(2);
-            const can = !hasOpenWithdrawal && balanceCents >= cents;
-            const needUsd = ((cents - balanceCents) / 100).toFixed(2);
-
-            return `
-              <button
-                type="button"
-                class="amount-card ${can ? '' : 'disabled'}"
-                data-cents="${cents}"
-                data-usd="${usd}"
-                ${can ? '' : 'disabled'}
-              >
-                <div class="amt">$${usd}</div>
-                <div class="brand">PayPal</div>
-                <div class="bar"><div class="fill" style="width:0%"></div></div>
-<div class="need">${can ? 'Available' : 'Need $' + needUsd}</div>
+                <div class="method-foot">
+                  <div class="minline">Minimum <b>$5</b></div>
+                  <div class="cta">${hasOpenWithdrawal ? 'In progress' : 'Open'}</div>
+                </div>
               </button>
-            `;
-          }).join('')}
-        </div>
-      </div>
-
-      <div class="co-divider"></div>
-
-      <form id="cashout-form" method="POST" action="/cashout/paypal">
-        <input type="hidden" name="amountCents" id="amountCents" value="" />
-
-        <div class="co-actions">
-          <div class="field">
-            <label>PayPal email</label>
-            <input id="paypalEmail" name="paypalEmail" type="email" placeholder="you@example.com" autocomplete="email" required />
+            </div>
           </div>
-
-          <button class="withdraw-btn" id="withdrawBtn" type="submit" disabled>
-            Choose an amount
-          </button>
-
-          <div class="co-small" id="coHint"></div>
         </div>
-      </form>
-    </div>
-  </div>
 
-  <script>
-    (function(){
-      const availableUsd = Number(window.AVAILABLE_USD || 0);
-      const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
+        <!-- ===== PayPal Modal ===== -->
+        <div class="co-backdrop" id="coBackdrop" aria-hidden="true">
+          <div class="co-modal" role="dialog" aria-modal="true" aria-labelledby="coTitle">
+            <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
 
-      const openBtn = document.getElementById('openPayPal');
-      const backdrop = document.getElementById('coBackdrop');
-      const closeBtn = document.getElementById('coClose');
+            <div class="co-header">
+              <div class="co-icon">P</div>
+              <div>
+                <div class="co-title" id="coTitle">PayPal</div>
+                <div class="co-sub">Currency: USD</div>
+                <div class="co-note">Note: This method is available for residents in DK.</div>
+              </div>
+            </div>
 
-      const amountGrid = document.getElementById('amountGrid');
-      const amountInp = document.getElementById('amountCents');
-      const emailInp = document.getElementById('paypalEmail');
-      const withdrawBtn = document.getElementById('withdrawBtn');
-      const hint = document.getElementById('coHint');
+            <div class="co-divider"></div>
 
-      let selectedCents = 0;
+            <div class="co-block">
+              <div class="co-block-title">Choose amount</div>
 
-      function openModal(){
-        if(hasOpen) return;
-        backdrop.classList.add('open');
-        backdrop.setAttribute('aria-hidden','false');
-        selectedCents = 0;
-        amountInp.value = '';
-        withdrawBtn.disabled = true;
-        withdrawBtn.textContent = 'Choose an amount';
-        hint.textContent = '';
-        Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
-        refreshBars();
-      }
+              <div class="amount-grid" id="amountGrid">
+                ${amountCardsHtml}
+              </div>
+            </div>
 
-      function closeModal(){
-        backdrop.classList.remove('open');
-        backdrop.setAttribute('aria-hidden','true');
-      }
+            <div class="co-divider"></div>
 
-      function refreshBars(){
-        const cards = Array.from(amountGrid.querySelectorAll('.amount-card'));
-        cards.forEach(card => {
-          const cents = Number(card.getAttribute('data-cents') || 0);
-          const usd = cents / 100;
-          const pct = Math.max(0, Math.min(100, (availableUsd / usd) * 100));
-          const fill = card.querySelector('.fill');
-          if(fill) fill.style.width = pct + '%';
-        });
-      }
+            <form id="cashout-form" method="POST" action="/cashout/paypal">
+              <input type="hidden" name="amountCents" id="amountCents" value="" />
 
-      function validate(){
-        const email = (emailInp.value || '').trim();
-        const emailOk = email.includes('@') && email.includes('.');
-        const amountOk = selectedCents > 0;
+              <div class="co-actions">
+                <div class="field">
+                  <label>PayPal email</label>
+                  <input id="paypalEmail" name="paypalEmail" type="email" placeholder="you@example.com" autocomplete="email" required />
+                </div>
 
-        if(!amountOk){
-          withdrawBtn.disabled = true;
-          withdrawBtn.textContent = 'Choose an amount';
-          hint.textContent = 'Choose an amount.';
-          return;
-        }
+                <button class="withdraw-btn" id="withdrawBtn" type="submit" disabled>
+                  Choose an amount
+                </button>
 
-        const selectedUsd = (selectedCents / 100);
-        if(availableUsd < selectedUsd){
-          withdrawBtn.disabled = true;
-          withdrawBtn.textContent = 'Insufficient balance';
-          hint.textContent = 'Insufficient balance for this amount.';
-          return;
-        }
+                <div class="co-small" id="coHint"></div>
+              </div>
+            </form>
+          </div>
+        </div>
 
-        if(!emailOk){
-          withdrawBtn.disabled = true;
-          withdrawBtn.textContent = 'Enter email';
-          hint.textContent = 'Enter a valid PayPal email.';
-          return;
-        }
+        <script>
+          (function(){
+            const availableUsd = Number(window.AVAILABLE_USD || 0);
+            const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
 
-        withdrawBtn.disabled = false;
-        withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
-        hint.textContent = '';
-      }
+            const openBtn = document.getElementById('openPayPal');
+            const backdrop = document.getElementById('coBackdrop');
+            const closeBtn = document.getElementById('coClose');
 
-      if(openBtn) openBtn.addEventListener('click', openModal);
-      if(closeBtn) closeBtn.addEventListener('click', closeModal);
-      if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
-      window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+            const amountGrid = document.getElementById('amountGrid');
+            const amountInp = document.getElementById('amountCents');
+            const emailInp = document.getElementById('paypalEmail');
+            const withdrawBtn = document.getElementById('withdrawBtn');
+            const hint = document.getElementById('coHint');
 
-      if(amountGrid){
-        amountGrid.addEventListener('click', (e) => {
-          const card = e.target.closest('.amount-card');
-          if(!card) return;
-          if(card.disabled) return;
+            let selectedCents = 0;
 
-          Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
-          card.classList.add('active');
+            function openModal(){
+              if(hasOpen) return;
+              backdrop.classList.add('open');
+              backdrop.setAttribute('aria-hidden','false');
+              selectedCents = 0;
+              amountInp.value = '';
+              withdrawBtn.disabled = true;
+              withdrawBtn.textContent = 'Choose an amount';
+              hint.textContent = '';
+              Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
+              refreshBars();
+            }
 
-          selectedCents = Number(card.getAttribute('data-cents') || 0);
-          amountInp.value = String(selectedCents);
-          validate();
-        });
-      }
+            function closeModal(){
+              backdrop.classList.remove('open');
+              backdrop.setAttribute('aria-hidden','true');
+            }
 
-      if(emailInp) emailInp.addEventListener('input', validate);
+            function refreshBars(){
+              const cards = Array.from(amountGrid.querySelectorAll('.amount-card'));
+              cards.forEach(card => {
+                const cents = Number(card.getAttribute('data-cents') || 0);
+                const usd = cents / 100;
+                const pct = Math.max(0, Math.min(100, (availableUsd / usd) * 100));
+                const fill = card.querySelector('.fill');
+                if(fill) fill.style.width = pct + '%';
+              });
+            }
 
-      // initial
-      refreshBars();
-      validate();
-    })();
-  </script>
+            function validate(){
+              const email = (emailInp.value || '').trim();
+              const emailOk = email.includes('@') && email.includes('.');
+              const amountOk = selectedCents > 0;
 
-  ${autoCheckScript}
-`,
+              if(!amountOk){
+                withdrawBtn.disabled = true;
+                withdrawBtn.textContent = 'Choose an amount';
+                hint.textContent = 'Choose an amount.';
+                return;
+              }
+
+              const selectedUsd = (selectedCents / 100);
+              if(availableUsd < selectedUsd){
+                withdrawBtn.disabled = true;
+                withdrawBtn.textContent = 'Insufficient balance';
+                hint.textContent = 'Insufficient balance for this amount.';
+                return;
+              }
+
+              if(!emailOk){
+                withdrawBtn.disabled = true;
+                withdrawBtn.textContent = 'Enter email';
+                hint.textContent = 'Enter a valid PayPal email.';
+                return;
+              }
+
+              withdrawBtn.disabled = false;
+              withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
+              hint.textContent = '';
+            }
+
+            if(openBtn) openBtn.addEventListener('click', openModal);
+            if(closeBtn) closeBtn.addEventListener('click', closeModal);
+            if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
+            window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+
+            if(amountGrid){
+              amountGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.amount-card');
+                if(!card) return;
+                if(card.disabled) return;
+
+                Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
+                card.classList.add('active');
+
+                selectedCents = Number(card.getAttribute('data-cents') || 0);
+                amountInp.value = String(selectedCents);
+                validate();
+              });
+            }
+
+            if(emailInp) emailInp.addEventListener('input', validate);
+
+            // initial
+            refreshBars();
+            validate();
+          })();
+        </script>
+
+        ${autoCheckScript}
+      `,
+    })
+  );
+});
 
 
 
