@@ -3548,20 +3548,29 @@ const progressRightText =
   gap:16px;
 }
 
-/* top row = 2 cards */
+/* Card */
 .method-card{
   width:100%;
   text-align:left;
   cursor:pointer;
-  background:rgba(255,255,255,.03);
+
+  /* mindre "rektangel" -> mere blød / card feel */
+  border-radius:22px;
+  padding:16px;
+
+  /* mere freecash-ish depth */
+  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
   border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
-  padding:14px;
+  box-shadow:0 18px 60px rgba(0,0,0,.28);
+
   color:#fff;
-  transition:.12s ease;
-  min-height:190px;            /* ens højde */
+  transition:transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+  min-height:200px;
   display:flex;
   flex-direction:column;
+
+  position:relative;
+  overflow:hidden;
 }
 
 .method-card:hover{
@@ -3569,13 +3578,13 @@ const progressRightText =
   border-color:rgba(255,255,255,.14);
 }
 
-/* PayPal hover grøn (som Freecash vibe) */
+/* PayPal hover grøn */
 .method-card.paypal:hover{
   border-color:rgba(34,197,94,.85);
-  box-shadow:0 18px 60px rgba(34,197,94,.12);
+  box-shadow:0 18px 60px rgba(34,197,94,.12), 0 18px 60px rgba(0,0,0,.28);
 }
 
-/* placeholder cards */
+/* Placeholder cards */
 .method-card.placeholder{
   opacity:.65;
   cursor:not-allowed;
@@ -3583,67 +3592,43 @@ const progressRightText =
 .method-card.placeholder:hover{
   transform:none;
   border-color:rgba(255,255,255,.10);
-  box-shadow:none;
+  box-shadow:0 18px 60px rgba(0,0,0,.22);
 }
 
+/* Title */
 .method-title{
   font-weight:900;
   font-size:14px;
   text-align:center;
-  margin:0 0 10px;
+  margin:0 0 12px;
   opacity:.95;
 }
 
+/* ✅ FJERN den lille grå "rektangel inde i boksen" */
 .method-logo-tile{
-  border-radius:14px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.08);
-  height:92px;
+  /* ingen boks inde i boksen */
+  background:transparent;
+  border:none;
+
+  /* bare centrer logo */
+  height:108px;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:12px;
+  padding:0;
 }
 
+/* Logo sizing */
 .method-logo-tile img{
-  width:190px;
-  max-width:100%;
+  max-width:92%;
+  max-height:108px;
+  width:auto;
   height:auto;
   display:block;
   opacity:.98;
 }
 
-/* progress bar + footer like freecash */
-.method-bar{
-  margin-top:12px;
-  height:8px;
-  border-radius:999px;
-  background:rgba(255,255,255,.10);
-  overflow:hidden;
-}
-.method-fill{
-  height:100%;
-  border-radius:999px;
-  background:#22c55e;
-  width:0%;
-}
-
-.method-foot{
-  margin-top:auto;             /* skubber footer ned */
-  padding-top:10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  font-size:12px;
-  color:#b8c4d6;
-}
-.method-foot b{
-  color:#fff;
-  font-weight:900;
-}
-
-/* placeholder text */
+/* Placeholder center content */
 .soon-wrap{
   width:100%;
   text-align:center;
@@ -3663,15 +3648,13 @@ const progressRightText =
   color:#cbd5e1;
 }
 
-/* Layout: top row 2 cards (span) */
-.method-card.top{
-  grid-column:span 1;
+/* ✅ Skjul progress/minimum på payout-method cards (kun her oppe) */
+.method-bar,
+.method-foot{
+  display:none !important;
 }
-.method-card.top:nth-child(1),
-.method-card.top:nth-child(2){
-  grid-column:span 1;
-}
-/* vi “faker” 2 top ved at sætte 3 kolonner og lade top være 2 cards + 1 tom slot */
+
+/* Spacer for 2 top + 3 bottom */
 .methods-grid .spacer{
   display:block;
 }
