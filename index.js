@@ -3969,10 +3969,6 @@ const progressRightText =
     <img src="${paypalImg}" alt="PayPal" />
   </div>
 
-  <div class="method-bar">
-    <div class="method-fill" style="width:${progressPct}%"></div>
-  </div>
-
 </button>
 
   <div class="method-card placeholder top">
