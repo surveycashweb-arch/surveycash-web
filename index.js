@@ -3736,7 +3736,7 @@ app.get('/cashout', async (req, res) => {
 }
 
 .withdraw-btn{
-  height:46px;                  /* same as input */
+  height:52px;                  /* same as input */
   margin:0;
   align-self:end;               /* stick to bottom (same as input row) */
 }
