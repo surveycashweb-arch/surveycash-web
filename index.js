@@ -3527,41 +3527,54 @@ app.get('/cashout', async (req, res) => {
             color:#cbd5e1;
           }
 
-          /* ===== Method tile ===== */
-          .method-grid{ display:flex; gap:16px; }
-          .method-card{
-            width:320px;
-            text-align:left; cursor:pointer;
-            background:rgba(255,255,255,.03);
-            border:1px solid rgba(255,255,255,.08);
-            border-radius:18px;
-            padding:16px;
-            color:#fff;
-            transition:.15s ease;
-          }
-          .method-card:hover{ transform:translateY(-2px); border-color:rgba(255,255,255,.14); }
-          .method-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
+/* ===== 5 payout methods layout ===== */
+.methods-wrap{
+  margin-top:12px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
 
-          .method-name{ font-weight:800; font-size:16px; }
+.methods-top{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:16px;
+}
 
-          .method-logo{
-            height:140px;
-            margin-top:12px;
-            border-radius:16px;
-            background:rgba(255,255,255,.05);
-            border:1px solid rgba(255,255,255,.06);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:16px;
-          }
-          .method-logo img{
-            width:230px;
-            max-width:100%;
-            height:auto;
-            display:block;
-            opacity:.98;
-          }
+.methods-bottom{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:16px;
+}
+
+@media (max-width: 900px){
+  .methods-bottom{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px){
+  .methods-top{ grid-template-columns: 1fr; }
+  .methods-bottom{ grid-template-columns: 1fr; }
+}
+
+.method-card.placeholder{
+  opacity:.75;
+  cursor:not-allowed;
+}
+
+.placeholder-logo{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  color:#cbd5e1;
+}
+
+.soon-text{
+  font-size:14px;
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+}
 
           /* ===== Modal ===== */
           .co-backdrop{
@@ -3833,19 +3846,51 @@ app.get('/cashout', async (req, res) => {
               <span class="pill">Fast payouts</span>
             </div>
 
-            <div class="method-grid">
-              <button class="method-card ${hasOpenWithdrawal ? 'disabled' : ''}"
-                      id="openPayPal"
-                      type="button"
-                      ${hasOpenWithdrawal ? 'disabled' : ''}>
-                <div class="method-name">PayPal</div>
-                <div class="method-logo">
-                  <img src="${paypalImg}" alt="PayPal" />
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
+            <div class="methods-wrap">
+  <div class="methods-top">
+    <!-- PayPal -->
+    <button class="method-card ${hasOpenWithdrawal ? 'disabled' : ''}"
+            id="openPayPal"
+            type="button"
+            ${hasOpenWithdrawal ? 'disabled' : ''}>
+      <div class="method-name">PayPal</div>
+      <div class="method-logo">
+        <img src="${paypalImg}" alt="PayPal" />
+      </div>
+    </button>
+
+    <!-- Placeholder ved siden af -->
+    <button class="method-card placeholder" type="button" disabled>
+      <div class="method-name">New payout methods soon</div>
+      <div class="method-logo placeholder-logo">
+        <div class="soon-text">Coming soon</div>
+      </div>
+    </button>
+  </div>
+
+  <div class="methods-bottom">
+    <button class="method-card placeholder" type="button" disabled>
+      <div class="method-name">New payout methods soon</div>
+      <div class="method-logo placeholder-logo">
+        <div class="soon-text">Coming soon</div>
+      </div>
+    </button>
+
+    <button class="method-card placeholder" type="button" disabled>
+      <div class="method-name">New payout methods soon</div>
+      <div class="method-logo placeholder-logo">
+        <div class="soon-text">Coming soon</div>
+      </div>
+    </button>
+
+    <button class="method-card placeholder" type="button" disabled>
+      <div class="method-name">New payout methods soon</div>
+      <div class="method-logo placeholder-logo">
+        <div class="soon-text">Coming soon</div>
+      </div>
+    </button>
+  </div>
+</div>
 
         <!-- ===== PayPal Modal ===== -->
         <div class="co-backdrop" id="coBackdrop" aria-hidden="true">
