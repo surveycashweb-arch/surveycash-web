@@ -3474,6 +3474,19 @@ app.get('/cashout', async (req, res) => {
   // PayPal logo path (public/img/paypal.png)
   const paypalImg = '/img/paypal.png';
 
+
+// progress bar data til PayPal card
+const minCashoutCents = CASHOUT_ALLOWED_CENTS[0] || 500;
+
+const progressPct = Math.max(
+  0,
+  Math.min(100, (balanceCents / minCashoutCents) * 100)
+);
+
+const progressRightText =
+  '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents/100).toFixed(0);
+
+
   // Amount cards HTML (bygges udenfor bodyHtml)
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
