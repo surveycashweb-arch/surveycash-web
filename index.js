@@ -3527,53 +3527,149 @@ app.get('/cashout', async (req, res) => {
             color:#cbd5e1;
           }
 
-/* ===== 5 payout methods layout ===== */
-.methods-wrap{
+/* ===== Freecash-style payout methods (2 top, 3 bottom, same size) ===== */
+.methods-grid{
   margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:16px;
+}
+
+/* top row = 2 cards */
+.method-card{
+  width:100%;
+  text-align:left;
+  cursor:pointer;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:14px;
+  color:#fff;
+  transition:.12s ease;
+  min-height:190px;            /* ens højde */
   display:flex;
   flex-direction:column;
-  gap:14px;
 }
 
-.methods-top{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:16px;
+.method-card:hover{
+  transform:translateY(-1px);
+  border-color:rgba(255,255,255,.14);
 }
 
-.methods-bottom{
-  display:grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap:16px;
+/* PayPal hover grøn (som Freecash vibe) */
+.method-card.paypal:hover{
+  border-color:rgba(34,197,94,.85);
+  box-shadow:0 18px 60px rgba(34,197,94,.12);
 }
 
-@media (max-width: 900px){
-  .methods-bottom{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 640px){
-  .methods-top{ grid-template-columns: 1fr; }
-  .methods-bottom{ grid-template-columns: 1fr; }
-}
-
+/* placeholder cards */
 .method-card.placeholder{
-  opacity:.75;
+  opacity:.65;
   cursor:not-allowed;
 }
+.method-card.placeholder:hover{
+  transform:none;
+  border-color:rgba(255,255,255,.10);
+  box-shadow:none;
+}
 
-.placeholder-logo{
+.method-title{
+  font-weight:900;
+  font-size:14px;
+  text-align:center;
+  margin:0 0 10px;
+  opacity:.95;
+}
+
+.method-logo-tile{
+  border-radius:14px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  height:92px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-weight:900;
-  color:#cbd5e1;
+  padding:12px;
 }
 
-.soon-text{
-  font-size:14px;
-  padding:10px 14px;
+.method-logo-tile img{
+  width:190px;
+  max-width:100%;
+  height:auto;
+  display:block;
+  opacity:.98;
+}
+
+/* progress bar + footer like freecash */
+.method-bar{
+  margin-top:12px;
+  height:8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.10);
+  overflow:hidden;
+}
+.method-fill{
+  height:100%;
+  border-radius:999px;
+  background:#22c55e;
+  width:0%;
+}
+
+.method-foot{
+  margin-top:auto;             /* skubber footer ned */
+  padding-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-size:12px;
+  color:#b8c4d6;
+}
+.method-foot b{
+  color:#fff;
+  font-weight:900;
+}
+
+/* placeholder text */
+.soon-wrap{
+  width:100%;
+  text-align:center;
+}
+.soon-top{
+  font-weight:900;
+  color:#cbd5e1;
+  margin-bottom:10px;
+}
+.soon-pill{
+  display:inline-block;
+  font-size:13px;
+  padding:8px 14px;
   border-radius:999px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
+  color:#cbd5e1;
+}
+
+/* Layout: top row 2 cards (span) */
+.method-card.top{
+  grid-column:span 1;
+}
+.method-card.top:nth-child(1),
+.method-card.top:nth-child(2){
+  grid-column:span 1;
+}
+/* vi “faker” 2 top ved at sætte 3 kolonner og lade top være 2 cards + 1 tom slot */
+.methods-grid .spacer{
+  display:block;
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  .methods-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .methods-grid .spacer{ display:none; }
+}
+@media (max-width: 640px){
+  .methods-grid{ grid-template-columns:1fr; }
 }
 
           /* ===== Modal ===== */
@@ -3846,50 +3942,83 @@ app.get('/cashout', async (req, res) => {
               <span class="pill">Fast payouts</span>
             </div>
 
-            <div class="methods-wrap">
-  <div class="methods-top">
-    <!-- PayPal -->
-    <button class="method-card ${hasOpenWithdrawal ? 'disabled' : ''}"
-            id="openPayPal"
-            type="button"
-            ${hasOpenWithdrawal ? 'disabled' : ''}>
-      <div class="method-name">PayPal</div>
-      <div class="method-logo">
-        <img src="${paypalImg}" alt="PayPal" />
-      </div>
-    </button>
+            <div class="methods-grid">
 
-    <!-- Placeholder ved siden af -->
-    <button class="method-card placeholder" type="button" disabled>
-      <div class="method-name">New payout methods soon</div>
-      <div class="method-logo placeholder-logo">
-        <div class="soon-text">Coming soon</div>
+  <!-- TOP ROW (2 cards) -->
+  <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
+          id="openPayPal"
+          type="button"
+          ${hasOpenWithdrawal ? 'disabled' : ''}>
+    <div class="method-title">PayPal</div>
+
+    <div class="method-logo-tile">
+      <img src="${paypalImg}" alt="PayPal" />
+    </div>
+
+    <div class="method-bar">
+      <div class="method-fill" style="width:${progressPct}%"></div>
+    </div>
+
+    <div class="method-foot">
+      <span>Minimum $</span>
+      <b>${progressRightText}</b>
+    </div>
+  </button>
+
+  <div class="method-card placeholder top">
+    <div class="method-title">More payout methods</div>
+
+    <div class="method-logo-tile">
+      <div class="soon-wrap">
+        <div class="soon-top">Soon</div>
+        <span class="soon-pill">Coming soon</span>
       </div>
-    </button>
+    </div>
+
+    <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+    <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
   </div>
 
-  <div class="methods-bottom">
-    <button class="method-card placeholder" type="button" disabled>
-      <div class="method-name">New payout methods soon</div>
-      <div class="method-logo placeholder-logo">
-        <div class="soon-text">Coming soon</div>
-      </div>
-    </button>
+  <!-- SPACER så top bliver 2 og bunden 3 (på desktop) -->
+  <span class="spacer"></span>
 
-    <button class="method-card placeholder" type="button" disabled>
-      <div class="method-name">New payout methods soon</div>
-      <div class="method-logo placeholder-logo">
-        <div class="soon-text">Coming soon</div>
+  <!-- BOTTOM ROW (3 cards) -->
+  <div class="method-card placeholder">
+    <div class="method-title">More payout methods</div>
+    <div class="method-logo-tile">
+      <div class="soon-wrap">
+        <div class="soon-top">Soon</div>
+        <span class="soon-pill">Coming soon</span>
       </div>
-    </button>
-
-    <button class="method-card placeholder" type="button" disabled>
-      <div class="method-name">New payout methods soon</div>
-      <div class="method-logo placeholder-logo">
-        <div class="soon-text">Coming soon</div>
-      </div>
-    </button>
+    </div>
+    <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+    <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
   </div>
+
+  <div class="method-card placeholder">
+    <div class="method-title">More payout methods</div>
+    <div class="method-logo-tile">
+      <div class="soon-wrap">
+        <div class="soon-top">Soon</div>
+        <span class="soon-pill">Coming soon</span>
+      </div>
+    </div>
+    <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+    <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
+  </div>
+
+  <div class="method-card placeholder">
+    <div class="method-title">More payout methods</div>
+    <div class="method-logo-tile">
+      <div class="soon-wrap">
+        <div class="soon-top">Soon</div>
+        <span class="soon-pill">Coming soon</span>
+      </div>
+    </div>
+    <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+    <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
+  </div>
+
 </div>
 
         <!-- ===== PayPal Modal ===== -->
