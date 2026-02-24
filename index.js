@@ -3702,30 +3702,29 @@ app.get('/cashout', async (req, res) => {
   font-size:12px;
 }
 
-/* ===== FIX: input + button perfectly aligned (same row as input) ===== */
+/* ===== FIX: input + button perfectly aligned (same row) ===== */
 .co-actions{
   display:grid;
   grid-template-columns: 1fr 210px;
   gap:12px;
-  align-items:end;              /* key: align to bottom */
+  align-items:end;                /* begge “lander” samme bundlinje */
 }
 
-/* Make label+input predictable */
+/* label over input, men input-højden fast */
 .field{
   margin:0;
-  display:grid;
-  grid-template-rows:auto 46px; /* label row + input row */
-  gap:6px;
 }
 
 .field label{
-  margin:0;
+  display:block;
+  margin:0 0 6px;
   line-height:1.1;
 }
 
+/* input = knap-højde */
 .field input{
   width:100%;
-  height:46px;                  /* same as button */
+  height:48px;
   padding:0 14px;
   border-radius:14px;
   background:rgba(255,255,255,.04);
@@ -3733,15 +3732,18 @@ app.get('/cashout', async (req, res) => {
   color:#fff;
   outline:none;
   margin:0;
+  box-sizing:border-box;
 }
 
+/* knap = input-højde + samme baseline */
 .withdraw-btn{
-  height:52px;                  /* same as input */
+  height:48px;
   margin:0;
-  align-self:end;               /* stick to bottom (same as input row) */
+  align-self:end;
+  box-sizing:border-box;
 }
 
-/* Hint under both */
+/* hint under begge */
 .co-small{
   grid-column:1 / -1;
   margin-top:6px;
