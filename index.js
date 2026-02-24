@@ -3702,37 +3702,55 @@ app.get('/cashout', async (req, res) => {
   font-size:12px;
 }
 
-/* ===== Input + button perfectly aligned ===== */
+/* ===== FIX: input + button perfectly aligned (same row as input) ===== */
 .co-actions{
   display:grid;
   grid-template-columns: 1fr 210px;
   gap:12px;
-  align-items:start;   /* ← DET HER ER NØGLEN */
+  align-items:end;              /* key: align to bottom */
 }
 
-/* ingen offset på knappen */
-.withdraw-btn{
-  height:46px;
-  margin:0;
-}
-
-/* label + input må ikke skubbe */
+/* Make label+input predictable */
 .field{
   margin:0;
+  display:grid;
+  grid-template-rows:auto 46px; /* label row + input row */
+  gap:6px;
 }
 
-/* hint under begge */
+.field label{
+  margin:0;
+  line-height:1.1;
+}
+
+.field input{
+  width:100%;
+  height:46px;                  /* same as button */
+  padding:0 14px;
+  border-radius:14px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.10);
+  color:#fff;
+  outline:none;
+  margin:0;
+}
+
+.withdraw-btn{
+  height:46px;                  /* same as input */
+  margin:0;
+  align-self:end;               /* stick to bottom (same as input row) */
+}
+
+/* Hint under both */
 .co-small{
   grid-column:1 / -1;
-  font-size:12px;
-  margin-top:4px;
+  margin-top:6px;
 }
 
-/* Mobile only */
+/* Mobile stacks */
 @media (max-width:520px){
-  .co-actions{
-    grid-template-columns:1fr;
-  }
+  .co-actions{ grid-template-columns:1fr; }
+  .withdraw-btn{ width:100%; }
 }
 
           .field label{ display:block; font-size:12px; color:#b8c4d6; margin-bottom:6px; }
