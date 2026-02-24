@@ -3630,7 +3630,9 @@ app.get('/cashout', async (req, res) => {
   .amount-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
 
+/* ===== Card ===== */
 .amount-card{
+  position:relative;
   text-align:left;
   cursor:pointer;
   border-radius:16px;
@@ -3638,32 +3640,54 @@ app.get('/cashout', async (req, res) => {
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.08);
   color:#fff;
-  transition:.12s ease;
-  min-height:124px;   /* mindre */
+  transition:.15s ease;
+  min-height:124px;
 }
 
+/* hover = grøn outline */
 .amount-card:hover{
-  border-color:rgba(255,255,255,.14);
-  transform:translateY(-1px);
+  border-color:#22c55e;
+  box-shadow:0 0 0 1px #22c55e;
 }
 
+/* valgt kort */
 .amount-card.active{
-  border-color:rgba(59,130,246,.55);
-  box-shadow:0 18px 60px rgba(59,130,246,.18);
+  border-color:#22c55e;
+  box-shadow:0 0 0 2px #22c55e;
 }
 
+/* grøn check */
+.amount-card.active::after{
+  content:"✓";
+  position:absolute;
+  top:8px;
+  right:8px;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:#22c55e;
+  color:#0b1220;
+  font-weight:900;
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* disabled */
 .amount-card.disabled{
   opacity:.45;
   cursor:not-allowed;
   transform:none !important;
 }
 
+/* amount text */
 .amount-card .amt{
   font-weight:900;
   font-size:15px;
 }
 
-/* Bigger logo without wasting space */
+/* logo */
 .amount-card .brand{
   margin-top:6px;
   display:flex;
@@ -3680,7 +3704,7 @@ app.get('/cashout', async (req, res) => {
   opacity:.98;
 }
 
-/* Slim bar */
+/* progress bar */
 .bar{
   margin-top:8px;
   height:6px;
