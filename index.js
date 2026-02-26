@@ -3540,129 +3540,103 @@ const progressRightText =
             color:#cbd5e1;
           }
 
-/* ===== Freecash-style payout methods (2 top, 3 bottom, same size) ===== */
+/* ===== Square payout methods (Freecash style) ===== */
 .methods-grid{
   margin-top:12px;
   display:grid;
   grid-template-columns:repeat(3, minmax(0, 1fr));
-  gap:16px;
+  gap:18px;
 }
 
-/* Card */
+/* Square card */
 .method-card{
   width:100%;
-  text-align:left;
+  aspect-ratio:1 / 1;
   cursor:pointer;
-
-  /* mindre "rektangel" -> mere blød / card feel */
   border-radius:22px;
-  padding:16px;
+  padding:18px;
 
-  /* mere freecash-ish depth */
   background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
   border:1px solid rgba(255,255,255,.08);
   box-shadow:0 18px 60px rgba(0,0,0,.28);
 
   color:#fff;
   transition:transform .12s ease, border-color .12s ease, box-shadow .12s ease;
-  min-height:200px;
+
   display:flex;
   flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
 
   position:relative;
   overflow:hidden;
 }
 
 .method-card:hover{
-  transform:translateY(-1px);
-  border-color:rgba(255,255,255,.14);
+  transform:translateY(-3px);
+  border-color:rgba(255,255,255,.16);
 }
 
-/* PayPal hover grøn */
+/* PayPal aktiv */
 .method-card.paypal:hover{
   border-color:rgba(34,197,94,.85);
   box-shadow:0 18px 60px rgba(34,197,94,.12), 0 18px 60px rgba(0,0,0,.28);
 }
 
-/* Placeholder cards */
+/* Placeholder */
 .method-card.placeholder{
-  opacity:.65;
+  opacity:.6;
   cursor:not-allowed;
 }
 .method-card.placeholder:hover{
   transform:none;
-  border-color:rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.22);
 }
 
 /* Title */
 .method-title{
   font-weight:900;
-  font-size:14px;
-  text-align:center;
-  margin:0 0 12px;
-  opacity:.95;
+  font-size:15px;
+  margin-top:10px;
 }
 
-/* ✅ FJERN den lille grå "rektangel inde i boksen" */
+/* Logo center */
 .method-logo-tile{
-  /* ingen boks inde i boksen */
-  background:transparent;
-  border:none;
-
-  /* bare centrer logo */
-  height:108px;
+  height:110px;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:0;
 }
 
-/* Logo sizing */
 .method-logo-tile img{
-  max-width:92%;
-  max-height:108px;
-  width:auto;
-  height:auto;
-  display:block;
-  opacity:.98;
+  max-width:110px;
+  max-height:64px;
 }
 
-/* Placeholder center content */
+/* Coming soon */
 .soon-wrap{
-  width:100%;
-  text-align:center;
+  margin-top:10px;
 }
-.soon-top{
-  font-weight:900;
-  color:#cbd5e1;
-  margin-bottom:10px;
-}
+
 .soon-pill{
   display:inline-block;
-  font-size:13px;
-  padding:8px 14px;
+  font-size:12px;
+  padding:7px 12px;
   border-radius:999px;
-  background:rgba(255,255,255,.06);
+  background:rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.10);
   color:#cbd5e1;
 }
 
-/* ✅ Skjul progress/minimum på payout-method cards (kun her oppe) */
+/* skjul gamle progress */
 .method-bar,
 .method-foot{
   display:none !important;
 }
 
-/* Spacer for 2 top + 3 bottom */
-.methods-grid .spacer{
-  display:block;
-}
-
 /* Responsive */
 @media (max-width: 900px){
   .methods-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
-  .methods-grid .spacer{ display:none; }
 }
 @media (max-width: 640px){
   .methods-grid{ grid-template-columns:1fr; }
