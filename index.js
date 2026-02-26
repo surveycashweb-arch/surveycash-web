@@ -3615,20 +3615,29 @@ const progressRightText =
   max-height:60px;
 }
 
-/* 🔥 PayPal special styling (Freecash look) */
+/* 🔥 PayPal tile (bigger + clean white background like reference) */
 .method-card.paypal .method-logo-tile{
-  background:#e5e7eb;
-  border-radius:16px;
-  padding:18px 22px;
+  background:#ffffff;
+  border-radius:14px;
+  padding:12px 16px;
   height:auto;
-  margin-top:6px;
-  margin-bottom:12px;
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
+
+  /* fylder mere */
+  width:100%;
+  max-width:190px;
+
+  margin:6px auto 14px;
+
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
 }
 
+/* PayPal logo større */
 .method-card.paypal .method-logo-tile img{
-  max-width:160px;
-  max-height:72px;
+  max-width:175px;
+  max-height:74px;
+  width:auto;
+  height:auto;
+  display:block;
 }
 
 /* Coming soon */
@@ -3663,7 +3672,6 @@ const progressRightText =
     grid-template-columns:1fr;
   }
 }
-
           /* ===== Modal ===== */
           .co-backdrop{
             position:fixed; inset:0;
