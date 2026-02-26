@@ -3556,7 +3556,7 @@ const progressRightText =
   cursor:pointer;
 
   border-radius:22px;
-  padding:16px;
+  padding:14px 16px;
 
   background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
   border:1px solid rgba(255,255,255,.08);
@@ -3567,7 +3567,7 @@ const progressRightText =
 
   display:flex;
   flex-direction:column;
-  justify-content:center;
+  justify-content:flex-start;
   align-items:center;
   text-align:center;
 
@@ -3595,11 +3595,12 @@ const progressRightText =
   transform:none;
 }
 
-/* Title */
+/* 🔥 PayPal tekst større + højere */
 .method-title{
   font-weight:900;
-  font-size:16px;
-  margin-bottom:12px;
+  font-size:18px;
+  margin-bottom:6px;
+  margin-top:-4px;
 }
 
 /* Default logo (coming soon cards) */
@@ -3615,19 +3616,19 @@ const progressRightText =
   max-height:60px;
 }
 
-/* 🔥 PayPal logo — uden hvid baggrund */
+/* 🔥 PayPal logo uden baggrund + større */
 .method-card.paypal .method-logo-tile{
   background:transparent;
   padding:0;
   height:auto;
   width:auto;
-  margin:6px auto 14px;
+  margin:0 auto 10px;
   box-shadow:none;
 }
 
 .method-card.paypal .method-logo-tile img{
-  max-width:180px;
-  max-height:80px;
+  max-width:210px;
+  max-height:95px;
   width:auto;
   height:auto;
   display:block;
