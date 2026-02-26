@@ -3616,19 +3616,22 @@ const progressRightText =
   max-height:60px;
 }
 
-/* 🔥 PayPal logo uden baggrund + større */
+/* 🔥 PayPal logo med lys baggrund igen */
 .method-card.paypal .method-logo-tile{
-  background:transparent;
-  padding:0;
+  background:#f1f5f9;
+  border-radius:12px;
+  padding:14px 18px;
   height:auto;
-  width:auto;
-  margin:0 auto 10px;
-  box-shadow:none;
+  width:100%;
+  max-width:200px;
+  margin:4px auto 12px;
+  box-shadow:0 10px 22px rgba(0,0,0,.12);
 }
 
+/* PayPal logo størrelse */
 .method-card.paypal .method-logo-tile img{
-  max-width:210px;
-  max-height:95px;
+  max-width:190px;
+  max-height:85px;
   width:auto;
   height:auto;
   display:block;
