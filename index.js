@@ -3615,26 +3615,19 @@ const progressRightText =
   max-height:60px;
 }
 
-/* 🔥 PayPal tile (bigger + clean white background like reference) */
+/* 🔥 PayPal logo — uden hvid baggrund */
 .method-card.paypal .method-logo-tile{
-  background:#ffffff;
-  border-radius:14px;
-  padding:12px 16px;
+  background:transparent;
+  padding:0;
   height:auto;
-
-  /* fylder mere */
-  width:100%;
-  max-width:190px;
-
+  width:auto;
   margin:6px auto 14px;
-
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
+  box-shadow:none;
 }
 
-/* PayPal logo større */
 .method-card.paypal .method-logo-tile img{
-  max-width:175px;
-  max-height:74px;
+  max-width:180px;
+  max-height:80px;
   width:auto;
   height:auto;
   display:block;
