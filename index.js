@@ -3553,7 +3553,6 @@ const progressRightText =
 .method-card{
   width:220px;
   aspect-ratio:3.5 / 3;
-  text-align:left;
   cursor:pointer;
 
   border-radius:22px;
@@ -3599,11 +3598,11 @@ const progressRightText =
 /* Title */
 .method-title{
   font-weight:900;
-  font-size:14px;
-  margin-top:8px;
+  font-size:16px;
+  margin-bottom:12px;
 }
 
-/* Logo center */
+/* Default logo (coming soon cards) */
 .method-logo-tile{
   height:90px;
   display:flex;
@@ -3614,6 +3613,22 @@ const progressRightText =
 .method-logo-tile img{
   max-width:100px;
   max-height:60px;
+}
+
+/* 🔥 PayPal special styling (Freecash look) */
+.method-card.paypal .method-logo-tile{
+  background:#e5e7eb;
+  border-radius:16px;
+  padding:18px 22px;
+  height:auto;
+  margin-top:6px;
+  margin-bottom:12px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
+}
+
+.method-card.paypal .method-logo-tile img{
+  max-width:160px;
+  max-height:72px;
 }
 
 /* Coming soon */
