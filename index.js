@@ -3540,21 +3540,24 @@ const progressRightText =
             color:#cbd5e1;
           }
 
-/* ===== Square payout methods (Freecash style) ===== */
+/* ===== Freecash-style payout methods (smaller + rectangle cards) ===== */
 .methods-grid{
   margin-top:12px;
   display:grid;
-  grid-template-columns:repeat(3, minmax(0, 1fr));
+  grid-template-columns:repeat(3, 220px);
+  justify-content:flex-start;
   gap:18px;
 }
 
-/* Square card */
+/* Card */
 .method-card{
-  width:100%;
-  aspect-ratio:1 / 1;
+  width:220px;
+  aspect-ratio:3.5 / 3;
+  text-align:left;
   cursor:pointer;
+
   border-radius:22px;
-  padding:18px;
+  padding:16px;
 
   background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
   border:1px solid rgba(255,255,255,.08);
@@ -3574,11 +3577,11 @@ const progressRightText =
 }
 
 .method-card:hover{
-  transform:translateY(-3px);
+  transform:translateY(-2px);
   border-color:rgba(255,255,255,.16);
 }
 
-/* PayPal aktiv */
+/* PayPal hover grøn */
 .method-card.paypal:hover{
   border-color:rgba(34,197,94,.85);
   box-shadow:0 18px 60px rgba(34,197,94,.12), 0 18px 60px rgba(0,0,0,.28);
@@ -3596,26 +3599,26 @@ const progressRightText =
 /* Title */
 .method-title{
   font-weight:900;
-  font-size:15px;
-  margin-top:10px;
+  font-size:14px;
+  margin-top:8px;
 }
 
 /* Logo center */
 .method-logo-tile{
-  height:110px;
+  height:90px;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
 .method-logo-tile img{
-  max-width:110px;
-  max-height:64px;
+  max-width:100px;
+  max-height:60px;
 }
 
 /* Coming soon */
 .soon-wrap{
-  margin-top:10px;
+  margin-top:8px;
 }
 
 .soon-pill{
@@ -3636,10 +3639,14 @@ const progressRightText =
 
 /* Responsive */
 @media (max-width: 900px){
-  .methods-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .methods-grid{
+    grid-template-columns:repeat(2, 220px);
+  }
 }
 @media (max-width: 640px){
-  .methods-grid{ grid-template-columns:1fr; }
+  .methods-grid{
+    grid-template-columns:1fr;
+  }
 }
 
           /* ===== Modal ===== */
