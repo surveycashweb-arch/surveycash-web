@@ -3650,8 +3650,9 @@ const progressRightText =
   color:#cbd5e1;
 }
 
-/* ===== Freecash minimum bar (visible) ===== */
-.method-bar{
+/* ✅ Freecash minimum bar (unikke klasser så intet clash'er) */
+.minbar{
+  display:block !important;
   width:100%;
   height:6px;
   border-radius:999px;
@@ -3659,22 +3660,23 @@ const progressRightText =
   overflow:hidden;
   margin-top:10px;
 }
-.method-fill{
+.minfill{
+  display:block !important;
   height:100%;
   width:0%;
   border-radius:999px;
-  background:#ffffff;  /* Freecash hvid bar */
+  background:#fff;
 }
-.method-foot{
+.minfoot{
+  display:flex !important;
   width:100%;
   margin-top:6px;
-  display:flex;
   justify-content:space-between;
   align-items:center;
   font-size:12px;
   color:#94a3b8;
 }
-.method-foot b{
+.minfoot b{
   color:#fff;
   font-weight:800;
 }
@@ -3974,16 +3976,14 @@ const progressRightText =
     <img src="${paypalImg}" alt="PayPal" />
   </div>
 
-  <!-- ✅ Minimum bar -->
-  <div class="method-bar">
-    <div class="method-fill" style="width:${progressPct}%"></div>
-  </div>
+<div class="minbar">
+  <div class="minfill" style="width:${progressPct}%"></div>
+</div>
 
-  <!-- ✅ Minimum tekst -->
-  <div class="method-foot">
-    <span>Minimum $</span>
-    <b>${progressRightText}</b>
-  </div>
+<div class="minfoot">
+  <span>Minimum $</span>
+  <b>${progressRightText}</b>
+</div>
 
 </button>
 
