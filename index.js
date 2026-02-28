@@ -3540,7 +3540,7 @@ const progressRightText =
             color:#cbd5e1;
           }
 
-/* ===== Freecash-style payout methods (2 top, 3 bottom, same size) ===== */
+/* ===== Freecash-style payout methods ===== */
 .methods-grid{
   margin-top:12px;
   display:grid;
@@ -3591,27 +3591,18 @@ const progressRightText =
   font-weight:900;
   font-size:18px;
   text-align:center;
-  margin:0 0 8px;
+  margin:0 0 12px;
 }
 
-/* Default logo tile (coming soon cards) */
+/* 🔥 LOGO CONTAINER — HELT UDEN GRÅ BAGGRUND */
 .method-logo-tile{
-  border-radius:14px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.08);
-  height:95px;
+  background:transparent;
+  border:0;
+  height:auto;
+  padding:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:12px;
-}
-
-/* 🔥 FJERN grå rectangle kun for PayPal */
-.method-card.paypal .method-logo-tile{
-  background:transparent !important;
-  border:0 !important;
-  padding:0 !important;
-  height:auto;
 }
 
 /* Logo */
@@ -3624,7 +3615,7 @@ const progressRightText =
 
 /* ===== Progress bar ===== */
 .method-bar{
-  margin-top:14px;
+  margin-top:18px;
   height:8px;
   border-radius:999px;
   background:rgba(255,255,255,.10);
