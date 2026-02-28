@@ -3540,29 +3540,29 @@ const progressRightText =
             color:#cbd5e1;
           }
 
-/* ===== Compact Freecash-style payout methods ===== */
+/* ===== Larger Compact Freecash-style payout methods ===== */
 .methods-grid{
-  margin-top:12px;
+  margin-top:18px;
   display:grid;
-  grid-template-columns:repeat(3, 200px);
+  grid-template-columns:repeat(3, 300px); /* 200 → 300 */
   justify-content:flex-start;
-  gap:18px;
+  gap:26px; /* 18 → 26 */
 }
 
 /* Card */
 .method-card{
-  width:200px;
-  height:165px;
+  width:300px;          /* 200 → 300 */
+  height:250px;         /* 165 → 250 */
   cursor:pointer;
 
-  border-radius:16px;
-  padding:12px;
+  border-radius:22px;   /* 16 → 22 */
+  padding:18px;         /* 12 → 18 */
 
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.08);
 
   color:#fff;
-  transition:.12s ease;
+  transition:.15s ease;
 
   display:flex;
   flex-direction:column;
@@ -3571,14 +3571,14 @@ const progressRightText =
 }
 
 .method-card:hover{
-  transform:translateY(-2px);
-  border-color:rgba(255,255,255,.15);
+  transform:translateY(-3px);
+  border-color:rgba(255,255,255,.18);
 }
 
 /* PayPal hover grøn */
 .method-card.paypal:hover{
   border-color:rgba(34,197,94,.85);
-  box-shadow:0 12px 40px rgba(34,197,94,.15);
+  box-shadow:0 18px 60px rgba(34,197,94,.18);
 }
 
 /* Placeholder */
@@ -3594,34 +3594,33 @@ const progressRightText =
 /* Title */
 .method-title{
   font-weight:900;
-  font-size:15px;
-  margin:0 0 8px;
+  font-size:20px;  /* 15 → 20 */
+  margin:0 0 14px;
 }
 
-/* 🔥 LOGO — helt uden grå baggrund */
+/* LOGO — helt uden grå baggrund */
 .method-logo-tile{
   background:transparent;
   border:0;
   padding:0;
-  height:auto;
   display:flex;
   align-items:center;
   justify-content:center;
-  margin-bottom:8px; /* giver plads til baren */
+  margin-bottom:14px;
 }
 
 .method-logo-tile img{
-  width:125px;
+  width:180px;  /* 125 → 180 */
   max-width:100%;
   height:auto;
 }
 
-/* ===== Progress bar (mindre + altid synlig) ===== */
+/* ===== Progress bar (større + tydelig) ===== */
 .method-bar{
   margin-top:auto;
-  height:5px;                  /* mindre */
+  height:8px;                 /* 5 → 8 */
   border-radius:999px;
-  background:rgba(255,255,255,.12);
+  background:rgba(255,255,255,.14);
   overflow:hidden;
   width:100%;
 }
@@ -3636,10 +3635,10 @@ const progressRightText =
 
 /* Footer */
 .method-foot{
-  margin-top:6px;
+  margin-top:10px;
   display:flex;
   justify-content:space-between;
-  font-size:12px;
+  font-size:15px;  /* 12 → 15 */
   color:#b8c4d6;
   width:100%;
 }
@@ -3657,13 +3656,14 @@ const progressRightText =
 
 .soon-top{
   font-weight:900;
-  margin-bottom:8px;
+  margin-bottom:12px;
+  font-size:18px;
 }
 
 .soon-pill{
   display:inline-block;
-  font-size:12px;
-  padding:6px 12px;
+  font-size:14px;
+  padding:8px 18px;
   border-radius:999px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
@@ -3671,9 +3671,9 @@ const progressRightText =
 }
 
 /* Responsive */
-@media (max-width:900px){
+@media (max-width:1100px){
   .methods-grid{
-    grid-template-columns:repeat(2, 200px);
+    grid-template-columns:repeat(2, 300px);
   }
 }
 
@@ -3683,7 +3683,7 @@ const progressRightText =
   }
   .method-card{
     width:100%;
-    max-width:320px; /* ser pænt ud på mobil */
+    max-width:380px;
   }
 }
           /* ===== Modal ===== */
