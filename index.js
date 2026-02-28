@@ -3544,7 +3544,7 @@ const progressRightText =
 .methods-grid{
   margin-top:16px;
   display:grid;
-  grid-template-columns:repeat(3, 250px); /* lidt mindre */
+  grid-template-columns:repeat(3, 250px);
   justify-content:flex-start;
   gap:22px;
 }
@@ -3610,7 +3610,7 @@ const progressRightText =
 }
 
 .method-logo-tile img{
-  width:150px;     /* lidt bredere */
+  width:150px;
   max-width:100%;
   height:auto;
 }
@@ -3618,9 +3618,9 @@ const progressRightText =
 /* ===== Progress bar ===== */
 .method-bar{
   margin-top:auto;
-  height:7px;
+  height:6px; /* lidt smallere */
   border-radius:999px;
-  background:rgba(255,255,255,.14);
+  background:rgba(255,255,255,.10);
   overflow:hidden;
   width:100%;
 }
@@ -3633,19 +3633,26 @@ const progressRightText =
   transition:width .4s ease;
 }
 
-/* Footer */
+/* ===== Footer – Small Freecash Style ===== */
 .method-foot{
-  margin-top:8px;
+  margin-top:6px;
   display:flex;
   justify-content:space-between;
-  font-size:14px;
-  color:#b8c4d6;
+  align-items:center;
+  font-size:11px;                 /* mindre */
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.55);    /* mere diskret */
   width:100%;
 }
 
+.method-foot span{
+  font-weight:500;
+}
+
 .method-foot b{
-  color:#fff;
-  font-weight:900;
+  font-size:11px;
+  font-weight:600;
+  color:rgba(255,255,255,.75);    /* ikke helt hvid */
 }
 
 /* Coming soon */
@@ -3686,6 +3693,7 @@ const progressRightText =
     max-width:320px;
   }
 }
+
           /* ===== Modal ===== */
           .co-backdrop{
             position:fixed; inset:0;
