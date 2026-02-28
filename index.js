@@ -3484,7 +3484,7 @@ const progressPct = Math.max(
 );
 
 const progressRightText =
-  formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents/100).toFixed(0);
+  '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents/100).toFixed(0);
 
 
   // Amount cards HTML (bygges udenfor bodyHtml)
@@ -3540,7 +3540,7 @@ const progressRightText =
             color:#cbd5e1;
           }
 
-/* ===== Freecash-style payout methods ===== */
+/* ===== Freecash-style payout methods (smaller + rectangle cards) ===== */
 .methods-grid{
   margin-top:12px;
   display:grid;
@@ -3567,6 +3567,7 @@ const progressRightText =
 
   display:flex;
   flex-direction:column;
+  justify-content:flex-start;
   align-items:center;
   text-align:center;
 
@@ -3594,66 +3595,53 @@ const progressRightText =
   transform:none;
 }
 
-/* Title */
+/* 🔥 PayPal tekst større + højere */
 .method-title{
   font-weight:900;
-  font-size:16px;
-  margin-bottom:10px;
+  font-size:18px;
+  margin-bottom:6px;
+  margin-top:-4px;
 }
 
-/* PayPal logo tile */
+/* Default logo (coming soon cards) */
+.method-logo-tile{
+  height:90px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.method-logo-tile img{
+  max-width:100px;
+  max-height:60px;
+}
+
+/* 🔥 PayPal logo med lys baggrund igen */
 .method-card.paypal .method-logo-tile{
   background:#f1f5f9;
-  border-radius:14px;
-  padding:12px 16px;
-  margin-bottom:12px;
-  box-shadow:0 8px 18px rgba(0,0,0,.12);
+  border-radius:12px;
+  padding:14px 18px;
+  height:auto;
+  width:100%;
+  max-width:200px;
+  margin:4px auto 12px;
+  box-shadow:0 10px 22px rgba(0,0,0,.12);
 }
 
+/* PayPal logo størrelse */
 .method-card.paypal .method-logo-tile img{
-  max-width:170px;
-  max-height:75px;
+  max-width:190px;
+  max-height:85px;
   width:auto;
   height:auto;
   display:block;
 }
 
-/* ===== Minimum & Progress ===== */
-.method-foot{
-  width:100%;
-  margin-top:auto;
-}
-
-.method-bar{
-  width:100%;
-  height:6px;
-  border-radius:999px;
-  background:rgba(255,255,255,.10);
-  overflow:hidden;
-  margin-bottom:6px;
-}
-
-.method-bar-fill{
-  height:100%;
-  width:0%;
-  background:#22c55e;
-  border-radius:999px;
-}
-
-.method-min-row{
-  display:flex;
-  justify-content:space-between;
-  font-size:12px;
-  color:#94a3b8;
-}
-
-.method-min-row strong{
-  color:#fff;
-  font-weight:800;
-}
-
 /* Coming soon */
-.soon-wrap{ margin-top:auto; padding-top:6px; }
+.soon-wrap{
+  margin-top:8px;
+}
+
 .soon-pill{
   display:inline-block;
   font-size:12px;
@@ -3664,14 +3652,23 @@ const progressRightText =
   color:#cbd5e1;
 }
 
-/* Responsive */
-@media (max-width: 900px){
-  .methods-grid{ grid-template-columns:repeat(2, 220px); }
-}
-@media (max-width: 640px){
-  .methods-grid{ grid-template-columns:1fr; }
+/* skjul gamle progress */
+.method-bar,
+.method-foot{
+  display:none !important;
 }
 
+/* Responsive */
+@media (max-width: 900px){
+  .methods-grid{
+    grid-template-columns:repeat(2, 220px);
+  }
+}
+@media (max-width: 640px){
+  .methods-grid{
+    grid-template-columns:1fr;
+  }
+}
           /* ===== Modal ===== */
           .co-backdrop{
             position:fixed; inset:0;
@@ -3956,15 +3953,6 @@ const progressRightText =
     <img src="${paypalImg}" alt="PayPal" />
   </div>
 
-  <div class="method-bar">
-    <div class="method-fill" style="width:${progressPct}%"></div>
-  </div>
-
-  <div class="method-foot">
-    <span>Minimum $</span>
-    <b>${progressRightText}</b>
-  </div>
-
 </button>
 
   <div class="method-card placeholder top">
@@ -3976,6 +3964,10 @@ const progressRightText =
         <span class="soon-pill">Coming soon</span>
       </div>
     </div>
+
+    <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+    <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
+  </div>
 
   <!-- SPACER så top bliver 2 og bunden 3 (på desktop) -->
   <span class="spacer"></span>
