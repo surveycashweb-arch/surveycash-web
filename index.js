@@ -3957,26 +3957,19 @@ const progressRightText =
 
             <div class="methods-grid">
 
-  <!-- TOP ROW (2 cards) -->
-  <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
-          id="openPayPal"
-          type="button"
-          ${hasOpenWithdrawal ? 'disabled' : ''}>
-    <div class="method-title">PayPal</div>
+<!-- TOP ROW (2 cards) -->
+<button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
+        id="openPayPal"
+        type="button"
+        ${hasOpenWithdrawal ? 'disabled' : ''}>
 
-    <div class="method-logo-tile">
-      <img src="${paypalImg}" alt="PayPal" />
-    </div>
+  <div class="method-title">PayPal</div>
 
-    <div class="method-bar">
-      <div class="method-fill" style="width:${progressPct}%"></div>
-    </div>
+  <div class="method-logo-tile">
+    <img src="${paypalImg}" alt="PayPal" />
+  </div>
 
-    <div class="method-foot">
-      <span>Minimum $</span>
-      <b>${progressRightText}</b>
-    </div>
-  </button>
+</button>
 
   <div class="method-card placeholder top">
     <div class="method-title">More payout methods</div>
