@@ -3622,14 +3622,14 @@ const progressRightText =
   padding:0;
   height:auto;
   width:auto;
-  margin:6px auto 12px;
+  margin:4px auto 6px; /* mindre luft */
   box-shadow:none;
 }
 
-/* PayPal logo større */
+/* 🔥 PayPal logo større */
 .method-card.paypal .method-logo-tile img{
-  max-width:210px;
-  max-height:95px;
+  max-width:220px;
+  max-height:110px;
   width:auto;
   height:auto;
   display:block;
