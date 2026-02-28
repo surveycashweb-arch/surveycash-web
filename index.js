@@ -3613,7 +3613,7 @@ const progressRightText =
 }
 
 .method-logo-tile img{
-  width:180px;
+  width:200px;
   max-width:100%;
   height:auto;
 }
