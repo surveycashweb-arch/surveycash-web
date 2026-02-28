@@ -3540,85 +3540,87 @@ const progressRightText =
             color:#cbd5e1;
           }
 
-/* ===== Freecash-style payout methods ===== */
+/* ===== Compact Freecash-style payout methods ===== */
 .methods-grid{
   margin-top:12px;
   display:grid;
-  grid-template-columns:repeat(3, minmax(0, 1fr));
-  gap:16px;
+  grid-template-columns:repeat(3, 180px);
+  justify-content:flex-start;
+  gap:18px;
 }
 
 /* Card */
 .method-card{
-  width:100%;
-  text-align:left;
+  width:180px;
+  height:150px;
   cursor:pointer;
+
+  border-radius:16px;
+  padding:12px;
+
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
-  padding:16px;
+
   color:#fff;
   transition:.12s ease;
-  min-height:210px;
+
   display:flex;
   flex-direction:column;
+  align-items:center;
+  text-align:center;
 }
 
 .method-card:hover{
   transform:translateY(-2px);
-  border-color:rgba(255,255,255,.14);
+  border-color:rgba(255,255,255,.15);
 }
 
 /* PayPal hover grøn */
 .method-card.paypal:hover{
   border-color:rgba(34,197,94,.85);
-  box-shadow:0 18px 60px rgba(34,197,94,.12);
+  box-shadow:0 12px 40px rgba(34,197,94,.15);
 }
 
 /* Placeholder */
 .method-card.placeholder{
-  opacity:.65;
+  opacity:.6;
   cursor:not-allowed;
 }
 .method-card.placeholder:hover{
   transform:none;
-  border-color:rgba(255,255,255,.10);
   box-shadow:none;
 }
 
 /* Title */
 .method-title{
   font-weight:900;
-  font-size:18px;
-  text-align:center;
-  margin:0 0 12px;
+  font-size:15px;
+  margin:0 0 8px;
 }
 
-/* 🔥 LOGO CONTAINER — HELT UDEN GRÅ BAGGRUND */
+/* 🔥 LOGO — helt uden grå baggrund */
 .method-logo-tile{
   background:transparent;
   border:0;
-  height:auto;
   padding:0;
+  height:auto;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
-/* Logo */
 .method-logo-tile img{
-  width:190px;
+  width:120px;
   max-width:100%;
   height:auto;
-  display:block;
 }
 
 /* ===== Progress bar ===== */
 .method-bar{
-  margin-top:18px;
-  height:8px;
+  margin-top:auto;
+  height:6px;
   border-radius:999px;
-  background:rgba(255,255,255,.10);
+  background:rgba(255,255,255,.12);
   overflow:hidden;
 }
 
@@ -3632,13 +3634,12 @@ const progressRightText =
 
 /* Footer */
 .method-foot{
-  margin-top:auto;
-  padding-top:10px;
+  margin-top:6px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  font-size:13px;
+  font-size:12px;
   color:#b8c4d6;
+  width:100%;
 }
 
 .method-foot b{
@@ -3654,13 +3655,13 @@ const progressRightText =
 
 .soon-top{
   font-weight:900;
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 
 .soon-pill{
   display:inline-block;
-  font-size:13px;
-  padding:8px 14px;
+  font-size:12px;
+  padding:6px 12px;
   border-radius:999px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
@@ -3668,13 +3669,13 @@ const progressRightText =
 }
 
 /* Responsive */
-@media (max-width: 900px){
+@media (max-width:900px){
   .methods-grid{
-    grid-template-columns:repeat(2, minmax(0, 1fr));
+    grid-template-columns:repeat(2, 180px);
   }
 }
 
-@media (max-width: 640px){
+@media (max-width:640px){
   .methods-grid{
     grid-template-columns:1fr;
   }
