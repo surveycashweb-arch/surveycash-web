@@ -3544,15 +3544,15 @@ const progressRightText =
 .methods-grid{
   margin-top:12px;
   display:grid;
-  grid-template-columns:repeat(3, 180px);
+  grid-template-columns:repeat(3, 200px);
   justify-content:flex-start;
   gap:18px;
 }
 
 /* Card */
 .method-card{
-  width:180px;
-  height:150px;
+  width:200px;
+  height:165px;
   cursor:pointer;
 
   border-radius:16px;
@@ -3607,21 +3607,23 @@ const progressRightText =
   display:flex;
   align-items:center;
   justify-content:center;
+  margin-bottom:8px; /* giver plads til baren */
 }
 
 .method-logo-tile img{
-  width:120px;
+  width:125px;
   max-width:100%;
   height:auto;
 }
 
-/* ===== Progress bar ===== */
+/* ===== Progress bar (mindre + altid synlig) ===== */
 .method-bar{
   margin-top:auto;
-  height:6px;
+  height:5px;                  /* mindre */
   border-radius:999px;
   background:rgba(255,255,255,.12);
   overflow:hidden;
+  width:100%;
 }
 
 .method-fill{
@@ -3671,7 +3673,7 @@ const progressRightText =
 /* Responsive */
 @media (max-width:900px){
   .methods-grid{
-    grid-template-columns:repeat(2, 180px);
+    grid-template-columns:repeat(2, 200px);
   }
 }
 
@@ -3679,8 +3681,11 @@ const progressRightText =
   .methods-grid{
     grid-template-columns:1fr;
   }
+  .method-card{
+    width:100%;
+    max-width:320px; /* ser pænt ud på mobil */
+  }
 }
-
           /* ===== Modal ===== */
           .co-backdrop{
             position:fixed; inset:0;
