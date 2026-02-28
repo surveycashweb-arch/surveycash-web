@@ -3597,7 +3597,7 @@ const progressRightText =
   font-size:14px;       /* mindre */
   letter-spacing:.3px;
   margin:0 0 8px;
-  margin-top:-10px;      /* rykker lidt op */
+  margin-top:-8px;      /* rykker lidt op */
   opacity:.9;
 }
 
