@@ -3540,158 +3540,151 @@ const progressRightText =
             color:#cbd5e1;
           }
 
-/* ===== Freecash-style payout methods (smaller + rectangle cards) ===== */
+/* ===== Freecash-style payout methods (2 top, 3 bottom, same size) ===== */
 .methods-grid{
   margin-top:12px;
   display:grid;
-  grid-template-columns:repeat(3, 220px);
-  justify-content:flex-start;
-  gap:18px;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:16px;
 }
 
-/* Card */
+/* top row = 2 cards */
 .method-card{
-  width:220px;
-  aspect-ratio:3.5 / 3;
+  width:100%;
+  text-align:left;
   cursor:pointer;
-
-  border-radius:22px;
-  padding:14px 16px;
-
-  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+  background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 18px 60px rgba(0,0,0,.28);
-
+  border-radius:18px;
+  padding:14px;
   color:#fff;
-  transition:transform .12s ease, border-color .12s ease, box-shadow .12s ease;
-
+  transition:.12s ease;
+  min-height:190px;            /* ens højde */
   display:flex;
   flex-direction:column;
-  justify-content:flex-start;
-  align-items:center;
-  text-align:center;
-
-  position:relative;
-  overflow:hidden;
 }
 
 .method-card:hover{
-  transform:translateY(-2px);
-  border-color:rgba(255,255,255,.16);
+  transform:translateY(-1px);
+  border-color:rgba(255,255,255,.14);
 }
 
-/* PayPal hover grøn */
+/* PayPal hover grøn (som Freecash vibe) */
 .method-card.paypal:hover{
   border-color:rgba(34,197,94,.85);
-  box-shadow:0 18px 60px rgba(34,197,94,.12), 0 18px 60px rgba(0,0,0,.28);
+  box-shadow:0 18px 60px rgba(34,197,94,.12);
 }
 
-/* Placeholder */
+/* placeholder cards */
 .method-card.placeholder{
-  opacity:.6;
+  opacity:.65;
   cursor:not-allowed;
 }
 .method-card.placeholder:hover{
   transform:none;
-}
-
-/* 🔥 PayPal tekst større + højere */
-.method-title{
-  font-weight:900;
-  font-size:18px;
-  margin-bottom:6px;
-  margin-top:-4px;
-}
-
-/* Default logo (coming soon cards) */
-.method-logo-tile{
-  height:90px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.method-logo-tile img{
-  max-width:100px;
-  max-height:60px;
-}
-
-/* 🔥 PayPal logo uden baggrund (ingen hvid tile) */
-.method-card.paypal .method-logo-tile{
-  background:transparent;
-  padding:0;
-  height:auto;
-  width:auto;
-  margin:6px auto 12px;
+  border-color:rgba(255,255,255,.10);
   box-shadow:none;
 }
 
-/* PayPal logo større */
-.method-card.paypal .method-logo-tile img{
-  max-width:210px;
-  max-height:95px;
-  width:auto;
+.method-title{
+  font-weight:900;
+  font-size:14px;
+  text-align:center;
+  margin:0 0 10px;
+  opacity:.95;
+}
+
+.method-logo-tile{
+  border-radius:14px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px;
+}
+
+.method-logo-tile img{
+  width:190px;
+  max-width:100%;
   height:auto;
   display:block;
+  opacity:.98;
 }
 
-/* Coming soon */
+/* progress bar + footer like freecash */
+.method-bar{
+  margin-top:12px;
+  height:8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.10);
+  overflow:hidden;
+}
+.method-fill{
+  height:100%;
+  border-radius:999px;
+  background:#22c55e;
+  width:0%;
+}
+
+.method-foot{
+  margin-top:auto;             /* skubber footer ned */
+  padding-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-size:12px;
+  color:#b8c4d6;
+}
+.method-foot b{
+  color:#fff;
+  font-weight:900;
+}
+
+/* placeholder text */
 .soon-wrap{
-  margin-top:8px;
+  width:100%;
+  text-align:center;
 }
-
+.soon-top{
+  font-weight:900;
+  color:#cbd5e1;
+  margin-bottom:10px;
+}
 .soon-pill{
   display:inline-block;
-  font-size:12px;
-  padding:7px 12px;
+  font-size:13px;
+  padding:8px 14px;
   border-radius:999px;
-  background:rgba(255,255,255,.05);
+  background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.10);
   color:#cbd5e1;
 }
 
-/* ✅ Freecash minimum bar (unikke klasser så intet clash'er) */
-.minbar{
-  display:block !important;
-  width:100%;
-  height:6px;
-  border-radius:999px;
-  background:rgba(255,255,255,.12);
-  overflow:hidden;
-  margin-top:10px;
+/* Layout: top row 2 cards (span) */
+.method-card.top{
+  grid-column:span 1;
 }
-.minfill{
-  display:block !important;
-  height:100%;
-  width:0%;
-  border-radius:999px;
-  background:#fff;
+.method-card.top:nth-child(1),
+.method-card.top:nth-child(2){
+  grid-column:span 1;
 }
-.minfoot{
-  display:flex !important;
-  width:100%;
-  margin-top:6px;
-  justify-content:space-between;
-  align-items:center;
-  font-size:12px;
-  color:#94a3b8;
-}
-.minfoot b{
-  color:#fff;
-  font-weight:800;
+/* vi “faker” 2 top ved at sætte 3 kolonner og lade top være 2 cards + 1 tom slot */
+.methods-grid .spacer{
+  display:block;
 }
 
 /* Responsive */
 @media (max-width: 900px){
-  .methods-grid{
-    grid-template-columns:repeat(2, 220px);
-  }
+  .methods-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .methods-grid .spacer{ display:none; }
 }
 @media (max-width: 640px){
-  .methods-grid{
-    grid-template-columns:1fr;
-  }
+  .methods-grid{ grid-template-columns:1fr; }
 }
+
           /* ===== Modal ===== */
           .co-backdrop{
             position:fixed; inset:0;
@@ -3964,28 +3957,26 @@ const progressRightText =
 
             <div class="methods-grid">
 
-<!-- TOP ROW (2 cards) -->
-<button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
-        id="openPayPal"
-        type="button"
-        ${hasOpenWithdrawal ? 'disabled' : ''}>
+  <!-- TOP ROW (2 cards) -->
+  <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
+          id="openPayPal"
+          type="button"
+          ${hasOpenWithdrawal ? 'disabled' : ''}>
+    <div class="method-title">PayPal</div>
 
-  <div class="method-title">PayPal</div>
+    <div class="method-logo-tile">
+      <img src="${paypalImg}" alt="PayPal" />
+    </div>
 
-  <div class="method-logo-tile">
-    <img src="${paypalImg}" alt="PayPal" />
-  </div>
+    <div class="method-bar">
+      <div class="method-fill" style="width:${progressPct}%"></div>
+    </div>
 
-<div class="minbar">
-  <div class="minfill" style="width:${progressPct}%"></div>
-</div>
-
-<div class="minfoot">
-  <span>Minimum $</span>
-  <b>${progressRightText}</b>
-</div>
-
-</button>
+    <div class="method-foot">
+      <span>Minimum $</span>
+      <b>${progressRightText}</b>
+    </div>
+  </button>
 
   <div class="method-card placeholder top">
     <div class="method-title">More payout methods</div>
@@ -4193,8 +4184,6 @@ const progressRightText =
     })
   );
 });
-
-
 
 app.get('/support', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
