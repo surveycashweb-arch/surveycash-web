@@ -3556,7 +3556,7 @@ const progressRightText =
   cursor:pointer;
 
   border-radius:20px;
-  padding:16px;
+  padding:14px 16px 16px; /* mindre top padding */
 
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.08);
@@ -3591,11 +3591,14 @@ const progressRightText =
   box-shadow:none;
 }
 
-/* Title */
+/* 🔥 Title – mindre + rykket op */
 .method-title{
-  font-weight:900;
-  font-size:18px;
-  margin:0 0 12px;
+  font-weight:800;
+  font-size:14px;       /* mindre */
+  letter-spacing:.3px;
+  margin:0 0 8px;
+  margin-top:-4px;      /* rykker lidt op */
+  opacity:.9;
 }
 
 /* Logo */
@@ -3618,7 +3621,7 @@ const progressRightText =
 /* ===== Progress bar ===== */
 .method-bar{
   margin-top:auto;
-  height:6px; /* lidt smallere */
+  height:6px;
   border-radius:999px;
   background:rgba(255,255,255,.10);
   overflow:hidden;
@@ -3639,9 +3642,9 @@ const progressRightText =
   display:flex;
   justify-content:space-between;
   align-items:center;
-  font-size:11px;                 /* mindre */
+  font-size:11px;
   letter-spacing:.2px;
-  color:rgba(255,255,255,.55);    /* mere diskret */
+  color:rgba(255,255,255,.55);
   width:100%;
 }
 
@@ -3652,7 +3655,7 @@ const progressRightText =
 .method-foot b{
   font-size:11px;
   font-weight:600;
-  color:rgba(255,255,255,.75);    /* ikke helt hvid */
+  color:rgba(255,255,255,.75);
 }
 
 /* Coming soon */
