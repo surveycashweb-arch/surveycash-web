@@ -3475,11 +3475,10 @@ app.get('/cashout', async (req, res) => {
   const paypalImg = '/img/paypal.png';
 
   // ===== Freecash minimum bar data til PayPal card =====
-  const minCashoutCents = CASHOUT_ALLOWED_CENTS[0] || 500;
+  const minCashoutCents = CASHOUT_ALLOWED_CENTS?.[0] || 500; // default $5.00
   const progressPct = Math.max(0, Math.min(100, (balanceCents / minCashoutCents) * 100));
-  // ✅ FIX: formatUsdFromCents returnerer allerede tal-string, så vi sætter ikke ekstra '$' foran
   const progressRightText =
-    formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents / 100).toFixed(0);
+    `$${formatUsdFromCents(balanceCents)} / $${(minCashoutCents / 100).toFixed(0)}`;
 
   // Amount cards HTML (bygges udenfor bodyHtml)
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
@@ -3547,7 +3546,6 @@ app.get('/cashout', async (req, res) => {
             width:220px;
             aspect-ratio:3.5 / 3;
             cursor:pointer;
-
             border-radius:22px;
             padding:14px 16px;
 
@@ -3578,6 +3576,13 @@ app.get('/cashout', async (req, res) => {
             box-shadow:0 18px 60px rgba(34,197,94,.12), 0 18px 60px rgba(0,0,0,.28);
           }
 
+          /* disabled paypal når open withdrawal */
+          .method-card.disabled{
+            opacity:.55;
+            cursor:not-allowed;
+          }
+          .method-card.disabled:hover{ transform:none; }
+
           .method-card.placeholder{
             opacity:.6;
             cursor:not-allowed;
@@ -3598,30 +3603,29 @@ app.get('/cashout', async (req, res) => {
             justify-content:center;
           }
 
-          .method-logo-tile img{
-            max-width:100px;
-            max-height:60px;
-          }
-
+          /* PayPal tile med lys baggrund som Freecash */
           .method-card.paypal .method-logo-tile{
-            background:transparent;
-            padding:0;
+            background:#f8fafc;
+            border-radius:14px;
+            padding:12px 14px;
             height:auto;
-            width:auto;
-            margin:6px auto 12px;
-            box-shadow:none;
+            width:100%;
+            max-width:200px;
+            margin:6px auto 10px;
+            box-shadow:0 10px 22px rgba(0,0,0,.12);
           }
 
           .method-card.paypal .method-logo-tile img{
-            max-width:210px;
-            max-height:95px;
+            max-width:185px;
+            max-height:78px;
             width:auto;
             height:auto;
             display:block;
           }
 
-          /* Coming soon */
-          .soon-wrap{ margin-top:8px; }
+          /* Placeholder center */
+          .soon-wrap{ width:100%; text-align:center; }
+          .soon-top{ font-weight:900; color:#cbd5e1; margin-bottom:10px; }
           .soon-pill{
             display:inline-block;
             font-size:12px;
@@ -3643,7 +3647,7 @@ app.get('/cashout', async (req, res) => {
           }
           .method-fill{
             height:100%;
-            background:#ffffff; /* Freecash-style */
+            background:#ffffff;
             border-radius:999px;
             width:0%;
           }
@@ -3661,8 +3665,11 @@ app.get('/cashout', async (req, res) => {
             font-weight:800;
           }
 
+          /* SPACER så top bliver 2 og bunden 3 på desktop */
+          .methods-grid .spacer{ display:block; }
           @media (max-width: 900px){
             .methods-grid{ grid-template-columns:repeat(2, 220px); }
+            .methods-grid .spacer{ display:none; }
           }
           @media (max-width: 640px){
             .methods-grid{ grid-template-columns:1fr; }
@@ -3678,7 +3685,6 @@ app.get('/cashout', async (req, res) => {
           }
           .co-backdrop.open{ display:flex; }
 
-          /* ===== Compact Freecash-style modal ===== */
           .co-modal{
             width:min(640px, 100%);
             background:#0b1220;
@@ -3820,7 +3826,6 @@ app.get('/cashout', async (req, res) => {
             font-size:12px;
           }
 
-          /* ===== FIX: input + button perfectly aligned ===== */
           .co-actions{
             display:grid;
             grid-template-columns: 1fr 210px;
@@ -3849,10 +3854,18 @@ app.get('/cashout', async (req, res) => {
           }
 
           .withdraw-btn{
-            height:48px;
-            margin:0;
-            align-self:end;
-            box-sizing:border-box;
+            height:42px;
+            border-radius:14px;
+            border:1px solid rgba(251,191,36,.25);
+            background:#fbbf24;
+            color:#0b1220;
+            font-weight:900;
+            cursor:pointer;
+          }
+          .withdraw-btn:disabled{
+            opacity:.45; cursor:not-allowed;
+            background:rgba(251,191,36,.18);
+            color:#fbbf24;
           }
 
           .co-small{
@@ -3866,21 +3879,6 @@ app.get('/cashout', async (req, res) => {
           @media (max-width:520px){
             .co-actions{ grid-template-columns:1fr; }
             .withdraw-btn{ width:100%; }
-          }
-
-          .withdraw-btn{
-            height:42px;
-            border-radius:14px;
-            border:1px solid rgba(251,191,36,.25);
-            background:#fbbf24;
-            color:#0b1220;
-            font-weight:900;
-            cursor:pointer;
-          }
-          .withdraw-btn:disabled{
-            opacity:.45; cursor:not-allowed;
-            background:rgba(251,191,36,.18);
-            color:#fbbf24;
           }
         </style>
 
@@ -3909,7 +3907,6 @@ app.get('/cashout', async (req, res) => {
             </div>
 
             <div class="methods-grid">
-
               <!-- TOP ROW (2 cards) -->
               <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
                       id="openPayPal"
@@ -3975,7 +3972,6 @@ app.get('/cashout', async (req, res) => {
                   </div>
                 </div>
               </div>
-
             </div>
 
             <!-- ===== PayPal Modal ===== -->
