@@ -3548,7 +3548,7 @@ const progressRightText =
   gap:16px;
 }
 
-/* top row = 2 cards */
+/* Card */
 .method-card{
   width:100%;
   text-align:left;
@@ -3556,26 +3556,26 @@ const progressRightText =
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.08);
   border-radius:18px;
-  padding:14px;
+  padding:16px;
   color:#fff;
   transition:.12s ease;
-  min-height:190px;            /* ens højde */
+  min-height:210px;
   display:flex;
   flex-direction:column;
 }
 
 .method-card:hover{
-  transform:translateY(-1px);
+  transform:translateY(-2px);
   border-color:rgba(255,255,255,.14);
 }
 
-/* PayPal hover grøn (som Freecash vibe) */
+/* PayPal hover grøn */
 .method-card.paypal:hover{
   border-color:rgba(34,197,94,.85);
   box-shadow:0 18px 60px rgba(34,197,94,.12);
 }
 
-/* placeholder cards */
+/* Placeholder */
 .method-card.placeholder{
   opacity:.65;
   cursor:not-allowed;
@@ -3586,73 +3586,86 @@ const progressRightText =
   box-shadow:none;
 }
 
+/* Title */
 .method-title{
   font-weight:900;
-  font-size:14px;
+  font-size:18px;
   text-align:center;
-  margin:0 0 10px;
-  opacity:.95;
+  margin:0 0 8px;
 }
 
+/* Default logo tile (coming soon cards) */
 .method-logo-tile{
   border-radius:14px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.08);
-  height:92px;
+  height:95px;
   display:flex;
   align-items:center;
   justify-content:center;
   padding:12px;
 }
 
+/* 🔥 FJERN grå rectangle kun for PayPal */
+.method-card.paypal .method-logo-tile{
+  background:transparent !important;
+  border:0 !important;
+  padding:0 !important;
+  height:auto;
+}
+
+/* Logo */
 .method-logo-tile img{
   width:190px;
   max-width:100%;
   height:auto;
   display:block;
-  opacity:.98;
 }
 
-/* progress bar + footer like freecash */
+/* ===== Progress bar ===== */
 .method-bar{
-  margin-top:12px;
+  margin-top:14px;
   height:8px;
   border-radius:999px;
   background:rgba(255,255,255,.10);
   overflow:hidden;
 }
+
 .method-fill{
   height:100%;
   border-radius:999px;
   background:#22c55e;
   width:0%;
+  transition:width .4s ease;
 }
 
+/* Footer */
 .method-foot{
-  margin-top:auto;             /* skubber footer ned */
+  margin-top:auto;
   padding-top:10px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:10px;
-  font-size:12px;
+  font-size:13px;
   color:#b8c4d6;
 }
+
 .method-foot b{
   color:#fff;
   font-weight:900;
 }
 
-/* placeholder text */
+/* Coming soon */
 .soon-wrap{
   width:100%;
   text-align:center;
 }
+
 .soon-top{
   font-weight:900;
-  color:#cbd5e1;
   margin-bottom:10px;
 }
+
 .soon-pill{
   display:inline-block;
   font-size:13px;
@@ -3663,26 +3676,17 @@ const progressRightText =
   color:#cbd5e1;
 }
 
-/* Layout: top row 2 cards (span) */
-.method-card.top{
-  grid-column:span 1;
-}
-.method-card.top:nth-child(1),
-.method-card.top:nth-child(2){
-  grid-column:span 1;
-}
-/* vi “faker” 2 top ved at sætte 3 kolonner og lade top være 2 cards + 1 tom slot */
-.methods-grid .spacer{
-  display:block;
-}
-
 /* Responsive */
 @media (max-width: 900px){
-  .methods-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
-  .methods-grid .spacer{ display:none; }
+  .methods-grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
 }
+
 @media (max-width: 640px){
-  .methods-grid{ grid-template-columns:1fr; }
+  .methods-grid{
+    grid-template-columns:1fr;
+  }
 }
 
           /* ===== Modal ===== */
