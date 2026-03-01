@@ -3624,7 +3624,7 @@ const progressRightText =
 /* ===== Progress bar ===== */
 .method-bar{
   margin-top:auto;
-  height:6px;
+  height:10px;
   border-radius:999px;
   background:rgba(255,255,255,.10);
   overflow:hidden;
