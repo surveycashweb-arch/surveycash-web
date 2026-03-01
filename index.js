@@ -3522,7 +3522,12 @@ const progressRightText =
       bodyHtml: `
         <style>
           /* ===== Page ===== */
-         .cashout-page{ max-width:1100px; margin:40px auto 0; padding:0 18px 60px; }
+ 
+.cashout-page{
+  max-width:1100px;
+  margin:40px 0 0 0;   /* fjerner auto-center */
+  padding:0 0 60px 40px;  /* lille venstre spacing */
+}        
 
 .cashout-head{
   display:flex;
