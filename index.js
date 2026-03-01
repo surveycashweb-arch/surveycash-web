@@ -3532,31 +3532,31 @@ const progressRightText =
   margin-bottom:28px;
 }
 
-/* 🔥 Clean yellow button – no glow */
+/* 🔥 More subtle yellow button */
 .my-payments-btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
 
-  padding:12px 26px;
-  border-radius:10px;           /* mere firkantet */
+  padding:11px 24px;
+  border-radius:8px;              /* mere firkantet */
 
-  background:#fbbf24;
-  color:#ffffff;                /* hvid tekst */
+  background:#eab308;             /* mindre skarp gul */
+  color:#0b1220;                  /* sort/mørk tekst */
 
-  font-weight:800;
-  font-size:15px;
+  font-weight:700;
+  font-size:14px;
   letter-spacing:.2px;
   text-decoration:none;
 
-  border:none;
-  box-shadow:none;              /* fjern glow */
+  border:1px solid rgba(234,179,8,.6);
+  box-shadow:none;
 
   transition:.15s ease;
 }
 
 .my-payments-btn:hover{
-  background:#facc15;
+  background:#d4a006;             /* lidt mørkere hover */
   transform:translateY(-1px);
 }
 
