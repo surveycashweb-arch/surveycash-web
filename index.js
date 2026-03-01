@@ -3534,10 +3534,16 @@ const progressRightText =
 
 /* 🔥 CashOut titel */
 .cashout-head h1{
-  font-size:52px;     /* større */
+  font-size:52px;
   font-weight:900;
-  margin:-10px 0 0 0; /* rykker højere op */
+  margin:-10px 0 0 0;
   letter-spacing:.5px;
+  color:#ffffff;
+}
+
+/* 🔥 Gul "Cash" */
+.cash-accent{
+  color:#eab308;
 }
 
 /* 🔥 More subtle yellow button */
@@ -3997,7 +4003,7 @@ const progressRightText =
 <div class="cashout-page">
 
   <div class="cashout-head">
-  <h1>Cash Out</h1>
+  <h1><span class="cash-accent">Cash</span>Out</h1>
 
   <a href="/payments" class="my-payments-btn">
     My payments
