@@ -3483,8 +3483,6 @@ const progressPct = Math.max(
   Math.min(100, (balanceCents / minCashoutCents) * 100)
 );
 
-const hasEnough = balanceCents >= minCashoutCents;
-const progressColor = hasEnough ? '#22c55e' : '#ffffff';
 
 const progressRightText =
   '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents/100).toFixed(0);
@@ -3984,7 +3982,7 @@ const progressRightText =
     </div>
 
     <div class="method-bar">
-  <div class="method-fill" style="width:${progressPct}%; background:${progressColor};"></div>
+  <div class="method-fill" style="width:${progressPct}%"></div>
 </div>
 
     <div class="method-foot">
