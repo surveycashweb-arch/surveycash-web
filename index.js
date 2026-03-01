@@ -3521,23 +3521,40 @@ const progressRightText =
       loggedIn: user,
       bodyHtml: `
         <style>
+
           /* ===== Page ===== */
  
-.cashout-page{
-  max-width:1100px;
-  margin:40px 0 0 0;   /* fjerner auto-center */
-  padding:0 0 60px 40px;  /* lille venstre spacing */
-}        
 
+/* ===== FORCE CASHOUT FULL LEFT ===== */
+
+/* Nulstil evt global centering */
+main,
+.container,
+.page,
+.content{
+  margin-left:0 !important;
+  margin-right:0 !important;
+  max-width:none !important;
+}
+
+/* Cashout wrapper */
+.cashout-page{
+  width:100%;
+  max-width:none;
+  margin:40px 0 0 0 !important;
+  padding:0 0 60px 40px !important; /* lille venstre spacing */
+}
+
+/* Header */
 .cashout-head{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
   gap:18px;
-  margin-bottom:20px; /* lidt mindre så den rykker op */
+  margin-bottom:20px;
 }
 
-/* 🔥 CashOut titel */
+/* CashOut titel */
 .cashout-head h1{
   font-size:52px;
   font-weight:900;
@@ -3546,31 +3563,26 @@ const progressRightText =
   color:#ffffff;
 }
 
-/* 🔥 Gul "Cash" */
+/* Gul "Cash" */
 .cash-accent{
   color:#eab308;
 }
 
-/* 🔥 More subtle yellow button */
+/* My payments button */
 .my-payments-btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-
   padding:11px 24px;
   border-radius:8px;
-
   background:#eab308;
   color:#0b1220;
-
   font-weight:700;
   font-size:14px;
   letter-spacing:.2px;
   text-decoration:none;
-
   border:1px solid rgba(234,179,8,.6);
   box-shadow:none;
-
   transition:.15s ease;
 }
 
@@ -3582,6 +3594,7 @@ const progressRightText =
 .my-payments-btn:active{
   transform:translateY(0);
 }
+
           .cashout-section{ margin-top:22px; }
           .section-title{ display:flex; align-items:center; gap:12px; margin:0 0 14px; }
           .section-title h2{ margin:0; font-size:18px; }
