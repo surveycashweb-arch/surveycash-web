@@ -3528,32 +3528,41 @@ const progressRightText =
   display:flex;
   flex-direction:column;
   align-items:flex-start;
-  gap:14px;
-  margin-bottom:20px;
+  gap:18px;
+  margin-bottom:28px;
 }
 
-.cashout-head h1{
-  font-size:40px;
-  margin:0;
-}
-
-/* gul knap */
+/* 🔥 Freecash-style yellow button */
 .my-payments-btn{
-  display:inline-block;
-  padding:10px 22px;
-  border-radius:14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:14px 28px;
+  border-radius:18px;
+
   background:#fbbf24;
   color:#0b1220;
-  font-weight:800;
-  font-size:14px;
+
+  font-weight:900;
+  font-size:16px;
+  letter-spacing:.3px;
   text-decoration:none;
-  border:1px solid rgba(251,191,36,.35);
-  transition:.15s ease;
+
+  border:none;
+  box-shadow:0 10px 30px rgba(251,191,36,.35);
+
+  transition:all .18s ease;
 }
 
 .my-payments-btn:hover{
   background:#facc15;
-  transform:translateY(-2px);
+  transform:translateY(-3px);
+  box-shadow:0 16px 40px rgba(251,191,36,.45);
+}
+
+.my-payments-btn:active{
+  transform:translateY(-1px);
 }
 
           .cashout-section{ margin-top:22px; }
