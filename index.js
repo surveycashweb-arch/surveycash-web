@@ -3529,7 +3529,15 @@ const progressRightText =
   flex-direction:column;
   align-items:flex-start;
   gap:18px;
-  margin-bottom:28px;
+  margin-bottom:20px; /* lidt mindre så den rykker op */
+}
+
+/* 🔥 CashOut titel */
+.cashout-head h1{
+  font-size:52px;     /* større */
+  font-weight:900;
+  margin:-10px 0 0 0; /* rykker højere op */
+  letter-spacing:.5px;
 }
 
 /* 🔥 More subtle yellow button */
@@ -3539,10 +3547,10 @@ const progressRightText =
   justify-content:center;
 
   padding:11px 24px;
-  border-radius:8px;              /* mere firkantet */
+  border-radius:8px;
 
-  background:#eab308;             /* mindre skarp gul */
-  color:#0b1220;                  /* sort/mørk tekst */
+  background:#eab308;
+  color:#0b1220;
 
   font-weight:700;
   font-size:14px;
@@ -3556,14 +3564,13 @@ const progressRightText =
 }
 
 .my-payments-btn:hover{
-  background:#d4a006;             /* lidt mørkere hover */
+  background:#d4a006;
   transform:translateY(-1px);
 }
 
 .my-payments-btn:active{
   transform:translateY(0);
 }
-
           .cashout-section{ margin-top:22px; }
           .section-title{ display:flex; align-items:center; gap:12px; margin:0 0 14px; }
           .section-title h2{ margin:0; font-size:18px; }
