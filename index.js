@@ -3522,9 +3522,39 @@ const progressRightText =
       bodyHtml: `
         <style>
           /* ===== Page ===== */
-          .cashout-page{ max-width:1100px; margin:40px auto 0; padding:0 18px 60px; }
-          .cashout-head h1{ font-size:40px; margin:0 0 8px; }
-          .cashout-head p{ margin:0; color:#b8c4d6; }
+         .cashout-page{ max-width:1100px; margin:40px auto 0; padding:0 18px 60px; }
+
+.cashout-head{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:20px;
+}
+
+.cashout-head h1{
+  font-size:40px;
+  margin:0;
+}
+
+/* gul knap */
+.my-payments-btn{
+  display:inline-block;
+  padding:10px 22px;
+  border-radius:14px;
+  background:#fbbf24;
+  color:#0b1220;
+  font-weight:800;
+  font-size:14px;
+  text-decoration:none;
+  border:1px solid rgba(251,191,36,.35);
+  transition:.15s ease;
+}
+
+.my-payments-btn:hover{
+  background:#facc15;
+  transform:translateY(-2px);
+}
 
           .cashout-section{ margin-top:22px; }
           .section-title{ display:flex; align-items:center; gap:12px; margin:0 0 14px; }
@@ -3952,8 +3982,12 @@ const progressRightText =
 <div class="cashout-page">
 
   <div class="cashout-head">
-    <h1>Cash Out</h1>
-  </div>
+  <h1>Cash Out</h1>
+
+  <a href="/payments" class="my-payments-btn">
+    My payments
+  </a>
+</div>
 
   ${msg}
 
