@@ -3949,26 +3949,16 @@ const progressRightText =
           window.HAS_OPEN_WITHDRAWAL = ${hasOpenWithdrawal ? 'true' : 'false'};
         </script>
 
-        <div class="cashout-page">
-          <div class="cashout-head">
-            <h1>Cash Out</h1>
-            <p>Choose a method, then pick an amount.</p>
-          </div>
+<div class="cashout-page">
 
-          ${msg}
+  <div class="cashout-head">
+    <h1>Cash Out</h1>
+  </div>
 
-          <div class="balance-row">
-            <div><b>Available:</b> $${formatUsdFromCents(balanceCents)}</div>
-            <div><b>Pending:</b> $${formatUsdFromCents(pendingCents)}</div>
-          </div>
+  ${msg}
 
-          <div class="cashout-section">
-            <div class="section-title">
-              <h2>Most popular</h2>
-              <span class="pill">Fast payouts</span>
-            </div>
-
-            <div class="methods-grid">
+  <div class="cashout-section">
+    <div class="methods-grid">
 
   <!-- TOP ROW (2 cards) -->
   <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
