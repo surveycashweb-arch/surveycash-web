@@ -3532,37 +3532,36 @@ const progressRightText =
   margin-bottom:28px;
 }
 
-/* 🔥 Freecash-style yellow button */
+/* 🔥 Clean yellow button – no glow */
 .my-payments-btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
 
-  padding:14px 28px;
-  border-radius:18px;
+  padding:12px 26px;
+  border-radius:10px;           /* mere firkantet */
 
   background:#fbbf24;
-  color:#0b1220;
+  color:#ffffff;                /* hvid tekst */
 
-  font-weight:900;
-  font-size:16px;
-  letter-spacing:.3px;
+  font-weight:800;
+  font-size:15px;
+  letter-spacing:.2px;
   text-decoration:none;
 
   border:none;
-  box-shadow:0 10px 30px rgba(251,191,36,.35);
+  box-shadow:none;              /* fjern glow */
 
-  transition:all .18s ease;
+  transition:.15s ease;
 }
 
 .my-payments-btn:hover{
   background:#facc15;
-  transform:translateY(-3px);
-  box-shadow:0 16px 40px rgba(251,191,36,.45);
+  transform:translateY(-1px);
 }
 
 .my-payments-btn:active{
-  transform:translateY(-1px);
+  transform:translateY(0);
 }
 
           .cashout-section{ margin-top:22px; }
