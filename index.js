@@ -4131,129 +4131,119 @@ main,
 
             <div class="co-divider"></div>
 
-            <form id="cashout-form" method="POST" action="/cashout/paypal">
-              <input type="hidden" name="amountCents" id="amountCents" value="" />
+<form id="cashout-form" method="POST" action="/cashout/paypal">
+  <input type="hidden" name="amountCents" id="amountCents" value="" />
 
-              <div class="co-actions">
-                <div class="field">
-                  <label>PayPal email</label>
-                  <input id="paypalEmail" name="paypalEmail" type="email" placeholder="you@example.com" autocomplete="email" required />
-                </div>
+  <div class="co-actions">
+    <button class="withdraw-btn" id="withdrawBtn" type="submit" disabled>
+      Choose an amount
+    </button>
 
-                <button class="withdraw-btn" id="withdrawBtn" type="submit" disabled>
-                  Choose an amount
-                </button>
-
-                <div class="co-small" id="coHint"></div>
-              </div>
-            </form>
+    <div class="co-small" id="coHint"></div>
+  </div>
+</form>
           </div>
         </div>
 
         <script>
-          (function(){
-            const availableUsd = Number(window.AVAILABLE_USD || 0);
-            const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
+(function(){
+  const availableUsd = Number(window.AVAILABLE_USD || 0);
+  const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
 
-            const openBtn = document.getElementById('openPayPal');
-            const backdrop = document.getElementById('coBackdrop');
-            const closeBtn = document.getElementById('coClose');
+  const openBtn = document.getElementById('openPayPal');
+  const backdrop = document.getElementById('coBackdrop');
+  const closeBtn = document.getElementById('coClose');
 
-            const amountGrid = document.getElementById('amountGrid');
-            const amountInp = document.getElementById('amountCents');
-            const emailInp = document.getElementById('paypalEmail');
-            const withdrawBtn = document.getElementById('withdrawBtn');
-            const hint = document.getElementById('coHint');
+  const amountGrid = document.getElementById('amountGrid');
+  const amountInp = document.getElementById('amountCents');
+  const withdrawBtn = document.getElementById('withdrawBtn');
+  const hint = document.getElementById('coHint');
 
-            let selectedCents = 0;
+  let selectedCents = 0;
 
-            function openModal(){
-              if(hasOpen) return;
-              backdrop.classList.add('open');
-              backdrop.setAttribute('aria-hidden','false');
-              selectedCents = 0;
-              amountInp.value = '';
-              withdrawBtn.disabled = true;
-              withdrawBtn.textContent = 'Choose an amount';
-              hint.textContent = '';
-              Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
-              refreshBars();
-            }
+  function openModal(){
+    if(hasOpen) return;
+    backdrop.classList.add('open');
+    backdrop.setAttribute('aria-hidden','false');
+    selectedCents = 0;
+    amountInp.value = '';
+    withdrawBtn.disabled = true;
+    withdrawBtn.textContent = 'Choose an amount';
+    hint.textContent = '';
+    Array.from(amountGrid.querySelectorAll('.amount-card.active'))
+      .forEach(x => x.classList.remove('active'));
+    refreshBars();
+  }
 
-            function closeModal(){
-              backdrop.classList.remove('open');
-              backdrop.setAttribute('aria-hidden','true');
-            }
+  function closeModal(){
+    backdrop.classList.remove('open');
+    backdrop.setAttribute('aria-hidden','true');
+  }
 
-            function refreshBars(){
-              const cards = Array.from(amountGrid.querySelectorAll('.amount-card'));
-              cards.forEach(card => {
-                const cents = Number(card.getAttribute('data-cents') || 0);
-                const usd = cents / 100;
-                const pct = Math.max(0, Math.min(100, (availableUsd / usd) * 100));
-                const fill = card.querySelector('.fill');
-                if(fill) fill.style.width = pct + '%';
-              });
-            }
+  function refreshBars(){
+    const cards = Array.from(amountGrid.querySelectorAll('.amount-card'));
+    cards.forEach(card => {
+      const cents = Number(card.getAttribute('data-cents') || 0);
+      const usd = cents / 100;
+      const pct = Math.max(0, Math.min(100, (availableUsd / usd) * 100));
+      const fill = card.querySelector('.fill');
+      if(fill) fill.style.width = pct + '%';
+    });
+  }
 
-            function validate(){
-              const email = (emailInp.value || '').trim();
-              const emailOk = email.includes('@') && email.includes('.');
-              const amountOk = selectedCents > 0;
+  function validate(){
+    if(selectedCents <= 0){
+      withdrawBtn.disabled = true;
+      withdrawBtn.textContent = 'Choose an amount';
+      hint.textContent = 'Choose an amount.';
+      return;
+    }
 
-              if(!amountOk){
-                withdrawBtn.disabled = true;
-                withdrawBtn.textContent = 'Choose an amount';
-                hint.textContent = 'Choose an amount.';
-                return;
-              }
+    const selectedUsd = selectedCents / 100;
 
-              const selectedUsd = (selectedCents / 100);
-              if(availableUsd < selectedUsd){
-                withdrawBtn.disabled = true;
-                withdrawBtn.textContent = 'Insufficient balance';
-                hint.textContent = 'Insufficient balance for this amount.';
-                return;
-              }
+    if(availableUsd < selectedUsd){
+      withdrawBtn.disabled = true;
+      withdrawBtn.textContent = 'Insufficient balance';
+      hint.textContent = 'Insufficient balance for this amount.';
+      return;
+    }
 
-              if(!emailOk){
-                withdrawBtn.disabled = true;
-                withdrawBtn.textContent = 'Enter email';
-                hint.textContent = 'Enter a valid PayPal email.';
-                return;
-              }
+    withdrawBtn.disabled = false;
+    withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
+    hint.textContent = '';
+  }
 
-              withdrawBtn.disabled = false;
-              withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
-              hint.textContent = '';
-            }
+  if(openBtn) openBtn.addEventListener('click', openModal);
+  if(closeBtn) closeBtn.addEventListener('click', closeModal);
+  if(backdrop) backdrop.addEventListener('click', (e) => {
+    if(e.target === backdrop) closeModal();
+  });
 
-            if(openBtn) openBtn.addEventListener('click', openModal);
-            if(closeBtn) closeBtn.addEventListener('click', closeModal);
-            if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
-            window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+  window.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') closeModal();
+  });
 
-            if(amountGrid){
-              amountGrid.addEventListener('click', (e) => {
-                const card = e.target.closest('.amount-card');
-                if(!card) return;
-                if(card.disabled) return;
+  if(amountGrid){
+    amountGrid.addEventListener('click', (e) => {
+      const card = e.target.closest('.amount-card');
+      if(!card || card.disabled) return;
 
-                Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
-                card.classList.add('active');
+      Array.from(amountGrid.querySelectorAll('.amount-card.active'))
+        .forEach(x => x.classList.remove('active'));
 
-                selectedCents = Number(card.getAttribute('data-cents') || 0);
-                amountInp.value = String(selectedCents);
-                validate();
-              });
-            }
+      card.classList.add('active');
 
-            if(emailInp) emailInp.addEventListener('input', validate);
+      selectedCents = Number(card.getAttribute('data-cents') || 0);
+      amountInp.value = String(selectedCents);
 
-            refreshBars();
-            validate();
-          })();
-        </script>
+      validate();
+    });
+  }
+
+  refreshBars();
+  validate();
+})();
+                  </script>
 
         ${autoCheckScript}
       `,
