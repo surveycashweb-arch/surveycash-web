@@ -3629,18 +3629,27 @@ main,
 .side-stats{
   display:flex;
   flex-direction:column;
-  gap:6px;
-  color:#cbd5e1;
-  font-size:14px;
+  gap:14px;
 }
 
 .stat-row{
-  width:170px;
+  width:190px;
   display:flex;
   justify-content:space-between;
+  align-items:center;
 }
 
-.stat-row b{ color:#ffffff; }
+.stat-row span{
+  font-size:16px;
+  font-weight:600;
+  color:#e5e7eb;     /* lysere */
+}
+
+.stat-row b{
+  font-size:18px;
+  font-weight:800;
+  color:#ffffff;     /* helt hvid */
+}
 
 /* ✅ Giv plads så payout grid ikke går ind under boksen */
 .cashout-section{
