@@ -3884,8 +3884,12 @@ main,
   margin:0;
   box-sizing:border-box;
 }
+.field input:focus{
+  border-color:rgba(251,191,36,.45);
+  box-shadow:0 0 0 3px rgba(251,191,36,.12);
+}
 
-/* submit button */
+/* action button */
 .withdraw-btn{
   height:48px;
   margin:0;
@@ -3916,30 +3920,28 @@ main,
   .withdraw-btn{ width:100%; }
 }
 
-/* ===== Confirm modal styles (NO EDIT, click email row) ===== */
+/* ===== Confirm modal styles ===== */
 .confirm-modal{ width:min(640px, 100%); }
 
 .confirm-row{ padding:4px 4px 0; }
 .confirm-label{ font-size:12px; color:rgba(255,255,255,.65); margin-bottom:6px; }
 
-.confirm-email{
-  display:flex;
-  align-items:center;
+/* clickable/editable email field */
+.confirm-email-input input{
+  width:100%;
+  height:48px;
+  padding:0 14px;
+  border-radius:14px;
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.10);
-  border-radius:14px;
-  padding:12px 12px;
-  cursor:pointer;
-  transition:.15s ease;
+  color:#fff;
+  outline:none;
+  box-sizing:border-box;
+  font-weight:700;
 }
-.confirm-email:hover{
-  border-color:rgba(251,191,36,.35);
-  box-shadow:0 0 0 3px rgba(251,191,36,.10);
-}
-.confirm-email span{
-  font-weight:700; color:#fff;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  width:100%;
+.confirm-email-input input:focus{
+  border-color:rgba(251,191,36,.45);
+  box-shadow:0 0 0 3px rgba(251,191,36,.12);
 }
 
 .confirm-note{
@@ -3960,8 +3962,11 @@ main,
   border-bottom:1px solid rgba(255,255,255,.06);
 }
 .fee-row b{ color:#fff; }
-.fee-row.total{ border-bottom:none; padding-top:14px; }
-.fee-row.receive{ border-bottom:none; padding-top:6px; font-size:16px; }
+.fee-row.receive{
+  border-bottom:none;
+  padding-top:12px;
+  font-size:16px;
+}
 .fee-row.receive b{ color:#fff; font-weight:900; }
 
 .confirm-checks{
@@ -4108,7 +4113,7 @@ main,
 
 <!-- ===== PayPal Modal (step 1) ===== -->
 <div class="co-backdrop" id="coBackdrop" aria-hidden="true">
-  <div class="co-modal" role="dialog" aria-modal="true" aria-labelledby="coTitle">
+  <div class="co-modal" id="coModal" role="dialog" aria-modal="true" aria-labelledby="coTitle">
     <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
 
     <div class="co-header">
@@ -4149,7 +4154,7 @@ main,
 
 <!-- ===== Confirm Modal (step 2) ===== -->
 <div class="co-backdrop" id="confirmBackdrop" aria-hidden="true">
-  <div class="co-modal confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="co-modal confirm-modal" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
     <button class="co-close" id="confirmClose" type="button" aria-label="Close">✕</button>
 
     <div class="co-header">
@@ -4161,9 +4166,8 @@ main,
     <div class="confirm-row">
       <div class="confirm-label">PayPal account*</div>
 
-      <!-- ✅ klik her for at ændre email (ingen Edit knap) -->
-      <div class="confirm-email" id="confirmEmailRow" role="button" tabindex="0" aria-label="Edit PayPal email">
-        <span id="confirmEmailText">—</span>
+      <div class="confirm-email-input">
+        <input id="confirmEmailInput" type="email" placeholder="you@example.com" autocomplete="email" />
       </div>
 
       <div class="confirm-note">
@@ -4183,11 +4187,7 @@ main,
         <b id="feePaypal">$0.00</b>
       </div>
 
-      <div class="fee-row total">
-        <span>Amount</span>
-        <b id="feeAmount">$0.00</b>
-      </div>
-
+      <!-- ✅ kun "You receive" -->
       <div class="fee-row receive">
         <span>You receive</span>
         <b id="feeReceive">$0.00</b>
@@ -4219,6 +4219,7 @@ main,
 
   const openBtn = document.getElementById('openPayPal');
   const backdrop = document.getElementById('coBackdrop');
+  const modal = document.getElementById('coModal');
   const closeBtn = document.getElementById('coClose');
 
   const amountGrid = document.getElementById('amountGrid');
@@ -4228,13 +4229,13 @@ main,
   const hint = document.getElementById('coHint');
 
   const confirmBackdrop = document.getElementById('confirmBackdrop');
+  const confirmModal = document.getElementById('confirmModal');
   const confirmClose = document.getElementById('confirmClose');
-  const confirmEmailText = document.getElementById('confirmEmailText');
-  const confirmEmailRow = document.getElementById('confirmEmailRow');
+
+  const confirmEmailInput = document.getElementById('confirmEmailInput');
 
   const feePayout = document.getElementById('feePayout');
   const feePaypal = document.getElementById('feePaypal');
-  const feeAmount = document.getElementById('feeAmount');
   const feeReceive = document.getElementById('feeReceive');
 
   const chkCanReceive = document.getElementById('chkCanReceive');
@@ -4242,6 +4243,11 @@ main,
   const confirmSubmit = document.getElementById('confirmSubmit');
 
   let selectedCents = 0;
+
+  function isEmailValid(v){
+    const s = String(v || '').trim();
+    return s.includes('@') && s.includes('.');
+  }
 
   function openModal(){
     if(hasOpen) return;
@@ -4267,25 +4273,27 @@ main,
 
   function openConfirm(){
     const email = (emailInp.value || '').trim();
-    confirmEmailText.textContent = email || '—';
+    if(confirmEmailInput) confirmEmailInput.value = email;
 
     const amount = (selectedCents / 100);
 
+    // placeholder fees (ændr når du vil)
     const payoutFee = 0.00;
     const paypalFee = 0.00;
     const receive = Math.max(0, amount - payoutFee - paypalFee);
 
     feePayout.textContent = '$' + payoutFee.toFixed(2);
     feePaypal.textContent = '$' + paypalFee.toFixed(2);
-    feeAmount.textContent = '$' + amount.toFixed(2);
     feeReceive.textContent = '$' + receive.toFixed(2);
 
     chkCanReceive.checked = false;
     chkNoRefund.checked = false;
-    confirmSubmit.disabled = true;
 
     confirmBackdrop.classList.add('open');
     confirmBackdrop.setAttribute('aria-hidden','false');
+
+    validateConfirm();
+    setTimeout(() => confirmEmailInput && confirmEmailInput.focus(), 0);
   }
 
   function closeConfirm(){
@@ -4294,7 +4302,8 @@ main,
   }
 
   function validateConfirm(){
-    confirmSubmit.disabled = !(chkCanReceive.checked && chkNoRefund.checked);
+    const emailOk = isEmailValid(confirmEmailInput ? confirmEmailInput.value : '');
+    confirmSubmit.disabled = !(chkCanReceive.checked && chkNoRefund.checked && emailOk);
   }
 
   function refreshBars(){
@@ -4310,7 +4319,7 @@ main,
 
   function validate(){
     const email = (emailInp.value || '').trim();
-    const emailOk = email.includes('@') && email.includes('.');
+    const emailOk = isEmailValid(email);
     const amountOk = selectedCents > 0;
 
     if(!amountOk){
@@ -4346,6 +4355,12 @@ main,
   if(closeBtn) closeBtn.addEventListener('click', closeModal);
   if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
 
+  // stop klik inde i modal fra at boble op (så den aldrig lukker pga andre handlers)
+  if(modal) modal.addEventListener('click', (e) => e.stopPropagation());
+  if(confirmModal) confirmModal.addEventListener('click', (e) => e.stopPropagation());
+  if(backdrop) backdrop.addEventListener('click', (e) => e.stopPropagation());
+  if(confirmBackdrop) confirmBackdrop.addEventListener('click', (e) => e.stopPropagation());
+
   window.addEventListener('keydown', (e) => {
     if(e.key === 'Escape'){
       if(confirmBackdrop.classList.contains('open')) closeConfirm();
@@ -4370,6 +4385,7 @@ main,
 
   if(emailInp) emailInp.addEventListener('input', validate);
 
+  // Step1 -> åbner confirm
   if(withdrawBtn){
     withdrawBtn.addEventListener('click', () => {
       if(!validate()) return;
@@ -4377,33 +4393,16 @@ main,
     });
   }
 
-  // ✅ Confirm email row click = gå tilbage og fokus email
-  function jumpToEmail(){
-    closeConfirm();
-    setTimeout(() => {
-      if(emailInp){
-        emailInp.focus();
-        emailInp.select();
-      }
-    }, 0);
-  }
-
-  if(confirmEmailRow){
-    confirmEmailRow.addEventListener('click', jumpToEmail);
-    confirmEmailRow.addEventListener('keydown', (e) => {
-      if(e.key === 'Enter' || e.key === ' '){
-        e.preventDefault();
-        jumpToEmail();
-      }
-    });
-  }
-
+  // confirm email ændring påvirker submit-knap
+  if(confirmEmailInput) confirmEmailInput.addEventListener('input', validateConfirm);
   if(chkCanReceive) chkCanReceive.addEventListener('change', validateConfirm);
   if(chkNoRefund) chkNoRefund.addEventListener('change', validateConfirm);
 
+  // Confirm submit: sync email tilbage til form input og submit
   if(confirmSubmit){
     confirmSubmit.addEventListener('click', () => {
       if(confirmSubmit.disabled) return;
+      if(confirmEmailInput && emailInp) emailInp.value = String(confirmEmailInput.value || '').trim();
       document.getElementById('cashout-form').submit();
     });
   }
