@@ -3932,10 +3932,10 @@ main,
 
 /* ===== FIX: input + button perfectly aligned (same row) ===== */
 .co-actions{
-  display:grid;
-  grid-template-columns: 1fr 210px;
-  gap:12px;
-  align-items:end;                /* begge “lander” samme bundlinje */
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
 }
 
 /* label over input, men input-højden fast */
@@ -3966,9 +3966,10 @@ main,
 /* knap = input-højde + samme baseline */
 .withdraw-btn{
   height:48px;
-  margin:0;
-  align-self:end;
+  margin:0 auto;      /* centrerer knappen */
   box-sizing:border-box;
+  width:280px;
+  max-width:100%;
 }
 
 /* hint under begge */
