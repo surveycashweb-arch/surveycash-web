@@ -3545,16 +3545,25 @@ main,
   padding:0 0 60px 40px !important; /* lille venstre spacing */
 }
 
-/* Header */
+/* ===== Top row: title left, stats right ===== */
+.cashout-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:24px;
+  margin-bottom:18px;
+}
+
+/* venstre side */
 .cashout-head{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
-  gap:18px;
-  margin-bottom:20px;
+  gap:12px;
+  margin:0;
 }
 
-/* CashOut titel */
+/* titel */
 .cashout-head h1{
   font-size:52px;
   font-weight:900;
@@ -3568,47 +3577,65 @@ main,
   color:#eab308;
 }
 
-/* My payments button */
+/* højre side */
+.cashout-side{
+  margin-left:auto;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.side-card{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  text-align:right;
+  gap:10px;
+  min-width:220px;
+}
+
+/* My payments */
 .my-payments-btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   padding:11px 24px;
-  border-radius:8px;
+  border-radius:10px;
   background:#eab308;
   color:#0b1220;
-  font-weight:700;
+  font-weight:800;
   font-size:14px;
   letter-spacing:.2px;
   text-decoration:none;
   border:1px solid rgba(234,179,8,.6);
-  box-shadow:none;
   transition:.15s ease;
 }
+.my-payments-btn:hover{ background:#d4a006; transform:translateY(-1px); }
+.my-payments-btn:active{ transform:translateY(0); }
 
-.my-payments-btn:hover{
-  background:#d4a006;
-  transform:translateY(-1px);
+/* stats */
+.side-stats{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  color:#cbd5e1;
+  font-size:14px;
 }
-
-.my-payments-btn:active{
-  transform:translateY(0);
+.stat-row{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  white-space:nowrap;
 }
+.stat-row span{ opacity:.9; }
+.stat-row b{ color:#fff; }
 
-          .cashout-section{ margin-top:22px; }
-          .section-title{ display:flex; align-items:center; gap:12px; margin:0 0 14px; }
-          .section-title h2{ margin:0; font-size:18px; }
-          .pill{
-            font-size:12px; padding:6px 10px; border-radius:999px;
-            background:rgba(34,197,94,.12); color:#22c55e; border:1px solid rgba(34,197,94,.18);
-          }
-
-          .balance-row{
-            margin-top:14px;
-            max-width:820px;
-            display:flex; gap:16px; flex-wrap:wrap;
-            color:#cbd5e1;
-          }
+/* mobil */
+@media (max-width:720px){
+  .cashout-top{ flex-direction:column; }
+  .cashout-side{ width:100%; justify-content:flex-start; }
+  .side-card{ align-items:flex-start; text-align:left; }
+  .stat-row{ justify-content:flex-start; }
+}
 
 /* ===== Medium Freecash-style payout methods ===== */
 .methods-grid{
