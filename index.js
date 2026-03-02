@@ -3579,27 +3579,31 @@ main,
 /* 🔥 højre boks – fjernet fra layout flow */
 .cashout-side{
   position:absolute;
-  top:6px;            /* 🔥 lidt ned så den flugter pænere */
-  right:40px;
+  top:0;
+  right:40px; /* matcher venstre padding */
   display:flex;
   justify-content:flex-end;
 }
 
+/* SELVE BOKSEN */
 .side-card{
   width:280px;
-  min-height:620px;   /* 🔥 længere ned til bunden af payout boxes */
+  min-height:560px;   /* 🔥 går ned til nederste payout boxes */
   border-radius:30px;
+
   background:#151c2e;
   border:1px solid rgba(255,255,255,.05);
   box-shadow:0 40px 120px rgba(0,0,0,.45);
 
   display:flex;
   flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
 
-  padding:40px 20px;
+  align-items:center;
+  justify-content:flex-start;   /* starter øverst */
+
+  text-align:center;
   gap:20px;
+  padding:40px 20px;
 }
 
 /* My payments */
@@ -3651,37 +3655,6 @@ main,
 .cashout-section{
   margin-top:22px;
   padding-right:340px;
-}
-
-.side-help{
-  margin-top:auto;
-  width:100%;
-  padding-top:20px;
-  border-top:1px solid rgba(255,255,255,.06);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:10px;
-}
-
-.help-text{
-  font-size:13px;
-  line-height:1.5;
-  color:rgba(255,255,255,.70);
-  text-align:center;
-  max-width:220px;
-}
-
-.help-link{
-  font-size:14px;
-  font-weight:800;
-  color:#fbbf24;
-  text-decoration:none;
-  transition:.15s ease;
-}
-.help-link:hover{
-  color:#fcd34d;
-  text-decoration:underline;
 }
 
 /* ===== Mobil ===== */
@@ -4122,35 +4095,30 @@ main,
       ${msg}
     </div>
 
-<div class="cashout-side">
-  <div class="side-card">
+    <div class="cashout-side">
+      <div class="side-card">
+        <a href="/payments" class="my-payments-btn side-btn">My payments</a>
 
-    <a href="/payments" class="my-payments-btn side-btn">My payments</a>
-
-    <div class="side-stats">
-      <div class="stat-row">
-        <span>Available</span>
-        <b>$${formatUsdFromCents(balanceCents)}</b>
-      </div>
-      <div class="stat-row">
-        <span>Pending</span>
-        <b>$${formatUsdFromCents(pendingCents)}</b>
+        <div class="side-stats">
+          <div class="stat-row">
+            <span>Available</span>
+            <b>$${formatUsdFromCents(balanceCents)}</b>
+          </div>
+          <div class="stat-row">
+            <span>Pending</span>
+            <b>$${formatUsdFromCents(pendingCents)}</b>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 🔥 FLYT DEN HEROP -->
-    <div class="side-help">
-      <div class="help-text">
-        Having trouble with your payout?<br>
-        You can always contact support — we’re happy to help.
-      </div>
-      <a href="/support" class="help-link">Contact support</a>
-    </div>
+  </div>
 
-  </div>   <!-- side-card lukkes HER -->
-</div>
+  <div class="cashout-section">
+    <div class="methods-grid">
 
-          <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
+      <!-- PayPal -->
+      <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
               id="openPayPal"
               type="button"
               ${hasOpenWithdrawal ? 'disabled' : ''}>
