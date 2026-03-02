@@ -3871,15 +3871,11 @@ main,
 .field{ margin:0; }
 .field label{ display:block; margin:0 0 6px; line-height:1.1; }
 
-/* ===== PayPal account locked + gul Edit ===== */
-.email-input-wrap{
-  position:relative;
-  width:100%;
-}
-.email-input-wrap input{
+/* input (normal, altid skrivbar) */
+.field input{
   width:100%;
   height:48px;
-  padding:0 88px 0 14px; /* plads til Edit */
+  padding:0 14px;
   border-radius:14px;
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.10);
@@ -3887,23 +3883,6 @@ main,
   outline:none;
   margin:0;
   box-sizing:border-box;
-}
-.email-edit{
-  position:absolute;
-  right:14px;
-  top:50%;
-  transform:translateY(-50%);
-  background:transparent;
-  border:0;
-  padding:0;
-  cursor:pointer;
-  color:#fbbf24; /* gul */
-  font-weight:900;
-  font-size:14px;
-}
-.email-edit:hover{
-  color:#fcd34d;
-  text-decoration:underline;
 }
 
 /* submit button */
@@ -4154,12 +4133,8 @@ main,
       <div class="co-actions">
         <div class="field">
           <label>PayPal account*</label>
-
-          <div class="email-input-wrap">
-            <input id="paypalEmail" name="paypalEmail" type="email"
-                   placeholder="you@example.com" autocomplete="email" required readonly />
-            <button type="button" class="email-edit" id="paypalEmailEdit">Edit</button>
-          </div>
+          <input id="paypalEmail" name="paypalEmail" type="email"
+                 placeholder="you@example.com" autocomplete="email" required />
         </div>
 
         <button class="withdraw-btn" id="withdrawBtn" type="button" disabled>
@@ -4249,7 +4224,6 @@ main,
   const amountGrid = document.getElementById('amountGrid');
   const amountInp = document.getElementById('amountCents');
   const emailInp = document.getElementById('paypalEmail');
-  const emailEditBtn = document.getElementById('paypalEmailEdit');
   const withdrawBtn = document.getElementById('withdrawBtn');
   const hint = document.getElementById('coHint');
 
@@ -4269,18 +4243,6 @@ main,
 
   let selectedCents = 0;
 
-  function setEmailLocked(locked){
-    if(!emailInp || !emailEditBtn) return;
-    emailInp.readOnly = !!locked;
-    emailEditBtn.textContent = locked ? 'Edit' : 'Done';
-    if(!locked){
-      setTimeout(() => {
-        emailInp.focus();
-        emailInp.select();
-      }, 0);
-    }
-  }
-
   function openModal(){
     if(hasOpen) return;
     backdrop.classList.add('open');
@@ -4292,12 +4254,10 @@ main,
     withdrawBtn.textContent = 'Choose an amount';
     hint.textContent = '';
 
-    // ✅ lås email som default
-    setEmailLocked(true);
-
     Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
     refreshBars();
     validate();
+    setTimeout(() => emailInp && emailInp.focus(), 0);
   }
 
   function closeModal(){
@@ -4381,30 +4341,14 @@ main,
     return true;
   }
 
-  // åbne/lukke (kun X og ESC) ✅
+  // Åbn/luk: kun X og ESC
   if(openBtn) openBtn.addEventListener('click', openModal);
   if(closeBtn) closeBtn.addEventListener('click', closeModal);
 
-  // ✅ fjernet: klik udenfor lukker IKKE
-
-  // gul Edit i step 1
-  if(emailEditBtn){
-    emailEditBtn.addEventListener('click', () => {
-      const locked = emailInp.readOnly;
-      if(locked){
-        setEmailLocked(false);
-      } else {
-        setEmailLocked(true);
-        validate();
-      }
-    });
-  }
-
-  // ESC lukker den øverste modal
   window.addEventListener('keydown', (e) => {
     if(e.key === 'Escape'){
       if(confirmBackdrop.classList.contains('open')) closeConfirm();
-      else closeModal();
+      else if(backdrop.classList.contains('open')) closeModal();
     }
   });
 
@@ -4425,7 +4369,6 @@ main,
 
   if(emailInp) emailInp.addEventListener('input', validate);
 
-  // klik på cashout => åbn confirm modal
   if(withdrawBtn){
     withdrawBtn.addEventListener('click', () => {
       if(!validate()) return;
@@ -4433,18 +4376,17 @@ main,
     });
   }
 
-  // confirm modal: kun X og ESC ✅
+  // Confirm: kun X og ESC
   if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
-  // ✅ fjernet: klik udenfor confirm lukker IKKE
 
   if(chkCanReceive) chkCanReceive.addEventListener('change', validateConfirm);
   if(chkNoRefund) chkNoRefund.addEventListener('change', validateConfirm);
 
-  // Edit i confirm -> tilbage til step 1 og lås op for email
+  // Confirm Edit -> tilbage til step 1 + fokus email (ingen lock)
   if(confirmEditEmail){
     confirmEditEmail.addEventListener('click', () => {
       closeConfirm();
-      setEmailLocked(false);
+      setTimeout(() => emailInp && emailInp.focus(), 0);
     });
   }
 
