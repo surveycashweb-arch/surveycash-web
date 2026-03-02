@@ -3584,13 +3584,26 @@ main,
   justify-content:flex-end;
 }
 
+/* 🔥 SELVE BOKSEN */
 .side-card{
+  width:280px;
+  height:260px;
+  border-radius:30px;
+
+  background:#151c2e;   /* samme som header */
+
+  border:1px solid rgba(255,255,255,.05);
+  box-shadow:0 40px 120px rgba(0,0,0,.45);
+
   display:flex;
   flex-direction:column;
-  align-items:flex-end;
-  text-align:right;
-  gap:10px;
-  min-width:220px;
+
+  align-items:center;      /* centrer vandret */
+  justify-content:center;  /* centrer lodret */
+
+  text-align:center;
+  gap:16px;
+  padding:20px;
 }
 
 /* My payments */
@@ -3598,8 +3611,8 @@ main,
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  padding:11px 24px;
-  border-radius:10px;
+  padding:11px 26px;
+  border-radius:12px;
   background:#eab308;
   color:#0b1220;
   font-weight:800;
@@ -3616,25 +3629,27 @@ main,
 .side-stats{
   display:flex;
   flex-direction:column;
-  gap:4px;
+  gap:6px;
   color:#cbd5e1;
   font-size:14px;
 }
+
 .stat-row{
+  width:170px;
   display:flex;
-  gap:10px;
-  justify-content:flex-end;
-  white-space:nowrap;
+  justify-content:space-between;
 }
-.stat-row span{ opacity:.9; }
-.stat-row b{ color:#fff; }
+
+.stat-row b{ color:#ffffff; }
 
 /* mobil */
 @media (max-width:720px){
   .cashout-top{ flex-direction:column; }
   .cashout-side{ width:100%; justify-content:flex-start; }
-  .side-card{ align-items:flex-start; text-align:left; }
-  .stat-row{ justify-content:flex-start; }
+  .side-card{
+    align-items:center;
+    text-align:center;
+  }
 }
 
 /* ===== Medium Freecash-style payout methods ===== */
