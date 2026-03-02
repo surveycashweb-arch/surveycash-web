@@ -3871,11 +3871,15 @@ main,
 .field{ margin:0; }
 .field label{ display:block; margin:0 0 6px; line-height:1.1; }
 
-/* input */
-.field input{
+/* ===== PayPal account locked + gul Edit ===== */
+.email-input-wrap{
+  position:relative;
+  width:100%;
+}
+.email-input-wrap input{
   width:100%;
   height:48px;
-  padding:0 14px;
+  padding:0 88px 0 14px; /* plads til Edit */
   border-radius:14px;
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.10);
@@ -3883,6 +3887,23 @@ main,
   outline:none;
   margin:0;
   box-sizing:border-box;
+}
+.email-edit{
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  background:transparent;
+  border:0;
+  padding:0;
+  cursor:pointer;
+  color:#fbbf24; /* gul */
+  font-weight:900;
+  font-size:14px;
+}
+.email-edit:hover{
+  color:#fcd34d;
+  text-decoration:underline;
 }
 
 /* submit button */
@@ -3903,6 +3924,7 @@ main,
   background:rgba(251,191,36,.18);
   color:#fbbf24;
 }
+
 .co-small{
   grid-column:1 / -1;
   color:#b8c4d6;
@@ -3913,32 +3935,6 @@ main,
 @media (max-width:520px){
   .co-actions{ grid-template-columns:1fr; }
   .withdraw-btn{ width:100%; }
-}
-
-/* ===== PayPal konto locked + gul Edit (step 1) ===== */
-.email-input-wrap{
-  position:relative;
-  width:100%;
-}
-.email-input-wrap input{
-  padding-right:90px; /* plads til Edit */
-}
-.email-edit{
-  position:absolute;
-  right:14px;
-  top:50%;
-  transform:translateY(-50%);
-  background:transparent;
-  border:0;
-  padding:0;
-  cursor:pointer;
-  color:#fbbf24; /* gul */
-  font-weight:900;
-  font-size:14px;
-}
-.email-edit:hover{
-  color:#fcd34d;
-  text-decoration:underline;
 }
 
 /* ===== Confirm modal styles ===== */
@@ -3959,7 +3955,7 @@ main,
 }
 .confirm-edit{
   border:0; background:transparent;
-  color:#fbbf24;          /* ✅ gul */
+  color:#fbbf24;
   font-weight:900;
   cursor:pointer;
 }
@@ -4166,7 +4162,6 @@ main,
           </div>
         </div>
 
-        <!-- 🔥 vigtig: button (ikke submit) -->
         <button class="withdraw-btn" id="withdrawBtn" type="button" disabled>
           Choose an amount
         </button>
@@ -4278,6 +4273,12 @@ main,
     if(!emailInp || !emailEditBtn) return;
     emailInp.readOnly = !!locked;
     emailEditBtn.textContent = locked ? 'Edit' : 'Done';
+    if(!locked){
+      setTimeout(() => {
+        emailInp.focus();
+        emailInp.select();
+      }, 0);
+    }
   }
 
   function openModal(){
@@ -4310,7 +4311,6 @@ main,
 
     const amount = (selectedCents / 100);
 
-    // placeholder fees (kan ændres senere)
     const payoutFee = 0.00;
     const paypalFee = 0.00;
     const receive = Math.max(0, amount - payoutFee - paypalFee);
@@ -4381,17 +4381,18 @@ main,
     return true;
   }
 
+  // åbne/lukke (kun X og ESC) ✅
   if(openBtn) openBtn.addEventListener('click', openModal);
   if(closeBtn) closeBtn.addEventListener('click', closeModal);
-  if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
 
-  // ✅ gul Edit i step 1
+  // ✅ fjernet: klik udenfor lukker IKKE
+
+  // gul Edit i step 1
   if(emailEditBtn){
     emailEditBtn.addEventListener('click', () => {
       const locked = emailInp.readOnly;
       if(locked){
         setEmailLocked(false);
-        setTimeout(() => emailInp.focus(), 0);
       } else {
         setEmailLocked(true);
         validate();
@@ -4432,18 +4433,18 @@ main,
     });
   }
 
+  // confirm modal: kun X og ESC ✅
   if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
-  if(confirmBackdrop) confirmBackdrop.addEventListener('click', (e) => { if(e.target === confirmBackdrop) closeConfirm(); });
+  // ✅ fjernet: klik udenfor confirm lukker IKKE
 
   if(chkCanReceive) chkCanReceive.addEventListener('change', validateConfirm);
   if(chkNoRefund) chkNoRefund.addEventListener('change', validateConfirm);
 
-  // ✅ Edit i confirm -> tilbage til step 1 og lås op for email
+  // Edit i confirm -> tilbage til step 1 og lås op for email
   if(confirmEditEmail){
     confirmEditEmail.addEventListener('click', () => {
       closeConfirm();
       setEmailLocked(false);
-      setTimeout(() => emailInp.focus(), 0);
     });
   }
 
