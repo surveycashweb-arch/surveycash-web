@@ -3471,17 +3471,11 @@ app.get('/cashout', async (req, res) => {
     msg = `<div class="notice error">Cash out failed.</div>`;
   }
 
-  // PayPal logo path (public/img/paypal.png)
   const paypalImg = '/img/paypal.png';
 
   // progress bar data til PayPal card
   const minCashoutCents = CASHOUT_ALLOWED_CENTS[0] || 500;
-
-  const progressPct = Math.max(
-    0,
-    Math.min(100, (balanceCents / minCashoutCents) * 100)
-  );
-
+  const progressPct = Math.max(0, Math.min(100, (balanceCents / minCashoutCents) * 100));
   const progressRightText =
     '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents / 100).toFixed(0);
 
@@ -3683,7 +3677,6 @@ main,
   border-color:rgba(34,197,94,.85);
   box-shadow:0 14px 50px rgba(34,197,94,.16);
 }
-
 .method-card.placeholder{ opacity:.6; cursor:not-allowed; }
 .method-card.placeholder:hover{ transform:none; box-shadow:none; }
 
@@ -3801,7 +3794,6 @@ main,
 .co-title{ font-weight:900; font-size:17px; }
 
 .co-divider{ height:1px; background:rgba(255,255,255,.08); margin:8px 0; }
-
 .co-block-title{ font-weight:800; margin:2px 0 8px; }
 
 .amount-grid{
@@ -3878,6 +3870,8 @@ main,
 }
 .field{ margin:0; }
 .field label{ display:block; margin:0 0 6px; line-height:1.1; }
+
+/* input */
 .field input{
   width:100%;
   height:48px;
@@ -3890,6 +3884,8 @@ main,
   margin:0;
   box-sizing:border-box;
 }
+
+/* submit button */
 .withdraw-btn{
   height:48px;
   margin:0;
@@ -3907,10 +3903,42 @@ main,
   background:rgba(251,191,36,.18);
   color:#fbbf24;
 }
-.co-small{ grid-column:1 / -1; color:#b8c4d6; font-size:12px; min-height:16px; margin-top:6px; }
+.co-small{
+  grid-column:1 / -1;
+  color:#b8c4d6;
+  font-size:12px;
+  min-height:16px;
+  margin-top:6px;
+}
 @media (max-width:520px){
   .co-actions{ grid-template-columns:1fr; }
   .withdraw-btn{ width:100%; }
+}
+
+/* ===== PayPal konto locked + gul Edit (step 1) ===== */
+.email-input-wrap{
+  position:relative;
+  width:100%;
+}
+.email-input-wrap input{
+  padding-right:90px; /* plads til Edit */
+}
+.email-edit{
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  background:transparent;
+  border:0;
+  padding:0;
+  cursor:pointer;
+  color:#fbbf24; /* gul */
+  font-weight:900;
+  font-size:14px;
+}
+.email-edit:hover{
+  color:#fcd34d;
+  text-decoration:underline;
 }
 
 /* ===== Confirm modal styles ===== */
@@ -3931,9 +3959,13 @@ main,
 }
 .confirm-edit{
   border:0; background:transparent;
-  color:#22c55e;
-  font-weight:800;
+  color:#fbbf24;          /* ✅ gul */
+  font-weight:900;
   cursor:pointer;
+}
+.confirm-edit:hover{
+  color:#fcd34d;
+  text-decoration:underline;
 }
 .confirm-note{
   margin-top:8px;
@@ -4125,8 +4157,13 @@ main,
 
       <div class="co-actions">
         <div class="field">
-          <label>PayPal email</label>
-          <input id="paypalEmail" name="paypalEmail" type="email" placeholder="you@example.com" autocomplete="email" required />
+          <label>PayPal account*</label>
+
+          <div class="email-input-wrap">
+            <input id="paypalEmail" name="paypalEmail" type="email"
+                   placeholder="you@example.com" autocomplete="email" required readonly />
+            <button type="button" class="email-edit" id="paypalEmailEdit">Edit</button>
+          </div>
         </div>
 
         <!-- 🔥 vigtig: button (ikke submit) -->
@@ -4217,6 +4254,7 @@ main,
   const amountGrid = document.getElementById('amountGrid');
   const amountInp = document.getElementById('amountCents');
   const emailInp = document.getElementById('paypalEmail');
+  const emailEditBtn = document.getElementById('paypalEmailEdit');
   const withdrawBtn = document.getElementById('withdrawBtn');
   const hint = document.getElementById('coHint');
 
@@ -4236,17 +4274,29 @@ main,
 
   let selectedCents = 0;
 
+  function setEmailLocked(locked){
+    if(!emailInp || !emailEditBtn) return;
+    emailInp.readOnly = !!locked;
+    emailEditBtn.textContent = locked ? 'Edit' : 'Done';
+  }
+
   function openModal(){
     if(hasOpen) return;
     backdrop.classList.add('open');
     backdrop.setAttribute('aria-hidden','false');
+
     selectedCents = 0;
     amountInp.value = '';
     withdrawBtn.disabled = true;
     withdrawBtn.textContent = 'Choose an amount';
     hint.textContent = '';
+
+    // ✅ lås email som default
+    setEmailLocked(true);
+
     Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
     refreshBars();
+    validate();
   }
 
   function closeModal(){
@@ -4255,7 +4305,6 @@ main,
   }
 
   function openConfirm(){
-    // fyld email + fees
     const email = (emailInp.value || '').trim();
     confirmEmailText.textContent = email || '—';
 
@@ -4336,6 +4385,20 @@ main,
   if(closeBtn) closeBtn.addEventListener('click', closeModal);
   if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
 
+  // ✅ gul Edit i step 1
+  if(emailEditBtn){
+    emailEditBtn.addEventListener('click', () => {
+      const locked = emailInp.readOnly;
+      if(locked){
+        setEmailLocked(false);
+        setTimeout(() => emailInp.focus(), 0);
+      } else {
+        setEmailLocked(true);
+        validate();
+      }
+    });
+  }
+
   // ESC lukker den øverste modal
   window.addEventListener('keydown', (e) => {
     if(e.key === 'Escape'){
@@ -4375,10 +4438,12 @@ main,
   if(chkCanReceive) chkCanReceive.addEventListener('change', validateConfirm);
   if(chkNoRefund) chkNoRefund.addEventListener('change', validateConfirm);
 
+  // ✅ Edit i confirm -> tilbage til step 1 og lås op for email
   if(confirmEditEmail){
     confirmEditEmail.addEventListener('click', () => {
       closeConfirm();
-      emailInp.focus();
+      setEmailLocked(false);
+      setTimeout(() => emailInp.focus(), 0);
     });
   }
 
