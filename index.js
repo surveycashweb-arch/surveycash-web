@@ -4122,38 +4122,35 @@ main,
       ${msg}
     </div>
 
-    <div class="cashout-side">
-      <div class="side-card">
-        <a href="/payments" class="my-payments-btn side-btn">My payments</a>
+<div class="cashout-side">
+  <div class="side-card">
 
-        <div class="side-stats">
-          <div class="stat-row">
-            <span>Available</span>
-            <b>$${formatUsdFromCents(balanceCents)}</b>
-          </div>
-          <div class="stat-row">
-            <span>Pending</span>
-            <b>$${formatUsdFromCents(pendingCents)}</b>
-          </div>
-        </div>
+    <a href="/payments" class="my-payments-btn side-btn">My payments</a>
+
+    <div class="side-stats">
+      <div class="stat-row">
+        <span>Available</span>
+        <b>$${formatUsdFromCents(balanceCents)}</b>
+      </div>
+      <div class="stat-row">
+        <span>Pending</span>
+        <b>$${formatUsdFromCents(pendingCents)}</b>
       </div>
     </div>
 
-<div class="side-help">
-  <div class="help-text">
-    Having trouble with your payout?<br>
-    You can always contact support — we’re happy to help.
-  </div>
-  <a href="/support" class="help-link">Contact support</a>
+    <!-- 🔥 FLYT DEN HEROP -->
+    <div class="side-help">
+      <div class="help-text">
+        Having trouble with your payout?<br>
+        You can always contact support — we’re happy to help.
+      </div>
+      <a href="/support" class="help-link">Contact support</a>
+    </div>
+
+  </div>   <!-- side-card lukkes HER -->
 </div>
 
-  </div>
-
-  <div class="cashout-section">
-    <div class="methods-grid">
-
-      <!-- PayPal -->
-      <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
+          <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
               id="openPayPal"
               type="button"
               ${hasOpenWithdrawal ? 'disabled' : ''}>
