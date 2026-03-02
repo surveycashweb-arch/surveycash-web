@@ -3474,21 +3474,18 @@ app.get('/cashout', async (req, res) => {
   // PayPal logo path (public/img/paypal.png)
   const paypalImg = '/img/paypal.png';
 
+  // progress bar data til PayPal card
+  const minCashoutCents = CASHOUT_ALLOWED_CENTS[0] || 500;
 
-// progress bar data til PayPal card
-const minCashoutCents = CASHOUT_ALLOWED_CENTS[0] || 500;
+  const progressPct = Math.max(
+    0,
+    Math.min(100, (balanceCents / minCashoutCents) * 100)
+  );
 
-const progressPct = Math.max(
-  0,
-  Math.min(100, (balanceCents / minCashoutCents) * 100)
-);
+  const progressRightText =
+    '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents / 100).toFixed(0);
 
-
-const progressRightText =
-  '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents/100).toFixed(0);
-
-
-  // Amount cards HTML (bygges udenfor bodyHtml)
+  // Amount cards HTML
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
     const can = !hasOpenWithdrawal && balanceCents >= cents;
@@ -3521,13 +3518,7 @@ const progressRightText =
       loggedIn: user,
       bodyHtml: `
         <style>
-
-          /* ===== Page ===== */
- 
-
 /* ===== FORCE CASHOUT FULL LEFT ===== */
-
-/* Nulstil evt global centering */
 main,
 .container,
 .page,
@@ -3539,14 +3530,14 @@ main,
 
 /* Cashout wrapper */
 .cashout-page{
-  position:relative;               /* vigtig */
+  position:relative;
   width:100%;
   max-width:none;
   margin:40px 0 0 0 !important;
   padding:0 0 60px 40px !important;
 }
 
-/* ===== Top row ===== */
+/* Top row */
 .cashout-top{
   position:relative;
   display:flex;
@@ -3555,7 +3546,6 @@ main,
   margin-bottom:0;
 }
 
-/* venstre side */
 .cashout-head{
   display:flex;
   flex-direction:column;
@@ -3572,15 +3562,13 @@ main,
   color:#ffffff;
 }
 
-.cash-accent{
-  color:#eab308;
-}
+.cash-accent{ color:#eab308; }
 
-/* 🔥 højre boks – fjernet fra layout flow */
+/* højre boks */
 .cashout-side{
   position:absolute;
   top:0;
-  right:40px; /* matcher venstre padding */
+  right:40px;
   display:flex;
   justify-content:flex-end;
 }
@@ -3588,25 +3576,20 @@ main,
 /* SELVE BOKSEN */
 .side-card{
   width:280px;
-  min-height:560px;   /* 🔥 går ned til nederste payout boxes */
+  min-height:560px;
   border-radius:30px;
-
   background:#151c2e;
   border:1px solid rgba(255,255,255,.05);
   box-shadow:0 40px 120px rgba(0,0,0,.45);
-
   display:flex;
   flex-direction:column;
-
   align-items:center;
-  justify-content:flex-start;   /* starter øverst */
-
+  justify-content:flex-start;
   text-align:center;
   gap:20px;
   padding:40px 20px;
 }
 
-/* My payments */
 .my-payments-btn{
   display:inline-flex;
   align-items:center;
@@ -3625,7 +3608,6 @@ main,
 .my-payments-btn:hover{ background:#d4a006; transform:translateY(-1px); }
 .my-payments-btn:active{ transform:translateY(0); }
 
-/* stats */
 .side-stats{
   display:flex;
   flex-direction:column;
@@ -3642,24 +3624,22 @@ main,
 .stat-row span{
   font-size:16px;
   font-weight:600;
-  color:#e5e7eb;     /* lysere */
+  color:#e5e7eb;
 }
-
 .stat-row b{
   font-size:18px;
   font-weight:800;
-  color:#ffffff;     /* helt hvid */
+  color:#ffffff;
 }
 
-/* ✅ Giv plads så payout grid ikke går ind under boksen */
+/* plads til boksen */
 .cashout-section{
   margin-top:22px;
   padding-right:340px;
 }
 
-/* ===== Mobil ===== */
+/* mobil */
 @media (max-width:900px){
-
   .cashout-side{
     position:static;
     right:auto;
@@ -3667,18 +3647,11 @@ main,
     width:100%;
     margin-top:20px;
   }
-
-  .cashout-section{
-    padding-right:0;
-  }
-
-  .side-card{
-    width:100%;
-    max-width:320px;
-  }
+  .cashout-section{ padding-right:0; }
+  .side-card{ width:100%; max-width:320px; }
 }
 
-/* ===== Medium Freecash-style payout methods ===== */
+/* ===== Medium payout methods ===== */
 .methods-grid{
   margin-top:16px;
   display:grid;
@@ -3687,59 +3660,42 @@ main,
   gap:22px;
 }
 
-/* Card */
 .method-card{
   width:250px;
   height:210px;
   cursor:pointer;
-
   border-radius:20px;
-  padding:14px 16px 16px; /* mindre top padding */
-
+  padding:14px 16px 16px;
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.08);
-
   color:#fff;
   transition:.15s ease;
-
   display:flex;
   flex-direction:column;
   align-items:center;
   text-align:center;
 }
-
 .method-card:hover{
   transform:translateY(-3px);
   border-color:rgba(255,255,255,.18);
 }
-
-/* PayPal hover grøn */
 .method-card.paypal:hover{
   border-color:rgba(34,197,94,.85);
   box-shadow:0 14px 50px rgba(34,197,94,.16);
 }
 
-/* Placeholder */
-.method-card.placeholder{
-  opacity:.6;
-  cursor:not-allowed;
-}
-.method-card.placeholder:hover{
-  transform:none;
-  box-shadow:none;
-}
+.method-card.placeholder{ opacity:.6; cursor:not-allowed; }
+.method-card.placeholder:hover{ transform:none; box-shadow:none; }
 
-/* 🔥 Title – mindre + rykket op */
 .method-title{
   font-weight:800;
-  font-size:14px;       /* mindre */
+  font-size:14px;
   letter-spacing:.3px;
   margin:0 0 8px;
-  margin-top:-8px;      /* rykker lidt op */
+  margin-top:-8px;
   opacity:.9;
 }
 
-/* Logo */
 .method-logo-tile{
   background:transparent;
   border:0;
@@ -3749,14 +3705,12 @@ main,
   justify-content:center;
   margin-bottom:12px;
 }
-
 .method-logo-tile img{
   width:198px;
   max-width:100%;
   height:auto;
 }
 
-/* ===== Progress bar ===== */
 .method-bar{
   margin-top:auto;
   height:10px;
@@ -3765,7 +3719,6 @@ main,
   overflow:hidden;
   width:100%;
 }
-
 .method-fill{
   height:100%;
   border-radius:999px;
@@ -3774,7 +3727,6 @@ main,
   transition:width .4s ease;
 }
 
-/* ===== Footer – Small Freecash Style ===== */
 .method-foot{
   margin-top:6px;
   display:flex;
@@ -3785,29 +3737,14 @@ main,
   color:rgba(255,255,255,.55);
   width:100%;
 }
-
-.method-foot span{
-  font-weight:500;
-}
-
 .method-foot b{
   font-size:11px;
   font-weight:600;
   color:rgba(255,255,255,.75);
 }
 
-/* Coming soon */
-.soon-wrap{
-  width:100%;
-  text-align:center;
-}
-
-.soon-top{
-  font-weight:900;
-  margin-bottom:10px;
-  font-size:16px;
-}
-
+.soon-wrap{ width:100%; text-align:center; }
+.soon-top{ font-weight:900; margin-bottom:10px; font-size:16px; }
 .soon-pill{
   display:inline-block;
   font-size:13px;
@@ -3818,42 +3755,30 @@ main,
   color:#cbd5e1;
 }
 
-/* Responsive */
 @media (max-width:1000px){
-  .methods-grid{
-    grid-template-columns:repeat(2, 250px);
-  }
+  .methods-grid{ grid-template-columns:repeat(2, 250px); }
 }
-
 @media (max-width:640px){
-  .methods-grid{
-    grid-template-columns:1fr;
-  }
-  .method-card{
-    width:100%;
-    max-width:320px;
-  }
+  .methods-grid{ grid-template-columns:1fr; }
+  .method-card{ width:100%; max-width:320px; }
 }
 
-          /* ===== Modal ===== */
-          .co-backdrop{
-            position:fixed; inset:0;
-            background:rgba(0,0,0,.55);
-            display:none; align-items:center; justify-content:center;
-            z-index:9999;
-            padding:16px;
-          }
-          .co-backdrop.open{ display:flex; }
-
+/* ===== Modal base ===== */
+.co-backdrop{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.55);
+  display:none; align-items:center; justify-content:center;
+  z-index:9999;
+  padding:16px;
+}
 .co-backdrop.open{ display:flex; }
 
-/* ===== Compact Freecash-style modal ===== */
 .co-modal{
   width:min(640px, 100%);
   background:#0b1220;
   border:1px solid rgba(255,255,255,.08);
   border-radius:18px;
-  padding:14px 14px 10px;   /* mindre bund-padding */
+  padding:14px 14px 10px;
   box-shadow:0 40px 140px rgba(0,0,0,.65);
   position:relative;
 }
@@ -3869,40 +3794,25 @@ main,
 
 .co-header{
   display:flex; gap:10px; align-items:center;
-  padding:4px 4px 8px;   /* mindre luft */
+  padding:4px 4px 8px;
 }
-
-.co-icon{
-  width:32px; height:32px;
-  display:flex; align-items:center; justify-content:center;
-}
+.co-icon{ width:32px; height:32px; display:flex; align-items:center; justify-content:center; }
 .co-icon img{ width:32px; height:auto; display:block; }
-
 .co-title{ font-weight:900; font-size:17px; }
 
-.co-divider{
-  height:1px;
-  background:rgba(255,255,255,.08);
-  margin:8px 0;   /* mindre spacing */
-}
+.co-divider{ height:1px; background:rgba(255,255,255,.08); margin:8px 0; }
 
-.co-block-title{
-  font-weight:800;
-  margin:2px 0 8px;
-}
+.co-block-title{ font-weight:800; margin:2px 0 8px; }
 
-/* ===== Amount grid tighter ===== */
 .amount-grid{
   display:grid;
   grid-template-columns:repeat(3, minmax(0, 1fr));
   gap:10px;
 }
-
 @media (max-width: 760px){
   .amount-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
 
-/* ===== Card ===== */
 .amount-card{
   position:relative;
   text-align:left;
@@ -3915,51 +3825,26 @@ main,
   transition:.15s ease;
   min-height:124px;
 }
-
-/* hover = grøn outline */
-.amount-card:hover{
-  border-color:#22c55e;
-  box-shadow:0 0 0 1px #22c55e;
-}
-
-/* valgt kort */
-.amount-card.active{
-  border-color:#22c55e;
-  box-shadow:0 0 0 2px #22c55e;
-}
-
-/* grøn check */
+.amount-card:hover{ border-color:#22c55e; box-shadow:0 0 0 1px #22c55e; }
+.amount-card.active{ border-color:#22c55e; box-shadow:0 0 0 2px #22c55e; }
 .amount-card.active::after{
   content:"✓";
-  position:absolute;
-  top:8px;
-  right:8px;
-  width:22px;
-  height:22px;
+  position:absolute; top:8px; right:8px;
+  width:22px; height:22px;
   border-radius:50%;
   background:#22c55e;
   color:#0b1220;
   font-weight:900;
   font-size:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:flex; align-items:center; justify-content:center;
 }
-
-/* disabled */
 .amount-card.disabled{
   opacity:.45;
   cursor:not-allowed;
   transform:none !important;
 }
+.amount-card .amt{ font-weight:900; font-size:15px; }
 
-/* amount text */
-.amount-card .amt{
-  font-weight:900;
-  font-size:15px;
-}
-
-/* logo */
 .amount-card .brand{
   margin-top:6px;
   display:flex;
@@ -3967,7 +3852,6 @@ main,
   justify-content:center;
   min-height:64px;
 }
-
 .amount-card .brand img{
   width:190px;
   max-width:100%;
@@ -3976,7 +3860,6 @@ main,
   opacity:.98;
 }
 
-/* progress bar */
 .bar{
   margin-top:8px;
   height:6px;
@@ -3984,40 +3867,17 @@ main,
   background:rgba(255,255,255,.08);
   overflow:hidden;
 }
+.fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
+.need{ margin-top:6px; color:#b8c4d6; font-size:12px; }
 
-.fill{
-  height:100%;
-  border-radius:999px;
-  background:#22c55e;
-  width:0%;
-}
-
-.need{
-  margin-top:6px;
-  color:#b8c4d6;
-  font-size:12px;
-}
-
-/* ===== FIX: input + button perfectly aligned (same row) ===== */
 .co-actions{
   display:grid;
   grid-template-columns: 1fr 210px;
   gap:12px;
-  align-items:end;                /* begge “lander” samme bundlinje */
+  align-items:end;
 }
-
-/* label over input, men input-højden fast */
-.field{
-  margin:0;
-}
-
-.field label{
-  display:block;
-  margin:0 0 6px;
-  line-height:1.1;
-}
-
-/* input = knap-højde */
+.field{ margin:0; }
+.field label{ display:block; margin:0 0 6px; line-height:1.1; }
 .field input{
   width:100%;
   height:48px;
@@ -4030,55 +3890,104 @@ main,
   margin:0;
   box-sizing:border-box;
 }
-
-/* knap = input-højde + samme baseline */
 .withdraw-btn{
   height:48px;
   margin:0;
   align-self:end;
   box-sizing:border-box;
+  border-radius:14px;
+  border:1px solid rgba(251,191,36,.25);
+  background:#fbbf24;
+  color:#0b1220;
+  font-weight:900;
+  cursor:pointer;
 }
-
-/* hint under begge */
-.co-small{
-  grid-column:1 / -1;
-  margin-top:6px;
+.withdraw-btn:disabled{
+  opacity:.45; cursor:not-allowed;
+  background:rgba(251,191,36,.18);
+  color:#fbbf24;
 }
-
-/* Mobile stacks */
+.co-small{ grid-column:1 / -1; color:#b8c4d6; font-size:12px; min-height:16px; margin-top:6px; }
 @media (max-width:520px){
   .co-actions{ grid-template-columns:1fr; }
   .withdraw-btn{ width:100%; }
 }
 
-          .field label{ display:block; font-size:12px; color:#b8c4d6; margin-bottom:6px; }
-          .field input{
-            width:100%;
-            padding:11px 12px;
-            border-radius:14px;
-            background:rgba(255,255,255,.04);
-            border:1px solid rgba(255,255,255,.10);
-            color:#fff;
-            outline:none;
-          }
-          .field input:focus{ border-color:rgba(251,191,36,.45); box-shadow:0 0 0 3px rgba(251,191,36,.12); }
+/* ===== Confirm modal styles ===== */
+.confirm-modal{ width:min(640px, 100%); }
 
-          .withdraw-btn{
-            height:42px;
-            border-radius:14px;
-            border:1px solid rgba(251,191,36,.25);
-            background:#fbbf24;
-            color:#0b1220;
-            font-weight:900;
-            cursor:pointer;
-          }
-          .withdraw-btn:disabled{
-            opacity:.45; cursor:not-allowed;
-            background:rgba(251,191,36,.18);
-            color:#fbbf24;
-          }
+.confirm-row{ padding:4px 4px 0; }
+.confirm-label{ font-size:12px; color:rgba(255,255,255,.65); margin-bottom:6px; }
+.confirm-email{
+  display:flex; justify-content:space-between; align-items:center;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  padding:12px 12px;
+}
+.confirm-email span{
+  font-weight:700; color:#fff;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.confirm-edit{
+  border:0; background:transparent;
+  color:#22c55e;
+  font-weight:800;
+  cursor:pointer;
+}
+.confirm-note{
+  margin-top:8px;
+  font-size:12px;
+  color:rgba(255,255,255,.70);
+  background:rgba(59,130,246,.10);
+  border:1px solid rgba(59,130,246,.22);
+  padding:10px 12px;
+  border-radius:12px;
+}
 
-          .co-small{ grid-column:1 / -1; color:#b8c4d6; font-size:12px; min-height:16px; }
+.confirm-fees{ margin-top:4px; }
+.fee-row{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 4px;
+  color:rgba(255,255,255,.75);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.fee-row b{ color:#fff; }
+.fee-row.total{ border-bottom:none; padding-top:14px; }
+.fee-row.receive{ border-bottom:none; padding-top:6px; font-size:16px; }
+.fee-row.receive b{ color:#fff; font-weight:900; }
+
+.confirm-checks{
+  margin:12px 4px 14px;
+  display:flex; flex-direction:column;
+  gap:10px;
+}
+.check{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  color:rgba(255,255,255,.80);
+  font-size:13px;
+}
+.check input{ transform:translateY(2px); }
+
+.confirm-btn{
+  width:100%;
+  height:48px;
+  border-radius:14px;
+  border:1px solid rgba(34,197,94,.30);
+  background:#22c55e;
+  color:#0b1220;
+  font-weight:900;
+  cursor:pointer;
+}
+.confirm-btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  background:rgba(34,197,94,.20);
+  color:rgba(255,255,255,.65);
+  border-color:rgba(255,255,255,.14);
+}
         </style>
 
         <script>
@@ -4087,9 +3996,7 @@ main,
         </script>
 
 <div class="cashout-page">
-
   <div class="cashout-top">
-
     <div class="cashout-head">
       <h1><span class="cash-accent">Cash</span>Out</h1>
       ${msg}
@@ -4111,7 +4018,6 @@ main,
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="cashout-section">
@@ -4141,22 +4047,18 @@ main,
       <!-- Placeholder -->
       <div class="method-card placeholder top">
         <div class="method-title">More payout methods</div>
-
         <div class="method-logo-tile">
           <div class="soon-wrap">
             <div class="soon-top">Soon</div>
             <span class="soon-pill">Coming soon</span>
           </div>
         </div>
-
         <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
         <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
       </div>
 
-      <!-- SPACER så top bliver 2 og bunden 3 -->
       <span class="spacer"></span>
 
-      <!-- Bottom placeholders -->
       <div class="method-card placeholder">
         <div class="method-title">More payout methods</div>
         <div class="method-logo-tile">
@@ -4195,158 +4097,309 @@ main,
 
     </div>
   </div>
-
 </div>
-        <!-- ===== PayPal Modal ===== -->
-        <div class="co-backdrop" id="coBackdrop" aria-hidden="true">
-          <div class="co-modal" role="dialog" aria-modal="true" aria-labelledby="coTitle">
-            <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
 
-            <div class="co-header">
-              <div class="co-icon"><img src="${paypalImg}" alt="PayPal" /></div>
-              <div><div class="co-title" id="coTitle">PayPal</div></div>
-            </div>
+<!-- ===== PayPal Modal (step 1) ===== -->
+<div class="co-backdrop" id="coBackdrop" aria-hidden="true">
+  <div class="co-modal" role="dialog" aria-modal="true" aria-labelledby="coTitle">
+    <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
 
-            <div class="co-divider"></div>
+    <div class="co-header">
+      <div class="co-icon"><img src="${paypalImg}" alt="PayPal" /></div>
+      <div><div class="co-title" id="coTitle">PayPal</div></div>
+    </div>
 
-            <div class="co-block">
-              <div class="co-block-title">Choose amount</div>
-              <div class="amount-grid" id="amountGrid">
-                ${amountCardsHtml}
-              </div>
-            </div>
+    <div class="co-divider"></div>
 
-            <div class="co-divider"></div>
+    <div class="co-block">
+      <div class="co-block-title">Choose amount</div>
+      <div class="amount-grid" id="amountGrid">
+        ${amountCardsHtml}
+      </div>
+    </div>
 
-            <form id="cashout-form" method="POST" action="/cashout/paypal">
-              <input type="hidden" name="amountCents" id="amountCents" value="" />
+    <div class="co-divider"></div>
 
-              <div class="co-actions">
-                <div class="field">
-                  <label>PayPal email</label>
-                  <input id="paypalEmail" name="paypalEmail" type="email" placeholder="you@example.com" autocomplete="email" required />
-                </div>
+    <form id="cashout-form" method="POST" action="/cashout/paypal">
+      <input type="hidden" name="amountCents" id="amountCents" value="" />
 
-                <button class="withdraw-btn" id="withdrawBtn" type="submit" disabled>
-                  Choose an amount
-                </button>
-
-                <div class="co-small" id="coHint"></div>
-              </div>
-            </form>
-          </div>
+      <div class="co-actions">
+        <div class="field">
+          <label>PayPal email</label>
+          <input id="paypalEmail" name="paypalEmail" type="email" placeholder="you@example.com" autocomplete="email" required />
         </div>
 
-        <script>
-          (function(){
-            const availableUsd = Number(window.AVAILABLE_USD || 0);
-            const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
+        <!-- 🔥 vigtig: button (ikke submit) -->
+        <button class="withdraw-btn" id="withdrawBtn" type="button" disabled>
+          Choose an amount
+        </button>
 
-            const openBtn = document.getElementById('openPayPal');
-            const backdrop = document.getElementById('coBackdrop');
-            const closeBtn = document.getElementById('coClose');
+        <div class="co-small" id="coHint"></div>
+      </div>
+    </form>
+  </div>
+</div>
 
-            const amountGrid = document.getElementById('amountGrid');
-            const amountInp = document.getElementById('amountCents');
-            const emailInp = document.getElementById('paypalEmail');
-            const withdrawBtn = document.getElementById('withdrawBtn');
-            const hint = document.getElementById('coHint');
+<!-- ===== Confirm Modal (step 2) ===== -->
+<div class="co-backdrop" id="confirmBackdrop" aria-hidden="true">
+  <div class="co-modal confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <button class="co-close" id="confirmClose" type="button" aria-label="Close">✕</button>
 
-            let selectedCents = 0;
+    <div class="co-header">
+      <div><div class="co-title" id="confirmTitle">Confirm PayPal cashout</div></div>
+    </div>
 
-            function openModal(){
-              if(hasOpen) return;
-              backdrop.classList.add('open');
-              backdrop.setAttribute('aria-hidden','false');
-              selectedCents = 0;
-              amountInp.value = '';
-              withdrawBtn.disabled = true;
-              withdrawBtn.textContent = 'Choose an amount';
-              hint.textContent = '';
-              Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
-              refreshBars();
-            }
+    <div class="co-divider"></div>
 
-            function closeModal(){
-              backdrop.classList.remove('open');
-              backdrop.setAttribute('aria-hidden','true');
-            }
+    <div class="confirm-row">
+      <div class="confirm-label">PayPal account*</div>
 
-            function refreshBars(){
-              const cards = Array.from(amountGrid.querySelectorAll('.amount-card'));
-              cards.forEach(card => {
-                const cents = Number(card.getAttribute('data-cents') || 0);
-                const usd = cents / 100;
-                const pct = Math.max(0, Math.min(100, (availableUsd / usd) * 100));
-                const fill = card.querySelector('.fill');
-                if(fill) fill.style.width = pct + '%';
-              });
-            }
+      <div class="confirm-email">
+        <span id="confirmEmailText">—</span>
+        <button type="button" class="confirm-edit" id="confirmEditEmail">Edit</button>
+      </div>
 
-            function validate(){
-              const email = (emailInp.value || '').trim();
-              const emailOk = email.includes('@') && email.includes('.');
-              const amountOk = selectedCents > 0;
+      <div class="confirm-note">
+        Your reward will be sent to this email. Make sure it’s linked to your PayPal account.
+      </div>
+    </div>
 
-              if(!amountOk){
-                withdrawBtn.disabled = true;
-                withdrawBtn.textContent = 'Choose an amount';
-                hint.textContent = 'Choose an amount.';
-                return;
-              }
+    <div class="co-divider"></div>
 
-              const selectedUsd = (selectedCents / 100);
-              if(availableUsd < selectedUsd){
-                withdrawBtn.disabled = true;
-                withdrawBtn.textContent = 'Insufficient balance';
-                hint.textContent = 'Insufficient balance for this amount.';
-                return;
-              }
+    <div class="confirm-fees">
+      <div class="fee-row">
+        <span>Payout fee</span>
+        <b id="feePayout">$0.00</b>
+      </div>
+      <div class="fee-row">
+        <span>PayPal user fee</span>
+        <b id="feePaypal">$0.00</b>
+      </div>
 
-              if(!emailOk){
-                withdrawBtn.disabled = true;
-                withdrawBtn.textContent = 'Enter email';
-                hint.textContent = 'Enter a valid PayPal email.';
-                return;
-              }
+      <div class="fee-row total">
+        <span>Amount</span>
+        <b id="feeAmount">$0.00</b>
+      </div>
 
-              withdrawBtn.disabled = false;
-              withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
-              hint.textContent = '';
-            }
+      <div class="fee-row receive">
+        <span>You receive</span>
+        <b id="feeReceive">$0.00</b>
+      </div>
+    </div>
 
-            if(openBtn) openBtn.addEventListener('click', openModal);
-            if(closeBtn) closeBtn.addEventListener('click', closeModal);
-            if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
-            window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+    <div class="confirm-checks">
+      <label class="check">
+        <input type="checkbox" id="chkCanReceive">
+        <span>I confirm this PayPal account can receive payments</span>
+      </label>
 
-            if(amountGrid){
-              amountGrid.addEventListener('click', (e) => {
-                const card = e.target.closest('.amount-card');
-                if(!card) return;
-                if(card.disabled) return;
+      <label class="check">
+        <input type="checkbox" id="chkNoRefund">
+        <span>I understand this cashout cannot be refunded</span>
+      </label>
+    </div>
 
-                Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
-                card.classList.add('active');
+    <button class="confirm-btn" id="confirmSubmit" type="button" disabled>
+      Confirm cashout
+    </button>
+  </div>
+</div>
 
-                selectedCents = Number(card.getAttribute('data-cents') || 0);
-                amountInp.value = String(selectedCents);
-                validate();
-              });
-            }
+<script>
+(function(){
+  const availableUsd = Number(window.AVAILABLE_USD || 0);
+  const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
 
-            if(emailInp) emailInp.addEventListener('input', validate);
+  const openBtn = document.getElementById('openPayPal');
+  const backdrop = document.getElementById('coBackdrop');
+  const closeBtn = document.getElementById('coClose');
 
-            refreshBars();
-            validate();
-          })();
-        </script>
+  const amountGrid = document.getElementById('amountGrid');
+  const amountInp = document.getElementById('amountCents');
+  const emailInp = document.getElementById('paypalEmail');
+  const withdrawBtn = document.getElementById('withdrawBtn');
+  const hint = document.getElementById('coHint');
 
-        ${autoCheckScript}
+  const confirmBackdrop = document.getElementById('confirmBackdrop');
+  const confirmClose = document.getElementById('confirmClose');
+  const confirmEmailText = document.getElementById('confirmEmailText');
+  const confirmEditEmail = document.getElementById('confirmEditEmail');
+
+  const feePayout = document.getElementById('feePayout');
+  const feePaypal = document.getElementById('feePaypal');
+  const feeAmount = document.getElementById('feeAmount');
+  const feeReceive = document.getElementById('feeReceive');
+
+  const chkCanReceive = document.getElementById('chkCanReceive');
+  const chkNoRefund = document.getElementById('chkNoRefund');
+  const confirmSubmit = document.getElementById('confirmSubmit');
+
+  let selectedCents = 0;
+
+  function openModal(){
+    if(hasOpen) return;
+    backdrop.classList.add('open');
+    backdrop.setAttribute('aria-hidden','false');
+    selectedCents = 0;
+    amountInp.value = '';
+    withdrawBtn.disabled = true;
+    withdrawBtn.textContent = 'Choose an amount';
+    hint.textContent = '';
+    Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
+    refreshBars();
+  }
+
+  function closeModal(){
+    backdrop.classList.remove('open');
+    backdrop.setAttribute('aria-hidden','true');
+  }
+
+  function openConfirm(){
+    // fyld email + fees
+    const email = (emailInp.value || '').trim();
+    confirmEmailText.textContent = email || '—';
+
+    const amount = (selectedCents / 100);
+
+    // placeholder fees (kan ændres senere)
+    const payoutFee = 0.00;
+    const paypalFee = 0.00;
+    const receive = Math.max(0, amount - payoutFee - paypalFee);
+
+    feePayout.textContent = '$' + payoutFee.toFixed(2);
+    feePaypal.textContent = '$' + paypalFee.toFixed(2);
+    feeAmount.textContent = '$' + amount.toFixed(2);
+    feeReceive.textContent = '$' + receive.toFixed(2);
+
+    chkCanReceive.checked = false;
+    chkNoRefund.checked = false;
+    confirmSubmit.disabled = true;
+
+    confirmBackdrop.classList.add('open');
+    confirmBackdrop.setAttribute('aria-hidden','false');
+  }
+
+  function closeConfirm(){
+    confirmBackdrop.classList.remove('open');
+    confirmBackdrop.setAttribute('aria-hidden','true');
+  }
+
+  function validateConfirm(){
+    confirmSubmit.disabled = !(chkCanReceive.checked && chkNoRefund.checked);
+  }
+
+  function refreshBars(){
+    const cards = Array.from(amountGrid.querySelectorAll('.amount-card'));
+    cards.forEach(card => {
+      const cents = Number(card.getAttribute('data-cents') || 0);
+      const usd = cents / 100;
+      const pct = Math.max(0, Math.min(100, (availableUsd / usd) * 100));
+      const fill = card.querySelector('.fill');
+      if(fill) fill.style.width = pct + '%';
+    });
+  }
+
+  function validate(){
+    const email = (emailInp.value || '').trim();
+    const emailOk = email.includes('@') && email.includes('.');
+    const amountOk = selectedCents > 0;
+
+    if(!amountOk){
+      withdrawBtn.disabled = true;
+      withdrawBtn.textContent = 'Choose an amount';
+      hint.textContent = 'Choose an amount.';
+      return false;
+    }
+
+    const selectedUsd = (selectedCents / 100);
+    if(availableUsd < selectedUsd){
+      withdrawBtn.disabled = true;
+      withdrawBtn.textContent = 'Insufficient balance';
+      hint.textContent = 'Insufficient balance for this amount.';
+      return false;
+    }
+
+    if(!emailOk){
+      withdrawBtn.disabled = true;
+      withdrawBtn.textContent = 'Enter email';
+      hint.textContent = 'Enter a valid PayPal email.';
+      return false;
+    }
+
+    withdrawBtn.disabled = false;
+    withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
+    hint.textContent = '';
+    return true;
+  }
+
+  if(openBtn) openBtn.addEventListener('click', openModal);
+  if(closeBtn) closeBtn.addEventListener('click', closeModal);
+  if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
+
+  // ESC lukker den øverste modal
+  window.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      if(confirmBackdrop.classList.contains('open')) closeConfirm();
+      else closeModal();
+    }
+  });
+
+  if(amountGrid){
+    amountGrid.addEventListener('click', (e) => {
+      const card = e.target.closest('.amount-card');
+      if(!card) return;
+      if(card.disabled) return;
+
+      Array.from(amountGrid.querySelectorAll('.amount-card.active')).forEach(x => x.classList.remove('active'));
+      card.classList.add('active');
+
+      selectedCents = Number(card.getAttribute('data-cents') || 0);
+      amountInp.value = String(selectedCents);
+      validate();
+    });
+  }
+
+  if(emailInp) emailInp.addEventListener('input', validate);
+
+  // klik på cashout => åbn confirm modal
+  if(withdrawBtn){
+    withdrawBtn.addEventListener('click', () => {
+      if(!validate()) return;
+      openConfirm();
+    });
+  }
+
+  if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
+  if(confirmBackdrop) confirmBackdrop.addEventListener('click', (e) => { if(e.target === confirmBackdrop) closeConfirm(); });
+
+  if(chkCanReceive) chkCanReceive.addEventListener('change', validateConfirm);
+  if(chkNoRefund) chkNoRefund.addEventListener('change', validateConfirm);
+
+  if(confirmEditEmail){
+    confirmEditEmail.addEventListener('click', () => {
+      closeConfirm();
+      emailInp.focus();
+    });
+  }
+
+  if(confirmSubmit){
+    confirmSubmit.addEventListener('click', () => {
+      if(confirmSubmit.disabled) return;
+      document.getElementById('cashout-form').submit();
+    });
+  }
+
+  refreshBars();
+  validate();
+})();
+</script>
+
+${autoCheckScript}
       `,
     })
   );
 });
+
 
 app.get('/support', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
