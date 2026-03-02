@@ -3539,19 +3539,20 @@ main,
 
 /* Cashout wrapper */
 .cashout-page{
+  position:relative;               /* vigtig */
   width:100%;
   max-width:none;
   margin:40px 0 0 0 !important;
-  padding:0 0 60px 40px !important; /* lille venstre spacing */
+  padding:0 0 60px 40px !important;
 }
 
-/* ===== Top row: title left, stats right ===== */
+/* ===== Top row ===== */
 .cashout-top{
+  position:relative;
   display:flex;
   align-items:flex-start;
-  justify-content:space-between;
   gap:24px;
-  margin-bottom:18px;
+  margin-bottom:0;
 }
 
 /* venstre side */
@@ -3563,7 +3564,6 @@ main,
   margin:0;
 }
 
-/* titel */
 .cashout-head h1{
   font-size:52px;
   font-weight:900;
@@ -3572,36 +3572,34 @@ main,
   color:#ffffff;
 }
 
-/* Gul "Cash" */
 .cash-accent{
   color:#eab308;
 }
 
-/* højre side */
+/* 🔥 højre boks – fjernet fra layout flow */
 .cashout-side{
-  margin-left:auto;
+  position:absolute;
+  top:0;
+  right:40px; /* matcher venstre padding */
   display:flex;
   justify-content:flex-end;
 }
 
-/* 🔥 SELVE BOKSEN */
+/* SELVE BOKSEN */
 .side-card{
   width:280px;
   height:260px;
   border-radius:30px;
-
-  background:#151c2e;   /* samme som header */
-
+  background:#151c2e;
   border:1px solid rgba(255,255,255,.05);
   box-shadow:0 40px 120px rgba(0,0,0,.45);
 
   display:flex;
   flex-direction:column;
-
-  align-items:center;      /* centrer vandret */
-  justify-content:center;  /* centrer lodret */
-
+  align-items:center;
+  justify-content:center;
   text-align:center;
+
   gap:16px;
   padding:20px;
 }
@@ -3642,13 +3640,30 @@ main,
 
 .stat-row b{ color:#ffffff; }
 
-/* mobil */
-@media (max-width:720px){
-  .cashout-top{ flex-direction:column; }
-  .cashout-side{ width:100%; justify-content:flex-start; }
+/* ✅ Giv plads så payout grid ikke går ind under boksen */
+.cashout-section{
+  margin-top:22px;
+  padding-right:340px;
+}
+
+/* ===== Mobil ===== */
+@media (max-width:900px){
+
+  .cashout-side{
+    position:static;
+    right:auto;
+    top:auto;
+    width:100%;
+    margin-top:20px;
+  }
+
+  .cashout-section{
+    padding-right:0;
+  }
+
   .side-card{
-    align-items:center;
-    text-align:center;
+    width:100%;
+    max-width:320px;
   }
 }
 
