@@ -3936,6 +3936,7 @@ main,
   flex-direction:column;
   align-items:center;
   gap:14px;
+  margin-top:32px;   /* 👈 rykker den ned */
 }
 
 /* label over input, men input-højden fast */
