@@ -3871,7 +3871,7 @@ main,
 .field{ margin:0; }
 .field label{ display:block; margin:0 0 6px; line-height:1.1; }
 
-/* input (normal, altid skrivbar) */
+/* input (altid skrivbar) */
 .field input{
   width:100%;
   height:48px;
@@ -3916,32 +3916,32 @@ main,
   .withdraw-btn{ width:100%; }
 }
 
-/* ===== Confirm modal styles ===== */
+/* ===== Confirm modal styles (NO EDIT, click email row) ===== */
 .confirm-modal{ width:min(640px, 100%); }
 
 .confirm-row{ padding:4px 4px 0; }
 .confirm-label{ font-size:12px; color:rgba(255,255,255,.65); margin-bottom:6px; }
+
 .confirm-email{
-  display:flex; justify-content:space-between; align-items:center;
+  display:flex;
+  align-items:center;
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.10);
   border-radius:14px;
   padding:12px 12px;
+  cursor:pointer;
+  transition:.15s ease;
+}
+.confirm-email:hover{
+  border-color:rgba(251,191,36,.35);
+  box-shadow:0 0 0 3px rgba(251,191,36,.10);
 }
 .confirm-email span{
   font-weight:700; color:#fff;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  width:100%;
 }
-.confirm-edit{
-  border:0; background:transparent;
-  color:#fbbf24;
-  font-weight:900;
-  cursor:pointer;
-}
-.confirm-edit:hover{
-  color:#fcd34d;
-  text-decoration:underline;
-}
+
 .confirm-note{
   margin-top:8px;
   font-size:12px;
@@ -4161,9 +4161,9 @@ main,
     <div class="confirm-row">
       <div class="confirm-label">PayPal account*</div>
 
-      <div class="confirm-email">
+      <!-- ✅ klik her for at ændre email (ingen Edit knap) -->
+      <div class="confirm-email" id="confirmEmailRow" role="button" tabindex="0" aria-label="Edit PayPal email">
         <span id="confirmEmailText">—</span>
-        <button type="button" class="confirm-edit" id="confirmEditEmail">Edit</button>
       </div>
 
       <div class="confirm-note">
@@ -4230,7 +4230,7 @@ main,
   const confirmBackdrop = document.getElementById('confirmBackdrop');
   const confirmClose = document.getElementById('confirmClose');
   const confirmEmailText = document.getElementById('confirmEmailText');
-  const confirmEditEmail = document.getElementById('confirmEditEmail');
+  const confirmEmailRow = document.getElementById('confirmEmailRow');
 
   const feePayout = document.getElementById('feePayout');
   const feePaypal = document.getElementById('feePaypal');
@@ -4341,9 +4341,10 @@ main,
     return true;
   }
 
-  // Åbn/luk: kun X og ESC
+  // Åbn/luk: kun X og ESC (klik udenfor lukker IKKE)
   if(openBtn) openBtn.addEventListener('click', openModal);
   if(closeBtn) closeBtn.addEventListener('click', closeModal);
+  if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
 
   window.addEventListener('keydown', (e) => {
     if(e.key === 'Escape'){
@@ -4376,19 +4377,29 @@ main,
     });
   }
 
-  // Confirm: kun X og ESC
-  if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
+  // ✅ Confirm email row click = gå tilbage og fokus email
+  function jumpToEmail(){
+    closeConfirm();
+    setTimeout(() => {
+      if(emailInp){
+        emailInp.focus();
+        emailInp.select();
+      }
+    }, 0);
+  }
+
+  if(confirmEmailRow){
+    confirmEmailRow.addEventListener('click', jumpToEmail);
+    confirmEmailRow.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        jumpToEmail();
+      }
+    });
+  }
 
   if(chkCanReceive) chkCanReceive.addEventListener('change', validateConfirm);
   if(chkNoRefund) chkNoRefund.addEventListener('change', validateConfirm);
-
-  // Confirm Edit -> tilbage til step 1 + fokus email (ingen lock)
-  if(confirmEditEmail){
-    confirmEditEmail.addEventListener('click', () => {
-      closeConfirm();
-      setTimeout(() => emailInp && emailInp.focus(), 0);
-    });
-  }
 
   if(confirmSubmit){
     confirmSubmit.addEventListener('click', () => {
