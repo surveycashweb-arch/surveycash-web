@@ -3588,20 +3588,22 @@ main,
 /* SELVE BOKSEN */
 .side-card{
   width:280px;
-  height:260px;
+  min-height:560px;   /* 🔥 går ned til nederste payout boxes */
   border-radius:30px;
+
   background:#151c2e;
   border:1px solid rgba(255,255,255,.05);
   box-shadow:0 40px 120px rgba(0,0,0,.45);
 
   display:flex;
   flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
 
-  gap:16px;
-  padding:20px;
+  align-items:center;
+  justify-content:flex-start;   /* starter øverst */
+
+  text-align:center;
+  gap:20px;
+  padding:40px 20px;
 }
 
 /* My payments */
