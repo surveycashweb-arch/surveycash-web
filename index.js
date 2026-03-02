@@ -3579,31 +3579,27 @@ main,
 /* 🔥 højre boks – fjernet fra layout flow */
 .cashout-side{
   position:absolute;
-  top:0;
-  right:40px; /* matcher venstre padding */
+  top:6px;            /* 🔥 lidt ned så den flugter pænere */
+  right:40px;
   display:flex;
   justify-content:flex-end;
 }
 
-/* SELVE BOKSEN */
 .side-card{
   width:280px;
-  min-height:560px;   /* 🔥 går ned til nederste payout boxes */
+  min-height:620px;   /* 🔥 længere ned til bunden af payout boxes */
   border-radius:30px;
-
   background:#151c2e;
   border:1px solid rgba(255,255,255,.05);
   box-shadow:0 40px 120px rgba(0,0,0,.45);
 
   display:flex;
   flex-direction:column;
-
   align-items:center;
-  justify-content:flex-start;   /* starter øverst */
+  justify-content:flex-start;
 
-  text-align:center;
-  gap:20px;
   padding:40px 20px;
+  gap:20px;
 }
 
 /* My payments */
@@ -3655,6 +3651,37 @@ main,
 .cashout-section{
   margin-top:22px;
   padding-right:340px;
+}
+
+.side-help{
+  margin-top:auto;
+  width:100%;
+  padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+.help-text{
+  font-size:13px;
+  line-height:1.5;
+  color:rgba(255,255,255,.70);
+  text-align:center;
+  max-width:220px;
+}
+
+.help-link{
+  font-size:14px;
+  font-weight:800;
+  color:#fbbf24;
+  text-decoration:none;
+  transition:.15s ease;
+}
+.help-link:hover{
+  color:#fcd34d;
+  text-decoration:underline;
 }
 
 /* ===== Mobil ===== */
@@ -4111,6 +4138,14 @@ main,
         </div>
       </div>
     </div>
+
+<div class="side-help">
+  <div class="help-text">
+    Having trouble with your payout?<br>
+    You can always contact support — we’re happy to help.
+  </div>
+  <a href="/support" class="help-link">Contact support</a>
+</div>
 
   </div>
 
