@@ -3484,10 +3484,7 @@ app.get('/cashout', async (req, res) => {
   const progressRightText =
     '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents/100).toFixed(0);
 
-  // PayPal email (brug den du har – hvis du gemmer et felt i profil, så skift her)
-  const paypalPrefill = String(profile.paypal_email || user.email || '');
-
-  // Amount cards HTML (bygges udenfor bodyHtml)
+  // Amount cards HTML
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
     const can = !hasOpenWithdrawal && balanceCents >= cents;
@@ -3520,11 +3517,6 @@ app.get('/cashout', async (req, res) => {
       loggedIn: user,
       bodyHtml: `
         <style>
-
-          /* ===== Page ===== */
-
-          /* ===== FORCE CASHOUT FULL LEFT ===== */
-
           main,
           .container,
           .page,
@@ -3557,9 +3549,7 @@ app.get('/cashout', async (req, res) => {
             color:#ffffff;
           }
 
-          .cash-accent{
-            color:#eab308;
-          }
+          .cash-accent{ color:#eab308; }
 
           .my-payments-btn{
             display:inline-flex;
@@ -3574,22 +3564,13 @@ app.get('/cashout', async (req, res) => {
             letter-spacing:.2px;
             text-decoration:none;
             border:1px solid rgba(234,179,8,.6);
-            box-shadow:none;
             transition:.15s ease;
           }
-
-          .my-payments-btn:hover{
-            background:#d4a006;
-            transform:translateY(-1px);
-          }
-
-          .my-payments-btn:active{
-            transform:translateY(0);
-          }
+          .my-payments-btn:hover{ background:#d4a006; transform:translateY(-1px); }
+          .my-payments-btn:active{ transform:translateY(0); }
 
           .cashout-section{ margin-top:22px; }
 
-          /* ===== Medium Freecash-style payout methods ===== */
           .methods-grid{
             margin-top:16px;
             display:grid;
@@ -3614,24 +3595,15 @@ app.get('/cashout', async (req, res) => {
             text-align:center;
           }
 
-          .method-card:hover{
-            transform:translateY(-3px);
-            border-color:rgba(255,255,255,.18);
-          }
+          .method-card:hover{ transform:translateY(-3px); border-color:rgba(255,255,255,.18); }
 
           .method-card.paypal:hover{
             border-color:rgba(34,197,94,.85);
             box-shadow:0 14px 50px rgba(34,197,94,.16);
           }
 
-          .method-card.placeholder{
-            opacity:.6;
-            cursor:not-allowed;
-          }
-          .method-card.placeholder:hover{
-            transform:none;
-            box-shadow:none;
-          }
+          .method-card.placeholder{ opacity:.6; cursor:not-allowed; }
+          .method-card.placeholder:hover{ transform:none; box-shadow:none; }
 
           .method-title{
             font-weight:800;
@@ -3652,11 +3624,7 @@ app.get('/cashout', async (req, res) => {
             margin-bottom:12px;
           }
 
-          .method-logo-tile img{
-            width:198px;
-            max-width:100%;
-            height:auto;
-          }
+          .method-logo-tile img{ width:198px; max-width:100%; height:auto; }
 
           .method-bar{
             margin-top:auto;
@@ -3685,12 +3653,7 @@ app.get('/cashout', async (req, res) => {
             color:rgba(255,255,255,.55);
             width:100%;
           }
-
-          .method-foot b{
-            font-size:11px;
-            font-weight:600;
-            color:rgba(255,255,255,.75);
-          }
+          .method-foot b{ font-size:11px; font-weight:600; color:rgba(255,255,255,.75); }
 
           .soon-wrap{ width:100%; text-align:center; }
           .soon-top{ font-weight:900; margin-bottom:10px; font-size:16px; }
@@ -3704,15 +3667,13 @@ app.get('/cashout', async (req, res) => {
             color:#cbd5e1;
           }
 
-          @media (max-width:1000px){
-            .methods-grid{ grid-template-columns:repeat(2, 250px); }
-          }
+          @media (max-width:1000px){ .methods-grid{ grid-template-columns:repeat(2, 250px); } }
           @media (max-width:640px){
             .methods-grid{ grid-template-columns:1fr; }
             .method-card{ width:100%; max-width:320px; }
           }
 
-          /* ===== Modal base ===== */
+          /* ===== Backdrop ===== */
           .co-backdrop{
             position:fixed; inset:0;
             background:rgba(0,0,0,.55);
@@ -3742,29 +3703,13 @@ app.get('/cashout', async (req, res) => {
             color:#fff; cursor:pointer;
           }
 
-          .co-header{
-            display:flex; gap:10px; align-items:center;
-            padding:4px 4px 8px;
-          }
-
-          .co-icon{
-            width:32px; height:32px;
-            display:flex; align-items:center; justify-content:center;
-          }
+          .co-header{ display:flex; gap:10px; align-items:center; padding:4px 4px 8px; }
+          .co-icon{ width:32px; height:32px; display:flex; align-items:center; justify-content:center; }
           .co-icon img{ width:32px; height:auto; display:block; }
-
           .co-title{ font-weight:900; font-size:17px; }
 
-          .co-divider{
-            height:1px;
-            background:rgba(255,255,255,.08);
-            margin:8px 0;
-          }
-
-          .co-block-title{
-            font-weight:800;
-            margin:2px 0 8px;
-          }
+          .co-divider{ height:1px; background:rgba(255,255,255,.08); margin:8px 0; }
+          .co-block-title{ font-weight:800; margin:2px 0 8px; }
 
           .amount-grid{
             display:grid;
@@ -3787,17 +3732,8 @@ app.get('/cashout', async (req, res) => {
             transition:.15s ease;
             min-height:124px;
           }
-
-          .amount-card:hover{
-            border-color:#22c55e;
-            box-shadow:0 0 0 1px #22c55e;
-          }
-
-          .amount-card.active{
-            border-color:#22c55e;
-            box-shadow:0 0 0 2px #22c55e;
-          }
-
+          .amount-card:hover{ border-color:#22c55e; box-shadow:0 0 0 1px #22c55e; }
+          .amount-card.active{ border-color:#22c55e; box-shadow:0 0 0 2px #22c55e; }
           .amount-card.active::after{
             content:"✓";
             position:absolute;
@@ -3814,18 +3750,9 @@ app.get('/cashout', async (req, res) => {
             align-items:center;
             justify-content:center;
           }
+          .amount-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
 
-          .amount-card.disabled{
-            opacity:.45;
-            cursor:not-allowed;
-            transform:none !important;
-          }
-
-          .amount-card .amt{
-            font-weight:900;
-            font-size:15px;
-          }
-
+          .amount-card .amt{ font-weight:900; font-size:15px; }
           .amount-card .brand{
             margin-top:6px;
             display:flex;
@@ -3833,35 +3760,10 @@ app.get('/cashout', async (req, res) => {
             justify-content:center;
             min-height:64px;
           }
-
-          .amount-card .brand img{
-            width:190px;
-            max-width:100%;
-            height:auto;
-            display:block;
-            opacity:.98;
-          }
-
-          .bar{
-            margin-top:8px;
-            height:6px;
-            border-radius:999px;
-            background:rgba(255,255,255,.08);
-            overflow:hidden;
-          }
-
-          .fill{
-            height:100%;
-            border-radius:999px;
-            background:#22c55e;
-            width:0%;
-          }
-
-          .need{
-            margin-top:6px;
-            color:#b8c4d6;
-            font-size:12px;
-          }
+          .amount-card .brand img{ width:190px; max-width:100%; height:auto; display:block; opacity:.98; }
+          .bar{ margin-top:8px; height:6px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; }
+          .fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
+          .need{ margin-top:6px; color:#b8c4d6; font-size:12px; }
 
           .co-actions{
             display:flex;
@@ -3870,7 +3772,6 @@ app.get('/cashout', async (req, res) => {
             gap:14px;
             margin-top:32px;
           }
-
           .co-small{
             width:100%;
             text-align:center;
@@ -3895,24 +3796,19 @@ app.get('/cashout', async (req, res) => {
             cursor:pointer;
             transition:.2s ease;
           }
-
           .withdraw-btn:hover:not(:disabled){
             transform:translateY(-2px);
             box-shadow:0 12px 35px rgba(251,191,36,.25);
           }
-
           .withdraw-btn:disabled{
             opacity:.45;
             cursor:not-allowed;
             background:rgba(251,191,36,.18);
             color:#fbbf24;
           }
+          @media (max-width:520px){ .withdraw-btn{ width:100%; } }
 
-          @media (max-width:520px){
-            .withdraw-btn{ width:100%; }
-          }
-
-          /* ===== Confirm modal (menuen fra dit billede) ===== */
+          /* ===== Confirm modal ===== */
           .co-confirm{
             width:min(720px, 100%);
             background:#0b1220;
@@ -3921,12 +3817,6 @@ app.get('/cashout', async (req, res) => {
             padding:16px;
             box-shadow:0 40px 140px rgba(0,0,0,.65);
             position:relative;
-          }
-
-          .co-confirm h3{
-            margin:0 0 10px;
-            font-size:18px;
-            font-weight:900;
           }
 
           .co-field-label{
@@ -3973,9 +3863,7 @@ app.get('/cashout', async (req, res) => {
             font-size:14px;
           }
 
-          .co-row strong{
-            color:#fff;
-          }
+          .co-row strong{ color:#fff; }
 
           .co-receive{
             margin-top:12px;
@@ -4007,16 +3895,7 @@ app.get('/cashout', async (req, res) => {
             gap:10px;
           }
 
-          .btn-back{
-            height:52px;
-            border-radius:14px;
-            border:1px solid rgba(34,197,94,.35);
-            background:#17422f;
-            color:#fff;
-            font-weight:900;
-            cursor:pointer;
-          }
-
+          /* KUN cashout knap */
           .btn-confirm{
             height:52px;
             border-radius:14px;
@@ -4046,9 +3925,7 @@ app.get('/cashout', async (req, res) => {
   <div class="cashout-head">
     <h1><span class="cash-accent">Cash</span>Out</h1>
 
-    <a href="/payments" class="my-payments-btn">
-      My payments
-    </a>
+    <a href="/payments" class="my-payments-btn">My payments</a>
   </div>
 
   ${msg}
@@ -4061,15 +3938,12 @@ app.get('/cashout', async (req, res) => {
               type="button"
               ${hasOpenWithdrawal ? 'disabled' : ''}>
         <div class="method-title">PayPal</div>
-
         <div class="method-logo-tile">
           <img src="${paypalImg}" alt="PayPal" />
         </div>
-
         <div class="method-bar">
           <div class="method-fill" style="width:${progressPct}%"></div>
         </div>
-
         <div class="method-foot">
           <span>Minimum $</span>
           <b>${progressRightText}</b>
@@ -4154,13 +4028,12 @@ app.get('/cashout', async (req, res) => {
         <button class="withdraw-btn" id="withdrawBtn" type="button" disabled>
           Choose an amount
         </button>
-
         <div class="co-small" id="coHint"></div>
       </div>
     </div>
   </div>
 
-  <!-- ===== Confirm Modal (menuen efter amount) ===== -->
+  <!-- ===== Confirm Modal ===== -->
   <div class="co-backdrop" id="confirmBackdrop" aria-hidden="true">
     <div class="co-confirm" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
       <button class="co-close" id="confirmClose" type="button" aria-label="Close">✕</button>
@@ -4175,9 +4048,10 @@ app.get('/cashout', async (req, res) => {
       <div class="co-divider"></div>
 
       <div class="co-field-label">PayPal konto*</div>
-      <!-- VIGTIGT: ingen "Rediger" knap, du skriver bare direkte i input -->
-      <input class="co-input" id="paypalEmailInput" name="paypalEmailVisible" type="email"
-             value="${paypalPrefill.replace(/"/g, '&quot;')}" placeholder="din@email.com" autocomplete="email" />
+
+      <!-- START TOMT -->
+      <input class="co-input" id="paypalEmailInput" type="email"
+             value="" placeholder="Indtast PayPal e-mail" autocomplete="email" />
 
       <div class="co-help">
         Din belønning vil blive sendt til denne adresse. Sørg for, at denne e-mail er tilknyttet din PayPal-konto.
@@ -4213,7 +4087,7 @@ app.get('/cashout', async (req, res) => {
         <input type="hidden" name="paypalEmail" id="paypalEmailHidden" value="" />
 
         <div class="co-confirm-actions">
-          <button type="button" class="btn-back" id="btnBack">Trække sig tilbage</button>
+          <!-- KUN cashout -->
           <button type="submit" class="btn-confirm" id="btnConfirm" disabled>Cash out</button>
         </div>
       </form>
@@ -4237,7 +4111,6 @@ app.get('/cashout', async (req, res) => {
     // confirm modal
     const confirmBackdrop = document.getElementById('confirmBackdrop');
     const confirmClose = document.getElementById('confirmClose');
-    const btnBack = document.getElementById('btnBack');
     const btnConfirm = document.getElementById('btnConfirm');
 
     const paypalEmailInput = document.getElementById('paypalEmailInput');
@@ -4252,7 +4125,6 @@ app.get('/cashout', async (req, res) => {
     const chk2 = document.getElementById('chk2');
 
     let selectedCents = 0;
-
     const fmt = (n) => '$' + Number(n).toFixed(2);
 
     function openModal(){
@@ -4277,15 +4149,9 @@ app.get('/cashout', async (req, res) => {
     }
 
     function openConfirm(){
-      // udfyld confirm modal felter
       const amountUsd = selectedCents / 100;
-
-      // 5% payout fee
       const payoutFee = amountUsd * 0.05;
-
-      // paypal consumer fee fixed $1
       const paypalFee = 1.00;
-
       const receive = Math.max(0, amountUsd - payoutFee - paypalFee);
 
       feePayoutEl.textContent = fmt(payoutFee) + ' (5%)';
@@ -4295,8 +4161,9 @@ app.get('/cashout', async (req, res) => {
 
       amountHidden.value = String(selectedCents);
 
-      // sync email til hidden når man submitter
-      paypalEmailHidden.value = (paypalEmailInput.value || '').trim();
+      // START TOMT – brugeren skal selv skrive
+      paypalEmailInput.value = '';
+      paypalEmailHidden.value = '';
 
       // reset checks + disable confirm
       chk1.checked = false;
@@ -4306,9 +4173,7 @@ app.get('/cashout', async (req, res) => {
       confirmBackdrop.classList.add('open');
       confirmBackdrop.setAttribute('aria-hidden','false');
 
-      // fokus i email felt (men uden nogen "rediger" UI)
       paypalEmailInput.focus();
-      paypalEmailInput.select();
     }
 
     function closeConfirm(){
@@ -4367,16 +4232,12 @@ app.get('/cashout', async (req, res) => {
     if(closeBtn) closeBtn.addEventListener('click', closeModal);
     if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
 
+    // Confirm: KUN X (og Escape) må lukke
     if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
-    if(btnBack) btnBack.addEventListener('click', () => { closeConfirm(); /* tilbage til amount modal */ });
-
-    if(confirmBackdrop) confirmBackdrop.addEventListener('click', (e) => {
-      if(e.target === confirmBackdrop) closeConfirm();
-    });
+    // VIGTIGT: ingen klik-udenfor-luk på confirmBackdrop (den er fjernet)
 
     window.addEventListener('keydown', (e) => {
       if(e.key === 'Escape'){
-        // luk confirm først hvis åben ellers amount modal
         if(confirmBackdrop.classList.contains('open')) closeConfirm();
         else if(backdrop.classList.contains('open')) closeModal();
       }
@@ -4400,7 +4261,6 @@ app.get('/cashout', async (req, res) => {
     if(withdrawBtn){
       withdrawBtn.addEventListener('click', () => {
         if(withdrawBtn.disabled) return;
-        // åbn confirm menu efter amount er valgt
         openConfirm();
       });
     }
@@ -4409,7 +4269,6 @@ app.get('/cashout', async (req, res) => {
     if(chk2) chk2.addEventListener('change', validateConfirm);
     if(paypalEmailInput) paypalEmailInput.addEventListener('input', validateConfirm);
 
-    // init
     refreshBars();
     validateAmount();
     validateConfirm();
