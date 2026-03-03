@@ -3670,15 +3670,20 @@ app.get('/cashout', async (req, res) => {
             .method-card{ width:100%; max-width:320px; }
           }
 
+          /* ===== Backdrops ===== */
           .co-backdrop{
             position:fixed; inset:0;
             background:rgba(0,0,0,.55);
             display:none; align-items:center; justify-content:center;
-            z-index:9999;
             padding:16px;
           }
           .co-backdrop.open{ display:flex; }
 
+          /* layer order */
+          #coBackdrop{ z-index:9999; }
+          #confirmBackdrop{ z-index:10000; }
+
+          /* ===== Amount modal ===== */
           .co-modal{
             width:min(640px, 100%);
             background:#0b1220;
@@ -3803,14 +3808,18 @@ app.get('/cashout', async (req, res) => {
           }
           @media (max-width:520px){ .withdraw-btn{ width:100%; } }
 
+          /* ===== Confirm modal (MATCH co-modal exactly) ===== */
           .co-confirm{
-            width:min(720px, 100%);
+            width:min(640px, 100%);              /* SAME as .co-modal */
             background:#0b1220;
             border:1px solid rgba(255,255,255,.08);
-            border-radius:18px;
-            padding:16px;
+            border-radius:18px;                 /* SAME radius */
+            padding:14px 14px 10px;             /* SAME padding */
             box-shadow:0 40px 140px rgba(0,0,0,.65);
             position:relative;
+
+            max-height:calc(100vh - 60px);
+            overflow:auto;
           }
 
           .co-field-label{
@@ -4089,14 +4098,12 @@ app.get('/cashout', async (req, res) => {
 
     const openBtn = document.getElementById('openPayPal');
 
-    // amount modal
     const backdrop = document.getElementById('coBackdrop');
     const closeBtn = document.getElementById('coClose');
     const amountGrid = document.getElementById('amountGrid');
     const withdrawBtn = document.getElementById('withdrawBtn');
     const hint = document.getElementById('coHint');
 
-    // confirm modal
     const confirmBackdrop = document.getElementById('confirmBackdrop');
     const confirmClose = document.getElementById('confirmClose');
     const btnConfirm = document.getElementById('btnConfirm');
@@ -4149,7 +4156,6 @@ app.get('/cashout', async (req, res) => {
 
       amountHidden.value = String(selectedCents);
 
-      // start empty - user types themselves
       paypalEmailInput.value = '';
       paypalEmailHidden.value = '';
 
@@ -4218,7 +4224,6 @@ app.get('/cashout', async (req, res) => {
     if(closeBtn) closeBtn.addEventListener('click', closeModal);
     if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
 
-    // confirm: only X and Escape close (NOT clicking outside)
     if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
 
     window.addEventListener('keydown', (e) => {
