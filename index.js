@@ -3480,7 +3480,7 @@ app.get('/cashout', async (req, res) => {
   );
 
   const progressRightText =
-    '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents/100).toFixed(0);
+    '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents / 100).toFixed(0);
 
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
@@ -3683,9 +3683,19 @@ app.get('/cashout', async (req, res) => {
           #coBackdrop{ z-index:9999; }
           #confirmBackdrop{ z-index:10000; }
 
-          /* ===== Amount modal ===== */
-          .co-modal{
-            width:min(640px, 100%);
+          :root{
+            --coModalW: 640px;
+            --coModalH: 640px; /* SAME HEIGHT on both modals */
+          }
+
+          /* ===== Amount + Confirm share same size ===== */
+          .co-modal,
+          .co-confirm{
+            width:min(var(--coModalW), 100%);
+            height:var(--coModalH);
+            max-height:calc(100vh - 60px);
+            overflow:auto;
+
             background:#0b1220;
             border:1px solid rgba(255,255,255,.08);
             border-radius:18px;
@@ -3808,20 +3818,7 @@ app.get('/cashout', async (req, res) => {
           }
           @media (max-width:520px){ .withdraw-btn{ width:100%; } }
 
-          /* ===== Confirm modal (MATCH co-modal exactly) ===== */
-          .co-confirm{
-            width:min(640px, 100%);              /* SAME as .co-modal */
-            background:#0b1220;
-            border:1px solid rgba(255,255,255,.08);
-            border-radius:18px;                 /* SAME radius */
-            padding:14px 14px 10px;             /* SAME padding */
-            box-shadow:0 40px 140px rgba(0,0,0,.65);
-            position:relative;
-
-            max-height:calc(100vh - 60px);
-            overflow:auto;
-          }
-
+          /* ===== Confirm content ===== */
           .co-field-label{
             font-weight:800;
             margin:8px 0 6px;
@@ -4224,6 +4221,7 @@ app.get('/cashout', async (req, res) => {
     if(closeBtn) closeBtn.addEventListener('click', closeModal);
     if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
 
+    // confirm: only X + Escape close
     if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
 
     window.addEventListener('keydown', (e) => {
@@ -4269,6 +4267,7 @@ app.get('/cashout', async (req, res) => {
     })
   );
 });
+
 
 
 app.get('/support', (req, res) => {
