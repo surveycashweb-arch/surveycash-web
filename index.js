@@ -3392,7 +3392,7 @@ app.get('/cashout', async (req, res) => {
   const err = String(req.query.err || '');
   const wIdFromQuery = Number(req.query.w || 0);
 
-  // 1) Hent profil (balance + pending)
+  // 1) Get profile (balance + pending)
   let profile;
   try {
     profile = await getProfileByUserId(user.id);
@@ -3404,7 +3404,7 @@ app.get('/cashout', async (req, res) => {
   const balanceCents = Number(profile.balance_cents || 0);
   const pendingCents = Number(profile.pending_cents || 0);
 
-  // 2) Tjek om der allerede er en aktiv cashout (pending/processing)
+  // 2) Check if there is an active cashout (pending/processing)
   let hasOpenWithdrawal = false;
   let openWithdrawalId = 0;
 
@@ -3425,7 +3425,7 @@ app.get('/cashout', async (req, res) => {
     console.error('open withdrawal check (GET /cashout) failed:', e);
   }
 
-  // 3) Find hvilket withdrawal-id vi skal auto-checke
+  // 3) Determine which withdrawal-id to auto-check
   const wId = wIdFromQuery || openWithdrawalId;
 
   const autoCheckScript = wId
@@ -3458,7 +3458,7 @@ app.get('/cashout', async (req, res) => {
     `
     : '';
 
-  // 4) Beskeder
+  // 4) Messages
   let msg = '';
   if (paid) {
     msg = `<div class="notice success">Cash out status: <b>PAID</b> ✅</div>`;
@@ -3470,10 +3470,8 @@ app.get('/cashout', async (req, res) => {
     msg = `<div class="notice error">Cash out failed.</div>`;
   }
 
-  // PayPal logo path (public/img/paypal.png)
   const paypalImg = '/img/paypal.png';
 
-  // progress bar data til PayPal card
   const minCashoutCents = CASHOUT_ALLOWED_CENTS[0] || 500;
 
   const progressPct = Math.max(
@@ -3484,7 +3482,6 @@ app.get('/cashout', async (req, res) => {
   const progressRightText =
     '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents/100).toFixed(0);
 
-  // Amount cards HTML
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
     const can = !hasOpenWithdrawal && balanceCents >= cents;
@@ -3673,7 +3670,6 @@ app.get('/cashout', async (req, res) => {
             .method-card{ width:100%; max-width:320px; }
           }
 
-          /* ===== Backdrop ===== */
           .co-backdrop{
             position:fixed; inset:0;
             background:rgba(0,0,0,.55);
@@ -3683,7 +3679,6 @@ app.get('/cashout', async (req, res) => {
           }
           .co-backdrop.open{ display:flex; }
 
-          /* ===== Amount modal ===== */
           .co-modal{
             width:min(640px, 100%);
             background:#0b1220;
@@ -3808,7 +3803,6 @@ app.get('/cashout', async (req, res) => {
           }
           @media (max-width:520px){ .withdraw-btn{ width:100%; } }
 
-          /* ===== Confirm modal ===== */
           .co-confirm{
             width:min(720px, 100%);
             background:#0b1220;
@@ -3885,7 +3879,6 @@ app.get('/cashout', async (req, res) => {
             color:#cbd5e1;
             font-size:14px;
           }
-
           .co-checks input{ transform:translateY(1px); }
 
           .co-confirm-actions{
@@ -3895,7 +3888,6 @@ app.get('/cashout', async (req, res) => {
             gap:10px;
           }
 
-          /* KUN cashout knap */
           .btn-confirm{
             height:52px;
             border-radius:14px;
@@ -3912,7 +3904,6 @@ app.get('/cashout', async (req, res) => {
             background:rgba(251,191,36,.18);
             color:#fbbf24;
           }
-
         </style>
 
         <script>
@@ -3924,7 +3915,6 @@ app.get('/cashout', async (req, res) => {
 
   <div class="cashout-head">
     <h1><span class="cash-accent">Cash</span>Out</h1>
-
     <a href="/payments" class="my-payments-btn">My payments</a>
   </div>
 
@@ -4047,39 +4037,38 @@ app.get('/cashout', async (req, res) => {
 
       <div class="co-divider"></div>
 
-      <div class="co-field-label">PayPal konto*</div>
+      <div class="co-field-label">PayPal account*</div>
 
-      <!-- START TOMT -->
       <input class="co-input" id="paypalEmailInput" type="email"
-             value="" placeholder="Indtast PayPal e-mail" autocomplete="email" />
+             value="" placeholder="Enter PayPal email" autocomplete="email" />
 
       <div class="co-help">
-        Din belønning vil blive sendt til denne adresse. Sørg for, at denne e-mail er tilknyttet din PayPal-konto.
+        Your reward will be sent to this address. Make sure this email is linked to your PayPal account.
       </div>
 
       <div class="co-rows">
         <div class="co-row">
-          <span>Udbetalingsgebyr</span>
+          <span>Payout fee</span>
           <span id="feePayout">$0.00 (5%)</span>
         </div>
         <div class="co-row">
-          <span>PayPal forbrugergebyr</span>
+          <span>PayPal consumer fee</span>
           <span id="feePaypal">$1</span>
         </div>
         <div class="co-row">
-          <strong>Beløb</strong>
+          <strong>Amount</strong>
           <strong id="confirmAmount">$0.00</strong>
         </div>
       </div>
 
       <div class="co-receive">
-        <span>Du modtager</span>
+        <span>You receive</span>
         <span id="confirmReceive">$0.00</span>
       </div>
 
       <div class="co-checks">
-        <label><input type="checkbox" id="chk1"> Jeg bekræfter, at denne PayPal-konto kan modtage betalinger</label>
-        <label><input type="checkbox" id="chk2"> Jeg forstår, at min ordre ikke kan refunderes</label>
+        <label><input type="checkbox" id="chk1"> I confirm this PayPal account can receive payments</label>
+        <label><input type="checkbox" id="chk2"> I understand this order is non-refundable</label>
       </div>
 
       <form id="cashout-form" method="POST" action="/cashout/paypal">
@@ -4087,7 +4076,6 @@ app.get('/cashout', async (req, res) => {
         <input type="hidden" name="paypalEmail" id="paypalEmailHidden" value="" />
 
         <div class="co-confirm-actions">
-          <!-- KUN cashout -->
           <button type="submit" class="btn-confirm" id="btnConfirm" disabled>Cash out</button>
         </div>
       </form>
@@ -4161,11 +4149,10 @@ app.get('/cashout', async (req, res) => {
 
       amountHidden.value = String(selectedCents);
 
-      // START TOMT – brugeren skal selv skrive
+      // start empty - user types themselves
       paypalEmailInput.value = '';
       paypalEmailHidden.value = '';
 
-      // reset checks + disable confirm
       chk1.checked = false;
       chk2.checked = false;
       btnConfirm.disabled = true;
@@ -4227,14 +4214,12 @@ app.get('/cashout', async (req, res) => {
       btnConfirm.disabled = !ok;
     }
 
-    // events
     if(openBtn) openBtn.addEventListener('click', openModal);
     if(closeBtn) closeBtn.addEventListener('click', closeModal);
     if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
 
-    // Confirm: KUN X (og Escape) må lukke
+    // confirm: only X and Escape close (NOT clicking outside)
     if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
-    // VIGTIGT: ingen klik-udenfor-luk på confirmBackdrop (den er fjernet)
 
     window.addEventListener('keydown', (e) => {
       if(e.key === 'Escape'){
@@ -4253,7 +4238,6 @@ app.get('/cashout', async (req, res) => {
 
         card.classList.add('active');
         selectedCents = Number(card.getAttribute('data-cents') || 0);
-
         validateAmount();
       });
     }
@@ -4276,12 +4260,10 @@ app.get('/cashout', async (req, res) => {
   </script>
 
   ${autoCheckScript}
-
       `,
     })
   );
 });
-
 
 
 app.get('/support', (req, res) => {
