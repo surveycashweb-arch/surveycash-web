@@ -3765,30 +3765,32 @@ app.get('/cashout', async (req, res) => {
           .fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
           .need{ margin-top:6px; color:#b8c4d6; font-size:12px; }
 
-          .co-actions{
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            gap:14px;
-            margin-top:32px;
-          }
 
-          .withdraw-btn{
-            height:56px;
-            width:360px;
-            max-width:100%;
-            margin:0 auto;
-            border-radius:16px;
-            border:1px solid rgba(251,191,36,.35);
-            background:#fbbf24;
-            color:#0b1220;
-            font-weight:900;
-            font-size:16px;
-            letter-spacing:.3px;
-            cursor:pointer;
-            transition:.2s ease;
-          }
-          .withdraw-btn:hover:not(:disabled){
+.co-actions{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+  margin-top:20px; /* lidt højere op */
+}
+
+.withdraw-btn{
+  height:48px;      /* lidt mindre */
+  width:300px;      /* lidt smallere */
+  max-width:100%;
+  margin:0 auto;
+  border-radius:15px;
+  border:1px solid rgba(251,191,36,.35);
+  background:#fbbf24;
+  color:#0b1220;
+  font-weight:900;
+  font-size:14px;   /* lidt mindre tekst */
+  letter-spacing:.2px;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+                    .withdraw-btn:hover:not(:disabled){
             transform:translateY(-2px);
             box-shadow:0 12px 35px rgba(251,191,36,.25);
           }
