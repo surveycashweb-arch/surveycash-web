@@ -281,6 +281,25 @@ async function paypalGetPayoutBatch(payoutBatchId) {
 }
 
 
+app.get('/test-paypal', async (req, res) => {
+  try {
+    const token = await paypalGetAccessToken();
+
+    res.json({
+      ok: true,
+      message: 'PayPal connection works',
+      token_preview: token.slice(0, 20) + '...'
+    });
+  } catch (err) {
+    console.error('test-paypal error:', err);
+    res.status(500).json({
+      ok: false,
+      error: String(err.message || err)
+    });
+  }
+});
+
+
 // Returnerer: 'processing' | 'paid' | 'failed'
 function mapPayPalBatchStatus(batch) {
   // 1) item status (mest præcis)
