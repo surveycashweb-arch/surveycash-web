@@ -3568,14 +3568,16 @@ app.get('/cashout', async (req, res) => {
 
 
 .cashout-topbar{
-  width:100%;
   display:flex;
   align-items:center;
-  justify-content:space-between;
+  justify-content:flex-start;
+  gap:18px;
+  width:auto;
 }
 
 .cashout-balances{
   display:flex;
+  align-items:center;
   gap:24px;
   color:#ffffff;
   font-weight:600;
@@ -3788,7 +3790,7 @@ app.get('/cashout', async (req, res) => {
   flex-direction:column;
   align-items:center;
   gap:14px;
-  margin-top:20px; /* lidt højere op */
+  margin-top:14px; /* lidt højere op */
 }
 
 .withdraw-btn{
