@@ -3705,7 +3705,6 @@ app.get('/cashout', async (req, res) => {
             .method-card{ width:100%; max-width:320px; }
           }
 
-          /* ===== Backdrops ===== */
           .co-backdrop{
             position:fixed; inset:0;
             background:rgba(0,0,0,.55);
@@ -3714,7 +3713,6 @@ app.get('/cashout', async (req, res) => {
           }
           .co-backdrop.open{ display:flex; }
 
-          /* layer order */
           #coBackdrop{ z-index:9999; }
           #confirmBackdrop{ z-index:10000; }
 
@@ -3723,14 +3721,12 @@ app.get('/cashout', async (req, res) => {
             --coModalH: 640px;
           }
 
-          /* ===== Amount + Confirm share same size ===== */
           .co-modal,
           .co-confirm{
             width:min(var(--coModalW), 100%);
             height:var(--coModalH);
             max-height:calc(100vh - 60px);
             overflow:auto;
-
             background:#0b1220;
             border:1px solid rgba(255,255,255,.08);
             border-radius:18px;
@@ -3845,7 +3841,6 @@ app.get('/cashout', async (req, res) => {
           }
           @media (max-width:520px){ .withdraw-btn{ width:100%; } }
 
-          /* ===== Confirm content ===== */
           .co-field-label{
             font-weight:800;
             margin:8px 0 6px;
