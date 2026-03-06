@@ -3566,6 +3566,23 @@ app.get('/cashout', async (req, res) => {
           .my-payments-btn:hover{ background:#d4a006; transform:translateY(-1px); }
           .my-payments-btn:active{ transform:translateY(0); }
 
+
+.cashout-topbar{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.cashout-balances{
+  display:flex;
+  gap:24px;
+  color:#ffffff;
+  font-weight:600;
+  font-size:14px;
+  opacity:.9;
+}
+
           .cashout-section{ margin-top:22px; }
 
           .methods-grid{
@@ -3916,10 +3933,20 @@ app.get('/cashout', async (req, res) => {
 
 <div class="cashout-page">
 
-  <div class="cashout-head">
-    <h1><span class="cash-accent">Cash</span>Out</h1>
+<div class="cashout-head">
+  <h1><span class="cash-accent">Cash</span>Out</h1>
+
+  <div class="cashout-topbar">
+
     <a href="/payments" class="my-payments-btn">My payments</a>
+
+    <div class="cashout-balances">
+      <span>Available: $${formatUsdFromCents(balanceCents)}</span>
+      <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
+    </div>
+
   </div>
+</div>
 
   ${msg}
 
