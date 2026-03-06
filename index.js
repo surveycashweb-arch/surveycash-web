@@ -3480,7 +3480,7 @@ app.get('/cashout', async (req, res) => {
   );
 
   const progressRightText =
-    '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents / 100).toFixed(0);
+    '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents/100).toFixed(0);
 
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
@@ -3548,13 +3548,6 @@ app.get('/cashout', async (req, res) => {
 
           .cash-accent{ color:#eab308; }
 
-          .cashout-top-row{
-            display:flex;
-            align-items:center;
-            gap:20px;
-            flex-wrap:wrap;
-          }
-
           .my-payments-btn{
             display:inline-flex;
             align-items:center;
@@ -3572,34 +3565,6 @@ app.get('/cashout', async (req, res) => {
           }
           .my-payments-btn:hover{ background:#d4a006; transform:translateY(-1px); }
           .my-payments-btn:active{ transform:translateY(0); }
-
-          .balance-info{
-            display:flex;
-            gap:18px;
-            flex-wrap:wrap;
-          }
-
-          .balance-item{
-            background:rgba(255,255,255,.05);
-            border:1px solid rgba(255,255,255,.08);
-            border-radius:10px;
-            padding:8px 14px;
-            font-size:12px;
-            display:flex;
-            flex-direction:column;
-            min-width:110px;
-          }
-
-          .balance-item span{
-            color:#94a3b8;
-            font-size:11px;
-          }
-
-          .balance-item b{
-            color:#fff;
-            font-size:14px;
-            margin-top:2px;
-          }
 
           .cashout-section{ margin-top:22px; }
 
@@ -3705,6 +3670,7 @@ app.get('/cashout', async (req, res) => {
             .method-card{ width:100%; max-width:320px; }
           }
 
+          /* ===== Backdrops ===== */
           .co-backdrop{
             position:fixed; inset:0;
             background:rgba(0,0,0,.55);
@@ -3713,20 +3679,13 @@ app.get('/cashout', async (req, res) => {
           }
           .co-backdrop.open{ display:flex; }
 
+          /* layer order */
           #coBackdrop{ z-index:9999; }
           #confirmBackdrop{ z-index:10000; }
 
-          :root{
-            --coModalW: 640px;
-            --coModalH: 640px;
-          }
-
-          .co-modal,
-          .co-confirm{
-            width:min(var(--coModalW), 100%);
-            height:var(--coModalH);
-            max-height:calc(100vh - 60px);
-            overflow:auto;
+          /* ===== Amount modal ===== */
+          .co-modal{
+            width:min(640px, 100%);
             background:#0b1220;
             border:1px solid rgba(255,255,255,.08);
             border-radius:18px;
@@ -3813,6 +3772,14 @@ app.get('/cashout', async (req, res) => {
             gap:14px;
             margin-top:32px;
           }
+          .co-small{
+            width:100%;
+            text-align:center;
+            color:#b8c4d6;
+            font-size:12px;
+            min-height:16px;
+            margin-top:6px;
+          }
 
           .withdraw-btn{
             height:56px;
@@ -3840,6 +3807,20 @@ app.get('/cashout', async (req, res) => {
             color:#fbbf24;
           }
           @media (max-width:520px){ .withdraw-btn{ width:100%; } }
+
+          /* ===== Confirm modal (MATCH co-modal exactly) ===== */
+          .co-confirm{
+            width:min(640px, 100%);              /* SAME as .co-modal */
+            background:#0b1220;
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:18px;                 /* SAME radius */
+            padding:14px 14px 10px;             /* SAME padding */
+            box-shadow:0 40px 140px rgba(0,0,0,.65);
+            position:relative;
+
+            max-height:calc(100vh - 60px);
+            overflow:auto;
+          }
 
           .co-field-label{
             font-weight:800;
@@ -3943,22 +3924,7 @@ app.get('/cashout', async (req, res) => {
 
   <div class="cashout-head">
     <h1><span class="cash-accent">Cash</span>Out</h1>
-
-    <div class="cashout-top-row">
-      <a href="/payments" class="my-payments-btn">My payments</a>
-
-      <div class="balance-info">
-        <div class="balance-item">
-          <span>Available</span>
-          <b>$${formatUsdFromCents(balanceCents)}</b>
-        </div>
-
-        <div class="balance-item">
-          <span>Pending</span>
-          <b>$${formatUsdFromCents(pendingCents)}</b>
-        </div>
-      </div>
-    </div>
+    <a href="/payments" class="my-payments-btn">My payments</a>
   </div>
 
   ${msg}
@@ -4061,6 +4027,7 @@ app.get('/cashout', async (req, res) => {
         <button class="withdraw-btn" id="withdrawBtn" type="button" disabled>
           Choose an amount
         </button>
+        <div class="co-small" id="coHint"></div>
       </div>
     </div>
   </div>
@@ -4135,6 +4102,7 @@ app.get('/cashout', async (req, res) => {
     const closeBtn = document.getElementById('coClose');
     const amountGrid = document.getElementById('amountGrid');
     const withdrawBtn = document.getElementById('withdrawBtn');
+    const hint = document.getElementById('coHint');
 
     const confirmBackdrop = document.getElementById('confirmBackdrop');
     const confirmClose = document.getElementById('confirmClose');
@@ -4162,6 +4130,7 @@ app.get('/cashout', async (req, res) => {
       selectedCents = 0;
       withdrawBtn.disabled = true;
       withdrawBtn.textContent = 'Choose an amount';
+      hint.textContent = '';
       Array.from(amountGrid.querySelectorAll('.amount-card.active'))
         .forEach(x => x.classList.remove('active'));
 
@@ -4220,6 +4189,7 @@ app.get('/cashout', async (req, res) => {
       if(selectedCents <= 0){
         withdrawBtn.disabled = true;
         withdrawBtn.textContent = 'Choose an amount';
+        hint.textContent = 'Choose an amount.';
         return;
       }
 
@@ -4228,11 +4198,13 @@ app.get('/cashout', async (req, res) => {
       if(availableUsd < selectedUsd){
         withdrawBtn.disabled = true;
         withdrawBtn.textContent = 'Insufficient balance';
+        hint.textContent = 'Insufficient balance for this amount.';
         return;
       }
 
       withdrawBtn.disabled = false;
       withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
+      hint.textContent = '';
     }
 
     function emailValid(v){
@@ -4295,6 +4267,20 @@ app.get('/cashout', async (req, res) => {
   ${autoCheckScript}
       `,
     })
+  );
+});
+
+
+app.get('/support', (req, res) => {
+  if (!isLoggedIn(req)) return res.redirect('/');
+
+  res.send(
+    page(
+      req,
+      'Support — SurveyCash',
+      '/support',
+      ``
+    )
   );
 });
 
