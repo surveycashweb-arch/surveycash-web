@@ -3772,14 +3772,6 @@ app.get('/cashout', async (req, res) => {
             gap:14px;
             margin-top:32px;
           }
-          .co-small{
-            width:100%;
-            text-align:center;
-            color:#b8c4d6;
-            font-size:12px;
-            min-height:16px;
-            margin-top:6px;
-          }
 
           .withdraw-btn{
             height:56px;
@@ -4027,7 +4019,6 @@ app.get('/cashout', async (req, res) => {
         <button class="withdraw-btn" id="withdrawBtn" type="button" disabled>
           Choose an amount
         </button>
-        <div class="co-small" id="coHint"></div>
       </div>
     </div>
   </div>
@@ -4102,7 +4093,6 @@ app.get('/cashout', async (req, res) => {
     const closeBtn = document.getElementById('coClose');
     const amountGrid = document.getElementById('amountGrid');
     const withdrawBtn = document.getElementById('withdrawBtn');
-    const hint = document.getElementById('coHint');
 
     const confirmBackdrop = document.getElementById('confirmBackdrop');
     const confirmClose = document.getElementById('confirmClose');
@@ -4130,7 +4120,6 @@ app.get('/cashout', async (req, res) => {
       selectedCents = 0;
       withdrawBtn.disabled = true;
       withdrawBtn.textContent = 'Choose an amount';
-      hint.textContent = '';
       Array.from(amountGrid.querySelectorAll('.amount-card.active'))
         .forEach(x => x.classList.remove('active'));
 
@@ -4189,7 +4178,6 @@ app.get('/cashout', async (req, res) => {
       if(selectedCents <= 0){
         withdrawBtn.disabled = true;
         withdrawBtn.textContent = 'Choose an amount';
-        hint.textContent = 'Choose an amount.';
         return;
       }
 
@@ -4198,13 +4186,11 @@ app.get('/cashout', async (req, res) => {
       if(availableUsd < selectedUsd){
         withdrawBtn.disabled = true;
         withdrawBtn.textContent = 'Insufficient balance';
-        hint.textContent = 'Insufficient balance for this amount.';
         return;
       }
 
       withdrawBtn.disabled = false;
       withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
-      hint.textContent = '';
     }
 
     function emailValid(v){
@@ -4269,7 +4255,6 @@ app.get('/cashout', async (req, res) => {
     })
   );
 });
-
 
 app.get('/support', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
