@@ -4299,20 +4299,6 @@ app.get('/cashout', async (req, res) => {
 });
 
 
-app.get('/support', (req, res) => {
-  if (!isLoggedIn(req)) return res.redirect('/');
-
-  res.send(
-    page(
-      req,
-      'Support — SurveyCash',
-      '/support',
-      ``
-    )
-  );
-});
-
-
 // ---------- Auth: finish login after email verification ----------
 app.post('/auth/finish', async (req, res) => {
   try {
