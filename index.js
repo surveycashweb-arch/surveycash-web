@@ -3810,9 +3810,9 @@ app.get('/cashout', async (req, res) => {
 }
 
                     .withdraw-btn:hover:not(:disabled){
-            transform:translateY(-2px);
-            box-shadow:0 12px 35px rgba(251,191,36,.25);
-          }
+  transform:translateY(-2px);
+  box-shadow:none;
+}
           .withdraw-btn:disabled{
             opacity:.45;
             cursor:not-allowed;
