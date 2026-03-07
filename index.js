@@ -2067,7 +2067,7 @@ main{
   left:0;
   top:64px;
   bottom:0;
-  width:340px;
+  width:280px;
   background:linear-gradient(180deg,#11182b 0%,#0f172a 100%);
   border-right:1px solid rgba(255,255,255,.06);
   display:flex;
@@ -2175,7 +2175,7 @@ main{
 }
 
 .home-main{
-  margin-left:340px;
+  margin-left:280px;
   height:calc(100vh - 64px);
   overflow:hidden;
 }
