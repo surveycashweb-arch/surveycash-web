@@ -2052,6 +2052,15 @@ app.get('/', async (req, res) => {
 
   const bodyHtml = `
 <style>
+html, body{
+  height:100%;
+  overflow:hidden;
+}
+
+main{
+  height:calc(100vh - 64px);
+  overflow:hidden;
+}
 
 .home-chat{
   position:fixed;
@@ -2167,88 +2176,86 @@ app.get('/', async (req, res) => {
 
 .home-main{
   margin-left:340px;
-  min-height:900px;
+  height:calc(100vh - 64px);
+  overflow:hidden;
 }
-
 </style>
 
 <div class="home-chat">
+  <div class="home-chat-list">
 
-<div class="home-chat-list">
+    <div class="chat-item">
+      <div class="chat-item-top">
+        <div class="chat-user">
+          <div class="chat-avatar">D</div>
+          <div class="chat-name">daniel</div>
+        </div>
+        <div class="chat-time">04:00</div>
+      </div>
+      <div class="chat-message">don't</div>
+    </div>
 
-<div class="chat-item">
-<div class="chat-item-top">
-<div class="chat-user">
-<div class="chat-avatar">D</div>
-<div class="chat-name">daniel</div>
-</div>
-<div class="chat-time">04:00</div>
-</div>
-<div class="chat-message">don't</div>
-</div>
+    <div class="chat-item">
+      <div class="chat-item-top">
+        <div class="chat-user">
+          <div class="chat-avatar">M</div>
+          <div class="chat-name">Michal</div>
+        </div>
+        <div class="chat-time">04:08</div>
+      </div>
+      <div class="chat-message">@Dzoana co sie puszysz garbata</div>
+    </div>
 
-<div class="chat-item">
-<div class="chat-item-top">
-<div class="chat-user">
-<div class="chat-avatar">M</div>
-<div class="chat-name">Michal</div>
-</div>
-<div class="chat-time">04:08</div>
-</div>
-<div class="chat-message">@Dzoana co sie puszysz garbata</div>
-</div>
+    <div class="chat-item">
+      <div class="chat-item-top">
+        <div class="chat-user">
+          <div class="chat-avatar">P</div>
+          <div class="chat-name">Pawel</div>
+        </div>
+        <div class="chat-time">04:14</div>
+      </div>
+      <div class="chat-message">ten michas jeszcze dojebany nie zostal?</div>
+    </div>
 
-<div class="chat-item">
-<div class="chat-item-top">
-<div class="chat-user">
-<div class="chat-avatar">P</div>
-<div class="chat-name">Pawel</div>
-</div>
-<div class="chat-time">04:14</div>
-</div>
-<div class="chat-message">ten michas jeszcze dojebany nie zostal?</div>
-</div>
+    <div class="chat-item">
+      <div class="chat-item-top">
+        <div class="chat-user">
+          <div class="chat-avatar">U</div>
+          <div class="chat-name">UsecodeXKING</div>
+        </div>
+        <div class="chat-time">04:15</div>
+      </div>
+      <div class="chat-message">why cant i withdraw my money</div>
+    </div>
 
-<div class="chat-item">
-<div class="chat-item-top">
-<div class="chat-user">
-<div class="chat-avatar">U</div>
-<div class="chat-name">UsecodeXKING</div>
-</div>
-<div class="chat-time">04:15</div>
-</div>
-<div class="chat-message">why cant i withdraw my money</div>
-</div>
+    <div class="chat-item">
+      <div class="chat-item-top">
+        <div class="chat-user">
+          <div class="chat-avatar">T</div>
+          <div class="chat-name">tim</div>
+        </div>
+        <div class="chat-time">04:17</div>
+      </div>
+      <div class="chat-message">just waiting for support</div>
+    </div>
 
-<div class="chat-item">
-<div class="chat-item-top">
-<div class="chat-user">
-<div class="chat-avatar">T</div>
-<div class="chat-name">tim</div>
-</div>
-<div class="chat-time">04:17</div>
-</div>
-<div class="chat-message">just waiting for support</div>
-</div>
+    <div class="chat-item">
+      <div class="chat-item-top">
+        <div class="chat-user">
+          <div class="chat-avatar">N</div>
+          <div class="chat-name">noah</div>
+        </div>
+        <div class="chat-time">04:18</div>
+      </div>
+      <div class="chat-message">surveys worked fine for me today</div>
+    </div>
 
-<div class="chat-item">
-<div class="chat-item-top">
-<div class="chat-user">
-<div class="chat-avatar">N</div>
-<div class="chat-name">noah</div>
-</div>
-<div class="chat-time">04:18</div>
-</div>
-<div class="chat-message">surveys worked fine for me today</div>
-</div>
+  </div>
 
-</div>
-
-<div class="home-chat-input">
-<input placeholder="Enter message">
-<button class="home-chat-send">➤</button>
-</div>
-
+  <div class="home-chat-input">
+    <input placeholder="Enter message">
+    <button class="home-chat-send">➤</button>
+  </div>
 </div>
 
 <div class="home-main"></div>
@@ -2263,7 +2270,6 @@ app.get('/', async (req, res) => {
     ),
   );
 });
-
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
