@@ -2038,7 +2038,6 @@ function landingHtml() {
 
 // ---------- Routes ----------
 app.get('/', async (req, res) => {
-  // Ikke logget ind -> vis landing
   if (!isLoggedIn(req)) {
     return res.send(
       layout({
@@ -2065,240 +2064,234 @@ app.get('/', async (req, res) => {
 
   const bodyHtml = `
 <style>
-html, body{
-  height:100%;
-  overflow:hidden;
+
+html,body{
+height:100%;
+overflow:hidden;
 }
 
 main{
-  height:calc(100vh - 64px);
-  overflow:hidden;
+height:calc(100vh - 64px);
+overflow:hidden;
 }
 
 .home-chat{
-  position:fixed;
-  left:0;
-  top:64px;
-  bottom:0;
-  width:280px;
-  background:#151c2e;
-  border-right:1px solid #1f2937;
-  display:flex;
-  flex-direction:column;
+position:fixed;
+left:0;
+top:64px;
+bottom:0;
+width:280px;
+background:#151c2e;
+border-right:1px solid #1f2937;
+display:flex;
+flex-direction:column;
 }
 
 .home-chat-list{
-  flex:1;
-  overflow:auto;
-  padding:12px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.home-chat-list::-webkit-scrollbar{
-  width:8px;
-}
-
-.home-chat-list::-webkit-scrollbar-thumb{
-  background:rgba(255,255,255,.1);
-  border-radius:999px;
+flex:1;
+overflow:auto;
+padding:10px;
+display:flex;
+flex-direction:column;
+gap:8px;
 }
 
 .chat-empty{
-  margin:auto 0;
-  padding:18px 14px;
-  text-align:center;
-  color:#94a3b8;
-  font-size:14px;
+margin:auto 0;
+text-align:center;
+color:#94a3b8;
+font-size:13px;
 }
 
 .chat-item{
-  background:#17203a;
-  border:1px solid rgba(255,255,255,.05);
-  border-radius:14px;
-  padding:11px 12px;
+background:#0b1220;
+border:1px solid rgba(255,255,255,.04);
+border-radius:12px;
+padding:9px 10px;
 }
 
 .chat-item-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:6px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:4px;
 }
 
 .chat-user{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
+display:flex;
+align-items:center;
+gap:8px;
 }
 
 .chat-avatar{
-  width:30px;
-  height:30px;
-  border-radius:999px;
-  background:#fbbf24;
-  color:#0b1220;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-  font-size:13px;
-  flex-shrink:0;
+width:26px;
+height:26px;
+border-radius:999px;
+background:#fbbf24;
+color:#0b1220;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:900;
+font-size:12px;
 }
 
 .chat-name{
-  font-size:14px;
-  font-weight:800;
-  color:#fff;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+font-size:13px;
+font-weight:800;
+color:#fff;
 }
 
 .chat-time{
-  font-size:12px;
-  color:#94a3b8;
-  flex-shrink:0;
+font-size:11px;
+color:#94a3b8;
 }
 
 .chat-message{
-  font-size:14px;
-  color:#e5e7eb;
-  line-height:1.45;
-  word-break:break-word;
+font-size:13px;
+color:#e5e7eb;
+line-height:1.35;
+word-break:break-word;
 }
 
 .home-chat-input{
-  padding:12px;
-  display:flex;
-  gap:10px;
-  border-top:1px solid rgba(255,255,255,.06);
+padding:10px;
+display:flex;
+gap:8px;
+border-top:1px solid rgba(255,255,255,.06);
 }
 
 .home-chat-input input{
-  flex:1;
-  height:42px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.08);
-  background:#0b1220;
-  color:#fff;
-  padding:0 14px;
-  outline:none;
-  -webkit-user-select:text;
-  user-select:text;
-}
-
-.home-chat-input input::placeholder{
-  color:#7f8aa3;
+flex:1;
+height:38px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,.08);
+background:#0b1220;
+color:#fff;
+padding:0 12px;
+outline:none;
 }
 
 .home-chat-send{
-  width:42px;
-  height:42px;
-  border-radius:12px;
-  border:none;
-  background:#fbbf24;
-  color:#0b1220;
-  font-weight:900;
-  cursor:pointer;
-}
-
-.home-chat-send:hover{
-  background:#f59e0b;
+width:38px;
+height:38px;
+border-radius:10px;
+border:none;
+background:#fbbf24;
+color:#0b1220;
+font-weight:900;
+cursor:pointer;
 }
 
 .home-main{
-  margin-left:280px;
-  height:calc(100vh - 64px);
-  overflow:hidden;
+margin-left:280px;
+height:calc(100vh - 64px);
+overflow:hidden;
 }
+
 </style>
 
 <div class="home-chat">
-  <div class="home-chat-list" id="homeChatList">
-    <div class="chat-empty" id="chatEmpty">No messages yet</div>
-  </div>
 
-  <div class="home-chat-input">
-    <input id="chatInput" type="text" placeholder="Enter message" maxlength="250">
-    <button class="home-chat-send" id="chatSend" type="button">➤</button>
-  </div>
+<div class="home-chat-list" id="homeChatList">
+<div class="chat-empty" id="chatEmpty">No messages yet</div>
+</div>
+
+<div class="home-chat-input">
+<input id="chatInput" type="text" placeholder="Enter message" maxlength="50">
+<button class="home-chat-send" id="chatSend">➤</button>
+</div>
+
 </div>
 
 <div class="home-main"></div>
 
 <script>
-(function () {
-  const list = document.getElementById('homeChatList');
-  const empty = document.getElementById('chatEmpty');
-  const input = document.getElementById('chatInput');
-  const send = document.getElementById('chatSend');
 
-  const currentName = ${JSON.stringify(displayName)};
-  const currentInitial = ${JSON.stringify(userInitial)};
+(function(){
 
-  function nowText() {
-    const d = new Date();
-    const h = String(d.getHours()).padStart(2, '0');
-    const m = String(d.getMinutes()).padStart(2, '0');
-    return h + ':' + m;
-  }
+const list=document.getElementById('homeChatList')
+const empty=document.getElementById('chatEmpty')
+const input=document.getElementById('chatInput')
+const send=document.getElementById('chatSend')
 
-  function addMessage(text) {
-    const value = String(text || '').trim();
-    if (!value) return;
+const name=${JSON.stringify(displayName)}
+const initial=${JSON.stringify(userInitial)}
 
-    if (empty) empty.remove();
+function time(){
 
-    const item = document.createElement('div');
-    item.className = 'chat-item';
+const d=new Date()
+const h=String(d.getHours()).padStart(2,'0')
+const m=String(d.getMinutes()).padStart(2,'0')
 
-    item.innerHTML = \`
-      <div class="chat-item-top">
-        <div class="chat-user">
-          <div class="chat-avatar">\${currentInitial}</div>
-          <div class="chat-name">\${currentName}</div>
-        </div>
-        <div class="chat-time">\${nowText()}</div>
-      </div>
-      <div class="chat-message"></div>
-    \`;
+return h+':'+m
 
-    item.querySelector('.chat-message').textContent = value;
-    list.appendChild(item);
-    list.scrollTop = list.scrollHeight;
-  }
+}
 
-  function submitMessage() {
-    const value = input.value.trim();
-    if (!value) return;
-    addMessage(value);
-    input.value = '';
-    input.focus();
-  }
+function addMessage(text){
 
-  send.addEventListener('click', submitMessage);
+const value=text.trim()
+if(!value)return
 
-  input.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      submitMessage();
-    }
-  });
+if(empty)empty.remove()
+
+const item=document.createElement('div')
+item.className='chat-item'
+
+item.innerHTML=\`
+
+<div class="chat-item-top">
+<div class="chat-user">
+<div class="chat-avatar">\${initial}</div>
+<div class="chat-name">\${name}</div>
+</div>
+<div class="chat-time">\${time()}</div>
+</div>
+
+<div class="chat-message"></div>
+
+\`
+
+item.querySelector('.chat-message').textContent=value
+
+list.appendChild(item)
+
+list.scrollTop=list.scrollHeight
+
+}
+
+function sendMessage(){
+
+const value=input.value.trim()
+
+if(!value)return
+
+addMessage(value)
+
+input.value=''
+input.focus()
+
+}
+
+send.onclick=sendMessage
+
+input.addEventListener('keydown',e=>{
+
+if(e.key==="Enter"){
+
+e.preventDefault()
+sendMessage()
+
+}
+
+})
+
 })();
+
 </script>
 `;
 
-  return res.send(
-    page(
-      req,
-      'Home — SurveyCash',
-      '/',
-      bodyHtml,
-    ),
-  );
+  return res.send(page(req,'Home — SurveyCash','/',bodyHtml));
 });
 
 // --------- Account / profil-side (ny version) ----------
