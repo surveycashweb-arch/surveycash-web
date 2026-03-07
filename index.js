@@ -2068,7 +2068,7 @@ main{
   top:64px;
   bottom:0;
   width:280px;
-  background:linear-gradient(180deg,#11182b 0%,#0f172a 100%);
+  background:#0b1220;
   border-right:1px solid rgba(255,255,255,.06);
   display:flex;
   flex-direction:column;
