@@ -2104,8 +2104,8 @@ font-size:13px;
 }
 
 .chat-item{
-background:#0b1220;
-border:1px solid rgba(255,255,255,.04);
+background:#111827;
+border:1px solid rgba(255,255,255,.06);
 border-radius:12px;
 padding:9px 10px;
 }
@@ -2207,7 +2207,6 @@ overflow:hidden;
 <div class="home-main"></div>
 
 <script>
-
 (function(){
 
 const list=document.getElementById('homeChatList')
@@ -2219,75 +2218,55 @@ const name=${JSON.stringify(displayName)}
 const initial=${JSON.stringify(userInitial)}
 
 function time(){
-
-const d=new Date()
-const h=String(d.getHours()).padStart(2,'0')
-const m=String(d.getMinutes()).padStart(2,'0')
-
-return h+':'+m
-
+  const d=new Date()
+  const h=String(d.getHours()).padStart(2,'0')
+  const m=String(d.getMinutes()).padStart(2,'0')
+  return h+':'+m
 }
 
 function addMessage(text){
+  const value=text.trim()
+  if(!value)return
 
-const value=text.trim()
-if(!value)return
+  if(empty) empty.remove()
 
-if(empty)empty.remove()
+  const item=document.createElement('div')
+  item.className='chat-item'
 
-const item=document.createElement('div')
-item.className='chat-item'
+  item.innerHTML=\`
+    <div class="chat-item-top">
+      <div class="chat-user">
+        <div class="chat-avatar">\${initial}</div>
+        <div class="chat-name">\${name}</div>
+      </div>
+      <div class="chat-time">\${time()}</div>
+    </div>
+    <div class="chat-message"></div>
+  \`
 
-item.innerHTML=\`
-
-<div class="chat-item-top">
-<div class="chat-user">
-<div class="chat-avatar">\${initial}</div>
-<div class="chat-name">\${name}</div>
-</div>
-<div class="chat-time">\${time()}</div>
-</div>
-
-<div class="chat-message"></div>
-
-\`
-
-item.querySelector('.chat-message').textContent=value
-
-list.appendChild(item)
-
-list.scrollTop=list.scrollHeight
-
+  item.querySelector('.chat-message').textContent=value
+  list.appendChild(item)
+  list.scrollTop=list.scrollHeight
 }
 
 function sendMessage(){
-
-const value=input.value.trim()
-
-if(!value)return
-
-addMessage(value)
-
-input.value=''
-input.focus()
-
+  const value=input.value.trim()
+  if(!value)return
+  addMessage(value)
+  input.value=''
+  input.focus()
 }
 
 send.onclick=sendMessage
 
 input.addEventListener('keydown',e=>{
-
-if(e.key==="Enter"){
-
-e.preventDefault()
-sendMessage()
-
-}
-
+  if(e.key==="Enter"){
+    e.preventDefault()
+    sendMessage()
+  }
 })
 
 })();
-
 </script>
 `;
 
