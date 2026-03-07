@@ -2050,6 +2050,19 @@ app.get('/', async (req, res) => {
     );
   }
 
+  const user = getUserFromReq(req) || null;
+  const displayName =
+    user && user.username && user.username.trim()
+      ? user.username.trim()
+      : user && user.email
+        ? String(user.email).split('@')[0]
+        : 'User';
+
+  const userInitial =
+    displayName && displayName.trim().length > 0
+      ? displayName.trim().charAt(0).toUpperCase()
+      : 'U';
+
   const bodyHtml = `
 <style>
 html, body{
@@ -2092,6 +2105,14 @@ main{
   border-radius:999px;
 }
 
+.chat-empty{
+  margin:auto 0;
+  padding:18px 14px;
+  text-align:center;
+  color:#94a3b8;
+  font-size:14px;
+}
+
 .chat-item{
   background:#17203a;
   border:1px solid rgba(255,255,255,.05);
@@ -2110,6 +2131,7 @@ main{
   display:flex;
   align-items:center;
   gap:10px;
+  min-width:0;
 }
 
 .chat-avatar{
@@ -2123,23 +2145,29 @@ main{
   justify-content:center;
   font-weight:900;
   font-size:13px;
+  flex-shrink:0;
 }
 
 .chat-name{
   font-size:14px;
   font-weight:800;
   color:#fff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .chat-time{
   font-size:12px;
   color:#94a3b8;
+  flex-shrink:0;
 }
 
 .chat-message{
   font-size:14px;
   color:#e5e7eb;
   line-height:1.45;
+  word-break:break-word;
 }
 
 .home-chat-input{
@@ -2157,6 +2185,13 @@ main{
   background:#0b1220;
   color:#fff;
   padding:0 14px;
+  outline:none;
+  -webkit-user-select:text;
+  user-select:text;
+}
+
+.home-chat-input input::placeholder{
+  color:#7f8aa3;
 }
 
 .home-chat-send{
@@ -2182,83 +2217,78 @@ main{
 </style>
 
 <div class="home-chat">
-  <div class="home-chat-list">
-
-    <div class="chat-item">
-      <div class="chat-item-top">
-        <div class="chat-user">
-          <div class="chat-avatar">D</div>
-          <div class="chat-name">daniel</div>
-        </div>
-        <div class="chat-time">04:00</div>
-      </div>
-      <div class="chat-message">don't</div>
-    </div>
-
-    <div class="chat-item">
-      <div class="chat-item-top">
-        <div class="chat-user">
-          <div class="chat-avatar">M</div>
-          <div class="chat-name">Michal</div>
-        </div>
-        <div class="chat-time">04:08</div>
-      </div>
-      <div class="chat-message">@Dzoana co sie puszysz garbata</div>
-    </div>
-
-    <div class="chat-item">
-      <div class="chat-item-top">
-        <div class="chat-user">
-          <div class="chat-avatar">P</div>
-          <div class="chat-name">Pawel</div>
-        </div>
-        <div class="chat-time">04:14</div>
-      </div>
-      <div class="chat-message">ten michas jeszcze dojebany nie zostal?</div>
-    </div>
-
-    <div class="chat-item">
-      <div class="chat-item-top">
-        <div class="chat-user">
-          <div class="chat-avatar">U</div>
-          <div class="chat-name">UsecodeXKING</div>
-        </div>
-        <div class="chat-time">04:15</div>
-      </div>
-      <div class="chat-message">why cant i withdraw my money</div>
-    </div>
-
-    <div class="chat-item">
-      <div class="chat-item-top">
-        <div class="chat-user">
-          <div class="chat-avatar">T</div>
-          <div class="chat-name">tim</div>
-        </div>
-        <div class="chat-time">04:17</div>
-      </div>
-      <div class="chat-message">just waiting for support</div>
-    </div>
-
-    <div class="chat-item">
-      <div class="chat-item-top">
-        <div class="chat-user">
-          <div class="chat-avatar">N</div>
-          <div class="chat-name">noah</div>
-        </div>
-        <div class="chat-time">04:18</div>
-      </div>
-      <div class="chat-message">surveys worked fine for me today</div>
-    </div>
-
+  <div class="home-chat-list" id="homeChatList">
+    <div class="chat-empty" id="chatEmpty">No messages yet</div>
   </div>
 
   <div class="home-chat-input">
-    <input placeholder="Enter message">
-    <button class="home-chat-send">➤</button>
+    <input id="chatInput" type="text" placeholder="Enter message" maxlength="250">
+    <button class="home-chat-send" id="chatSend" type="button">➤</button>
   </div>
 </div>
 
 <div class="home-main"></div>
+
+<script>
+(function () {
+  const list = document.getElementById('homeChatList');
+  const empty = document.getElementById('chatEmpty');
+  const input = document.getElementById('chatInput');
+  const send = document.getElementById('chatSend');
+
+  const currentName = ${JSON.stringify(displayName)};
+  const currentInitial = ${JSON.stringify(userInitial)};
+
+  function nowText() {
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2, '0');
+    const m = String(d.getMinutes()).padStart(2, '0');
+    return h + ':' + m;
+  }
+
+  function addMessage(text) {
+    const value = String(text || '').trim();
+    if (!value) return;
+
+    if (empty) empty.remove();
+
+    const item = document.createElement('div');
+    item.className = 'chat-item';
+
+    item.innerHTML = \`
+      <div class="chat-item-top">
+        <div class="chat-user">
+          <div class="chat-avatar">\${currentInitial}</div>
+          <div class="chat-name">\${currentName}</div>
+        </div>
+        <div class="chat-time">\${nowText()}</div>
+      </div>
+      <div class="chat-message"></div>
+    \`;
+
+    item.querySelector('.chat-message').textContent = value;
+    list.appendChild(item);
+    list.scrollTop = list.scrollHeight;
+  }
+
+  function submitMessage() {
+    const value = input.value.trim();
+    if (!value) return;
+    addMessage(value);
+    input.value = '';
+    input.focus();
+  }
+
+  send.addEventListener('click', submitMessage);
+
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      submitMessage();
+    }
+  });
+})();
+</script>
 `;
 
   return res.send(
