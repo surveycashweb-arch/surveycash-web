@@ -2050,15 +2050,296 @@ app.get('/', async (req, res) => {
     );
   }
 
-  const user = getUserFromReq(req) || null;
-
   const bodyHtml = `
   <div style="
-    padding:40px 40px 60px;
+    padding:18px 18px 30px;
     width:100%;
     margin:0;
-    min-height:500px;
   ">
+    <style>
+      .home-shell{
+        display:flex;
+        align-items:flex-start;
+        gap:24px;
+        min-height:760px;
+      }
+
+      .home-chat{
+        width:330px;
+        min-width:330px;
+        background:#151a30;
+        border:1px solid rgba(255,255,255,.06);
+        border-radius:18px;
+        overflow:hidden;
+        box-shadow:0 14px 40px rgba(0,0,0,.22);
+      }
+
+      .home-chat-top{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:14px 16px;
+        border-bottom:1px solid rgba(255,255,255,.06);
+        background:rgba(255,255,255,.02);
+      }
+
+      .home-chat-online{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        font-size:14px;
+        font-weight:700;
+        color:#dbeafe;
+      }
+
+      .home-chat-online::before{
+        content:"";
+        width:10px;
+        height:10px;
+        border-radius:999px;
+        background:#22c55e;
+        box-shadow:0 0 0 3px rgba(34,197,94,.14);
+      }
+
+      .home-chat-list{
+        padding:12px;
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+        max-height:650px;
+        overflow:auto;
+      }
+
+      .home-chat-list::-webkit-scrollbar{
+        width:8px;
+      }
+      .home-chat-list::-webkit-scrollbar-thumb{
+        background:rgba(255,255,255,.10);
+        border-radius:999px;
+      }
+
+      .chat-item{
+        background:#1a2040;
+        border:1px solid rgba(255,255,255,.05);
+        border-radius:14px;
+        padding:11px 12px;
+      }
+
+      .chat-item-top{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        margin-bottom:6px;
+      }
+
+      .chat-user{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        min-width:0;
+      }
+
+      .chat-avatar{
+        width:28px;
+        height:28px;
+        border-radius:999px;
+        background:#fbbf24;
+        color:#0b1220;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:900;
+        font-size:13px;
+        flex-shrink:0;
+      }
+
+      .chat-name{
+        color:#ffffff;
+        font-size:14px;
+        font-weight:800;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+
+      .chat-time{
+        font-size:12px;
+        color:#8ea0c5;
+        flex-shrink:0;
+      }
+
+      .chat-message{
+        color:#cbd5e1;
+        font-size:14px;
+        line-height:1.45;
+        word-break:break-word;
+      }
+
+      .home-chat-input{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:12px;
+        border-top:1px solid rgba(255,255,255,.06);
+        background:rgba(255,255,255,.02);
+      }
+
+      .home-chat-input input{
+        flex:1;
+        height:42px;
+        border-radius:12px;
+        border:1px solid rgba(255,255,255,.08);
+        background:#11182c;
+        color:#fff;
+        padding:0 14px;
+        outline:none;
+        -webkit-user-select:text;
+        user-select:text;
+      }
+
+      .home-chat-input input::placeholder{
+        color:#7f8aa3;
+      }
+
+      .home-chat-send{
+        width:42px;
+        height:42px;
+        border-radius:12px;
+        border:1px solid rgba(255,255,255,.08);
+        background:#222946;
+        color:#fff;
+        font-size:16px;
+        cursor:pointer;
+      }
+
+      .home-main{
+        flex:1;
+        min-height:760px;
+        border-radius:18px;
+      }
+
+      @media (max-width: 980px){
+        .home-shell{
+          flex-direction:column;
+        }
+
+        .home-chat{
+          width:100%;
+          min-width:0;
+        }
+
+        .home-main{
+          width:100%;
+          min-height:420px;
+        }
+      }
+    </style>
+
+    <div class="home-shell">
+      <aside class="home-chat">
+        <div class="home-chat-top">
+          <div class="home-chat-online">8,787 online</div>
+        </div>
+
+        <div class="home-chat-list">
+          <div class="chat-item">
+            <div class="chat-item-top">
+              <div class="chat-user">
+                <div class="chat-avatar">A</div>
+                <div class="chat-name">alex</div>
+              </div>
+              <div class="chat-time">04:00PM</div>
+            </div>
+            <div class="chat-message">agents doesnt help</div>
+          </div>
+
+          <div class="chat-item">
+            <div class="chat-item-top">
+              <div class="chat-user">
+                <div class="chat-avatar">D</div>
+                <div class="chat-name">daniel</div>
+              </div>
+              <div class="chat-time">04:00PM</div>
+            </div>
+            <div class="chat-message">don't</div>
+          </div>
+
+          <div class="chat-item">
+            <div class="chat-item-top">
+              <div class="chat-user">
+                <div class="chat-avatar">M</div>
+                <div class="chat-name">Michal</div>
+              </div>
+              <div class="chat-time">04:08PM</div>
+            </div>
+            <div class="chat-message">@Dzoana co sie puszysz garbata</div>
+          </div>
+
+          <div class="chat-item">
+            <div class="chat-item-top">
+              <div class="chat-user">
+                <div class="chat-avatar">P</div>
+                <div class="chat-name">Pawel</div>
+              </div>
+              <div class="chat-time">04:14PM</div>
+            </div>
+            <div class="chat-message">ten michas jeszcze dojebany nie zostal? dziwne</div>
+          </div>
+
+          <div class="chat-item">
+            <div class="chat-item-top">
+              <div class="chat-user">
+                <div class="chat-avatar">U</div>
+                <div class="chat-name">UsecodeXKING</div>
+              </div>
+              <div class="chat-time">04:15PM</div>
+            </div>
+            <div class="chat-message">😝</div>
+          </div>
+
+          <div class="chat-item">
+            <div class="chat-item-top">
+              <div class="chat-user">
+                <div class="chat-avatar">B</div>
+                <div class="chat-name">baller</div>
+              </div>
+              <div class="chat-time">04:15PM</div>
+            </div>
+            <div class="chat-message">why cant i withdraw my money</div>
+          </div>
+
+          <div class="chat-item">
+            <div class="chat-item-top">
+              <div class="chat-user">
+                <div class="chat-avatar">T</div>
+                <div class="chat-name">tim</div>
+              </div>
+              <div class="chat-time">04:17PM</div>
+            </div>
+            <div class="chat-message">just waiting for support</div>
+          </div>
+
+          <div class="chat-item">
+            <div class="chat-item-top">
+              <div class="chat-user">
+                <div class="chat-avatar">N</div>
+                <div class="chat-name">noah</div>
+              </div>
+              <div class="chat-time">04:18PM</div>
+            </div>
+            <div class="chat-message">surveys worked fine for me today</div>
+          </div>
+        </div>
+
+        <div class="home-chat-input">
+          <input type="text" placeholder="Enter message" />
+          <button class="home-chat-send" type="button">➤</button>
+        </div>
+      </aside>
+
+      <div class="home-main"></div>
+    </div>
   </div>
   `;
 
