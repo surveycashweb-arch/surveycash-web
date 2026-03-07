@@ -2068,8 +2068,8 @@ main{
   top:64px;
   bottom:0;
   width:280px;
-  background:#0b1220;
-  border-right:1px solid rgba(255,255,255,.06);
+  background:#151c2e;
+  border-right:1px solid #1f2937;
   display:flex;
   flex-direction:column;
 }
