@@ -2059,46 +2059,26 @@ app.get('/', async (req, res) => {
     <style>
       .home-shell{
         display:flex;
+        justify-content:flex-end;
         align-items:flex-start;
-        gap:24px;
         min-height:760px;
+        width:100%;
       }
 
       .home-chat{
-        width:330px;
-        min-width:330px;
-        background:#151a30;
+        width:340px;
+        min-width:340px;
+        background:linear-gradient(180deg, #11182b 0%, #0f172a 100%);
         border:1px solid rgba(255,255,255,.06);
         border-radius:18px;
         overflow:hidden;
-        box-shadow:0 14px 40px rgba(0,0,0,.22);
+        box-shadow:0 18px 45px rgba(0,0,0,.28);
       }
 
       .home-chat-top{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        padding:14px 16px;
+        height:18px;
         border-bottom:1px solid rgba(255,255,255,.06);
         background:rgba(255,255,255,.02);
-      }
-
-      .home-chat-online{
-        display:flex;
-        align-items:center;
-        gap:8px;
-        font-size:14px;
-        font-weight:700;
-        color:#dbeafe;
-      }
-
-      .home-chat-online::before{
-        content:"";
-        width:10px;
-        height:10px;
-        border-radius:999px;
-        background:#22c55e;
-        box-shadow:0 0 0 3px rgba(34,197,94,.14);
       }
 
       .home-chat-list{
@@ -2106,20 +2086,21 @@ app.get('/', async (req, res) => {
         display:flex;
         flex-direction:column;
         gap:10px;
-        max-height:650px;
+        max-height:690px;
         overflow:auto;
       }
 
       .home-chat-list::-webkit-scrollbar{
         width:8px;
       }
+
       .home-chat-list::-webkit-scrollbar-thumb{
         background:rgba(255,255,255,.10);
         border-radius:999px;
       }
 
       .chat-item{
-        background:#1a2040;
+        background:#17203a;
         border:1px solid rgba(255,255,255,.05);
         border-radius:14px;
         padding:11px 12px;
@@ -2141,8 +2122,8 @@ app.get('/', async (req, res) => {
       }
 
       .chat-avatar{
-        width:28px;
-        height:28px;
+        width:30px;
+        height:30px;
         border-radius:999px;
         background:#fbbf24;
         color:#0b1220;
@@ -2165,12 +2146,12 @@ app.get('/', async (req, res) => {
 
       .chat-time{
         font-size:12px;
-        color:#8ea0c5;
+        color:#94a3b8;
         flex-shrink:0;
       }
 
       .chat-message{
-        color:#cbd5e1;
+        color:#e5e7eb;
         font-size:14px;
         line-height:1.45;
         word-break:break-word;
@@ -2190,7 +2171,7 @@ app.get('/', async (req, res) => {
         height:42px;
         border-radius:12px;
         border:1px solid rgba(255,255,255,.08);
-        background:#11182c;
+        background:#0b1220;
         color:#fff;
         padding:0 14px;
         outline:none;
@@ -2206,54 +2187,36 @@ app.get('/', async (req, res) => {
         width:42px;
         height:42px;
         border-radius:12px;
-        border:1px solid rgba(255,255,255,.08);
-        background:#222946;
-        color:#fff;
+        border:1px solid rgba(251,191,36,.28);
+        background:#fbbf24;
+        color:#0b1220;
         font-size:16px;
+        font-weight:900;
         cursor:pointer;
       }
 
-      .home-main{
-        flex:1;
-        min-height:760px;
-        border-radius:18px;
+      .home-chat-send:hover{
+        background:#f59e0b;
       }
 
       @media (max-width: 980px){
         .home-shell{
-          flex-direction:column;
+          justify-content:center;
         }
 
         .home-chat{
           width:100%;
           min-width:0;
-        }
-
-        .home-main{
-          width:100%;
-          min-height:420px;
+          max-width:420px;
         }
       }
     </style>
 
     <div class="home-shell">
       <aside class="home-chat">
-        <div class="home-chat-top">
-          <div class="home-chat-online">8,787 online</div>
-        </div>
+        <div class="home-chat-top"></div>
 
         <div class="home-chat-list">
-          <div class="chat-item">
-            <div class="chat-item-top">
-              <div class="chat-user">
-                <div class="chat-avatar">A</div>
-                <div class="chat-name">alex</div>
-              </div>
-              <div class="chat-time">04:00PM</div>
-            </div>
-            <div class="chat-message">agents doesnt help</div>
-          </div>
-
           <div class="chat-item">
             <div class="chat-item-top">
               <div class="chat-user">
@@ -2295,17 +2258,6 @@ app.get('/', async (req, res) => {
               </div>
               <div class="chat-time">04:15PM</div>
             </div>
-            <div class="chat-message">😝</div>
-          </div>
-
-          <div class="chat-item">
-            <div class="chat-item-top">
-              <div class="chat-user">
-                <div class="chat-avatar">B</div>
-                <div class="chat-name">baller</div>
-              </div>
-              <div class="chat-time">04:15PM</div>
-            </div>
             <div class="chat-message">why cant i withdraw my money</div>
           </div>
 
@@ -2337,8 +2289,6 @@ app.get('/', async (req, res) => {
           <button class="home-chat-send" type="button">➤</button>
         </div>
       </aside>
-
-      <div class="home-main"></div>
     </div>
   </div>
   `;
