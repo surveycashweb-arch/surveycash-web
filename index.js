@@ -2094,6 +2094,12 @@ padding:10px;
 display:flex;
 flex-direction:column;
 gap:8px;
+scrollbar-width:none;
+-ms-overflow-style:none;
+}
+
+.home-chat-list::-webkit-scrollbar{
+display:none;
 }
 
 .chat-empty{
