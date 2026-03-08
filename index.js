@@ -2211,49 +2211,94 @@ overflow:hidden;
 (function(){
 
 const list=document.getElementById('homeChatList')
-const empty=document.getElementById('chatEmpty')
 const input=document.getElementById('chatInput')
 const send=document.getElementById('chatSend')
 
 const name=${JSON.stringify(displayName)}
 const initial=${JSON.stringify(userInitial)}
 
-function time(){
-  const d=new Date()
+const STORAGE_KEY='surveycash_chat_messages'
+const MAX_MESSAGES=50
+
+let messages=loadMessages()
+
+function loadMessages(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY)
+    const parsed=raw?JSON.parse(raw):[]
+    return Array.isArray(parsed)?parsed.slice(-MAX_MESSAGES):[]
+  }catch(err){
+    console.error('Failed to load chat messages:',err)
+    return []
+  }
+}
+
+function saveMessages(){
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(messages.slice(-MAX_MESSAGES)))
+  }catch(err){
+    console.error('Failed to save chat messages:',err)
+  }
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g,function(m){
+    return {
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+    }[m]
+  })
+}
+
+function formatTime(value){
+  const d=new Date(value)
   const h=String(d.getHours()).padStart(2,'0')
   const m=String(d.getMinutes()).padStart(2,'0')
   return h+':'+m
 }
 
-function addMessage(text){
-  const value=text.trim()
-  if(!value)return
+function renderMessages(){
+  if(!messages.length){
+    list.innerHTML='<div class="chat-empty">No messages yet</div>'
+    return
+  }
 
-  if(empty) empty.remove()
-
-  const item=document.createElement('div')
-  item.className='chat-item'
-
-  item.innerHTML=\`
-    <div class="chat-item-top">
-      <div class="chat-user">
-        <div class="chat-avatar">\${initial}</div>
-        <div class="chat-name">\${name}</div>
+  list.innerHTML=messages.map(msg=>\`
+    <div class="chat-item">
+      <div class="chat-item-top">
+        <div class="chat-user">
+          <div class="chat-avatar">\${escapeHtml(msg.initial||'U')}</div>
+          <div class="chat-name">\${escapeHtml(msg.name||'User')}</div>
+        </div>
+        <div class="chat-time">\${escapeHtml(formatTime(msg.createdAt))}</div>
       </div>
-      <div class="chat-time">\${time()}</div>
+      <div class="chat-message">\${escapeHtml(msg.text||'')}</div>
     </div>
-    <div class="chat-message"></div>
-  \`
+  \`).join('')
 
-  item.querySelector('.chat-message').textContent=value
-  list.appendChild(item)
   list.scrollTop=list.scrollHeight
 }
 
 function sendMessage(){
   const value=input.value.trim()
   if(!value)return
-  addMessage(value)
+
+  messages.push({
+    name,
+    initial,
+    text:value,
+    createdAt:new Date().toISOString()
+  })
+
+  if(messages.length>MAX_MESSAGES){
+    messages=messages.slice(-MAX_MESSAGES)
+  }
+
+  saveMessages()
+  renderMessages()
   input.value=''
   input.focus()
 }
@@ -2261,11 +2306,13 @@ function sendMessage(){
 send.onclick=sendMessage
 
 input.addEventListener('keydown',e=>{
-  if(e.key==="Enter"){
+  if(e.key==='Enter'){
     e.preventDefault()
     sendMessage()
   }
 })
+
+renderMessages()
 
 })();
 </script>
