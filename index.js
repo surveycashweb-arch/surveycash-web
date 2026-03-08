@@ -281,25 +281,6 @@ async function paypalGetPayoutBatch(payoutBatchId) {
 }
 
 
-app.get('/test-paypal', async (req, res) => {
-  try {
-    const token = await paypalGetAccessToken();
-
-    res.json({
-      ok: true,
-      message: 'PayPal connection works',
-      token_preview: token.slice(0, 20) + '...'
-    });
-  } catch (err) {
-    console.error('test-paypal error:', err);
-    res.status(500).json({
-      ok: false,
-      error: String(err.message || err)
-    });
-  }
-});
-
-
 // Returnerer: 'processing' | 'paid' | 'failed'
 function mapPayPalBatchStatus(batch) {
   // 1) item status (mest præcis)
@@ -2038,334 +2019,184 @@ function landingHtml() {
 
 // ---------- Routes ----------
 app.get('/', async (req, res) => {
+  // Ikke logget ind -> vis landing
   if (!isLoggedIn(req)) {
     return res.send(
       layout({
         title: 'SurveyCash — Earn by testing apps, games & surveys',
         active: null,
         bodyHtml: landingHtml(),
-        loggedIn: null,
+       loggedIn: null,
       }),
     );
   }
 
   const user = getUserFromReq(req) || null;
-  const displayName =
-    user && user.username && user.username.trim()
-      ? user.username.trim()
-      : user && user.email
-        ? String(user.email).split('@')[0]
-        : 'User';
 
-  const userInitial =
-    displayName && displayName.trim().length > 0
-      ? displayName.trim().charAt(0).toUpperCase()
-      : 'U';
+// ✅ Community stats fra Supabase
+let totalUsers = 0;
+let totalEarnedUsd = '0.00';
+
+try {
+  const { data, error } = await supabaseAdmin.rpc('get_community_stats');
+  if (error) throw error;
+
+  const row = Array.isArray(data) ? data[0] : data;
+
+  totalUsers = Number(row?.all_time_users || 0);
+  const communityCents = Number(row?.community_earnings_cents || 0);
+  totalEarnedUsd = formatUsdFromCents(communityCents);
+} catch (e) {
+  console.error('Home stats error:', e);
+}
+
 
   const bodyHtml = `
-<style>
+  <div style="
+    padding:10px 40px 60px;
+    width:100%;
+    margin:0;
+    position:relative;
+  ">
 
-html,body{
-height:100%;
-overflow:hidden;
-}
+    <div style="max-width:900px;margin:0 auto;text-align:center;">
+      <h1 style="margin-bottom:6px;font-size:28px;font-weight:700;">
+        Welcome back 👋
+      </h1>
 
-main{
-height:calc(100vh - 64px);
-overflow:hidden;
-}
+      <p style="
+        max-width:750px;
+        margin:auto;
+        opacity:0.85;
+        font-size:15px;
+        line-height:1.6;
+        margin-bottom:35px;
+      ">
+        SurveyCash allows you to earn real money by completing surveys, testing apps
+        and sharing your experiences. Each completed survey increases both your personal
+        balance and the platform's total earnings.
+        <br><br>
+        All tasks shown are verified and come from trusted partners — ensuring fair
+        and honest payouts for users.
+      </p>
 
-.home-chat{
-position:fixed;
-left:0;
-top:64px;
-bottom:0;
-width:240px;
-background:#151c2e;
-border-right:1px solid #1f2937;
-display:flex;
-flex-direction:column;
-transition:width .25s ease;
-}
+      <div style="display:flex;gap:20px;justify-content:center;margin-top:0;">
 
-.home-chat.closed{
-width:0;
-overflow:hidden;
-}
+        <div style="
+          width:240px;
+          padding:14px 16px;
+          border-radius:10px;
+          background:#111827;
+          border:1px solid rgba(255,255,255,0.12);
+          text-align:center;
+        ">
+          <div style="font-size:13px;opacity:.85;margin-bottom:4px;">
+            Community Earnings
+          </div>
+          <div style="font-size:26px;font-weight:700;">
+            $${totalEarnedUsd}
+          </div>
+        </div>
 
-.chat-toggle{
-position:fixed;
-left:240px;
-top:50%;
-transform:translate(-50%,-50%);
-width:26px;
-height:60px;
-border-radius:6px;
-border:1px solid #1f2937;
-background:#0b1220;
-color:#94a3b8;
-cursor:pointer;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:1000;
-transition:left .25s ease;
-box-shadow:none;
-}
+        <div style="
+          width:240px;
+          padding:14px 16px;
+          border-radius:10px;
+          background:#111827;
+          border:1px solid rgba(255,255,255,0.12);
+          text-align:center;
+        ">
+          <div style="font-size:13px;opacity:.85;margin-bottom:4px;">
+            All Time Users
+          </div>
+          <div style="font-size:26px;font-weight:700;">
+            ${totalUsers}
+          </div>
+        </div>
 
-.home-chat-list{
-flex:1;
-overflow:auto;
-padding:10px;
-display:flex;
-flex-direction:column;
-gap:8px;
-scrollbar-width:none;
--ms-overflow-style:none;
-}
+      </div>
 
-.home-chat-list::-webkit-scrollbar{
-display:none;
-}
+      <div style="
+        margin-top:45px;
+        max-width:770px;
+        margin-left:auto;
+        margin-right:auto;
+        font-size:15px;
+        opacity:.85;
+        line-height:1.6;
+      ">
+        If you ever have questions or experience any problems, our support team is here to help you. 
+        You can also rate your experience with SurveyCash on Trustpilot right now and tell others what you think. 
+        Your feedback helps us improve and build a better platform for all users.
+      </div>
 
-.chat-empty{
-margin:auto 0;
-text-align:center;
-color:#94a3b8;
-font-size:13px;
-}
+      <div style="margin-top:22px;">
+        <img src="/trustpilot-logo.png"
+          alt="Trustpilot"
+          style="width:160px;opacity:0.9;" />
+      </div>
+    </div>
 
-.chat-item{
-background:#111827;
-border:1px solid rgba(255,255,255,.06);
-border-radius:12px;
-padding:9px 10px;
-}
-
-.chat-item-top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:4px;
-}
-
-.chat-user{
-display:flex;
-align-items:center;
-gap:8px;
-}
-
-.chat-avatar{
-width:26px;
-height:26px;
-border-radius:999px;
-background:#fbbf24;
-color:#0b1220;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:900;
-font-size:12px;
-}
-
-.chat-name{
-font-size:13px;
-font-weight:800;
-color:#fff;
-}
-
-.chat-time{
-font-size:11px;
-color:#94a3b8;
-}
-
-.chat-message{
-font-size:13px;
-color:#e5e7eb;
-line-height:1.35;
-word-break:break-word;
-}
-
-.home-chat-input{
-padding:10px;
-display:flex;
-gap:8px;
-border-top:1px solid rgba(255,255,255,.06);
-}
-
-.home-chat-input input{
-flex:1;
-min-width:0;
-height:38px;
-border-radius:10px;
-border:1px solid rgba(255,255,255,.08);
-background:#0b1220;
-color:#fff;
-padding:0 12px;
-outline:none;
-}
-
-.home-chat-send{
-width:38px;
-height:38px;
-border-radius:10px;
-border:none;
-background:#fbbf24;
-color:#0b1220;
-font-weight:900;
-cursor:pointer;
-}
-
-.home-main{
-margin-left:240px;
-height:calc(100vh - 64px);
-overflow:hidden;
-transition:margin-left .25s ease;
-}
-
-</style>
-
-<button id="chatToggle" class="chat-toggle">❮</button>
-
-<div class="home-chat" id="homeChat">
-
-<div class="home-chat-list" id="homeChatList">
-<div class="chat-empty">No messages yet</div>
+    <!-- HØJRE SIDE: Why SurveyCash -->
+ <aside style="
+  width:300px;
+  position:absolute;
+  right:-220px;
+  top:60px;
+  text-align:left;
+">
+  <div style="
+  font-size:18px;
+  font-weight:600;
+  letter-spacing:0;
+  text-transform:none;
+  color:#ffffff;
+  margin-bottom:18px;
+">
+  Why SurveyCash?
 </div>
 
-<div class="home-chat-input">
-<input id="chatInput" type="text" placeholder="Enter message" maxlength="50">
-<button class="home-chat-send" id="chatSend">➤</button>
-</div>
 
-</div>
+  <div style="display:flex;flex-direction:column;gap:20px;font-size:16px;color:#ffffff;">
 
-<div class="home-main"></div>
+    <div>
+      <div style="font-weight:700;">Trusted payouts</div>
+      <div style="line-height:1.45;color:#bfc3c9;">
+        Withdraw safely using trusted providers such as PayPal.
+        Your balance is handled securely when you’re ready.
+      </div>
+    </div>
 
-<script>
-(function(){
+    <div>
+      <div style="font-weight:700;">Verified partners</div>
+      <div style="line-height:1.45;color:#bfc3c9;">
+        Surveys come from trusted providers — ensuring real payouts and fair rewards on every completed activity.
+      </div>
+    </div>
 
-const list=document.getElementById('homeChatList')
-const input=document.getElementById('chatInput')
-const send=document.getElementById('chatSend')
-const toggle=document.getElementById('chatToggle')
-const chat=document.getElementById('homeChat')
-const main=document.querySelector('.home-main')
+    <div>
+      <div style="font-weight:700;">Global users</div>
+      <div style="line-height:1.45;color:#bfc3c9;">
+        SurveyCash is used worldwide, letting you earn alongside many other users daily.
+      </div>
+    </div>
 
-const name=${JSON.stringify(displayName)}
-const initial=${JSON.stringify(userInitial)}
+  </div>
+</aside>
+  </div>
+  `;
 
-const STORAGE_KEY='surveycash_chat_messages'
-const MAX_MESSAGES=50
-
-let messages=loadMessages()
-
-function loadMessages(){
-try{
-const raw=localStorage.getItem(STORAGE_KEY)
-const parsed=raw?JSON.parse(raw):[]
-return Array.isArray(parsed)?parsed.slice(-MAX_MESSAGES):[]
-}catch{
-return[]
-}
-}
-
-function saveMessages(){
-localStorage.setItem(STORAGE_KEY,JSON.stringify(messages.slice(-MAX_MESSAGES)))
-}
-
-function escapeHtml(str){
-return String(str).replace(/[&<>"']/g,function(m){
-return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]
-})
-}
-
-function formatTime(value){
-const d=new Date(value)
-const h=String(d.getHours()).padStart(2,'0')
-const m=String(d.getMinutes()).padStart(2,'0')
-return h+':'+m
-}
-
-function renderMessages(){
-if(!messages.length){
-list.innerHTML='<div class="chat-empty">No messages yet</div>'
-return
-}
-
-list.innerHTML=messages.map(msg=>\`
-<div class="chat-item">
-<div class="chat-item-top">
-<div class="chat-user">
-<div class="chat-avatar">\${escapeHtml(msg.initial||'U')}</div>
-<div class="chat-name">\${escapeHtml(msg.name||'User')}</div>
-</div>
-<div class="chat-time">\${escapeHtml(formatTime(msg.createdAt))}</div>
-</div>
-<div class="chat-message">\${escapeHtml(msg.text||'')}</div>
-</div>
-\`).join('')
-
-list.scrollTop=list.scrollHeight
-}
-
-function sendMessage(){
-const value=input.value.trim()
-if(!value)return
-
-messages.push({
-name,
-initial,
-text:value,
-createdAt:new Date().toISOString()
-})
-
-if(messages.length>MAX_MESSAGES){
-messages=messages.slice(-MAX_MESSAGES)
-}
-
-saveMessages()
-renderMessages()
-
-input.value=''
-input.focus()
-}
-
-send.onclick=sendMessage
-
-input.addEventListener('keydown',e=>{
-if(e.key==='Enter'){
-e.preventDefault()
-sendMessage()
-}
-})
-
-let open=true
-
-toggle.onclick=()=>{
-open=!open
-
-if(open){
-chat.classList.remove('closed')
-main.style.marginLeft='240px'
-toggle.style.left='240px'
-toggle.textContent='❮'
-}else{
-chat.classList.add('closed')
-main.style.marginLeft='0px'
-toggle.style.left='0px'
-toggle.textContent='❯'
-}
-}
-
-renderMessages()
-
-})();
-</script>
-`;
-
-  return res.send(page(req,'Home — SurveyCash','/',bodyHtml));
+  return res.send(
+    page(
+      req,
+      'Home — SurveyCash',
+      '/',
+      bodyHtml,
+    ),
+  );
 });
+
+
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
@@ -3735,25 +3566,6 @@ app.get('/cashout', async (req, res) => {
           .my-payments-btn:hover{ background:#d4a006; transform:translateY(-1px); }
           .my-payments-btn:active{ transform:translateY(0); }
 
-
-.cashout-topbar{
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  gap:18px;
-  width:auto;
-}
-
-.cashout-balances{
-  display:flex;
-  align-items:center;
-  gap:24px;
-  color:#ffffff;
-  font-weight:600;
-  font-size:14px;
-  opacity:.9;
-}
-
           .cashout-section{ margin-top:22px; }
 
           .methods-grid{
@@ -3858,20 +3670,15 @@ app.get('/cashout', async (req, res) => {
             .method-card{ width:100%; max-width:320px; }
           }
 
-          /* ===== Backdrops ===== */
           .co-backdrop{
             position:fixed; inset:0;
             background:rgba(0,0,0,.55);
             display:none; align-items:center; justify-content:center;
+            z-index:9999;
             padding:16px;
           }
           .co-backdrop.open{ display:flex; }
 
-          /* layer order */
-          #coBackdrop{ z-index:9999; }
-          #confirmBackdrop{ z-index:10000; }
-
-          /* ===== Amount modal ===== */
           .co-modal{
             width:min(640px, 100%);
             background:#0b1220;
@@ -3953,35 +3760,41 @@ app.get('/cashout', async (req, res) => {
           .fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
           .need{ margin-top:6px; color:#b8c4d6; font-size:12px; }
 
+          .co-actions{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:14px;
+            margin-top:32px;
+          }
+          .co-small{
+            width:100%;
+            text-align:center;
+            color:#b8c4d6;
+            font-size:12px;
+            min-height:16px;
+            margin-top:6px;
+          }
 
-.co-actions{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:14px;
-  margin-top:14px; /* lidt højere op */
-}
-
-.withdraw-btn{
-  height:48px;      /* lidt mindre */
-  width:300px;      /* lidt smallere */
-  max-width:100%;
-  margin:0 auto;
-  border-radius:15px;
-  border:1px solid rgba(251,191,36,.35);
-  background:#fbbf24;
-  color:#0b1220;
-  font-weight:900;
-  font-size:14px;   /* lidt mindre tekst */
-  letter-spacing:.2px;
-  cursor:pointer;
-  transition:.2s ease;
-}
-
-                    .withdraw-btn:hover:not(:disabled){
-  transform:translateY(-2px);
-  box-shadow:none;
-}
+          .withdraw-btn{
+            height:56px;
+            width:360px;
+            max-width:100%;
+            margin:0 auto;
+            border-radius:16px;
+            border:1px solid rgba(251,191,36,.35);
+            background:#fbbf24;
+            color:#0b1220;
+            font-weight:900;
+            font-size:16px;
+            letter-spacing:.3px;
+            cursor:pointer;
+            transition:.2s ease;
+          }
+          .withdraw-btn:hover:not(:disabled){
+            transform:translateY(-2px);
+            box-shadow:0 12px 35px rgba(251,191,36,.25);
+          }
           .withdraw-btn:disabled{
             opacity:.45;
             cursor:not-allowed;
@@ -3990,18 +3803,14 @@ app.get('/cashout', async (req, res) => {
           }
           @media (max-width:520px){ .withdraw-btn{ width:100%; } }
 
-          /* ===== Confirm modal (MATCH co-modal exactly) ===== */
           .co-confirm{
-            width:min(640px, 100%);              /* SAME as .co-modal */
+            width:min(720px, 100%);
             background:#0b1220;
             border:1px solid rgba(255,255,255,.08);
-            border-radius:18px;                 /* SAME radius */
-            padding:14px 14px 10px;             /* SAME padding */
+            border-radius:18px;
+            padding:16px;
             box-shadow:0 40px 140px rgba(0,0,0,.65);
             position:relative;
-
-            max-height:calc(100vh - 60px);
-            overflow:auto;
           }
 
           .co-field-label{
@@ -4104,20 +3913,10 @@ app.get('/cashout', async (req, res) => {
 
 <div class="cashout-page">
 
-<div class="cashout-head">
-  <h1><span class="cash-accent">Cash</span>Out</h1>
-
-  <div class="cashout-topbar">
-
+  <div class="cashout-head">
+    <h1><span class="cash-accent">Cash</span>Out</h1>
     <a href="/payments" class="my-payments-btn">My payments</a>
-
-    <div class="cashout-balances">
-      <span>Available: $${formatUsdFromCents(balanceCents)}</span>
-      <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
-    </div>
-
   </div>
-</div>
 
   ${msg}
 
@@ -4219,6 +4018,7 @@ app.get('/cashout', async (req, res) => {
         <button class="withdraw-btn" id="withdrawBtn" type="button" disabled>
           Choose an amount
         </button>
+        <div class="co-small" id="coHint"></div>
       </div>
     </div>
   </div>
@@ -4289,11 +4089,14 @@ app.get('/cashout', async (req, res) => {
 
     const openBtn = document.getElementById('openPayPal');
 
+    // amount modal
     const backdrop = document.getElementById('coBackdrop');
     const closeBtn = document.getElementById('coClose');
     const amountGrid = document.getElementById('amountGrid');
     const withdrawBtn = document.getElementById('withdrawBtn');
+    const hint = document.getElementById('coHint');
 
+    // confirm modal
     const confirmBackdrop = document.getElementById('confirmBackdrop');
     const confirmClose = document.getElementById('confirmClose');
     const btnConfirm = document.getElementById('btnConfirm');
@@ -4320,6 +4123,7 @@ app.get('/cashout', async (req, res) => {
       selectedCents = 0;
       withdrawBtn.disabled = true;
       withdrawBtn.textContent = 'Choose an amount';
+      hint.textContent = '';
       Array.from(amountGrid.querySelectorAll('.amount-card.active'))
         .forEach(x => x.classList.remove('active'));
 
@@ -4345,6 +4149,7 @@ app.get('/cashout', async (req, res) => {
 
       amountHidden.value = String(selectedCents);
 
+      // start empty - user types themselves
       paypalEmailInput.value = '';
       paypalEmailHidden.value = '';
 
@@ -4378,6 +4183,7 @@ app.get('/cashout', async (req, res) => {
       if(selectedCents <= 0){
         withdrawBtn.disabled = true;
         withdrawBtn.textContent = 'Choose an amount';
+        hint.textContent = 'Choose an amount.';
         return;
       }
 
@@ -4386,11 +4192,13 @@ app.get('/cashout', async (req, res) => {
       if(availableUsd < selectedUsd){
         withdrawBtn.disabled = true;
         withdrawBtn.textContent = 'Insufficient balance';
+        hint.textContent = 'Insufficient balance for this amount.';
         return;
       }
 
       withdrawBtn.disabled = false;
       withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
+      hint.textContent = '';
     }
 
     function emailValid(v){
@@ -4410,6 +4218,7 @@ app.get('/cashout', async (req, res) => {
     if(closeBtn) closeBtn.addEventListener('click', closeModal);
     if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
 
+    // confirm: only X and Escape close (NOT clicking outside)
     if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
 
     window.addEventListener('keydown', (e) => {
@@ -4455,6 +4264,7 @@ app.get('/cashout', async (req, res) => {
     })
   );
 });
+
 
 app.get('/support', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
