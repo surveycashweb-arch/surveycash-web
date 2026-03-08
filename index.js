@@ -2080,7 +2080,7 @@ position:fixed;
 left:0;
 top:64px;
 bottom:0;
-width:280px;
+width:240px;
 background:#151c2e;
 border-right:1px solid #1f2937;
 display:flex;
