@@ -2163,6 +2163,7 @@ border-top:1px solid rgba(255,255,255,.06);
 
 .home-chat-input input{
 flex:1;
+min-width:0;
 height:38px;
 border-radius:10px;
 border:1px solid rgba(255,255,255,.08);
