@@ -2097,20 +2097,20 @@ overflow:hidden;
 position:fixed;
 left:240px;
 top:50%;
-transform:translateY(-50%);
-width:28px;
+transform:translate(-50%,-50%);
+width:26px;
 height:60px;
-border-radius:8px;
-border:none;
+border-radius:6px;
+border:1px solid #1f2937;
 background:#0b1220;
 color:#94a3b8;
 cursor:pointer;
 display:flex;
 align-items:center;
 justify-content:center;
-box-shadow:0 4px 20px rgba(0,0,0,.4);
 z-index:1000;
 transition:left .25s ease;
+box-shadow:none;
 }
 
 .home-chat-list{
@@ -2276,7 +2276,7 @@ localStorage.setItem(STORAGE_KEY,JSON.stringify(messages.slice(-MAX_MESSAGES)))
 
 function escapeHtml(str){
 return String(str).replace(/[&<>"']/g,function(m){
-return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]
+return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]
 })
 }
 
