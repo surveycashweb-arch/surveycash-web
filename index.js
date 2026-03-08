@@ -2095,7 +2095,7 @@ overflow:hidden;
 
 .chat-toggle{
 position:fixed;
-left:240px;
+left:250px;
 top:50%;
 transform:translate(-50%,-50%);
 width:26px;
