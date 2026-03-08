@@ -2038,184 +2038,240 @@ function landingHtml() {
 
 // ---------- Routes ----------
 app.get('/', async (req, res) => {
-  // Ikke logget ind -> vis landing
   if (!isLoggedIn(req)) {
     return res.send(
       layout({
         title: 'SurveyCash — Earn by testing apps, games & surveys',
         active: null,
         bodyHtml: landingHtml(),
-       loggedIn: null,
+        loggedIn: null,
       }),
     );
   }
 
   const user = getUserFromReq(req) || null;
+  const displayName =
+    user && user.username && user.username.trim()
+      ? user.username.trim()
+      : user && user.email
+        ? String(user.email).split('@')[0]
+        : 'User';
 
-// ✅ Community stats fra Supabase
-let totalUsers = 0;
-let totalEarnedUsd = '0.00';
-
-try {
-  const { data, error } = await supabaseAdmin.rpc('get_community_stats');
-  if (error) throw error;
-
-  const row = Array.isArray(data) ? data[0] : data;
-
-  totalUsers = Number(row?.all_time_users || 0);
-  const communityCents = Number(row?.community_earnings_cents || 0);
-  totalEarnedUsd = formatUsdFromCents(communityCents);
-} catch (e) {
-  console.error('Home stats error:', e);
-}
-
+  const userInitial =
+    displayName && displayName.trim().length > 0
+      ? displayName.trim().charAt(0).toUpperCase()
+      : 'U';
 
   const bodyHtml = `
-  <div style="
-    padding:10px 40px 60px;
-    width:100%;
-    margin:0;
-    position:relative;
-  ">
+<style>
 
-    <div style="max-width:900px;margin:0 auto;text-align:center;">
-      <h1 style="margin-bottom:6px;font-size:28px;font-weight:700;">
-        Welcome back 👋
-      </h1>
+html,body{
+height:100%;
+overflow:hidden;
+}
 
-      <p style="
-        max-width:750px;
-        margin:auto;
-        opacity:0.85;
-        font-size:15px;
-        line-height:1.6;
-        margin-bottom:35px;
-      ">
-        SurveyCash allows you to earn real money by completing surveys, testing apps
-        and sharing your experiences. Each completed survey increases both your personal
-        balance and the platform's total earnings.
-        <br><br>
-        All tasks shown are verified and come from trusted partners — ensuring fair
-        and honest payouts for users.
-      </p>
+main{
+height:calc(100vh - 64px);
+overflow:hidden;
+}
 
-      <div style="display:flex;gap:20px;justify-content:center;margin-top:0;">
+.home-chat{
+position:fixed;
+left:0;
+top:64px;
+bottom:0;
+width:280px;
+background:#151c2e;
+border-right:1px solid #1f2937;
+display:flex;
+flex-direction:column;
+}
 
-        <div style="
-          width:240px;
-          padding:14px 16px;
-          border-radius:10px;
-          background:#111827;
-          border:1px solid rgba(255,255,255,0.12);
-          text-align:center;
-        ">
-          <div style="font-size:13px;opacity:.85;margin-bottom:4px;">
-            Community Earnings
-          </div>
-          <div style="font-size:26px;font-weight:700;">
-            $${totalEarnedUsd}
-          </div>
-        </div>
+.home-chat-list{
+flex:1;
+overflow:auto;
+padding:10px;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
 
-        <div style="
-          width:240px;
-          padding:14px 16px;
-          border-radius:10px;
-          background:#111827;
-          border:1px solid rgba(255,255,255,0.12);
-          text-align:center;
-        ">
-          <div style="font-size:13px;opacity:.85;margin-bottom:4px;">
-            All Time Users
-          </div>
-          <div style="font-size:26px;font-weight:700;">
-            ${totalUsers}
-          </div>
-        </div>
+.chat-empty{
+margin:auto 0;
+text-align:center;
+color:#94a3b8;
+font-size:13px;
+}
 
-      </div>
+.chat-item{
+background:#111827;
+border:1px solid rgba(255,255,255,.06);
+border-radius:12px;
+padding:9px 10px;
+}
 
-      <div style="
-        margin-top:45px;
-        max-width:770px;
-        margin-left:auto;
-        margin-right:auto;
-        font-size:15px;
-        opacity:.85;
-        line-height:1.6;
-      ">
-        If you ever have questions or experience any problems, our support team is here to help you. 
-        You can also rate your experience with SurveyCash on Trustpilot right now and tell others what you think. 
-        Your feedback helps us improve and build a better platform for all users.
-      </div>
+.chat-item-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:4px;
+}
 
-      <div style="margin-top:22px;">
-        <img src="/trustpilot-logo.png"
-          alt="Trustpilot"
-          style="width:160px;opacity:0.9;" />
-      </div>
-    </div>
+.chat-user{
+display:flex;
+align-items:center;
+gap:8px;
+}
 
-    <!-- HØJRE SIDE: Why SurveyCash -->
- <aside style="
-  width:300px;
-  position:absolute;
-  right:-220px;
-  top:60px;
-  text-align:left;
-">
-  <div style="
-  font-size:18px;
-  font-weight:600;
-  letter-spacing:0;
-  text-transform:none;
-  color:#ffffff;
-  margin-bottom:18px;
-">
-  Why SurveyCash?
+.chat-avatar{
+width:26px;
+height:26px;
+border-radius:999px;
+background:#fbbf24;
+color:#0b1220;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:900;
+font-size:12px;
+}
+
+.chat-name{
+font-size:13px;
+font-weight:800;
+color:#fff;
+}
+
+.chat-time{
+font-size:11px;
+color:#94a3b8;
+}
+
+.chat-message{
+font-size:13px;
+color:#e5e7eb;
+line-height:1.35;
+word-break:break-word;
+}
+
+.home-chat-input{
+padding:10px;
+display:flex;
+gap:8px;
+border-top:1px solid rgba(255,255,255,.06);
+}
+
+.home-chat-input input{
+flex:1;
+height:38px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,.08);
+background:#0b1220;
+color:#fff;
+padding:0 12px;
+outline:none;
+}
+
+.home-chat-send{
+width:38px;
+height:38px;
+border-radius:10px;
+border:none;
+background:#fbbf24;
+color:#0b1220;
+font-weight:900;
+cursor:pointer;
+}
+
+.home-main{
+margin-left:280px;
+height:calc(100vh - 64px);
+overflow:hidden;
+}
+
+</style>
+
+<div class="home-chat">
+
+<div class="home-chat-list" id="homeChatList">
+<div class="chat-empty" id="chatEmpty">No messages yet</div>
 </div>
 
+<div class="home-chat-input">
+<input id="chatInput" type="text" placeholder="Enter message" maxlength="50">
+<button class="home-chat-send" id="chatSend">➤</button>
+</div>
 
-  <div style="display:flex;flex-direction:column;gap:20px;font-size:16px;color:#ffffff;">
+</div>
 
-    <div>
-      <div style="font-weight:700;">Trusted payouts</div>
-      <div style="line-height:1.45;color:#bfc3c9;">
-        Withdraw safely using trusted providers such as PayPal.
-        Your balance is handled securely when you’re ready.
+<div class="home-main"></div>
+
+<script>
+(function(){
+
+const list=document.getElementById('homeChatList')
+const empty=document.getElementById('chatEmpty')
+const input=document.getElementById('chatInput')
+const send=document.getElementById('chatSend')
+
+const name=${JSON.stringify(displayName)}
+const initial=${JSON.stringify(userInitial)}
+
+function time(){
+  const d=new Date()
+  const h=String(d.getHours()).padStart(2,'0')
+  const m=String(d.getMinutes()).padStart(2,'0')
+  return h+':'+m
+}
+
+function addMessage(text){
+  const value=text.trim()
+  if(!value)return
+
+  if(empty) empty.remove()
+
+  const item=document.createElement('div')
+  item.className='chat-item'
+
+  item.innerHTML=\`
+    <div class="chat-item-top">
+      <div class="chat-user">
+        <div class="chat-avatar">\${initial}</div>
+        <div class="chat-name">\${name}</div>
       </div>
+      <div class="chat-time">\${time()}</div>
     </div>
+    <div class="chat-message"></div>
+  \`
 
-    <div>
-      <div style="font-weight:700;">Verified partners</div>
-      <div style="line-height:1.45;color:#bfc3c9;">
-        Surveys come from trusted providers — ensuring real payouts and fair rewards on every completed activity.
-      </div>
-    </div>
+  item.querySelector('.chat-message').textContent=value
+  list.appendChild(item)
+  list.scrollTop=list.scrollHeight
+}
 
-    <div>
-      <div style="font-weight:700;">Global users</div>
-      <div style="line-height:1.45;color:#bfc3c9;">
-        SurveyCash is used worldwide, letting you earn alongside many other users daily.
-      </div>
-    </div>
+function sendMessage(){
+  const value=input.value.trim()
+  if(!value)return
+  addMessage(value)
+  input.value=''
+  input.focus()
+}
 
-  </div>
-</aside>
-  </div>
-  `;
+send.onclick=sendMessage
 
-  return res.send(
-    page(
-      req,
-      'Home — SurveyCash',
-      '/',
-      bodyHtml,
-    ),
-  );
+input.addEventListener('keydown',e=>{
+  if(e.key==="Enter"){
+    e.preventDefault()
+    sendMessage()
+  }
+})
+
+})();
+</script>
+`;
+
+  return res.send(page(req,'Home — SurveyCash','/',bodyHtml));
 });
-
-
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
