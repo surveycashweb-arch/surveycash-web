@@ -2094,8 +2094,8 @@ overflow:hidden;
 }
 
 .chat-toggle{
-position:absolute;
-right:-14px;
+position:fixed;
+left:240px;
 top:50%;
 transform:translateY(-50%);
 width:28px;
@@ -2109,7 +2109,8 @@ display:flex;
 align-items:center;
 justify-content:center;
 box-shadow:0 4px 20px rgba(0,0,0,.4);
-z-index:10;
+z-index:1000;
+transition:left .25s ease;
 }
 
 .home-chat-list{
@@ -2224,9 +2225,9 @@ transition:margin-left .25s ease;
 
 </style>
 
-<div class="home-chat" id="homeChat">
-
 <button id="chatToggle" class="chat-toggle">❮</button>
+
+<div class="home-chat" id="homeChat">
 
 <div class="home-chat-list" id="homeChatList">
 <div class="chat-empty">No messages yet</div>
@@ -2347,10 +2348,12 @@ open=!open
 if(open){
 chat.classList.remove('closed')
 main.style.marginLeft='240px'
+toggle.style.left='240px'
 toggle.textContent='❮'
 }else{
 chat.classList.add('closed')
 main.style.marginLeft='0px'
+toggle.style.left='0px'
 toggle.textContent='❯'
 }
 }
