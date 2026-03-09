@@ -2031,13 +2031,13 @@ app.get('/', async (req, res) => {
   const bodyHtml = `
   <style>
     .earn-wrap{
-      max-width:1180px;
+      max-width:1080px;
       margin:0 auto;
-      padding:24px 14px 36px;
+      padding:22px 14px 34px;
     }
 
     .earn-section{
-      margin-bottom:30px;
+      margin-bottom:26px;
     }
 
     .earn-section:last-child{
@@ -2049,12 +2049,12 @@ app.get('/', async (req, res) => {
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      margin-bottom:12px;
+      margin-bottom:10px;
     }
 
     .earn-section-title{
       margin:0;
-      font-size:18px;
+      font-size:17px;
       font-weight:800;
       color:#ffffff;
       letter-spacing:-0.01em;
@@ -2068,18 +2068,19 @@ app.get('/', async (req, res) => {
 
     .earn-card{
       position:relative;
-      aspect-ratio:1 / 1.55;
-      border-radius:14px;
+      aspect-ratio:1 / 1.32;
+      border-radius:13px;
       border:1px solid rgba(255,255,255,.06);
       background:
         radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 45%),
         rgba(18,24,40,.92);
-      padding:12px 10px 10px;
+      padding:10px 8px;
       overflow:hidden;
       text-decoration:none;
       display:flex;
       flex-direction:column;
-      justify-content:space-between;
+      justify-content:center;
+      align-items:center;
       transition:transform .15s ease, border-color .15s ease, background .15s ease;
     }
 
@@ -2098,17 +2099,17 @@ app.get('/', async (req, res) => {
     .earn-card-top{
       position:relative;
       z-index:2;
-      flex:1;
       display:flex;
       align-items:center;
       justify-content:center;
       text-align:center;
-      min-height:74px;
+      min-height:58px;
+      width:100%;
     }
 
     .earn-card-top img{
-      max-width:100px;
-      max-height:28px;
+      max-width:92px;
+      max-height:24px;
       width:auto;
       height:auto;
       display:block;
@@ -2118,30 +2119,31 @@ app.get('/', async (req, res) => {
       position:relative;
       z-index:2;
       text-align:center;
+      width:100%;
+      margin-top:2px;
     }
 
     .earn-card-name{
       margin:0;
-      font-size:12px;
-      line-height:1.35;
+      font-size:11px;
+      line-height:1.3;
       font-weight:800;
       color:#ffffff;
     }
 
-    .earn-card-sub{
-      font-size:12px;
-      line-height:1.35;
-      font-weight:700;
-      color:#cbd5e1;
-      opacity:.9;
+    .earn-card-brand{
       margin:0;
+      font-size:19px;
+      line-height:1.15;
+      font-weight:900;
+      color:#ffffff;
     }
 
     .earn-soon{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height:30px;
+      min-height:28px;
       padding:0 10px;
       border-radius:9px;
       font-size:11px;
@@ -2149,44 +2151,43 @@ app.get('/', async (req, res) => {
       color:#9ca3af;
       border:1px solid rgba(255,255,255,.06);
       background:rgba(255,255,255,.03);
-      margin-top:8px;
     }
 
     .partner-glow{
       position:absolute;
       inset:auto 0 0 0;
-      height:56px;
+      height:42px;
       pointer-events:none;
       z-index:1;
     }
 
     .glow-green{
-      background:linear-gradient(to top, rgba(34,197,94,.22) 0%, rgba(34,197,94,.08) 35%, rgba(34,197,94,0) 100%);
+      background:linear-gradient(to top, rgba(34,197,94,.18) 0%, rgba(34,197,94,.06) 40%, rgba(34,197,94,0) 100%);
     }
 
     .glow-orange{
-      background:linear-gradient(to top, rgba(249,115,22,.22) 0%, rgba(249,115,22,.08) 35%, rgba(249,115,22,0) 100%);
+      background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
-    @media (max-width: 1250px){
+    @media (max-width: 1150px){
       .earn-grid{
         grid-template-columns:repeat(5, 1fr);
       }
     }
 
-    @media (max-width: 1050px){
+    @media (max-width: 950px){
       .earn-grid{
         grid-template-columns:repeat(4, 1fr);
       }
     }
 
-    @media (max-width: 820px){
+    @media (max-width: 760px){
       .earn-grid{
         grid-template-columns:repeat(3, 1fr);
       }
     }
 
-    @media (max-width: 620px){
+    @media (max-width: 560px){
       .earn-grid{
         grid-template-columns:repeat(2, 1fr);
       }
@@ -2205,46 +2206,28 @@ app.get('/', async (req, res) => {
         <a href="/games/wannads" class="earn-card clickable">
           <div class="partner-glow glow-orange"></div>
           <div class="earn-card-top">
-            <div style="font-size:24px;font-weight:900;color:#fff;">Wannads</div>
-          </div>
-          <div class="earn-card-body">
-            <div class="earn-card-name">Wannads Offerwall</div>
+            <div class="earn-card-brand">Wannads</div>
           </div>
         </a>
 
         <div class="earn-card">
-          <div class="earn-card-top"></div>
-          <div class="earn-card-body">
-            <span class="earn-soon">Coming soon</span>
-          </div>
+          <span class="earn-soon">Coming soon</span>
         </div>
 
         <div class="earn-card">
-          <div class="earn-card-top"></div>
-          <div class="earn-card-body">
-            <span class="earn-soon">Coming soon</span>
-          </div>
+          <span class="earn-soon">Coming soon</span>
         </div>
 
         <div class="earn-card">
-          <div class="earn-card-top"></div>
-          <div class="earn-card-body">
-            <span class="earn-soon">Coming soon</span>
-          </div>
+          <span class="earn-soon">Coming soon</span>
         </div>
 
         <div class="earn-card">
-          <div class="earn-card-top"></div>
-          <div class="earn-card-body">
-            <span class="earn-soon">Coming soon</span>
-          </div>
+          <span class="earn-soon">Coming soon</span>
         </div>
 
         <div class="earn-card">
-          <div class="earn-card-top"></div>
-          <div class="earn-card-body">
-            <span class="earn-soon">Coming soon</span>
-          </div>
+          <span class="earn-soon">Coming soon</span>
         </div>
 
       </div>
@@ -2262,30 +2245,18 @@ app.get('/', async (req, res) => {
           <div class="earn-card-top">
             <img src="/partners/cpx.png" alt="CPX Research" />
           </div>
-          <div class="earn-card-body">
-            <div class="earn-card-name">CPX Research</div>
-          </div>
         </a>
 
         <div class="earn-card">
-          <div class="earn-card-top"></div>
-          <div class="earn-card-body">
-            <span class="earn-soon">Coming soon</span>
-          </div>
+          <span class="earn-soon">Coming soon</span>
         </div>
 
         <div class="earn-card">
-          <div class="earn-card-top"></div>
-          <div class="earn-card-body">
-            <span class="earn-soon">Coming soon</span>
-          </div>
+          <span class="earn-soon">Coming soon</span>
         </div>
 
         <div class="earn-card">
-          <div class="earn-card-top"></div>
-          <div class="earn-card-body">
-            <span class="earn-soon">Coming soon</span>
-          </div>
+          <span class="earn-soon">Coming soon</span>
         </div>
 
       </div>
