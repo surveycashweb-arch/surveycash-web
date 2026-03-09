@@ -1809,14 +1809,12 @@ document.addEventListener('click', function (e) {
     <div class="logo">Survey<span class="accent">Cash</span></div>
 
     ${user ? `
-      <nav>
-        ${tab('/', 'Home')}
-        ${tab('/surveys', 'Surveys')}
-        ${tab('/games', 'Games')}
-        ${tab('/cashout', 'Cash Out')}
-        ${tab('/support', 'Support')}
-      </nav>
-    ` : `<div style="flex:1"></div>`}
+<nav>
+  ${tab('/', 'Earn')}
+  ${tab('/cashout', 'Cash Out')}
+  ${tab('/support', 'Support')}
+</nav>
+        ` : `<div style="flex:1"></div>`}
 
     <div class="auth">
       ${user
