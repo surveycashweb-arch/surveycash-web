@@ -2035,29 +2035,18 @@ app.get('/', async (req, res) => {
     max-width:1000px;
     margin:0 auto;
   ">
-
-    <h1 style="
-      font-size:34px;
-      font-weight:800;
-      margin-bottom:30px;
-      color:#ffffff;
-    ">
-      Earn
-    </h1>
-
   </div>
   `;
 
   return res.send(
     page(
       req,
-      'Home — SurveyCash',
+      'Earn — SurveyCash',
       '/',
       bodyHtml,
     ),
   );
 });
-
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
