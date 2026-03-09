@@ -2030,11 +2030,328 @@ app.get('/', async (req, res) => {
   }
 
   const bodyHtml = `
-  <div style="
-    padding:40px 20px;
-    max-width:1000px;
-    margin:0 auto;
-  ">
+  <style>
+    .earn-wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:34px 20px 60px;
+    }
+
+    .earn-section{
+      margin-bottom:42px;
+    }
+
+    .earn-section:last-child{
+      margin-bottom:0;
+    }
+
+    .earn-section-title{
+      margin:0 0 8px;
+      font-size:28px;
+      font-weight:800;
+      color:#ffffff;
+    }
+
+    .earn-section-sub{
+      margin:0 0 18px;
+      font-size:14px;
+      color:#94a3b8;
+    }
+
+    .earn-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:16px;
+    }
+
+    .earn-card{
+      position:relative;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:18px;
+      min-height:150px;
+      background:rgba(15,23,42,.42);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .earn-card-title{
+      font-size:20px;
+      font-weight:800;
+      color:#ffffff;
+      margin:0 0 8px;
+    }
+
+    .earn-card-text{
+      color:#aeb7c6;
+      font-size:14px;
+      line-height:1.5;
+      margin:0;
+    }
+
+    .earn-card-top{
+      position:relative;
+      z-index:2;
+    }
+
+    .earn-card-bottom{
+      position:relative;
+      z-index:2;
+      margin-top:18px;
+    }
+
+    .earn-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:11px 16px;
+      border-radius:10px;
+      background:#fbbf24;
+      color:#111827;
+      text-decoration:none;
+      font-weight:800;
+      font-size:14px;
+      border:1px solid rgba(251,191,36,.55);
+      transition:.15s ease;
+    }
+
+    .earn-btn:hover{
+      background:#f59e0b;
+      transform:translateY(-1px);
+    }
+
+    .earn-soon{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 14px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.08);
+      color:#94a3b8;
+      font-weight:700;
+      font-size:14px;
+      background:rgba(255,255,255,.02);
+      opacity:.8;
+    }
+
+    .earn-card.soon{
+      opacity:.78;
+    }
+
+    .partner-glow{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:72px;
+      pointer-events:none;
+    }
+
+    .glow-green{
+      background:linear-gradient(
+        to top,
+        rgba(34,197,94,.28) 0%,
+        rgba(34,197,94,.12) 35%,
+        rgba(34,197,94,0) 100%
+      );
+    }
+
+    .glow-orange{
+      background:linear-gradient(
+        to top,
+        rgba(249,115,22,.28) 0%,
+        rgba(249,115,22,.12) 35%,
+        rgba(249,115,22,0) 100%
+      );
+    }
+
+    .glow-blue{
+      background:linear-gradient(
+        to top,
+        rgba(59,130,246,.28) 0%,
+        rgba(59,130,246,.12) 35%,
+        rgba(59,130,246,0) 100%
+      );
+    }
+
+    .glow-yellow{
+      background:linear-gradient(
+        to top,
+        rgba(251,191,36,.28) 0%,
+        rgba(251,191,36,.12) 35%,
+        rgba(251,191,36,0) 100%
+      );
+    }
+
+    .earn-logo-card{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:150px;
+      text-decoration:none;
+      background-color:rgba(15,23,42,.55);
+    }
+
+    .earn-logo-card img{
+      height:34px;
+      width:auto;
+      display:block;
+      position:relative;
+      z-index:2;
+    }
+
+    @media (max-width: 1050px){
+      .earn-grid{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px){
+      .earn-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+
+  <div class="earn-wrap">
+
+    <section class="earn-section">
+      <h2 class="earn-section-title">Offers</h2>
+      <p class="earn-section-sub">Play games, install apps and complete offerwall tasks.</p>
+
+      <div class="earn-grid">
+
+        <div class="earn-card">
+          <div class="partner-glow glow-orange"></div>
+
+          <div class="earn-card-top">
+            <h3 class="earn-card-title">Wannads Offerwall</h3>
+            <p class="earn-card-text">
+              Play and complete offers to earn coins.
+            </p>
+          </div>
+
+          <div class="earn-card-bottom">
+            <a class="earn-btn" href="/games/wannads">Open Offerwall</a>
+          </div>
+        </div>
+
+        <div class="earn-card soon">
+          <div class="partner-glow glow-yellow"></div>
+
+          <div class="earn-card-top">
+            <h3 class="earn-card-title">More offers</h3>
+            <p class="earn-card-text">
+              More offer partners will be added here soon.
+            </p>
+          </div>
+
+          <div class="earn-card-bottom">
+            <span class="earn-soon">Soon</span>
+          </div>
+        </div>
+
+        <div class="earn-card soon">
+          <div class="partner-glow glow-blue"></div>
+
+          <div class="earn-card-top">
+            <h3 class="earn-card-title">More offers</h3>
+            <p class="earn-card-text">
+              More offer partners will be added here soon.
+            </p>
+          </div>
+
+          <div class="earn-card-bottom">
+            <span class="earn-soon">Soon</span>
+          </div>
+        </div>
+
+        <div class="earn-card soon">
+          <div class="earn-card-top">
+            <h3 class="earn-card-title">More offers</h3>
+            <p class="earn-card-text">
+              More offer partners will be added here soon.
+            </p>
+          </div>
+
+          <div class="earn-card-bottom">
+            <span class="earn-soon">Soon</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="earn-section">
+      <h2 class="earn-section-title">Surveys</h2>
+      <p class="earn-section-sub">Complete surveys from trusted survey partners.</p>
+
+      <div class="earn-grid">
+
+        <a href="/surveys/cpx"
+           class="earn-card earn-logo-card"
+           style="
+             background-image: linear-gradient(
+               to top,
+               rgba(34,197,94,.28) 0%,
+               rgba(34,197,94,.14) 18%,
+               rgba(15,23,42,0) 55%
+             );
+             background-repeat:no-repeat;
+             background-size:100% 100%;
+             background-position:0 0;
+           ">
+          <img src="/partners/cpx.png" alt="CPX Research" />
+        </a>
+
+        <div class="earn-card soon">
+          <div class="partner-glow glow-blue"></div>
+
+          <div class="earn-card-top">
+            <h3 class="earn-card-title">More surveys</h3>
+            <p class="earn-card-text">
+              More survey partners will be added here soon.
+            </p>
+          </div>
+
+          <div class="earn-card-bottom">
+            <span class="earn-soon">Soon</span>
+          </div>
+        </div>
+
+        <div class="earn-card soon">
+          <div class="partner-glow glow-yellow"></div>
+
+          <div class="earn-card-top">
+            <h3 class="earn-card-title">More surveys</h3>
+            <p class="earn-card-text">
+              More survey partners will be added here soon.
+            </p>
+          </div>
+
+          <div class="earn-card-bottom">
+            <span class="earn-soon">Soon</span>
+          </div>
+        </div>
+
+        <div class="earn-card soon">
+          <div class="earn-card-top">
+            <h3 class="earn-card-title">More surveys</h3>
+            <p class="earn-card-text">
+              More survey partners will be added here soon.
+            </p>
+          </div>
+
+          <div class="earn-card-bottom">
+            <span class="earn-soon">Soon</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </div>
   `;
 
@@ -2047,6 +2364,7 @@ app.get('/', async (req, res) => {
     ),
   );
 });
+
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
