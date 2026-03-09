@@ -2026,163 +2026,27 @@ app.get('/', async (req, res) => {
         title: 'SurveyCash — Earn by testing apps, games & surveys',
         active: null,
         bodyHtml: landingHtml(),
-       loggedIn: null,
+        loggedIn: null,
       }),
     );
   }
 
-  const user = getUserFromReq(req) || null;
-
-// ✅ Community stats fra Supabase
-let totalUsers = 0;
-let totalEarnedUsd = '0.00';
-
-try {
-  const { data, error } = await supabaseAdmin.rpc('get_community_stats');
-  if (error) throw error;
-
-  const row = Array.isArray(data) ? data[0] : data;
-
-  totalUsers = Number(row?.all_time_users || 0);
-  const communityCents = Number(row?.community_earnings_cents || 0);
-  totalEarnedUsd = formatUsdFromCents(communityCents);
-} catch (e) {
-  console.error('Home stats error:', e);
-}
-
-
   const bodyHtml = `
   <div style="
-    padding:10px 40px 60px;
-    width:100%;
-    margin:0;
-    position:relative;
+    padding:40px 20px;
+    max-width:1000px;
+    margin:0 auto;
   ">
 
-    <div style="max-width:900px;margin:0 auto;text-align:center;">
-      <h1 style="margin-bottom:6px;font-size:28px;font-weight:700;">
-        Welcome back 👋
-      </h1>
+    <h1 style="
+      font-size:34px;
+      font-weight:800;
+      margin-bottom:30px;
+      color:#ffffff;
+    ">
+      Earn
+    </h1>
 
-      <p style="
-        max-width:750px;
-        margin:auto;
-        opacity:0.85;
-        font-size:15px;
-        line-height:1.6;
-        margin-bottom:35px;
-      ">
-        SurveyCash allows you to earn real money by completing surveys, testing apps
-        and sharing your experiences. Each completed survey increases both your personal
-        balance and the platform's total earnings.
-        <br><br>
-        All tasks shown are verified and come from trusted partners — ensuring fair
-        and honest payouts for users.
-      </p>
-
-      <div style="display:flex;gap:20px;justify-content:center;margin-top:0;">
-
-        <div style="
-          width:240px;
-          padding:14px 16px;
-          border-radius:10px;
-          background:#111827;
-          border:1px solid rgba(255,255,255,0.12);
-          text-align:center;
-        ">
-          <div style="font-size:13px;opacity:.85;margin-bottom:4px;">
-            Community Earnings
-          </div>
-          <div style="font-size:26px;font-weight:700;">
-            $${totalEarnedUsd}
-          </div>
-        </div>
-
-        <div style="
-          width:240px;
-          padding:14px 16px;
-          border-radius:10px;
-          background:#111827;
-          border:1px solid rgba(255,255,255,0.12);
-          text-align:center;
-        ">
-          <div style="font-size:13px;opacity:.85;margin-bottom:4px;">
-            All Time Users
-          </div>
-          <div style="font-size:26px;font-weight:700;">
-            ${totalUsers}
-          </div>
-        </div>
-
-      </div>
-
-      <div style="
-        margin-top:45px;
-        max-width:770px;
-        margin-left:auto;
-        margin-right:auto;
-        font-size:15px;
-        opacity:.85;
-        line-height:1.6;
-      ">
-        If you ever have questions or experience any problems, our support team is here to help you. 
-        You can also rate your experience with SurveyCash on Trustpilot right now and tell others what you think. 
-        Your feedback helps us improve and build a better platform for all users.
-      </div>
-
-      <div style="margin-top:22px;">
-        <img src="/trustpilot-logo.png"
-          alt="Trustpilot"
-          style="width:160px;opacity:0.9;" />
-      </div>
-    </div>
-
-    <!-- HØJRE SIDE: Why SurveyCash -->
- <aside style="
-  width:300px;
-  position:absolute;
-  right:-220px;
-  top:60px;
-  text-align:left;
-">
-  <div style="
-  font-size:18px;
-  font-weight:600;
-  letter-spacing:0;
-  text-transform:none;
-  color:#ffffff;
-  margin-bottom:18px;
-">
-  Why SurveyCash?
-</div>
-
-
-  <div style="display:flex;flex-direction:column;gap:20px;font-size:16px;color:#ffffff;">
-
-    <div>
-      <div style="font-weight:700;">Trusted payouts</div>
-      <div style="line-height:1.45;color:#bfc3c9;">
-        Withdraw safely using trusted providers such as PayPal.
-        Your balance is handled securely when you’re ready.
-      </div>
-    </div>
-
-    <div>
-      <div style="font-weight:700;">Verified partners</div>
-      <div style="line-height:1.45;color:#bfc3c9;">
-        Surveys come from trusted providers — ensuring real payouts and fair rewards on every completed activity.
-      </div>
-    </div>
-
-    <div>
-      <div style="font-weight:700;">Global users</div>
-      <div style="line-height:1.45;color:#bfc3c9;">
-        SurveyCash is used worldwide, letting you earn alongside many other users daily.
-      </div>
-    </div>
-
-  </div>
-</aside>
   </div>
   `;
 
@@ -2195,7 +2059,6 @@ try {
     ),
   );
 });
-
 
 
 // --------- Account / profil-side (ny version) ----------
