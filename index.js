@@ -2029,156 +2029,270 @@ app.get('/', async (req, res) => {
   }
 
   const bodyHtml = `
-<style>
-  .earn-wrap{
-    max-width:1080px;
-    margin:0 auto;
-    padding:26px 20px 44px;
-  }
-
-  .earn-section{
-    margin-bottom:34px;
-  }
-
-  .earn-section:last-child{
-    margin-bottom:0;
-  }
-
-  .earn-title{
-    font-size:18px;
-    font-weight:800;
-    margin:0 0 12px;
-    color:#ffffff;
-  }
-
-  .earn-grid{
-    display:grid;
-    grid-template-columns:repeat(6, 1fr);
-    gap:12px;
-  }
-
-  .earn-card{
-    min-height:128px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.07);
-    background:
-      radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 40%),
-      rgba(18,24,40,.95);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:12px;
-    text-decoration:none;
-    transition:.15s ease;
-  }
-
-  .earn-card:hover{
-    transform:translateY(-2px);
-    border-color:rgba(255,255,255,.14);
-  }
-
-  .earn-card-name{
-    font-size:15px;
-    font-weight:900;
-    color:#ffffff;
-    line-height:1.25;
-  }
-
-  .earn-card-sub{
-    margin-top:6px;
-    font-size:12px;
-    color:#cbd5e1;
-    line-height:1.3;
-  }
-
-  .earn-card img{
-    max-width:105px;
-    max-height:26px;
-    width:auto;
-    height:auto;
-    display:block;
-    margin-bottom:8px;
-  }
-
-  .earn-card-soon{
-    font-size:14px;
-    font-weight:800;
-    color:#cbd5e1;
-  }
-
-  @media (max-width:1100px){
-    .earn-grid{
-      grid-template-columns:repeat(4, 1fr);
+  <style>
+    .earn-wrap{
+      max-width:1180px;
+      margin:0 auto;
+      padding:24px 14px 36px;
     }
-  }
 
-  @media (max-width:700px){
-    .earn-grid{
-      grid-template-columns:repeat(2, 1fr);
+    .earn-section{
+      margin-bottom:30px;
     }
-  }
-</style>
 
-<div class="earn-wrap">
+    .earn-section:last-child{
+      margin-bottom:0;
+    }
 
-  <div class="earn-section">
-    <div class="earn-title">Offers</div>
+    .earn-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
 
-    <div class="earn-grid">
-      <a href="/games/wannads" class="earn-card">
-        <div class="earn-card-name">Wannads</div>
-        <div class="earn-card-sub">Offerwall</div>
-      </a>
+    .earn-section-title{
+      margin:0;
+      font-size:18px;
+      font-weight:800;
+      color:#ffffff;
+      letter-spacing:-0.01em;
+    }
 
-      <div class="earn-card">
-        <div class="earn-card-soon">Coming soon</div>
+    .earn-grid{
+      display:grid;
+      grid-template-columns:repeat(6, 1fr);
+      gap:10px;
+    }
+
+    .earn-card{
+      position:relative;
+      aspect-ratio:1 / 1.55;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.06);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 45%),
+        rgba(18,24,40,.92);
+      padding:12px 10px 10px;
+      overflow:hidden;
+      text-decoration:none;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .earn-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(255,255,255,.11);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.06), transparent 45%),
+        rgba(24,32,52,.98);
+    }
+
+    .earn-card.clickable{
+      cursor:pointer;
+    }
+
+    .earn-card-top{
+      position:relative;
+      z-index:2;
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      min-height:74px;
+    }
+
+    .earn-card-top img{
+      max-width:100px;
+      max-height:28px;
+      width:auto;
+      height:auto;
+      display:block;
+    }
+
+    .earn-card-body{
+      position:relative;
+      z-index:2;
+      text-align:center;
+    }
+
+    .earn-card-name{
+      margin:0;
+      font-size:12px;
+      line-height:1.35;
+      font-weight:800;
+      color:#ffffff;
+    }
+
+    .earn-card-sub{
+      font-size:12px;
+      line-height:1.35;
+      font-weight:700;
+      color:#cbd5e1;
+      opacity:.9;
+      margin:0;
+    }
+
+    .earn-soon{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:30px;
+      padding:0 10px;
+      border-radius:9px;
+      font-size:11px;
+      font-weight:800;
+      color:#9ca3af;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.03);
+      margin-top:8px;
+    }
+
+    .partner-glow{
+      position:absolute;
+      inset:auto 0 0 0;
+      height:56px;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .glow-green{
+      background:linear-gradient(to top, rgba(34,197,94,.22) 0%, rgba(34,197,94,.08) 35%, rgba(34,197,94,0) 100%);
+    }
+
+    .glow-orange{
+      background:linear-gradient(to top, rgba(249,115,22,.22) 0%, rgba(249,115,22,.08) 35%, rgba(249,115,22,0) 100%);
+    }
+
+    @media (max-width: 1250px){
+      .earn-grid{
+        grid-template-columns:repeat(5, 1fr);
+      }
+    }
+
+    @media (max-width: 1050px){
+      .earn-grid{
+        grid-template-columns:repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 820px){
+      .earn-grid{
+        grid-template-columns:repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 620px){
+      .earn-grid{
+        grid-template-columns:repeat(2, 1fr);
+      }
+    }
+  </style>
+
+  <div class="earn-wrap">
+
+    <section class="earn-section">
+      <div class="earn-head">
+        <h2 class="earn-section-title">Offers</h2>
       </div>
 
-      <div class="earn-card">
-        <div class="earn-card-soon">Coming soon</div>
+      <div class="earn-grid">
+
+        <a href="/games/wannads" class="earn-card clickable">
+          <div class="partner-glow glow-orange"></div>
+          <div class="earn-card-top">
+            <div style="font-size:24px;font-weight:900;color:#fff;">Wannads</div>
+          </div>
+          <div class="earn-card-body">
+            <div class="earn-card-name">Wannads Offerwall</div>
+          </div>
+        </a>
+
+        <div class="earn-card">
+          <div class="earn-card-top"></div>
+          <div class="earn-card-body">
+            <span class="earn-soon">Coming soon</span>
+          </div>
+        </div>
+
+        <div class="earn-card">
+          <div class="earn-card-top"></div>
+          <div class="earn-card-body">
+            <span class="earn-soon">Coming soon</span>
+          </div>
+        </div>
+
+        <div class="earn-card">
+          <div class="earn-card-top"></div>
+          <div class="earn-card-body">
+            <span class="earn-soon">Coming soon</span>
+          </div>
+        </div>
+
+        <div class="earn-card">
+          <div class="earn-card-top"></div>
+          <div class="earn-card-body">
+            <span class="earn-soon">Coming soon</span>
+          </div>
+        </div>
+
+        <div class="earn-card">
+          <div class="earn-card-top"></div>
+          <div class="earn-card-body">
+            <span class="earn-soon">Coming soon</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="earn-section">
+      <div class="earn-head">
+        <h2 class="earn-section-title">Surveys</h2>
       </div>
 
-      <div class="earn-card">
-        <div class="earn-card-soon">Coming soon</div>
-      </div>
+      <div class="earn-grid">
 
-      <div class="earn-card">
-        <div class="earn-card-soon">Coming soon</div>
-      </div>
+        <a href="/surveys/cpx" class="earn-card clickable">
+          <div class="partner-glow glow-green"></div>
+          <div class="earn-card-top">
+            <img src="/partners/cpx.png" alt="CPX Research" />
+          </div>
+          <div class="earn-card-body">
+            <div class="earn-card-name">CPX Research</div>
+          </div>
+        </a>
 
-      <div class="earn-card">
-        <div class="earn-card-soon">Coming soon</div>
+        <div class="earn-card">
+          <div class="earn-card-top"></div>
+          <div class="earn-card-body">
+            <span class="earn-soon">Coming soon</span>
+          </div>
+        </div>
+
+        <div class="earn-card">
+          <div class="earn-card-top"></div>
+          <div class="earn-card-body">
+            <span class="earn-soon">Coming soon</span>
+          </div>
+        </div>
+
+        <div class="earn-card">
+          <div class="earn-card-top"></div>
+          <div class="earn-card-body">
+            <span class="earn-soon">Coming soon</span>
+          </div>
+        </div>
+
       </div>
-    </div>
+    </section>
+
   </div>
-
-  <div class="earn-section">
-    <div class="earn-title">Surveys</div>
-
-    <div class="earn-grid">
-      <a href="/surveys/cpx" class="earn-card">
-        <img src="/partners/cpx.png" alt="CPX Research" />
-        <div class="earn-card-sub">CPX Research</div>
-      </a>
-
-      <div class="earn-card">
-        <div class="earn-card-soon">Coming soon</div>
-      </div>
-
-      <div class="earn-card">
-        <div class="earn-card-soon">Coming soon</div>
-      </div>
-
-      <div class="earn-card">
-        <div class="earn-card-soon">Coming soon</div>
-      </div>
-    </div>
-  </div>
-
-</div>
-`;
+  `;
 
   return res.send(
     page(
