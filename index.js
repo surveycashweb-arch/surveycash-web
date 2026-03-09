@@ -2062,13 +2062,13 @@ app.get('/', async (req, res) => {
 
     .earn-grid{
       display:grid;
-      grid-template-columns:repeat(6, minmax(0, 1fr));
+      grid-template-columns:repeat(6, 1fr);
       gap:12px;
     }
 
     .earn-card{
       position:relative;
-      min-height:164px;
+      aspect-ratio:1 / 1.75;
       border-radius:16px;
       border:1px solid rgba(255,255,255,.06);
       background:
@@ -2091,14 +2091,19 @@ app.get('/', async (req, res) => {
         rgba(24,32,52,.98);
     }
 
+    .earn-card.clickable{
+      cursor:pointer;
+    }
+
     .earn-card-top{
       position:relative;
       z-index:2;
-      min-height:78px;
+      flex:1;
       display:flex;
       align-items:center;
       justify-content:center;
       text-align:center;
+      min-height:90px;
     }
 
     .earn-card-top img{
@@ -2118,30 +2123,18 @@ app.get('/', async (req, res) => {
     .earn-card-name{
       margin:0 0 8px;
       font-size:13px;
-      line-height:1.3;
+      line-height:1.35;
       font-weight:800;
       color:#ffffff;
     }
 
-    .earn-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:34px;
-      padding:0 12px;
-      border-radius:10px;
-      background:#fbbf24;
-      color:#111827;
-      text-decoration:none;
+    .earn-card-sub{
       font-size:12px;
-      font-weight:800;
-      border:1px solid rgba(251,191,36,.50);
-      transition:.15s ease;
-    }
-
-    .earn-btn:hover{
-      background:#f59e0b;
-      transform:translateY(-1px);
+      line-height:1.35;
+      font-weight:700;
+      color:#cbd5e1;
+      opacity:.9;
+      margin:0;
     }
 
     .earn-soon{
@@ -2156,12 +2149,13 @@ app.get('/', async (req, res) => {
       color:#9ca3af;
       border:1px solid rgba(255,255,255,.06);
       background:rgba(255,255,255,.03);
+      margin-top:10px;
     }
 
     .partner-glow{
       position:absolute;
       inset:auto 0 0 0;
-      height:70px;
+      height:72px;
       pointer-events:none;
       z-index:1;
     }
@@ -2188,25 +2182,25 @@ app.get('/', async (req, res) => {
 
     @media (max-width: 1250px){
       .earn-grid{
-        grid-template-columns:repeat(5, minmax(0, 1fr));
+        grid-template-columns:repeat(5, 1fr);
       }
     }
 
     @media (max-width: 1050px){
       .earn-grid{
-        grid-template-columns:repeat(4, minmax(0, 1fr));
+        grid-template-columns:repeat(4, 1fr);
       }
     }
 
     @media (max-width: 820px){
       .earn-grid{
-        grid-template-columns:repeat(3, minmax(0, 1fr));
+        grid-template-columns:repeat(3, 1fr);
       }
     }
 
     @media (max-width: 620px){
       .earn-grid{
-        grid-template-columns:repeat(2, minmax(0, 1fr));
+        grid-template-columns:repeat(2, 1fr);
       }
     }
   </style>
@@ -2220,16 +2214,15 @@ app.get('/', async (req, res) => {
 
       <div class="earn-grid">
 
-        <div class="earn-card">
+        <a href="/games/wannads" class="earn-card clickable">
           <div class="partner-glow glow-orange"></div>
           <div class="earn-card-top">
             <div style="font-size:28px;font-weight:900;color:#fff;">Wannads</div>
           </div>
           <div class="earn-card-body">
             <div class="earn-card-name">Wannads Offerwall</div>
-            <a class="earn-btn" href="/games/wannads">Open</a>
           </div>
-        </div>
+        </a>
 
         <div class="earn-card">
           <div class="partner-glow glow-yellow"></div>
@@ -2296,14 +2289,13 @@ app.get('/', async (req, res) => {
 
       <div class="earn-grid">
 
-        <a href="/surveys/cpx" class="earn-card">
+        <a href="/surveys/cpx" class="earn-card clickable">
           <div class="partner-glow glow-green"></div>
           <div class="earn-card-top">
             <img src="/partners/cpx.png" alt="CPX Research" />
           </div>
           <div class="earn-card-body">
             <div class="earn-card-name">CPX Research</div>
-            <span class="earn-btn">Open</span>
           </div>
         </a>
 
@@ -2355,6 +2347,7 @@ app.get('/', async (req, res) => {
     ),
   );
 });
+
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
