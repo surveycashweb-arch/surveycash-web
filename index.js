@@ -2087,7 +2087,7 @@ app.get('/', async (req, res) => {
 
     .earn-card{
       position:relative;
-      aspect-ratio:1 / 1.32;
+      aspect-ratio:1 / 1.5;
       border-radius:13px;
       border:1px solid rgba(255,255,255,.06);
       background:
