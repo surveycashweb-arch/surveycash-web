@@ -2038,7 +2038,7 @@ app.get('/', async (req, res) => {
 
     main{
       position:relative;
-      height:calc(175vh - 64px);
+      height:calc(115vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
