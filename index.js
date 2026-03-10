@@ -2030,11 +2030,17 @@ app.get('/', async (req, res) => {
 
   const bodyHtml = `
   <style>
+    main{
+      max-width:none !important;
+      margin:0 !important;
+      padding:26px 0 34px !important;
+    }
+
     .earn-wrap{
-      max-width:1080px;
-      margin-left:24px;
-      margin-right:0;
-      padding:22px 14px 34px;
+      width:100%;
+      max-width:none;
+      margin:0;
+      padding:22px 24px 34px;
     }
 
     .earn-section{
@@ -2065,8 +2071,8 @@ app.get('/', async (req, res) => {
       display:grid;
       grid-template-columns:repeat(6, 1fr);
       gap:10px;
-      justify-content:start;
-      align-items:start;
+      justify-content:flex-start;
+      align-content:flex-start;
     }
 
     .earn-card{
@@ -2077,13 +2083,13 @@ app.get('/', async (req, res) => {
       background:
         radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 45%),
         rgba(18,24,40,.92);
-      padding:10px 8px 18px;
+      padding:10px 8px;
       overflow:hidden;
       text-decoration:none;
       display:flex;
       flex-direction:column;
-      justify-content:flex-end;
-      align-items:flex-start;
+      justify-content:center;
+      align-items:center;
       transition:transform .15s ease, border-color .15s ease, background .15s ease;
     }
 
@@ -2103,12 +2109,11 @@ app.get('/', async (req, res) => {
       position:relative;
       z-index:2;
       display:flex;
-      align-items:flex-end;
-      justify-content:flex-start;
-      text-align:left;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
       min-height:58px;
       width:100%;
-      margin-top:auto;
     }
 
     .earn-card-top img{
@@ -2122,9 +2127,9 @@ app.get('/', async (req, res) => {
     .earn-card-body{
       position:relative;
       z-index:2;
-      text-align:left;
+      text-align:center;
       width:100%;
-      margin-top:4px;
+      margin-top:2px;
     }
 
     .earn-card-name{
@@ -2278,7 +2283,6 @@ app.get('/', async (req, res) => {
     ),
   );
 });
-
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
