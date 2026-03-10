@@ -2083,7 +2083,7 @@ app.get('/', async (req, res) => {
       display:flex;
       flex-direction:column;
       justify-content:flex-end;
-      align-items:center;
+      align-items:flex-start;
       transition:transform .15s ease, border-color .15s ease, background .15s ease;
     }
 
@@ -2104,8 +2104,8 @@ app.get('/', async (req, res) => {
       z-index:2;
       display:flex;
       align-items:flex-end;
-      justify-content:center;
-      text-align:center;
+      justify-content:flex-start;
+      text-align:left;
       min-height:58px;
       width:100%;
       margin-top:auto;
@@ -2122,7 +2122,7 @@ app.get('/', async (req, res) => {
     .earn-card-body{
       position:relative;
       z-index:2;
-      text-align:center;
+      text-align:left;
       width:100%;
       margin-top:4px;
     }
