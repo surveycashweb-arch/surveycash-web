@@ -2072,12 +2072,12 @@ app.get('/', async (req, res) => {
     }
 
     .earn-section-title{
-      margin:0;
-      font-size:17px;
-      font-weight:800;
-      color:#ffffff;
-      letter-spacing:-0.01em;
-    }
+  margin:0;
+  font-size:34px;
+  font-weight:800;
+  color:#ffffff;
+  letter-spacing:-0.01em;
+}
 
     .earn-grid{
       display:grid;
