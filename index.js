@@ -2032,20 +2032,26 @@ app.get('/', async (req, res) => {
   <style>
 
     html, body{
-      min-height:100%;
+      height:100%;
+      overflow:hidden;
     }
 
     main{
       position:relative;
-      min-height:calc(100vh - 64px);
+      height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
+      overflow:hidden;
     }
 
     .earn-area{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
       background:#151c2e;
-      padding:260px 0 40px;
+      padding:24px 0 20px;
     }
 
     .earn-wrap{
