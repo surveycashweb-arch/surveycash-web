@@ -2032,29 +2032,27 @@ app.get('/', async (req, res) => {
   <style>
 
     html, body{
-      min-height:100%;
+      height:100%;
+      overflow:hidden;
     }
 
     main{
-      min-height:calc(100vh - 64px);
+      position:relative;
+      height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-end;
-    }
-
-    .earn-area{
-      background:#151c2e;
-      padding:24px 0 40px;
+      overflow:hidden;
     }
 
     .earn-wrap{
+      position:absolute;
+      left:0;
+      bottom:20px;
       width:1080px;
       max-width:1080px;
       margin:0;
-      padding:0 14px;
+      padding:22px 14px 0;
     }
 
     .earn-section{
@@ -2074,12 +2072,12 @@ app.get('/', async (req, res) => {
     }
 
     .earn-section-title{
-      margin:0;
-      font-size:26px;
-      font-weight:800;
-      color:#ffffff;
-      letter-spacing:-0.01em;
-    }
+  margin:0;
+  font-size:26px;
+  font-weight:800;
+  color:#ffffff;
+  letter-spacing:-0.01em;
+}
 
     .earn-grid{
       display:grid;
@@ -2216,54 +2214,52 @@ app.get('/', async (req, res) => {
 
   </style>
 
-  <div class="earn-area">
-    <div class="earn-wrap">
+  <div class="earn-wrap">
 
-      <section class="earn-section">
-        <div class="earn-head">
-          <h2 class="earn-section-title">Offers</h2>
-        </div>
+    <section class="earn-section">
+      <div class="earn-head">
+        <h2 class="earn-section-title">Offers</h2>
+      </div>
 
-        <div class="earn-grid">
+      <div class="earn-grid">
 
-          <a href="/games/wannads" class="earn-card clickable">
-            <div class="partner-glow glow-orange"></div>
-            <div class="earn-card-top">
-              <div class="earn-card-brand">Wannads</div>
-            </div>
-          </a>
+        <a href="/games/wannads" class="earn-card clickable">
+          <div class="partner-glow glow-orange"></div>
+          <div class="earn-card-top">
+            <div class="earn-card-brand">Wannads</div>
+          </div>
+        </a>
 
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
-        </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="earn-section">
-        <div class="earn-head">
-          <h2 class="earn-section-title">Surveys</h2>
-        </div>
+    <section class="earn-section">
+      <div class="earn-head">
+        <h2 class="earn-section-title">Surveys</h2>
+      </div>
 
-        <div class="earn-grid">
+      <div class="earn-grid">
 
-          <a href="/surveys/cpx" class="earn-card clickable">
-            <div class="partner-glow glow-green"></div>
-            <div class="earn-card-top">
-              <img src="/partners/cpx.png" alt="CPX Research" />
-            </div>
-          </a>
+        <a href="/surveys/cpx" class="earn-card clickable">
+          <div class="partner-glow glow-green"></div>
+          <div class="earn-card-top">
+            <img src="/partners/cpx.png" alt="CPX Research" />
+          </div>
+        </a>
 
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
-        </div>
-      </section>
+      </div>
+    </section>
 
-    </div>
   </div>
   `;
 
