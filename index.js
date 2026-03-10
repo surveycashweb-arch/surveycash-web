@@ -2034,6 +2034,30 @@ app.get('/', async (req, res) => {
     html, body{
       height:100%;
       overflow:auto;
+      scrollbar-width:thin;
+      scrollbar-color:#25324d #0b1430;
+    }
+
+    ::-webkit-scrollbar{
+      width:12px;
+    }
+
+    ::-webkit-scrollbar-track{
+      background:#0b1430;
+    }
+
+    ::-webkit-scrollbar-thumb{
+      background:#25324d;
+      border-radius:999px;
+      border:2px solid #0b1430;
+    }
+
+    ::-webkit-scrollbar-thumb:hover{
+      background:#33456a;
+    }
+
+    ::-webkit-scrollbar-corner{
+      background:#0b1430;
     }
 
     main{
