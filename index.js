@@ -2045,7 +2045,8 @@ app.get('/', async (req, res) => {
 
     .earn-area{
       background:#151c2e;
-      padding:120px 0 40px;
+      padding:24px 0 40px;
+      margin-top:320px;
     }
 
     .earn-wrap{
@@ -2274,7 +2275,6 @@ app.get('/', async (req, res) => {
     ),
   );
 });
-
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
