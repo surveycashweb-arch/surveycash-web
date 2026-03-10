@@ -2030,12 +2030,19 @@ app.get('/', async (req, res) => {
 
   const bodyHtml = `
   <style>
+
+    html, body{
+      height:100%;
+      overflow:hidden;
+    }
+
     main{
       position:relative;
-      min-height:calc(100vh - 64px);
+      height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
+      overflow:hidden;
     }
 
     .earn-wrap{
@@ -2204,6 +2211,7 @@ app.get('/', async (req, res) => {
         grid-template-columns:repeat(2, 1fr);
       }
     }
+
   </style>
 
   <div class="earn-wrap">
