@@ -2033,7 +2033,7 @@ app.get('/', async (req, res) => {
 
     html, body{
       height:100%;
-      overflow:hidden;
+      overflow:auto;
     }
 
     main{
