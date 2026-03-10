@@ -2035,7 +2035,7 @@ app.get('/', async (req, res) => {
       height:100%;
       overflow:auto;
       scrollbar-width:thin;
-      scrollbar-color:#25324d #0b1430;
+      scrollbar-color:#151c2e #25324d;
     }
 
     ::-webkit-scrollbar{
@@ -2043,21 +2043,21 @@ app.get('/', async (req, res) => {
     }
 
     ::-webkit-scrollbar-track{
-      background:#0b1430;
+      background:#25324d;
     }
 
     ::-webkit-scrollbar-thumb{
-      background:#25324d;
+      background:#151c2e;
       border-radius:999px;
-      border:2px solid #0b1430;
+      border:2px solid #25324d;
     }
 
     ::-webkit-scrollbar-thumb:hover{
-      background:#33456a;
+      background:#1f2942;
     }
 
     ::-webkit-scrollbar-corner{
-      background:#0b1430;
+      background:#25324d;
     }
 
     main{
