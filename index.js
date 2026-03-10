@@ -2032,7 +2032,8 @@ app.get('/', async (req, res) => {
   <style>
     .earn-wrap{
       max-width:1080px;
-      margin:0 auto;
+      margin-left:40px;
+      margin-right:0;
       padding:22px 14px 34px;
     }
 
@@ -2074,12 +2075,12 @@ app.get('/', async (req, res) => {
       background:
         radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 45%),
         rgba(18,24,40,.92);
-      padding:10px 8px;
+      padding:10px 8px 14px;
       overflow:hidden;
       text-decoration:none;
       display:flex;
       flex-direction:column;
-      justify-content:center;
+      justify-content:flex-end;
       align-items:center;
       transition:transform .15s ease, border-color .15s ease, background .15s ease;
     }
@@ -2121,14 +2122,6 @@ app.get('/', async (req, res) => {
       text-align:center;
       width:100%;
       margin-top:2px;
-    }
-
-    .earn-card-name{
-      margin:0;
-      font-size:11px;
-      line-height:1.3;
-      font-weight:800;
-      color:#ffffff;
     }
 
     .earn-card-brand{
@@ -2274,6 +2267,7 @@ app.get('/', async (req, res) => {
     ),
   );
 });
+
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
