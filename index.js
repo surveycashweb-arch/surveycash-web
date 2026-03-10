@@ -2031,14 +2031,20 @@ app.get('/', async (req, res) => {
   const bodyHtml = `
   <style>
     main{
+      position:relative;
       min-height:calc(100vh - 64px);
-      display:flex;
-      align-items:flex-end;
+      max-width:none !important;
+      margin:0 !important;
+      padding:0 !important;
     }
 
     .earn-wrap{
+      position:absolute;
+      left:0;
+      bottom:20px;
+      width:1080px;
       max-width:1080px;
-      margin:0 0 20px 24px;
+      margin:0;
       padding:22px 14px 0;
     }
 
@@ -2216,25 +2222,11 @@ app.get('/', async (req, res) => {
           </div>
         </a>
 
-        <div class="earn-card">
-          <span class="earn-soon">Coming soon</span>
-        </div>
-
-        <div class="earn-card">
-          <span class="earn-soon">Coming soon</span>
-        </div>
-
-        <div class="earn-card">
-          <span class="earn-soon">Coming soon</span>
-        </div>
-
-        <div class="earn-card">
-          <span class="earn-soon">Coming soon</span>
-        </div>
-
-        <div class="earn-card">
-          <span class="earn-soon">Coming soon</span>
-        </div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
       </div>
     </section>
@@ -2253,17 +2245,9 @@ app.get('/', async (req, res) => {
           </div>
         </a>
 
-        <div class="earn-card">
-          <span class="earn-soon">Coming soon</span>
-        </div>
-
-        <div class="earn-card">
-          <span class="earn-soon">Coming soon</span>
-        </div>
-
-        <div class="earn-card">
-          <span class="earn-soon">Coming soon</span>
-        </div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+        <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
       </div>
     </section>
