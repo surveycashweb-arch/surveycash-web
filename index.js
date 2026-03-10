@@ -2036,17 +2036,18 @@ app.get('/', async (req, res) => {
     }
 
     main{
-      position:relative;
       min-height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
     }
 
     .earn-area{
       background:#151c2e;
       padding:24px 0 40px;
-      margin-top:320px;
     }
 
     .earn-wrap{
