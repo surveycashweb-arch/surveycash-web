@@ -2073,7 +2073,7 @@ app.get('/', async (req, res) => {
 
     .earn-section-title{
   margin:0;
-  font-size:34px;
+  font-size:26px;
   font-weight:800;
   color:#ffffff;
   letter-spacing:-0.01em;
