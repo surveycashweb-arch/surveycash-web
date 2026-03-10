@@ -2030,17 +2030,10 @@ app.get('/', async (req, res) => {
 
   const bodyHtml = `
   <style>
-    main{
-      max-width:none !important;
-      margin:0 !important;
-      padding:26px 0 34px !important;
-    }
-
     .earn-wrap{
-      width:100%;
-      max-width:none;
-      margin:0;
-      padding:22px 24px 34px;
+      max-width:1080px;
+      margin:0 0 0 24px;
+      padding:22px 14px 34px;
     }
 
     .earn-section{
@@ -2071,8 +2064,7 @@ app.get('/', async (req, res) => {
       display:grid;
       grid-template-columns:repeat(6, 1fr);
       gap:10px;
-      justify-content:flex-start;
-      align-content:flex-start;
+      justify-items:start;
     }
 
     .earn-card{
