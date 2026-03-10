@@ -2034,132 +2034,15 @@ app.get('/', async (req, res) => {
     html, body{
       height:100%;
       overflow:auto;
-      scrollbar-width:thin;
-      scrollbar-color:#151c2e #25324d;
-    }
-
-    ::-webkit-scrollbar{
-      width:12px;
-    }
-
-    ::-webkit-scrollbar-track{
-      background:#25324d;
-    }
-
-    ::-webkit-scrollbar-thumb{
-      background:#151c2e;
-      border-radius:999px;
-      border:2px solid #25324d;
-    }
-
-    ::-webkit-scrollbar-thumb:hover{
-      background:#1f2942;
-    }
-
-    ::-webkit-scrollbar-corner{
-      background:#25324d;
     }
 
     main{
       position:relative;
-      height:calc(110vh - 64px);
+      height:calc(115vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
       overflow:hidden;
-    }
-
-    .daily-missions-wrap{
-      position:absolute;
-      top:22px;
-      right:22px;
-      z-index:5;
-    }
-
-    .daily-missions-card{
-      width:470px;
-      border-radius:32px;
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 38%),
-        #121b33;
-      border:1px solid rgba(255,255,255,.04);
-      box-shadow:0 20px 60px rgba(0,0,0,.22);
-      padding:18px 18px 16px;
-    }
-
-    .daily-missions-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .daily-missions-title{
-      font-size:32px;
-      font-weight:900;
-      line-height:1;
-      color:#ffffff;
-      letter-spacing:-0.02em;
-    }
-
-    .daily-missions-sub{
-      margin-top:6px;
-      font-size:14px;
-      font-weight:700;
-      color:#cbd5e1;
-    }
-
-    .daily-missions-grid{
-      display:grid;
-      grid-template-columns:repeat(7, 1fr);
-      gap:10px;
-    }
-
-    .mission-day-card{
-      min-height:108px;
-      border-radius:16px;
-      background:#0d1730;
-      border:1px solid rgba(255,255,255,.04);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      padding:10px 8px;
-      text-align:center;
-    }
-
-    .mission-day-active{
-      background:
-        radial-gradient(circle at bottom center, rgba(251,191,36,.12), transparent 55%),
-        #0d1730;
-      border-color:rgba(251,191,36,.28);
-      box-shadow:0 10px 30px rgba(251,191,36,.08);
-    }
-
-    .mission-day-label{
-      font-size:13px;
-      font-weight:800;
-      color:#ffffff;
-      margin-bottom:10px;
-    }
-
-    .mission-claim-btn{
-      border:0;
-      border-radius:12px;
-      background:#fbbf24;
-      color:#111827;
-      font-size:13px;
-      font-weight:900;
-      padding:10px 10px;
-      cursor:pointer;
-      line-height:1.1;
-    }
-
-    .mission-locked{
-      font-size:12px;
-      font-weight:800;
-      color:#7c879d;
     }
 
     .earn-area{
@@ -2311,20 +2194,6 @@ app.get('/', async (req, res) => {
       background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
-    @media (max-width: 1200px){
-      .daily-missions-card{
-        width:420px;
-      }
-
-      .daily-missions-grid{
-        gap:8px;
-      }
-
-      .mission-day-card{
-        min-height:96px;
-      }
-    }
-
     @media (max-width: 1150px){
       .earn-grid{
         grid-template-columns:repeat(5, 1fr);
@@ -2350,54 +2219,6 @@ app.get('/', async (req, res) => {
     }
 
   </style>
-
-  <div class="daily-missions-wrap">
-    <div class="daily-missions-card">
-      <div class="daily-missions-top">
-        <div>
-          <div class="daily-missions-title">Daily Missions</div>
-          <div class="daily-missions-sub">Earn $1 today to claim your streak reward</div>
-        </div>
-      </div>
-
-      <div class="daily-missions-grid">
-        <div class="mission-day-card mission-day-active">
-          <div class="mission-day-label">Day 1</div>
-          <button class="mission-claim-btn" type="button">Claim $0.05</button>
-        </div>
-
-        <div class="mission-day-card">
-          <div class="mission-day-label">Day 2</div>
-          <div class="mission-locked">Locked</div>
-        </div>
-
-        <div class="mission-day-card">
-          <div class="mission-day-label">Day 3</div>
-          <div class="mission-locked">Locked</div>
-        </div>
-
-        <div class="mission-day-card">
-          <div class="mission-day-label">Day 4</div>
-          <div class="mission-locked">Locked</div>
-        </div>
-
-        <div class="mission-day-card">
-          <div class="mission-day-label">Day 5</div>
-          <div class="mission-locked">Locked</div>
-        </div>
-
-        <div class="mission-day-card">
-          <div class="mission-day-label">Day 6</div>
-          <div class="mission-locked">Locked</div>
-        </div>
-
-        <div class="mission-day-card">
-          <div class="mission-day-label">Day 7</div>
-          <div class="mission-locked">Locked</div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div class="earn-area">
     <div class="earn-wrap">
