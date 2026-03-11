@@ -2059,12 +2059,13 @@ app.get('/', async (req, res) => {
       display:block;
       border-radius:24px;
       overflow:hidden;
-      box-shadow:0 20px 50px rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.06);
       transition:transform .2s ease;
     }
 
     .hero-promos a:hover{
       transform:translateY(-3px);
+      border-color:rgba(255,255,255,.12);
     }
 
     .hero-promos img{
