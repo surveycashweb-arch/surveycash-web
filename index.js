@@ -2045,28 +2045,24 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    /* HERO AREA */
-    .hero-area{
-      position:absolute;
-      top:0;
-      left:0;
-      right:0;
-      bottom:260px;
-      background:linear-gradient(180deg,#0f1b32 0%, #0b1629 100%);
-    }
-
+    /* TRUSTPILOT HERO */
     .trustpilot-mission{
       position:absolute;
-      top:50%;
+      top:28px;
       left:24px;
-      transform:translateY(-50%);
+      z-index:10;
       border-radius:24px;
       overflow:hidden;
       box-shadow:0 20px 50px rgba(0,0,0,.35);
+      transition:transform .2s ease;
+    }
+
+    .trustpilot-mission:hover{
+      transform:translateY(-3px);
     }
 
     .trustpilot-mission img{
-      width:380px;
+      width:340px;
       display:block;
       border-radius:24px;
     }
@@ -2206,12 +2202,10 @@ app.get('/', async (req, res) => {
 
   </style>
 
-  <div class="hero-area">
-    <div class="trustpilot-mission">
-      <a href="https://www.trustpilot.com/" target="_blank">
-        <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
-      </a>
-    </div>
+  <div class="trustpilot-mission">
+    <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
+      <img src="/img/trustpilot-mission.png" alt="Rate SurveyCash on Trustpilot">
+    </a>
   </div>
 
   <div class="earn-area">
