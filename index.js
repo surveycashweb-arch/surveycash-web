@@ -2198,7 +2198,7 @@ app.get('/', async (req, res) => {
 
   <div class="trustpilot-mission">
     <a href="https://www.trustpilot.com/" target="_blank">
-      <img src="/trustpilot-mission.png" alt="Rate us on Trustpilot">
+      <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
     </a>
   </div>
 
