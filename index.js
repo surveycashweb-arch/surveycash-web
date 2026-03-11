@@ -2045,30 +2045,6 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    /* HERO TRUSTPILOT FADE */
-
-    .hero-trustpilot{
-      position:absolute;
-      top:0;
-      left:0;
-      right:0;
-      height:220px;
-      pointer-events:none;
-      background:
-        radial-gradient(600px 200px at 140px 70px, rgba(34,197,94,.25), transparent 70%),
-        radial-gradient(400px 160px at 260px 80px, rgba(34,197,94,.18), transparent 70%);
-    }
-
-    .hero-trustpilot-text{
-      position:absolute;
-      top:80px;
-      left:24px;
-      font-size:22px;
-      font-weight:800;
-      color:#22c55e;
-      letter-spacing:-0.01em;
-    }
-
     .earn-area{
       position:absolute;
       left:0;
@@ -2164,6 +2140,22 @@ app.get('/', async (req, res) => {
       display:block;
     }
 
+    .earn-card-body{
+      position:relative;
+      z-index:2;
+      text-align:center;
+      width:100%;
+      margin-top:2px;
+    }
+
+    .earn-card-name{
+      margin:0;
+      font-size:11px;
+      line-height:1.3;
+      font-weight:800;
+      color:#ffffff;
+    }
+
     .earn-card-brand{
       margin:0;
       font-size:19px;
@@ -2202,10 +2194,31 @@ app.get('/', async (req, res) => {
       background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
-  </style>
+    @media (max-width: 1150px){
+      .earn-grid{
+        grid-template-columns:repeat(5, 1fr);
+      }
+    }
 
-  <div class="hero-trustpilot"></div>
-  <div class="hero-trustpilot-text">⭐ Rate us on Trustpilot</div>
+    @media (max-width: 950px){
+      .earn-grid{
+        grid-template-columns:repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 760px){
+      .earn-grid{
+        grid-template-columns:repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 560px){
+      .earn-grid{
+        grid-template-columns:repeat(2, 1fr);
+      }
+    }
+
+  </style>
 
   <div class="earn-area">
     <div class="earn-wrap">
