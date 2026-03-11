@@ -2048,10 +2048,10 @@ app.get('/', async (req, res) => {
     /* HERO BANNER */
     .hero-banner{
       position:absolute;
-      top:28px;
-      left:12px;
+      top:22px;
+      left:18px;
       background:#151c2e;
-      padding:16px;
+      padding:14px;
       border-radius:14px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
       z-index:10;
@@ -2062,9 +2062,9 @@ app.get('/', async (req, res) => {
     }
 
     .hero-banner img{
-      width:610px;
+      width:500px;
       display:block;
-      border-radius:6px;
+      border-radius:8px;
     }
 
     .earn-area{
@@ -2202,18 +2202,18 @@ app.get('/', async (req, res) => {
 
     @media (max-width: 760px){
       .hero-banner img{
-        width:520px;
+        width:420px;
       }
     }
 
     @media (max-width: 560px){
       .hero-banner{
-        left:8px;
-        top:20px;
+        left:10px;
+        top:18px;
       }
 
       .hero-banner img{
-        width:420px;
+        width:340px;
       }
     }
 
