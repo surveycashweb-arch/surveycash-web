@@ -2045,23 +2045,29 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    /* TRUSTPILOT HERO */
-    .trustpilot-mission{
+    /* HERO PROMOS */
+    .hero-promos{
       position:absolute;
       top:28px;
       left:24px;
+      display:flex;
+      gap:24px;
       z-index:10;
+    }
+
+    .hero-promos a{
+      display:block;
       border-radius:24px;
       overflow:hidden;
       box-shadow:0 20px 50px rgba(0,0,0,.35);
       transition:transform .2s ease;
     }
 
-    .trustpilot-mission:hover{
+    .hero-promos a:hover{
       transform:translateY(-3px);
     }
 
-    .trustpilot-mission img{
+    .hero-promos img{
       width:340px;
       display:block;
       border-radius:24px;
@@ -2202,10 +2208,16 @@ app.get('/', async (req, res) => {
 
   </style>
 
-  <div class="trustpilot-mission">
-    <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
-      <img src="/img/trustpilot-mission.png" alt="Rate SurveyCash on Trustpilot">
+  <div class="hero-promos">
+
+    <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank">
+      <img src="/img/trustpilot-mission.png" alt="Trustpilot">
     </a>
+
+    <a href="https://www.tiktok.com/@surveycash" target="_blank">
+      <img src="/img/tiktok-follow.png" alt="TikTok">
+    </a>
+
   </div>
 
   <div class="earn-area">
