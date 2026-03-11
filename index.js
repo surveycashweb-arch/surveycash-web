@@ -2045,22 +2045,23 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
+    /* HERO */
     .hero-banner{
       position:absolute;
-      top:28px;
-      left:12px;
+      top:0;
+      left:0;
+      height:170px;
       z-index:10;
     }
 
     .hero-banner a{
       display:block;
-      border-radius:0;
-      overflow:hidden;
+      height:100%;
     }
 
     .hero-banner img{
-      width:610px;
-      max-width:none;
+      height:100%;
+      width:auto;
       display:block;
     }
 
@@ -2069,6 +2070,7 @@ app.get('/', async (req, res) => {
       left:0;
       right:0;
       bottom:0;
+      top:170px;
       background:#151c2e;
       padding:24px 0 20px;
     }
@@ -2159,22 +2161,6 @@ app.get('/', async (req, res) => {
       display:block;
     }
 
-    .earn-card-body{
-      position:relative;
-      z-index:2;
-      text-align:center;
-      width:100%;
-      margin-top:2px;
-    }
-
-    .earn-card-name{
-      margin:0;
-      font-size:11px;
-      line-height:1.3;
-      font-weight:800;
-      color:#ffffff;
-    }
-
     .earn-card-brand{
       margin:0;
       font-size:19px;
@@ -2230,8 +2216,8 @@ app.get('/', async (req, res) => {
         grid-template-columns:repeat(3, 1fr);
       }
 
-      .hero-banner img{
-        width:520px;
+      .hero-banner{
+        height:150px;
       }
     }
 
@@ -2241,12 +2227,7 @@ app.get('/', async (req, res) => {
       }
 
       .hero-banner{
-        left:8px;
-        top:20px;
-      }
-
-      .hero-banner img{
-        width:420px;
+        height:130px;
       }
     }
 
@@ -2318,7 +2299,6 @@ app.get('/', async (req, res) => {
     ),
   );
 });
-
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
