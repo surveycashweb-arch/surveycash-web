@@ -2045,35 +2045,6 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    /* HERO PROMOS */
-    .hero-promos{
-      position:absolute;
-      top:28px;
-      left:24px;
-      display:flex;
-      gap:24px;
-      z-index:10;
-    }
-
-    .hero-promos a{
-      display:block;
-      border-radius:24px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.06);
-      transition:transform .2s ease;
-    }
-
-    .hero-promos a:hover{
-      transform:translateY(-3px);
-      border-color:rgba(255,255,255,.12);
-    }
-
-    .hero-promos img{
-      width:340px;
-      display:block;
-      border-radius:24px;
-    }
-
     .earn-area{
       position:absolute;
       left:0;
@@ -2169,6 +2140,22 @@ app.get('/', async (req, res) => {
       display:block;
     }
 
+    .earn-card-body{
+      position:relative;
+      z-index:2;
+      text-align:center;
+      width:100%;
+      margin-top:2px;
+    }
+
+    .earn-card-name{
+      margin:0;
+      font-size:11px;
+      line-height:1.3;
+      font-weight:800;
+      color:#ffffff;
+    }
+
     .earn-card-brand{
       margin:0;
       font-size:19px;
@@ -2207,19 +2194,31 @@ app.get('/', async (req, res) => {
       background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
+    @media (max-width: 1150px){
+      .earn-grid{
+        grid-template-columns:repeat(5, 1fr);
+      }
+    }
+
+    @media (max-width: 950px){
+      .earn-grid{
+        grid-template-columns:repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 760px){
+      .earn-grid{
+        grid-template-columns:repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 560px){
+      .earn-grid{
+        grid-template-columns:repeat(2, 1fr);
+      }
+    }
+
   </style>
-
-  <div class="hero-promos">
-
-    <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank">
-      <img src="/img/trustpilot-mission.png" alt="Trustpilot">
-    </a>
-
-    <a href="https://www.tiktok.com/@surveycash" target="_blank">
-      <img src="/img/tiktok-follow.png" alt="TikTok">
-    </a>
-
-  </div>
 
   <div class="earn-area">
     <div class="earn-wrap">
