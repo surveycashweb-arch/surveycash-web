@@ -2045,6 +2045,25 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
+    .hero-banner{
+      position:absolute;
+      top:28px;
+      left:12px;
+      z-index:10;
+    }
+
+    .hero-banner a{
+      display:block;
+      border-radius:0;
+      overflow:hidden;
+    }
+
+    .hero-banner img{
+      width:610px;
+      max-width:none;
+      display:block;
+    }
+
     .earn-area{
       position:absolute;
       left:0;
@@ -2210,15 +2229,34 @@ app.get('/', async (req, res) => {
       .earn-grid{
         grid-template-columns:repeat(3, 1fr);
       }
+
+      .hero-banner img{
+        width:520px;
+      }
     }
 
     @media (max-width: 560px){
       .earn-grid{
         grid-template-columns:repeat(2, 1fr);
       }
+
+      .hero-banner{
+        left:8px;
+        top:20px;
+      }
+
+      .hero-banner img{
+        width:420px;
+      }
     }
 
   </style>
+
+  <div class="hero-banner">
+    <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
+      <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
+    </a>
+  </div>
 
   <div class="earn-area">
     <div class="earn-wrap">
@@ -2280,6 +2318,7 @@ app.get('/', async (req, res) => {
     ),
   );
 });
+
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
