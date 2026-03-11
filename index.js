@@ -2045,15 +2045,14 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-.earn-area{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  top:300px;
-  background:#151c2e;
-  padding:24px 0 20px;
-}
+    .earn-area{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      background:#151c2e;
+      padding:24px 0 20px;
+    }
 
     .earn-wrap{
       width:1080px;
