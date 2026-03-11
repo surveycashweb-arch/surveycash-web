@@ -2047,8 +2047,9 @@ app.get('/', async (req, res) => {
 
     .trustpilot-mission{
       position:absolute;
-      top:26px;
+      top:50%;
       left:24px;
+      transform:translateY(-50%);
       z-index:5;
       border-radius:24px;
       overflow:hidden;
@@ -2056,7 +2057,7 @@ app.get('/', async (req, res) => {
     }
 
     .trustpilot-mission img{
-      width:300px;
+      width:380px;
       display:block;
       border-radius:24px;
     }
