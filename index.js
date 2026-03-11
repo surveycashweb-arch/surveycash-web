@@ -2037,39 +2037,40 @@ app.get('/', async (req, res) => {
     }
 
     main{
+      position:relative;
       height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
       overflow:hidden;
-      display:flex;
-      flex-direction:column;
     }
 
-    .hero-section{
-      height:180px;
-      min-height:180px;
-      display:flex;
-      align-items:center;
-      padding-left:18px;
-      background:linear-gradient(180deg,#0f172a 0%, #0b1220 100%);
+    .hero-banner{
+      position:absolute;
+      top:28px;
+      left:12px;
+      z-index:10;
     }
 
-    .hero-section a{
+    .hero-banner a{
       display:block;
+      border-radius:0;
+      overflow:hidden;
     }
 
-    .hero-section img{
-      height:140px;
-      width:auto;
+    .hero-banner img{
+      width:610px;
+      max-width:none;
       display:block;
     }
 
     .earn-area{
-      flex:1;
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
       background:#151c2e;
       padding:24px 0 20px;
-      overflow:hidden;
     }
 
     .earn-wrap{
@@ -2111,7 +2112,7 @@ app.get('/', async (req, res) => {
 
     .earn-card{
       position:relative;
-      aspect-ratio:1 / 1.25;
+      aspect-ratio:1 / 1.35;
       border-radius:13px;
       border:1px solid rgba(255,255,255,.06);
       background:
@@ -2229,8 +2230,8 @@ app.get('/', async (req, res) => {
         grid-template-columns:repeat(3, 1fr);
       }
 
-      .hero-section img{
-        height:120px;
+      .hero-banner img{
+        width:520px;
       }
     }
 
@@ -2239,18 +2240,19 @@ app.get('/', async (req, res) => {
         grid-template-columns:repeat(2, 1fr);
       }
 
-      .hero-section{
-        padding-left:10px;
+      .hero-banner{
+        left:8px;
+        top:20px;
       }
 
-      .hero-section img{
-        height:100px;
+      .hero-banner img{
+        width:420px;
       }
     }
 
   </style>
 
-  <div class="hero-section">
+  <div class="hero-banner">
     <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
       <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
     </a>
