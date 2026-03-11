@@ -2045,112 +2045,20 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    .trustpilot-promo-wrap{
+    .trustpilot-mission{
       position:absolute;
       top:26px;
       left:24px;
-      z-index:6;
-    }
-
-    .trustpilot-promo-card{
-      width:520px;
-      min-height:178px;
-      border-radius:34px;
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,.035), transparent 38%),
-        linear-gradient(180deg, rgba(20,28,48,.98) 0%, rgba(15,22,39,.98) 100%);
-      border:1px solid rgba(255,255,255,.04);
-      box-shadow:0 18px 50px rgba(0,0,0,.28);
-      padding:16px 18px;
-      display:flex;
-      align-items:center;
-      gap:18px;
-    }
-
-    .trustpilot-promo-image{
-      width:205px;
-      height:136px;
+      z-index:5;
       border-radius:24px;
       overflow:hidden;
-      flex:0 0 auto;
-      background:#0f172a;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      box-shadow:0 20px 50px rgba(0,0,0,.25);
     }
 
-    .trustpilot-promo-image img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
+    .trustpilot-mission img{
+      width:300px;
       display:block;
-    }
-
-    .trustpilot-promo-content{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      min-width:0;
-    }
-
-    .trustpilot-promo-title{
-      font-size:20px;
-      line-height:1.15;
-      font-weight:900;
-      color:#ffffff;
-      letter-spacing:-0.02em;
-      margin:0;
-    }
-
-    .trustpilot-promo-sub{
-      margin-top:10px;
-      font-size:14px;
-      line-height:1.45;
-      color:#cbd5e1;
-      font-weight:700;
-      max-width:220px;
-    }
-
-    .trustpilot-promo-bottom{
-      margin-top:16px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .trustpilot-reward{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:38px;
-      padding:0 14px;
-      border-radius:999px;
-      background:rgba(34,197,94,.12);
-      border:1px solid rgba(34,197,94,.22);
-      color:#4ade80;
-      font-size:14px;
-      font-weight:900;
-    }
-
-    .trustpilot-start-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:0 16px;
-      border-radius:14px;
-      background:#fbbf24;
-      color:#111827;
-      font-size:14px;
-      font-weight:900;
-      text-decoration:none;
-      box-shadow:0 10px 24px rgba(251,191,36,.18);
-    }
-
-    .trustpilot-start-btn:hover{
-      background:#f5b301;
+      border-radius:24px;
     }
 
     .earn-area{
@@ -2248,22 +2156,6 @@ app.get('/', async (req, res) => {
       display:block;
     }
 
-    .earn-card-body{
-      position:relative;
-      z-index:2;
-      text-align:center;
-      width:100%;
-      margin-top:2px;
-    }
-
-    .earn-card-name{
-      margin:0;
-      font-size:11px;
-      line-height:1.3;
-      font-weight:800;
-      color:#ffffff;
-    }
-
     .earn-card-brand{
       margin:0;
       font-size:19px;
@@ -2302,71 +2194,12 @@ app.get('/', async (req, res) => {
       background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
-    @media (max-width: 1150px){
-      .earn-grid{
-        grid-template-columns:repeat(5, 1fr);
-      }
-    }
-
-    @media (max-width: 950px){
-      .earn-grid{
-        grid-template-columns:repeat(4, 1fr);
-      }
-    }
-
-    @media (max-width: 900px){
-      .trustpilot-promo-card{
-        width:460px;
-        gap:14px;
-      }
-
-      .trustpilot-promo-image{
-        width:170px;
-        height:122px;
-      }
-    }
-
-    @media (max-width: 760px){
-      .earn-grid{
-        grid-template-columns:repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 560px){
-      .earn-grid{
-        grid-template-columns:repeat(2, 1fr);
-      }
-    }
-
   </style>
 
-  <div class="trustpilot-promo-wrap">
-    <div class="trustpilot-promo-card">
-      <div class="trustpilot-promo-image">
-        <img src="/trustpilot-mission.png" alt="Rate us on Trustpilot" />
-      </div>
-
-      <div class="trustpilot-promo-content">
-        <h3 class="trustpilot-promo-title">Rate us on Trustpilot</h3>
-
-        <div class="trustpilot-promo-sub">
-          Leave a review and help SurveyCash grow with your feedback.
-        </div>
-
-        <div class="trustpilot-promo-bottom">
-          <div class="trustpilot-reward">+$0.10</div>
-
-          <a
-            class="trustpilot-start-btn"
-            href="https://www.trustpilot.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Start mission
-          </a>
-        </div>
-      </div>
-    </div>
+  <div class="trustpilot-mission">
+    <a href="https://www.trustpilot.com/" target="_blank">
+      <img src="/trustpilot-mission.png" alt="Rate us on Trustpilot">
+    </a>
   </div>
 
   <div class="earn-area">
