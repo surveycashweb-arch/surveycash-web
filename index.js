@@ -2037,40 +2037,39 @@ app.get('/', async (req, res) => {
     }
 
     main{
-      position:relative;
       height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
       overflow:hidden;
+      display:flex;
+      flex-direction:column;
     }
 
-    .hero-banner{
-      position:absolute;
-      top:28px;
-      left:12px;
-      z-index:10;
+    .hero-section{
+      height:180px;
+      min-height:180px;
+      display:flex;
+      align-items:center;
+      padding-left:18px;
+      background:linear-gradient(180deg,#0f172a 0%, #0b1220 100%);
     }
 
-    .hero-banner a{
+    .hero-section a{
       display:block;
-      border-radius:0;
-      overflow:hidden;
     }
 
-    .hero-banner img{
-      width:610px;
-      max-width:none;
+    .hero-section img{
+      height:140px;
+      width:auto;
       display:block;
     }
 
     .earn-area{
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:0;
+      flex:1;
       background:#151c2e;
       padding:24px 0 20px;
+      overflow:hidden;
     }
 
     .earn-wrap{
@@ -2230,8 +2229,8 @@ app.get('/', async (req, res) => {
         grid-template-columns:repeat(3, 1fr);
       }
 
-      .hero-banner img{
-        width:520px;
+      .hero-section img{
+        height:120px;
       }
     }
 
@@ -2240,19 +2239,18 @@ app.get('/', async (req, res) => {
         grid-template-columns:repeat(2, 1fr);
       }
 
-      .hero-banner{
-        left:8px;
-        top:20px;
+      .hero-section{
+        padding-left:10px;
       }
 
-      .hero-banner img{
-        width:420px;
+      .hero-section img{
+        height:100px;
       }
     }
 
   </style>
 
-  <div class="hero-banner">
+  <div class="hero-section">
     <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
       <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
     </a>
