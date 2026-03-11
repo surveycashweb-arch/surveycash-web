@@ -2045,15 +2045,24 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
+    /* HERO AREA */
+    .hero-area{
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:260px;
+      background:linear-gradient(180deg,#0f1b32 0%, #0b1629 100%);
+    }
+
     .trustpilot-mission{
       position:absolute;
       top:50%;
       left:24px;
       transform:translateY(-50%);
-      z-index:5;
       border-radius:24px;
       overflow:hidden;
-      box-shadow:0 20px 50px rgba(0,0,0,.25);
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
     }
 
     .trustpilot-mission img{
@@ -2197,10 +2206,12 @@ app.get('/', async (req, res) => {
 
   </style>
 
-  <div class="trustpilot-mission">
-    <a href="https://www.trustpilot.com/" target="_blank">
-      <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
-    </a>
+  <div class="hero-area">
+    <div class="trustpilot-mission">
+      <a href="https://www.trustpilot.com/" target="_blank">
+        <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
+      </a>
+    </div>
   </div>
 
   <div class="earn-area">
