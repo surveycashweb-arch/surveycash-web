@@ -2045,26 +2045,35 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    /* HERO BANNER */
-    .hero-banner{
+    /* HERO */
+    .hero-wrap{
       position:absolute;
       top:22px;
       left:18px;
+      display:flex;
+      gap:16px;
+      z-index:10;
+    }
+
+    .hero-box{
       background:#151c2e;
       padding:14px;
       border-radius:14px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
-      z-index:10;
     }
 
-    .hero-banner a{
+    .hero-box a{
       display:block;
     }
 
-    .hero-banner img{
+    .hero-box img{
       width:500px;
       display:block;
       border-radius:8px;
+    }
+
+    .hero-box.x-box img{
+      width:180px;
     }
 
     .earn-area{
@@ -2201,28 +2210,53 @@ app.get('/', async (req, res) => {
     }
 
     @media (max-width: 760px){
-      .hero-banner img{
+      .hero-wrap{
+        gap:12px;
+      }
+
+      .hero-box img{
         width:420px;
+      }
+
+      .hero-box.x-box img{
+        width:140px;
       }
     }
 
     @media (max-width: 560px){
-      .hero-banner{
+      .hero-wrap{
         left:10px;
         top:18px;
+        gap:10px;
       }
 
-      .hero-banner img{
+      .hero-box{
+        padding:10px;
+      }
+
+      .hero-box img{
         width:340px;
+      }
+
+      .hero-box.x-box img{
+        width:110px;
       }
     }
 
   </style>
 
-  <div class="hero-banner">
-    <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
-      <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
-    </a>
+  <div class="hero-wrap">
+    <div class="hero-box">
+      <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
+        <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
+      </a>
+    </div>
+
+    <div class="hero-box x-box">
+      <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
+        <img src="/img/x-follow.png" alt="Follow us on X">
+      </a>
+    </div>
   </div>
 
   <div class="earn-area">
