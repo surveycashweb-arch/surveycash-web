@@ -2050,7 +2050,7 @@ app.get('/', async (req, res) => {
   left:0;
   right:0;
   bottom:0;
-  top:200px;
+  top:300px;
   background:#151c2e;
   padding:24px 0 20px;
 }
