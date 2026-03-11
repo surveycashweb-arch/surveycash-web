@@ -2045,23 +2045,26 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
+    /* HERO BANNER */
     .hero-banner{
       position:absolute;
       top:28px;
       left:12px;
+      background:#151c2e;
+      padding:16px;
+      border-radius:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
       z-index:10;
     }
 
     .hero-banner a{
       display:block;
-      border-radius:0;
-      overflow:hidden;
     }
 
     .hero-banner img{
       width:610px;
-      max-width:none;
       display:block;
+      border-radius:6px;
     }
 
     .earn-area{
@@ -2159,22 +2162,6 @@ app.get('/', async (req, res) => {
       display:block;
     }
 
-    .earn-card-body{
-      position:relative;
-      z-index:2;
-      text-align:center;
-      width:100%;
-      margin-top:2px;
-    }
-
-    .earn-card-name{
-      margin:0;
-      font-size:11px;
-      line-height:1.3;
-      font-weight:800;
-      color:#ffffff;
-    }
-
     .earn-card-brand{
       margin:0;
       font-size:19px;
@@ -2213,33 +2200,13 @@ app.get('/', async (req, res) => {
       background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
-    @media (max-width: 1150px){
-      .earn-grid{
-        grid-template-columns:repeat(5, 1fr);
-      }
-    }
-
-    @media (max-width: 950px){
-      .earn-grid{
-        grid-template-columns:repeat(4, 1fr);
-      }
-    }
-
     @media (max-width: 760px){
-      .earn-grid{
-        grid-template-columns:repeat(3, 1fr);
-      }
-
       .hero-banner img{
         width:520px;
       }
     }
 
     @media (max-width: 560px){
-      .earn-grid{
-        grid-template-columns:repeat(2, 1fr);
-      }
-
       .hero-banner{
         left:8px;
         top:20px;
