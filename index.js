@@ -826,7 +826,7 @@ if (err) {
 
 
 
-  var notifWrap = document.getElementById('notifWrap');
+    var notifWrap = document.getElementById('notifWrap');
   var notifBtn = document.getElementById('notifBtn');
   var notifDot = document.getElementById('notifDot');
   var notifPanel = document.getElementById('notifPanel');
@@ -869,11 +869,24 @@ if (err) {
       var unreadClass = item.is_read ? '' : ' unread';
       return '' +
         '<div class="notif-item' + unreadClass + '">' +
-          '<div class="notif-item-title">' + escapeNotifHtml(item.title) + '</div>' +
+          '<div class="notif-item-top">' +
+            '<div class="notif-item-title">' + escapeNotifHtml(item.title) + '</div>' +
+            '<button class="notif-remove" type="button" data-id="' + Number(item.id) + '">Remove</button>' +
+          '</div>' +
           '<div class="notif-item-date">' + escapeNotifHtml(formatNotifDate(item.created_at)) + '</div>' +
           '<div class="notif-item-body">' + escapeNotifHtml(item.body) + '</div>' +
         '</div>';
     }).join('');
+
+    var removeBtns = notifList.querySelectorAll('.notif-remove');
+    removeBtns.forEach(function (btn) {
+      btn.addEventListener('click', async function (e) {
+        e.stopPropagation();
+        var id = Number(btn.getAttribute('data-id') || 0);
+        if (!id) return;
+        await removeNotification(id);
+      });
+    });
   }
 
   function updateNotifBell(list) {
@@ -918,6 +931,29 @@ if (err) {
       updateNotifBell(notifications);
     } catch (err) {
       console.error('markNotificationsRead error:', err);
+    }
+  }
+
+  async function removeNotification(id) {
+    try {
+      var r = await fetch('/api/notifications/remove', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ id: id })
+      });
+
+      var j = await r.json();
+      if (!j || !j.ok) return;
+
+      notifications = notifications.filter(function (item) {
+        return Number(item.id) !== Number(id);
+      });
+
+      renderNotifications(notifications);
+      updateNotifBell(notifications);
+    } catch (err) {
+      console.error('removeNotification error:', err);
     }
   }
 
@@ -1176,11 +1212,13 @@ document.addEventListener('click', function (e) {
     text-overflow: ellipsis;
   }
 
+
 .notif-wrap{
   position:relative;
 }
 
-.notif-btn{
+/* gammel Freecash-style bell */
+.notif-bell{
   position:relative;
   border:none;
   background:transparent;
@@ -1194,29 +1232,28 @@ document.addEventListener('click', function (e) {
   transform:translateY(3px);
 }
 
-/* gammelt bell-design */
-.notif-bell{
+.notif-bell svg{
   width:32px;
   height:32px;
-  display:block;
   fill:#9ca3af;
   opacity:.95;
   transition:fill .15s ease;
 }
 
-.notif-btn:hover .notif-bell{
+.notif-bell:hover svg{
   fill:#d5d9e6;
 }
 
-/* når der er unread = gul klokke */
-.notif-btn.has-unread .notif-bell{
+/* unread = samme design, bare gul klokke */
+.notif-bell.has-unread svg{
   fill:#fbbf24;
 }
 
-.notif-btn.has-unread:hover .notif-bell{
+.notif-bell.has-unread:hover svg{
   fill:#f59e0b;
 }
 
+/* rød dot */
 .notif-dot{
   position:absolute;
   top:7px;
@@ -1224,7 +1261,7 @@ document.addEventListener('click', function (e) {
   width:9px;
   height:9px;
   border-radius:999px;
-  background:#fbbf24;
+  background:#ef4444;
   box-shadow:0 0 0 2px #151c2e;
 }
 
@@ -1232,7 +1269,7 @@ document.addEventListener('click', function (e) {
   position:absolute;
   top:48px;
   right:0;
-  width:360px;
+  width:370px;
   max-height:430px;
   overflow:hidden;
   border-radius:16px;
@@ -1247,7 +1284,7 @@ document.addEventListener('click', function (e) {
   align-items:center;
   justify-content:space-between;
   gap:12px;
-  padding:14px 14px 10px;
+  padding:14px 14px 12px;
   border-bottom:1px solid rgba(255,255,255,.06);
 }
 
@@ -1260,10 +1297,14 @@ document.addEventListener('click', function (e) {
 .notif-mark-read{
   border:0;
   background:transparent;
-  color:#22c55e;
+  color:#fbbf24;
   font-size:14px;
-  font-weight:700;
+  font-weight:800;
   cursor:pointer;
+}
+
+.notif-mark-read:hover{
+  color:#f59e0b;
 }
 
 .notif-list{
@@ -1273,10 +1314,11 @@ document.addEventListener('click', function (e) {
 }
 
 .notif-item{
+  position:relative;
   border-radius:14px;
   background:rgba(255,255,255,.03);
   border:1px solid rgba(255,255,255,.05);
-  padding:14px;
+  padding:14px 14px 14px;
   margin-bottom:12px;
 }
 
@@ -1285,15 +1327,37 @@ document.addEventListener('click', function (e) {
 }
 
 .notif-item.unread{
-  border-color:rgba(251,191,36,.35);
-  box-shadow:inset 0 0 0 1px rgba(251,191,36,.08);
+  border-color:rgba(239,68,68,.28);
+  box-shadow:inset 0 0 0 1px rgba(239,68,68,.08);
+}
+
+.notif-item-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:6px;
 }
 
 .notif-item-title{
   font-size:14px;
   font-weight:800;
   color:#fff;
-  margin-bottom:6px;
+}
+
+.notif-remove{
+  border:0;
+  background:transparent;
+  color:#94a3b8;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  padding:0;
+  line-height:1;
+}
+
+.notif-remove:hover{
+  color:#ef4444;
 }
 
 .notif-item-date{
@@ -2074,9 +2138,11 @@ document.addEventListener('click', function (e) {
             </div>
 
 <div class="notif-wrap" id="notifWrap">
-  <button class="notif-btn" id="notifBtn" type="button" aria-label="Notifications">
-    <svg class="notif-bell" id="notifBell" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M12 22a2.75 2.75 0 0 0 2.58-1.8h-5.16A2.75 2.75 0 0 0 12 22Zm7-5.25-1.2-1.34a2.2 2.2 0 0 1-.55-1.47V10a5.25 5.25 0 1 0-10.5 0v3.94c0 .54-.2 1.05-.55 1.47L5 16.75V18h14v-1.25Z" />
+  <button class="notif-bell" id="notifBtn" type="button" aria-label="Notifications">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="4" r="1.8" />
+      <path d="M6 10a6 6 0 0112 0v3.2l1.2 2A1 1 0 0118.4 17H5.6a1 1 0 01-.8-1.8l1.2-2V10z"/>
+      <circle cx="12" cy="18.3" r="1.2" />
     </svg>
     <span class="notif-dot" id="notifDot" hidden></span>
   </button>
@@ -3782,6 +3848,34 @@ app.post('/api/notifications/read', async (req, res) => {
   }
 });
 
+
+app.post('/api/notifications/remove', async (req, res) => {
+  try {
+    if (!isLoggedIn(req)) return res.json({ ok: false });
+
+    const user = getUserFromReq(req);
+    if (!user?.id) return res.json({ ok: false });
+
+    const id = Number(req.body?.id || 0);
+    if (!id) return res.json({ ok: false });
+
+    const { error } = await supabaseAdmin
+      .from('notifications')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('notifications remove error:', error);
+      return res.json({ ok: false });
+    }
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('notifications remove route error:', err);
+    return res.json({ ok: false });
+  }
+});
 
 app.get('/cpx/postback', async (req, res) => {
   try {
