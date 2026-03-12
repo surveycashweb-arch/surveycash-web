@@ -1191,25 +1191,30 @@ document.addEventListener('click', function (e) {
   padding:0;
   width:42px;
   height:42px;
-  color:#9ca3af;
   transform:translateY(3px);
 }
 
-.notif-btn:hover{
-  color:#d5d9e6;
-}
-
-.notif-btn.has-unread{
-  color:#fbbf24;
-}
-
+/* gammelt bell-design */
 .notif-bell{
   width:32px;
   height:32px;
   display:block;
-  fill:currentColor;
+  fill:#9ca3af;
   opacity:.95;
-  transition:fill .15s ease, color .15s ease;
+  transition:fill .15s ease;
+}
+
+.notif-btn:hover .notif-bell{
+  fill:#d5d9e6;
+}
+
+/* når der er unread = gul klokke */
+.notif-btn.has-unread .notif-bell{
+  fill:#fbbf24;
+}
+
+.notif-btn.has-unread:hover .notif-bell{
+  fill:#f59e0b;
 }
 
 .notif-dot{
