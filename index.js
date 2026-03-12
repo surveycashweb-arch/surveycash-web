@@ -3449,43 +3449,134 @@ async function findProfileByUserIdOrEmailSupabase(userIdOrEmail) {
 }
 
 
+async function createNotification(userId, kind, title, body) {
+  try {
+    if (!userId || !title || !body) return;
+
+    const { error } = await supabaseAdmin
+      .from('notifications')
+      .insert({
+        user_id: userId,
+        kind,
+        title,
+        body,
+      });
+
+    if (error) {
+      console.error('createNotification error:', error);
+    }
+  } catch (err) {
+    console.error('createNotification catch error:', err);
+  }
+}
+
+
+app.get('/api/notifications', async (req, res) => {
+  try {
+    if (!isLoggedIn(req)) return res.json([]);
+
+    const user = getUserFromReq(req);
+    if (!user?.id) return res.json([]);
+
+    const { data, error } = await supabaseAdmin
+      .from('notifications')
+      .select('id, kind, title, body, is_read, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (error) {
+      console.error('notifications fetch error:', error);
+      return res.json([]);
+    }
+
+    return res.json(data || []);
+  } catch (err) {
+    console.error('notifications route error:', err);
+    return res.json([]);
+  }
+});
+
+app.post('/api/notifications/read', async (req, res) => {
+  try {
+    if (!isLoggedIn(req)) return res.json({ ok: false });
+
+    const user = getUserFromReq(req);
+    if (!user?.id) return res.json({ ok: false });
+
+    const { error } = await supabaseAdmin
+      .from('notifications')
+      .update({ is_read: true })
+      .eq('user_id', user.id)
+      .eq('is_read', false);
+
+    if (error) {
+      console.error('notifications read update error:', error);
+      return res.json({ ok: false });
+    }
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('notifications read route error:', err);
+    return res.json({ ok: false });
+  }
+});
+
 
 app.get('/cpx/postback', async (req, res) => {
   try {
- const token = String(req.query.token || '');
+    const token = String(req.query.token || '');
     if (token !== process.env.CPX_POSTBACK_TOKEN) {
-      return res.status(200).send('ok'); // svar altid ok så angribere ikke kan se noget
+      return res.status(200).send('ok');
     }
+
     const q = req.query || {};
 
-    const statusRaw = String(q.status || q.state || '').toLowerCase();
+    const statusRaw = String(q.status || q.state || '').toLowerCase().trim();
     const transId = String(q.trans_id || q.transaction_id || q.sid || q.subid || '').trim();
     const userId = String(q.user_id || q.ext_user_id || q.uid || '').trim();
     const type = String(q.type || 'complete').toLowerCase().trim();
 
-    const amountRaw = q.amount_local ?? q.amount ?? q.reward ?? q.payout ?? q.value ?? '0';
+    const amountRaw =
+      q.amount_usd ??
+      q.amount_local ??
+      q.amount ??
+      q.reward ??
+      q.payout ??
+      q.value ??
+      '0';
+
     const amount = Number(String(amountRaw).replace(',', '.')) || 0;
 
-    if (!transId || !userId) return res.status(200).send('ok');
+    if (!transId || !userId) {
+      return res.status(200).send('ok');
+    }
 
     const isCredit =
-      statusRaw === '1' || statusRaw === 'approved' || statusRaw === 'completed' || statusRaw === 'ok';
+      statusRaw === '1' ||
+      statusRaw === 'approved' ||
+      statusRaw === 'completed' ||
+      statusRaw === 'ok';
 
     const isReversal =
-      statusRaw === '2' || statusRaw === 'reversed' || statusRaw === 'chargeback' ||
-      statusRaw === 'canceled' || statusRaw === 'cancelled';
+      statusRaw === '2' ||
+      statusRaw === 'reversed' ||
+      statusRaw === 'chargeback' ||
+      statusRaw === 'canceled' ||
+      statusRaw === 'cancelled';
 
     const profile = await findProfileByUserIdOrEmailSupabase(userId);
-    if (!profile) return res.status(200).send('ok');
+    if (!profile) {
+      return res.status(200).send('ok');
+    }
 
     const cents = Math.round(Math.max(0, amount) * 100);
 
     const currentBalance = Number(profile.balance_cents || 0);
-    const currentTotal   = Number(profile.total_earned_cents || 0);
+    const currentTotal = Number(profile.total_earned_cents || 0);
     const currentSurveys = Number(profile.completed_surveys || 0);
 
     if (isCredit) {
-      // insert hvis ikke allerede (UNIQUE trans_id+type stopper dupes)
       const { error: insErr } = await supabaseAdmin
         .from('cpx_transactions')
         .insert({
@@ -3496,13 +3587,11 @@ app.get('/cpx/postback', async (req, res) => {
           status: 1,
         });
 
-      // hvis duplicate → ignorer
       if (insErr && insErr.code !== '23505') {
         console.error('cpx_transactions insert error:', insErr);
         return res.status(200).send('ok');
       }
 
-      // kun credit hvis insert lykkedes (ikke duplicate)
       if (!insErr && cents > 0) {
         const next = {
           balance_cents: currentBalance + cents,
@@ -3518,14 +3607,30 @@ app.get('/cpx/postback', async (req, res) => {
           .update(next)
           .eq('user_id', profile.user_id);
 
-        if (upErr) console.error('CPX credit update error:', upErr);
+        if (upErr) {
+          console.error('CPX credit update error:', upErr);
+        } else {
+          let body = `You earned $${(cents / 100).toFixed(2)} from a CPX survey.`;
+
+          if (type === 'out') {
+            body = `You earned $${(cents / 100).toFixed(2)} from a CPX screenout.`;
+          } else if (type && !type.includes('complete')) {
+            body = `You earned $${(cents / 100).toFixed(2)} from CPX (${type}).`;
+          }
+
+          await createNotification(
+            profile.user_id,
+            'reward',
+            'Survey reward',
+            body
+          );
+        }
       }
 
       return res.status(200).send('ok');
     }
 
     if (isReversal) {
-      // find transaction, og kun reverse 1 gang
       const { data: tx } = await supabaseAdmin
         .from('cpx_transactions')
         .select('id, cents, status')
@@ -3548,7 +3653,16 @@ app.get('/cpx/postback', async (req, res) => {
             .update({ balance_cents: newBalance })
             .eq('user_id', profile.user_id);
 
-          if (upErr) console.error('CPX reversal update error:', upErr);
+          if (upErr) {
+            console.error('CPX reversal update error:', upErr);
+          } else {
+            await createNotification(
+              profile.user_id,
+              'reward_reversal',
+              'Survey reward reversed',
+              `A CPX reward of $${(revCents / 100).toFixed(2)} was reversed.`
+            );
+          }
         }
       }
 
@@ -3563,15 +3677,15 @@ app.get('/cpx/postback', async (req, res) => {
 });
 
 
-
 // ===== WANNADS POSTBACK =====
 app.get('/postback/wannads', async (req, res) => {
   try {
     console.log('Wannads postback:', req.query);
 
-    const userId = req.query.userId;
+    const userId = String(req.query.userId || '').trim();
     const amount = Number(req.query.amount || req.query.payout || 0);
-    const status = req.query.status || 'completed';
+    const status = String(req.query.status || 'completed').toLowerCase().trim();
+    const transId = String(req.query.transactionId || req.query.trans_id || req.query.id || '').trim();
 
     if (!userId) {
       console.log('No userId in postback');
@@ -3583,10 +3697,9 @@ app.get('/postback/wannads', async (req, res) => {
       return res.status(200).send('No reward');
     }
 
-    // Hent bruger
     const { data: profile, error: profErr } = await supabaseAdmin
       .from('profiles')
-      .select('balance_cents')
+      .select('user_id, balance_cents, total_earned_cents, completed_offers')
       .eq('user_id', userId)
       .single();
 
@@ -3595,13 +3708,59 @@ app.get('/postback/wannads', async (req, res) => {
       return res.status(200).send('User not found');
     }
 
-    const newBalance = Number(profile.balance_cents || 0) + Math.round(amount * 100);
+    const cents = Math.round(amount * 100);
+    const currentBalance = Number(profile.balance_cents || 0);
+    const currentTotal = Number(profile.total_earned_cents || 0);
+    const currentOffers = Number(profile.completed_offers || 0);
 
-    // Opdater balance
-    await supabaseAdmin
+    if (transId) {
+      const { data: existing } = await supabaseAdmin
+        .from('wannads_transactions')
+        .select('id')
+        .eq('trans_id', transId)
+        .maybeSingle();
+
+      if (existing) {
+        console.log('Duplicate Wannads transaction:', transId);
+        return res.status(200).send('Duplicate ignored');
+      }
+
+      const { error: insErr } = await supabaseAdmin
+        .from('wannads_transactions')
+        .insert({
+          user_id: userId,
+          trans_id: transId,
+          type: status || 'completed',
+          cents,
+          status: 1,
+        });
+
+      if (insErr) {
+        console.error('wannads_transactions insert error:', insErr);
+        return res.status(200).send('Insert failed');
+      }
+    }
+
+    const { error: upErr } = await supabaseAdmin
       .from('profiles')
-      .update({ balance_cents: newBalance })
+      .update({
+        balance_cents: currentBalance + cents,
+        total_earned_cents: currentTotal + cents,
+        completed_offers: currentOffers + 1,
+      })
       .eq('user_id', userId);
+
+    if (upErr) {
+      console.error('Wannads balance update error:', upErr);
+      return res.status(200).send('Update failed');
+    }
+
+    await createNotification(
+      userId,
+      'reward',
+      'Offer reward',
+      `You earned $${amount.toFixed(2)} from a Wannads offer.`
+    );
 
     console.log('Credited user:', userId, 'amount:', amount);
 
@@ -3611,7 +3770,6 @@ app.get('/postback/wannads', async (req, res) => {
     return res.status(200).send('Error handled');
   }
 });
-
 
 
 app.get('/cashout', async (req, res) => {
