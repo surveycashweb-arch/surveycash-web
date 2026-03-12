@@ -2045,7 +2045,7 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    /* HERO BANNER */
+    /* HERO BANNERS */
     .hero-banner{
       position:absolute;
       top:22px;
@@ -2057,14 +2057,28 @@ app.get('/', async (req, res) => {
       z-index:10;
     }
 
+    .hero-banner.hero-x{
+      left:560px;
+    }
+
     .hero-banner a{
       display:block;
     }
 
     .hero-banner img{
-      width:500px;
       display:block;
+      height:160px;
       border-radius:8px;
+    }
+
+    .hero-banner.hero-trustpilot img{
+      width:500px;
+      object-fit:cover;
+    }
+
+    .hero-banner.hero-x img{
+      width:340px;
+      object-fit:cover;
     }
 
     .earn-area{
@@ -2200,9 +2214,27 @@ app.get('/', async (req, res) => {
       background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
+    @media (max-width: 1200px){
+      .hero-banner.hero-x{
+        left:18px;
+        top:216px;
+      }
+    }
+
     @media (max-width: 760px){
-      .hero-banner img{
+      .hero-banner.hero-trustpilot img{
         width:420px;
+        height:auto;
+      }
+
+      .hero-banner.hero-x{
+        left:18px;
+        top:190px;
+      }
+
+      .hero-banner.hero-x img{
+        width:300px;
+        height:auto;
       }
     }
 
@@ -2212,16 +2244,33 @@ app.get('/', async (req, res) => {
         top:18px;
       }
 
-      .hero-banner img{
+      .hero-banner.hero-trustpilot img{
         width:340px;
+        height:auto;
+      }
+
+      .hero-banner.hero-x{
+        left:10px;
+        top:162px;
+      }
+
+      .hero-banner.hero-x img{
+        width:240px;
+        height:auto;
       }
     }
 
   </style>
 
-  <div class="hero-banner">
+  <div class="hero-banner hero-trustpilot">
     <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
       <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
+    </a>
+  </div>
+
+  <div class="hero-banner hero-x">
+    <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+      <img src="/img/x-follow.png" alt="Follow us on X">
     </a>
   </div>
 
@@ -2285,7 +2334,6 @@ app.get('/', async (req, res) => {
     ),
   );
 });
-
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
