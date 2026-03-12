@@ -2050,8 +2050,11 @@ app.get('/', async (req, res) => {
       position:absolute;
       top:22px;
       left:18px;
+      right:18px;
+      height:150px;
       display:flex;
       gap:16px;
+      align-items:flex-start;
       z-index:10;
     }
 
@@ -2218,6 +2221,10 @@ app.get('/', async (req, res) => {
 
     @media (max-width: 760px){
       .hero-wrap{
+        top:20px;
+        left:12px;
+        right:12px;
+        height:135px;
         gap:12px;
       }
 
@@ -2240,8 +2247,10 @@ app.get('/', async (req, res) => {
 
     @media (max-width: 560px){
       .hero-wrap{
-        left:10px;
         top:18px;
+        left:10px;
+        right:10px;
+        height:120px;
         gap:10px;
       }
 
