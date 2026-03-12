@@ -824,6 +824,142 @@ if (err) {
 
 })();
 
+
+
+  var notifWrap = document.getElementById('notifWrap');
+  var notifBtn = document.getElementById('notifBtn');
+  var notifDot = document.getElementById('notifDot');
+  var notifPanel = document.getElementById('notifPanel');
+  var notifList = document.getElementById('notifList');
+  var notifMarkRead = document.getElementById('notifMarkRead');
+
+  var notifications = [];
+
+  function escapeNotifHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function formatNotifDate(value) {
+    try {
+      var d = new Date(value);
+      return d.toLocaleString();
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function hasUnreadNotifications(list) {
+    return Array.isArray(list) && list.some(function (n) { return !n.is_read; });
+  }
+
+  function renderNotifications(list) {
+    if (!notifList) return;
+
+    if (!Array.isArray(list) || list.length === 0) {
+      notifList.innerHTML = '<div class="notif-empty">No notifications yet.</div>';
+      return;
+    }
+
+    notifList.innerHTML = list.map(function (item) {
+      var unreadClass = item.is_read ? '' : ' unread';
+      return '' +
+        '<div class="notif-item' + unreadClass + '">' +
+          '<div class="notif-item-title">' + escapeNotifHtml(item.title) + '</div>' +
+          '<div class="notif-item-date">' + escapeNotifHtml(formatNotifDate(item.created_at)) + '</div>' +
+          '<div class="notif-item-body">' + escapeNotifHtml(item.body) + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function updateNotifBell(list) {
+    if (!notifBtn || !notifDot) return;
+    var unread = hasUnreadNotifications(list);
+    notifBtn.classList.toggle('has-unread', unread);
+    notifDot.hidden = !unread;
+  }
+
+  async function loadNotifications() {
+    try {
+      if (!notifBtn) return;
+
+      var r = await fetch('/api/notifications', {
+        credentials: 'same-origin'
+      });
+
+      var data = await r.json();
+      notifications = Array.isArray(data) ? data : [];
+      renderNotifications(notifications);
+      updateNotifBell(notifications);
+    } catch (err) {
+      console.error('loadNotifications error:', err);
+    }
+  }
+
+  async function markNotificationsRead() {
+    try {
+      if (!hasUnreadNotifications(notifications)) return;
+
+      await fetch('/api/notifications/read', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin'
+      });
+
+      notifications = notifications.map(function (item) {
+        return Object.assign({}, item, { is_read: true });
+      });
+
+      renderNotifications(notifications);
+      updateNotifBell(notifications);
+    } catch (err) {
+      console.error('markNotificationsRead error:', err);
+    }
+  }
+
+  function openNotifPanel() {
+    if (!notifPanel) return;
+    notifPanel.hidden = false;
+    markNotificationsRead();
+  }
+
+  function closeNotifPanel() {
+    if (!notifPanel) return;
+    notifPanel.hidden = true;
+  }
+
+  if (notifBtn && notifPanel && notifWrap) {
+    notifBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+
+      if (notifPanel.hidden) {
+        openNotifPanel();
+      } else {
+        closeNotifPanel();
+      }
+    });
+
+    if (notifMarkRead) {
+      notifMarkRead.addEventListener('click', function (e) {
+        e.stopPropagation();
+        markNotificationsRead();
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      if (!notifWrap.contains(e.target)) {
+        closeNotifPanel();
+      }
+    });
+
+    loadNotifications();
+    setInterval(loadNotifications, 15000);
+  }
+
 // --- profil-menu til avatar i header ---
 window.toggleProfileMenu = function () {
   var menu = document.getElementById('profile-menu');
@@ -1040,31 +1176,138 @@ document.addEventListener('click', function (e) {
     text-overflow: ellipsis;
   }
 
-  /* Freecash-style grå klokke med SVG */
-  .notif-bell {
-    border: none;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    width: 42px;
-    height: 42px;
-    transform: translateY(3px); /* lidt ned i headeren */
-  }
+.notif-wrap{
+  position:relative;
+}
 
-  .notif-bell svg {
-    width: 32px;
-    height: 32px;
-    fill: #9ca3af;
-    opacity: 0.95;
-    transition: fill 0.15s ease;
-  }
+.notif-btn{
+  position:relative;
+  border:none;
+  background:transparent;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  padding:0;
+  width:42px;
+  height:42px;
+  color:#9ca3af;
+  transform:translateY(3px);
+}
 
-  .notif-bell:hover svg {
-    fill: #d5d9e6;
-  }
+.notif-btn:hover{
+  color:#d5d9e6;
+}
+
+.notif-btn.has-unread{
+  color:#fbbf24;
+}
+
+.notif-bell{
+  width:32px;
+  height:32px;
+  display:block;
+  fill:currentColor;
+  opacity:.95;
+  transition:fill .15s ease, color .15s ease;
+}
+
+.notif-dot{
+  position:absolute;
+  top:7px;
+  right:4px;
+  width:9px;
+  height:9px;
+  border-radius:999px;
+  background:#fbbf24;
+  box-shadow:0 0 0 2px #151c2e;
+}
+
+.notif-panel{
+  position:absolute;
+  top:48px;
+  right:0;
+  width:360px;
+  max-height:430px;
+  overflow:hidden;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#151c2e;
+  box-shadow:0 24px 60px rgba(0,0,0,.45);
+  z-index:300;
+}
+
+.notif-panel-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 14px 10px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.notif-panel-title{
+  font-size:20px;
+  font-weight:800;
+  color:#fff;
+}
+
+.notif-mark-read{
+  border:0;
+  background:transparent;
+  color:#22c55e;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.notif-list{
+  max-height:360px;
+  overflow:auto;
+  padding:12px;
+}
+
+.notif-item{
+  border-radius:14px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.05);
+  padding:14px;
+  margin-bottom:12px;
+}
+
+.notif-item:last-child{
+  margin-bottom:0;
+}
+
+.notif-item.unread{
+  border-color:rgba(251,191,36,.35);
+  box-shadow:inset 0 0 0 1px rgba(251,191,36,.08);
+}
+
+.notif-item-title{
+  font-size:14px;
+  font-weight:800;
+  color:#fff;
+  margin-bottom:6px;
+}
+
+.notif-item-date{
+  font-size:12px;
+  color:#94a3b8;
+  margin-bottom:8px;
+}
+
+.notif-item-body{
+  font-size:14px;
+  line-height:1.5;
+  color:#dbe4f0;
+}
+
+.notif-empty{
+  color:#94a3b8;
+  font-size:14px;
+  padding:10px 4px;
+}
 
   .profile-menu {
     position: absolute;
@@ -1825,13 +2068,25 @@ document.addEventListener('click', function (e) {
               <span class="balance-amount">${balanceAmountText}</span>
             </div>
 
-            <button class="notif-bell" type="button" aria-label="Notifications">
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <circle cx="12" cy="4" r="1.8" />
-                <path d="M6 10a6 6 0 0112 0v3.2l1.2 2A1 1 0 0118.4 17H5.6a1 1 0 01-.8-1.8l1.2-2V10z"/>
-                <circle cx="12" cy="18.3" r="1.2" />
-              </svg>
-            </button>
+<div class="notif-wrap" id="notifWrap">
+  <button class="notif-btn" id="notifBtn" type="button" aria-label="Notifications">
+    <svg class="notif-bell" id="notifBell" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 22a2.75 2.75 0 0 0 2.58-1.8h-5.16A2.75 2.75 0 0 0 12 22Zm7-5.25-1.2-1.34a2.2 2.2 0 0 1-.55-1.47V10a5.25 5.25 0 1 0-10.5 0v3.94c0 .54-.2 1.05-.55 1.47L5 16.75V18h14v-1.25Z" />
+    </svg>
+    <span class="notif-dot" id="notifDot" hidden></span>
+  </button>
+
+  <div class="notif-panel" id="notifPanel" hidden>
+    <div class="notif-panel-head">
+      <div class="notif-panel-title">Notifications</div>
+      <button class="notif-mark-read" id="notifMarkRead" type="button">Mark all as read</button>
+    </div>
+
+    <div class="notif-list" id="notifList">
+      <div class="notif-empty">No notifications yet.</div>
+    </div>
+  </div>
+</div>
 
             <div class="profile-chip" onclick="toggleProfileMenu()">
               <div class="profile-avatar">
