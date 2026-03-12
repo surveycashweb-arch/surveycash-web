@@ -3172,7 +3172,8 @@ app.get('/surveys/cpx', (req, res) => {
   const user = getUserFromReq(req);
   if (!user) return res.redirect('/');
 
-  const extUserId = String(user.id || user.email);
+  const extUserId = String(user.id || user.email || '').trim();
+  if (!extUserId) return res.redirect('/');
 
   const secureHash = CPX_APP_SECURE_HASH
     ? md5(`${extUserId}-${CPX_APP_SECURE_HASH}`)
@@ -3189,59 +3190,114 @@ app.get('/surveys/cpx', (req, res) => {
 
   const iframeUrl = `https://offers.cpx-research.com/index.php?${qs.toString()}`;
 
-  res.send(
-    page(
-      req,
-      'CPX Surveys — SurveyCash',
-      '/surveys',
-      `
-<style>
-  /* Ingen scroll */
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden !important;
-  }
-
-  /* Fjern page()-containers */
-  main, .container, .wrap, .content, .page, .inner {
-    margin: 0 !important;
-    padding: 0 !important;
-    max-width: none !important;
-    width: 100% !important;
-  }
-
-  /* Fullscreen CPX med luft top + bund */
-  .cpx-fullscreen {
-    position: fixed;
-    top: calc(var(--header-height, 64px) + 16px);   /* luft under header */
-    left: 16px;                                     /* luft i siderne */
-    right: 16px;
-    bottom: 16px;                                   /* 👈 LUFT I BUND */
-    background: #0b1020;
-    border-radius: 16px;                            /* matcher dit design */
-    overflow: hidden;
-  }
-
-  .cpx-fullscreen iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    display: block;
-    background: #fff;
-  }
-</style>
-
-<div class="cpx-fullscreen">
-  <iframe
-    src="${iframeUrl}"
-    allow="clipboard-read; clipboard-write"
-  ></iframe>
-</div>
-      `
-    )
+  res.setHeader(
+    'Content-Security-Policy',
+    [
+      "default-src 'self' https: data:;",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:;",
+      "style-src 'self' 'unsafe-inline' https:;",
+      "img-src 'self' https: data:;",
+      "connect-src 'self' https:;",
+      "frame-src https://offers.cpx-research.com https:;",
+    ].join(' ')
   );
+
+  res.send(`<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CPX Surveys</title>
+  <style>
+    :root{
+      --header-h:56px;
+      --bg:#0f172a;
+      --panel:#0b1430;
+      --line:rgba(255,255,255,.08);
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --accent:#fbbf24;
+    }
+
+    *{ box-sizing:border-box; }
+
+    html, body{
+      margin:0;
+      padding:0;
+      width:100%;
+      height:100%;
+      background:var(--bg);
+      overflow:hidden;
+      font-family:Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .top{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      height:var(--header-h);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:0 14px;
+      background:rgba(11,20,48,.96);
+      border-bottom:1px solid var(--line);
+      color:var(--text);
+      z-index:20;
+      backdrop-filter:blur(8px);
+    }
+
+    .back{
+      color:var(--accent);
+      text-decoration:none;
+      font-weight:800;
+      font-size:14px;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .title{
+      font-weight:800;
+      font-size:16px;
+      color:var(--text);
+    }
+
+    .frame-wrap{
+      position:fixed;
+      top:var(--header-h);
+      left:0;
+      right:0;
+      bottom:0;
+      background:var(--bg);
+    }
+
+    iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+      background:#fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <a class="back" href="/">← Back</a>
+    <div class="title">CPX Surveys</div>
+  </div>
+
+  <div class="frame-wrap">
+    <iframe
+      src="${iframeUrl}"
+      allow="clipboard-read; clipboard-write; fullscreen"
+    ></iframe>
+  </div>
+</body>
+</html>`);
 });
 
 
