@@ -2043,16 +2043,14 @@ app.get('/', async (req, res) => {
       margin:0 !important;
       padding:0 !important;
       overflow:hidden;
+      background:#0b1430;
     }
 
     /* HERO WRAP */
     .hero-wrap{
-      position:absolute;
-      top:22px;
-      left:18px;
       display:flex;
       gap:16px;
-      z-index:10;
+      margin-bottom:18px;
     }
 
     /* HERO BANNER */
@@ -2061,6 +2059,7 @@ app.get('/', async (req, res) => {
       padding:14px;
       border-radius:14px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
+      flex:0 0 auto;
     }
 
     .hero-banner a{
@@ -2069,6 +2068,8 @@ app.get('/', async (req, res) => {
 
     .hero-banner img{
       width:500px;
+      height:160px;
+      object-fit:cover;
       display:block;
       border-radius:8px;
     }
@@ -2208,24 +2209,24 @@ app.get('/', async (req, res) => {
 
   </style>
 
-  <div class="hero-wrap">
-
-    <div class="hero-banner">
-      <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
-        <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
-      </a>
-    </div>
-
-    <div class="hero-banner">
-      <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-        <img src="/img/x-follow.png" alt="Follow us on X">
-      </a>
-    </div>
-
-  </div>
-
   <div class="earn-area">
     <div class="earn-wrap">
+
+      <div class="hero-wrap">
+
+        <div class="hero-banner">
+          <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
+            <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
+          </a>
+        </div>
+
+        <div class="hero-banner">
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+            <img src="/img/x-follow.png" alt="Follow us on X">
+          </a>
+        </div>
+
+      </div>
 
       <section class="earn-section">
         <div class="earn-head">
