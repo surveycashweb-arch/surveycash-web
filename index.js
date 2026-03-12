@@ -2043,23 +2043,18 @@ app.get('/', async (req, res) => {
       margin:0 !important;
       padding:0 !important;
       overflow:hidden;
-      background:#0b1430;
-    }
-
-    /* HERO WRAP */
-    .hero-wrap{
-      display:flex;
-      gap:16px;
-      margin-bottom:18px;
     }
 
     /* HERO BANNER */
     .hero-banner{
+      position:absolute;
+      top:22px;
+      left:18px;
       background:#151c2e;
       padding:14px;
       border-radius:14px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
-      flex:0 0 auto;
+      z-index:10;
     }
 
     .hero-banner a{
@@ -2068,8 +2063,6 @@ app.get('/', async (req, res) => {
 
     .hero-banner img{
       width:500px;
-      height:160px;
-      object-fit:cover;
       display:block;
       border-radius:8px;
     }
@@ -2207,26 +2200,33 @@ app.get('/', async (req, res) => {
       background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
+    @media (max-width: 760px){
+      .hero-banner img{
+        width:420px;
+      }
+    }
+
+    @media (max-width: 560px){
+      .hero-banner{
+        left:10px;
+        top:18px;
+      }
+
+      .hero-banner img{
+        width:340px;
+      }
+    }
+
   </style>
+
+  <div class="hero-banner">
+    <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
+      <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
+    </a>
+  </div>
 
   <div class="earn-area">
     <div class="earn-wrap">
-
-      <div class="hero-wrap">
-
-        <div class="hero-banner">
-          <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
-            <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
-          </a>
-        </div>
-
-        <div class="hero-banner">
-          <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-            <img src="/img/x-follow.png" alt="Follow us on X">
-          </a>
-        </div>
-
-      </div>
 
       <section class="earn-section">
         <div class="earn-head">
@@ -2285,6 +2285,7 @@ app.get('/', async (req, res) => {
     ),
   );
 });
+
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
