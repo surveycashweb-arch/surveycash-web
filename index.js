@@ -2050,14 +2050,11 @@ app.get('/', async (req, res) => {
       position:absolute;
       top:22px;
       left:18px;
-      width:500px;
-      height:160px;
       background:#151c2e;
       padding:14px;
       border-radius:14px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
       z-index:10;
-      box-sizing:border-box;
     }
 
     .hero-banner.hero-x{
@@ -2066,16 +2063,22 @@ app.get('/', async (req, res) => {
 
     .hero-banner a{
       display:block;
-      width:100%;
-      height:100%;
     }
 
     .hero-banner img{
       display:block;
-      width:100%;
-      height:100%;
-      object-fit:cover;
+      height:160px;
       border-radius:8px;
+    }
+
+    .hero-banner.hero-trustpilot img{
+      width:500px;
+      object-fit:cover;
+    }
+
+    .hero-banner.hero-x img{
+      width:340px;
+      object-fit:cover;
     }
 
     .earn-area{
@@ -2219,14 +2222,19 @@ app.get('/', async (req, res) => {
     }
 
     @media (max-width: 760px){
-      .hero-banner{
+      .hero-banner.hero-trustpilot img{
         width:420px;
-        height:134px;
+        height:auto;
       }
 
       .hero-banner.hero-x{
         left:18px;
         top:190px;
+      }
+
+      .hero-banner.hero-x img{
+        width:300px;
+        height:auto;
       }
     }
 
@@ -2234,13 +2242,21 @@ app.get('/', async (req, res) => {
       .hero-banner{
         left:10px;
         top:18px;
+      }
+
+      .hero-banner.hero-trustpilot img{
         width:340px;
-        height:109px;
+        height:auto;
       }
 
       .hero-banner.hero-x{
         left:10px;
         top:162px;
+      }
+
+      .hero-banner.hero-x img{
+        width:240px;
+        height:auto;
       }
     }
 
@@ -2253,7 +2269,7 @@ app.get('/', async (req, res) => {
   </div>
 
   <div class="hero-banner hero-x">
-    <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
+    <a href="https://x.com" target="_blank" rel="noopener noreferrer">
       <img src="/img/x-follow.png" alt="Follow us on X">
     </a>
   </div>
