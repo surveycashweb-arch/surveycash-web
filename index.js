@@ -2269,7 +2269,7 @@ app.get('/', async (req, res) => {
   </div>
 
   <div class="hero-banner hero-x">
-    <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+    <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
       <img src="/img/x-follow.png" alt="Follow us on X">
     </a>
   </div>
