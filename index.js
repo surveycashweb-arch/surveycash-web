@@ -2067,18 +2067,21 @@ app.get('/', async (req, res) => {
 
     .hero-banner img{
       display:block;
-      height:160px;
       border-radius:8px;
     }
 
     .hero-banner.hero-trustpilot img{
       width:500px;
+      height:160px;
       object-fit:cover;
     }
 
     .hero-banner.hero-x img{
       width:340px;
-      object-fit:cover;
+      height:auto;
+      image-rendering:-webkit-optimize-contrast;
+      image-rendering:crisp-edges;
+      transform:translateZ(0);
     }
 
     .earn-area{
@@ -2269,7 +2272,7 @@ app.get('/', async (req, res) => {
   </div>
 
   <div class="hero-banner hero-x">
-    <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+    <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
       <img src="/img/x-follow.png" alt="Follow us on X">
     </a>
   </div>
