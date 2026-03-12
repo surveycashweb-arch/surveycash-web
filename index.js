@@ -2045,39 +2045,30 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    /* HERO */
+    /* HERO WRAP */
     .hero-wrap{
       position:absolute;
-      top:14px;
-      left:14px;
+      top:22px;
+      left:18px;
       display:flex;
       gap:16px;
-      align-items:flex-start;
       z-index:10;
     }
 
-    .hero-box{
+    /* HERO BANNER */
+    .hero-banner{
       background:#151c2e;
       padding:14px;
       border-radius:14px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
-      display:flex;
-      align-items:center;
-      justify-content:center;
     }
 
-    .hero-box a{
+    .hero-banner a{
       display:block;
     }
 
-    .hero-box.trustpilot img{
+    .hero-banner img{
       width:500px;
-      display:block;
-      border-radius:8px;
-    }
-
-    .hero-box.x-box img{
-      width:380px;
       display:block;
       border-radius:8px;
     }
@@ -2087,10 +2078,8 @@ app.get('/', async (req, res) => {
       left:0;
       right:0;
       bottom:0;
-      top:118px;
       background:#151c2e;
-      padding:18px 0 20px;
-      z-index:1;
+      padding:24px 0 20px;
     }
 
     .earn-wrap{
@@ -2217,68 +2206,22 @@ app.get('/', async (req, res) => {
       background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
-    @media (max-width: 760px){
-      .hero-wrap{
-        top:12px;
-        left:12px;
-        gap:12px;
-      }
-
-      .hero-box{
-        padding:10px;
-      }
-
-      .hero-box.trustpilot img{
-        width:420px;
-      }
-
-      .hero-box.x-box img{
-        width:300px;
-      }
-
-      .earn-area{
-        top:104px;
-      }
-    }
-
-    @media (max-width: 560px){
-      .hero-wrap{
-        top:10px;
-        left:10px;
-        gap:10px;
-      }
-
-      .hero-box{
-        padding:8px;
-      }
-
-      .hero-box.trustpilot img{
-        width:340px;
-      }
-
-      .hero-box.x-box img{
-        width:220px;
-      }
-
-      .earn-area{
-        top:96px;
-      }
-    }
-
   </style>
 
   <div class="hero-wrap">
-    <div class="hero-box trustpilot">
+
+    <div class="hero-banner">
       <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
         <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
       </a>
     </div>
 
-    <div class="hero-box x-box">
-      <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
+    <div class="hero-banner">
+      <a href="https://x.com" target="_blank" rel="noopener noreferrer">
         <img src="/img/x-follow.png" alt="Follow us on X">
       </a>
     </div>
+
   </div>
 
   <div class="earn-area">
