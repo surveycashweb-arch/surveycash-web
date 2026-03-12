@@ -2062,6 +2062,7 @@ app.get('/', async (req, res) => {
       box-shadow:0 10px 30px rgba(0,0,0,.35);
       display:flex;
       align-items:center;
+      justify-content:center;
     }
 
     .hero-box a{
@@ -2075,7 +2076,7 @@ app.get('/', async (req, res) => {
     }
 
     .hero-box.x-box img{
-      width:260px;
+      width:380px;
       display:block;
       border-radius:8px;
     }
@@ -2085,8 +2086,10 @@ app.get('/', async (req, res) => {
       left:0;
       right:0;
       bottom:0;
+      top:190px;
       background:#151c2e;
       padding:24px 0 20px;
+      z-index:1;
     }
 
     .earn-wrap{
@@ -2227,7 +2230,11 @@ app.get('/', async (req, res) => {
       }
 
       .hero-box.x-box img{
-        width:180px;
+        width:300px;
+      }
+
+      .earn-area{
+        top:170px;
       }
     }
 
@@ -2247,7 +2254,11 @@ app.get('/', async (req, res) => {
       }
 
       .hero-box.x-box img{
-        width:130px;
+        width:220px;
+      }
+
+      .earn-area{
+        top:150px;
       }
     }
 
@@ -2327,7 +2338,6 @@ app.get('/', async (req, res) => {
     ),
   );
 });
-
 
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
