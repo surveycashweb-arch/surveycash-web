@@ -2061,6 +2061,10 @@ app.get('/', async (req, res) => {
       left:560px;
     }
 
+    .hero-banner.hero-tiktok{
+      left:920px;
+    }
+
     .hero-banner a{
       display:block;
     }
@@ -2077,6 +2081,11 @@ app.get('/', async (req, res) => {
     }
 
     .hero-banner.hero-x img{
+      width:340px;
+      object-fit:cover;
+    }
+
+    .hero-banner.hero-tiktok img{
       width:340px;
       object-fit:cover;
     }
@@ -2219,6 +2228,11 @@ app.get('/', async (req, res) => {
         left:18px;
         top:216px;
       }
+
+      .hero-banner.hero-tiktok{
+        left:380px;
+        top:216px;
+      }
     }
 
     @media (max-width: 760px){
@@ -2233,6 +2247,16 @@ app.get('/', async (req, res) => {
       }
 
       .hero-banner.hero-x img{
+        width:300px;
+        height:auto;
+      }
+
+      .hero-banner.hero-tiktok{
+        left:18px;
+        top:336px;
+      }
+
+      .hero-banner.hero-tiktok img{
         width:300px;
         height:auto;
       }
@@ -2258,6 +2282,16 @@ app.get('/', async (req, res) => {
         width:240px;
         height:auto;
       }
+
+      .hero-banner.hero-tiktok{
+        left:10px;
+        top:286px;
+      }
+
+      .hero-banner.hero-tiktok img{
+        width:240px;
+        height:auto;
+      }
     }
 
   </style>
@@ -2271,6 +2305,12 @@ app.get('/', async (req, res) => {
   <div class="hero-banner hero-x">
     <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
       <img src="/img/x-follow.png" alt="Follow us on X">
+    </a>
+  </div>
+
+  <div class="hero-banner hero-tiktok">
+    <a href="https://www.tiktok.com/@surveycash" target="_blank" rel="noopener noreferrer">
+      <img src="/img/tiktok-follow.png" alt="Follow us on TikTok">
     </a>
   </div>
 
