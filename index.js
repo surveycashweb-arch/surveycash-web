@@ -2048,10 +2048,8 @@ app.get('/', async (req, res) => {
     /* HERO */
     .hero-wrap{
       position:absolute;
-      top:22px;
-      left:18px;
-      right:18px;
-      height:150px;
+      top:14px;
+      left:14px;
       display:flex;
       gap:16px;
       align-items:flex-start;
@@ -2089,9 +2087,9 @@ app.get('/', async (req, res) => {
       left:0;
       right:0;
       bottom:0;
-      top:190px;
+      top:118px;
       background:#151c2e;
-      padding:24px 0 20px;
+      padding:18px 0 20px;
       z-index:1;
     }
 
@@ -2221,10 +2219,8 @@ app.get('/', async (req, res) => {
 
     @media (max-width: 760px){
       .hero-wrap{
-        top:20px;
+        top:12px;
         left:12px;
-        right:12px;
-        height:135px;
         gap:12px;
       }
 
@@ -2241,16 +2237,14 @@ app.get('/', async (req, res) => {
       }
 
       .earn-area{
-        top:170px;
+        top:104px;
       }
     }
 
     @media (max-width: 560px){
       .hero-wrap{
-        top:18px;
+        top:10px;
         left:10px;
-        right:10px;
-        height:120px;
         gap:10px;
       }
 
@@ -2267,7 +2261,7 @@ app.get('/', async (req, res) => {
       }
 
       .earn-area{
-        top:150px;
+        top:96px;
       }
     }
 
