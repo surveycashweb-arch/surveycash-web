@@ -2062,7 +2062,7 @@ app.get('/', async (req, res) => {
     }
 
     .hero-banner.hero-tiktok{
-      left:930px;
+      left:940px;
     }
 
     .hero-banner a{
