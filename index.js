@@ -2406,7 +2406,7 @@ app.get('/', async (req, res) => {
     .hero-socials{
       display:flex;
       flex-direction:column;
-      gap:16px;
+      gap:10px;
     }
 
     .hero-banner.hero-x img{
