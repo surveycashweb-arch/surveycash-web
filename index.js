@@ -2544,10 +2544,13 @@ app.get('/', async (req, res) => {
   position:absolute;
   inset:0;
   background:
-    radial-gradient(circle at bottom,
-      rgba(34,197,94,.28) 0%,
-      rgba(34,197,94,.08) 40%,
-      transparent 75%);
+    linear-gradient(
+      to top,
+      rgba(34,197,94,.35) 0%,
+      rgba(34,197,94,.18) 40%,
+      rgba(34,197,94,.06) 70%,
+      transparent 100%
+    );
   pointer-events:none;
 }
 
