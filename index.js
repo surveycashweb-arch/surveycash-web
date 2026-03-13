@@ -2721,10 +2721,6 @@ app.get('/', async (req, res) => {
   <div class="earn-card-top">
     <img src="/partners/cpx.png" alt="CPX Research" />
   </div>
-
-  <div class="cpx-name">
-    CPX Research
-  </div>
 </a>
 
           <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
