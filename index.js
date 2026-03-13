@@ -2611,7 +2611,7 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-x img{
         width:300px;
-        height:82px;
+        height:72px;
       }
 
       .hero-banner.hero-tiktok img{
