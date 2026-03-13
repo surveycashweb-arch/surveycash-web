@@ -2554,14 +2554,13 @@ app.get('/', async (req, res) => {
 .cpx-card img{
   max-width:120px;
   max-height:36px;
-  margin-bottom:10px;
+  margin-bottom:12px;
 }
 
 .cpx-name{
-  font-size:16px;
-  font-weight:800;
+  font-size:18px;
+  font-weight:900;
   color:#ffffff;
-  margin-top:6px;
 }
 
 .cpx-pill{
@@ -2725,10 +2724,6 @@ app.get('/', async (req, res) => {
 
   <div class="cpx-name">
     CPX Research
-  </div>
-
-  <div class="cpx-pill">
-    Start survey
   </div>
 </a>
 
