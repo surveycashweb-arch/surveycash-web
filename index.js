@@ -2609,10 +2609,13 @@ app.get('/', async (req, res) => {
         flex-direction:column;
       }
 
-      .hero-banner.hero-x img{
-        width:300px;
-        height:72px;
-      }
+.hero-banner.hero-x img{
+  width:400px;
+  height:72px;
+  object-fit:contain;
+  background:#000;
+  padding:8px 14px;
+}
 
       .hero-banner.hero-tiktok img{
         width:300px;
