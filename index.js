@@ -2533,6 +2533,49 @@ app.get('/', async (req, res) => {
       background:rgba(255,255,255,.03);
     }
 
+
+/* CPX premium card */
+
+.cpx-card{
+  overflow:hidden;
+}
+
+.cpx-bg{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at bottom,
+      rgba(34,197,94,.28) 0%,
+      rgba(34,197,94,.08) 40%,
+      transparent 75%);
+  pointer-events:none;
+}
+
+.cpx-card img{
+  max-width:120px;
+  max-height:36px;
+  margin-bottom:10px;
+}
+
+.cpx-name{
+  font-size:16px;
+  font-weight:800;
+  color:#ffffff;
+  margin-top:6px;
+}
+
+.cpx-pill{
+  margin-top:8px;
+  font-size:12px;
+  font-weight:700;
+  padding:5px 10px;
+  border-radius:999px;
+  background:rgba(34,197,94,.18);
+  border:1px solid rgba(34,197,94,.35);
+  color:#22c55e;
+}
+
+
     .partner-glow{
       position:absolute;
       inset:auto 0 0 0;
@@ -2673,12 +2716,21 @@ app.get('/', async (req, res) => {
 
         <div class="earn-grid">
 
-          <a href="/surveys/cpx" class="earn-card clickable">
-            <div class="partner-glow glow-green"></div>
-            <div class="earn-card-top">
-              <img src="/partners/cpx.png" alt="CPX Research" />
-            </div>
-          </a>
+          <a href="/surveys/cpx" class="earn-card clickable cpx-card">
+  <div class="cpx-bg"></div>
+
+  <div class="earn-card-top">
+    <img src="/partners/cpx.png" alt="CPX Research" />
+  </div>
+
+  <div class="cpx-name">
+    CPX Research
+  </div>
+
+  <div class="cpx-pill">
+    Start survey
+  </div>
+</a>
 
           <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
           <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
