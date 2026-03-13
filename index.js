@@ -2546,10 +2546,10 @@ app.get('/', async (req, res) => {
   background:
     linear-gradient(
       to top,
-      rgba(34,197,94,.35) 0%,
-      rgba(34,197,94,.18) 40%,
-      rgba(34,197,94,.06) 70%,
-      transparent 100%
+      rgba(34,197,94,.25) 0%,
+      rgba(34,197,94,.10) 30%,
+      rgba(34,197,94,.04) 55%,
+      transparent 75%
     );
   pointer-events:none;
 }
