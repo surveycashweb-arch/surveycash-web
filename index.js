@@ -2453,15 +2453,15 @@ app.get('/', async (req, res) => {
       height:100%;
     }
 
-    .hero-banner.hero-x img,
-    .hero-banner.hero-tiktok img{
-      width:320px;
-      max-width:100%;
-      height:auto;
-      display:block;
-      margin:0 auto;
-      border-radius:8px;
-    }
+.hero-banner.hero-x img,
+.hero-banner.hero-tiktok img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  margin:0;
+  border-radius:8px;
+}
 
     .earn-area{
       position:absolute;
