@@ -2381,10 +2381,13 @@ app.get('/', async (req, res) => {
       border-radius:14px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
       z-index:10;
+      overflow:hidden;
     }
 
     .hero-banner a{
-      display:block;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       width:100%;
       height:100%;
     }
@@ -2399,9 +2402,10 @@ app.get('/', async (req, res) => {
       width:500px;
       height:160px;
       object-fit:cover;
+      border-radius:8px;
     }
 
-    /* Socials wrapper = samme samlede højde som trustpilot-boksen */
+    /* Socials wrapper */
     .hero-socials{
       position:absolute;
       top:22px;
@@ -2424,8 +2428,10 @@ app.get('/', async (req, res) => {
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:14px;
+      padding:12px 14px;
       min-height:0;
+      border-radius:14px;
+      overflow:hidden;
     }
 
     .hero-banner.hero-x{
@@ -2436,11 +2442,23 @@ app.get('/', async (req, res) => {
       flex:0.85;
     }
 
-    .hero-banner.hero-x img,
-    .hero-banner.hero-tiktok img{
+    .hero-banner.hero-x a,
+    .hero-banner.hero-tiktok a{
+      display:flex;
+      align-items:center;
+      justify-content:center;
       width:100%;
       height:100%;
-      object-fit:contain;
+    }
+
+    .hero-banner.hero-x img,
+    .hero-banner.hero-tiktok img{
+      width:320px;
+      max-width:100%;
+      height:auto;
+      display:block;
+      margin:0 auto;
+      border-radius:8px;
     }
 
     .earn-area{
@@ -2639,7 +2657,8 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:100%;
+        width:280px;
+        max-width:100%;
         height:auto;
       }
     }
@@ -2662,9 +2681,15 @@ app.get('/', async (req, res) => {
         height:auto;
       }
 
+      .hero-banner.hero-x,
+      .hero-banner.hero-tiktok{
+        padding:10px 12px;
+      }
+
       .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:100%;
+        width:220px;
+        max-width:100%;
         height:auto;
       }
     }
