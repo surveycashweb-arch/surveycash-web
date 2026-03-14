@@ -2385,10 +2385,12 @@ app.get('/', async (req, res) => {
 
     .hero-banner.hero-x{
       left:560px;
+      top:22px;
     }
 
     .hero-banner.hero-tiktok{
-      left:940px;
+      left:560px;
+      top:116px;
     }
 
     .hero-banner a{
@@ -2397,22 +2399,24 @@ app.get('/', async (req, res) => {
 
     .hero-banner img{
       display:block;
-      height:160px;
       border-radius:8px;
     }
 
     .hero-banner.hero-trustpilot img{
       width:500px;
+      height:160px;
       object-fit:cover;
     }
 
     .hero-banner.hero-x img{
       width:340px;
+      height:80px;
       object-fit:cover;
     }
 
     .hero-banner.hero-tiktok img{
       width:340px;
+      height:52px;
       object-fit:cover;
     }
 
@@ -2533,50 +2537,47 @@ app.get('/', async (req, res) => {
       background:rgba(255,255,255,.03);
     }
 
+    /* CPX premium card */
+    .cpx-card{
+      overflow:hidden;
+    }
 
-/* CPX premium card */
+    .cpx-bg{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(
+          to top,
+          rgba(34,197,94,.25) 0%,
+          rgba(34,197,94,.10) 30%,
+          rgba(34,197,94,.04) 55%,
+          transparent 75%
+        );
+      pointer-events:none;
+    }
 
-.cpx-card{
-  overflow:hidden;
-}
+    .cpx-card img{
+      max-width:120px;
+      max-height:36px;
+      margin-bottom:12px;
+    }
 
-.cpx-bg{
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(
-      to top,
-      rgba(34,197,94,.25) 0%,
-      rgba(34,197,94,.10) 30%,
-      rgba(34,197,94,.04) 55%,
-      transparent 75%
-    );
-  pointer-events:none;
-}
+    .cpx-name{
+      font-size:18px;
+      font-weight:900;
+      color:#ffffff;
+    }
 
-.cpx-card img{
-  max-width:120px;
-  max-height:36px;
-  margin-bottom:12px;
-}
-
-.cpx-name{
-  font-size:18px;
-  font-weight:900;
-  color:#ffffff;
-}
-
-.cpx-pill{
-  margin-top:8px;
-  font-size:12px;
-  font-weight:700;
-  padding:5px 10px;
-  border-radius:999px;
-  background:rgba(34,197,94,.18);
-  border:1px solid rgba(34,197,94,.35);
-  color:#22c55e;
-}
-
+    .cpx-pill{
+      margin-top:8px;
+      font-size:12px;
+      font-weight:700;
+      padding:5px 10px;
+      border-radius:999px;
+      background:rgba(34,197,94,.18);
+      border:1px solid rgba(34,197,94,.35);
+      color:#22c55e;
+    }
 
     .partner-glow{
       position:absolute;
@@ -2719,12 +2720,12 @@ app.get('/', async (req, res) => {
         <div class="earn-grid">
 
           <a href="/surveys/cpx" class="earn-card clickable cpx-card">
-  <div class="cpx-bg"></div>
+            <div class="cpx-bg"></div>
 
-  <div class="earn-card-top">
-    <img src="/partners/cpx.png" alt="CPX Research" />
-  </div>
-</a>
+            <div class="earn-card-top">
+              <img src="/partners/cpx.png" alt="CPX Research" />
+            </div>
+          </a>
 
           <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
           <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
