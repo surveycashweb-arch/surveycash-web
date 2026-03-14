@@ -2372,21 +2372,15 @@ app.get('/', async (req, res) => {
     }
 
     /* HERO */
-    .hero-area{
+    .hero-banner{
       position:absolute;
       top:22px;
       left:18px;
-      display:flex;
-      gap:18px;
-      align-items:flex-start;
-      z-index:10;
-    }
-
-    .hero-banner{
       background:#151c2e;
       padding:14px;
       border-radius:14px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
+      z-index:10;
     }
 
     .hero-banner a{
@@ -2398,7 +2392,6 @@ app.get('/', async (req, res) => {
       border-radius:8px;
     }
 
-    /* venstre stor trustpilot */
     .hero-banner.hero-trustpilot img{
       width:500px;
       height:160px;
@@ -2407,25 +2400,32 @@ app.get('/', async (req, res) => {
 
     /* højre kolonne */
     .hero-socials{
+      position:absolute;
+      top:22px;
+      left:560px;
+      width:368px; /* 340 + 14 + 14 */
+      height:188px; /* 160 + 14 + 14 = samme ydre højde som trustpilot */
       display:flex;
       flex-direction:column;
       gap:8px;
-      width:368px;                  /* 340 + 14 + 14 */
-      height:188px;                 /* 160 + 14 + 14 = samme ydre højde som trustpilot */
+      z-index:10;
     }
 
     .hero-banner.hero-x,
     .hero-banner.hero-tiktok{
-      padding:14px;
+      position:static;
+      left:auto;
+      top:auto;
       width:100%;
+      padding:14px;
     }
 
     .hero-banner.hero-x{
-      height:98px;                  /* lidt højere */
+      flex:1.08; /* lidt højere */
     }
 
     .hero-banner.hero-tiktok{
-      height:82px;                  /* lidt lavere */
+      flex:0.92; /* lidt mindre */
     }
 
     .hero-banner.hero-x img,
@@ -2554,7 +2554,7 @@ app.get('/', async (req, res) => {
       background:rgba(255,255,255,.03);
     }
 
-    /* CPX card */
+    /* CPX premium card */
     .cpx-card{
       overflow:hidden;
     }
@@ -2579,6 +2579,23 @@ app.get('/', async (req, res) => {
       margin-bottom:12px;
     }
 
+    .cpx-name{
+      font-size:18px;
+      font-weight:900;
+      color:#ffffff;
+    }
+
+    .cpx-pill{
+      margin-top:8px;
+      font-size:12px;
+      font-weight:700;
+      padding:5px 10px;
+      border-radius:999px;
+      background:rgba(34,197,94,.18);
+      border:1px solid rgba(34,197,94,.35);
+      color:#22c55e;
+    }
+
     .partner-glow{
       position:absolute;
       inset:auto 0 0 0;
@@ -2596,39 +2613,20 @@ app.get('/', async (req, res) => {
     }
 
     @media (max-width: 1200px){
-      .hero-area{
-        flex-direction:column;
-      }
-
       .hero-socials{
-        width:368px;
-        height:auto;
-      }
-
-      .hero-banner.hero-x,
-      .hero-banner.hero-tiktok{
-        height:auto;
-      }
-
-      .hero-banner.hero-x img,
-      .hero-banner.hero-tiktok img{
-        height:auto;
+        left:560px;
       }
     }
 
     @media (max-width: 760px){
-      .hero-area{
-        left:18px;
-        top:18px;
-        flex-direction:column;
-      }
-
       .hero-banner.hero-trustpilot img{
         width:420px;
         height:auto;
       }
 
       .hero-socials{
+        left:18px;
+        top:190px;
         width:328px;
         height:auto;
       }
@@ -2641,7 +2639,7 @@ app.get('/', async (req, res) => {
     }
 
     @media (max-width: 560px){
-      .hero-area{
+      .hero-banner{
         left:10px;
         top:18px;
       }
@@ -2652,6 +2650,8 @@ app.get('/', async (req, res) => {
       }
 
       .hero-socials{
+        left:10px;
+        top:162px;
         width:268px;
         height:auto;
       }
@@ -2665,28 +2665,24 @@ app.get('/', async (req, res) => {
 
   </style>
 
-  <div class="hero-area">
+  <div class="hero-banner hero-trustpilot">
+    <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
+      <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
+    </a>
+  </div>
 
-    <div class="hero-banner hero-trustpilot">
-      <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
-        <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
+  <div class="hero-socials">
+    <div class="hero-banner hero-x">
+      <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
+        <img src="/img/x-follow.png" alt="Follow us on X">
       </a>
     </div>
 
-    <div class="hero-socials">
-      <div class="hero-banner hero-x">
-        <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
-          <img src="/img/x-follow.png" alt="Follow us on X">
-        </a>
-      </div>
-
-      <div class="hero-banner hero-tiktok">
-        <a href="https://www.tiktok.com/@surveycash" target="_blank" rel="noopener noreferrer">
-          <img src="/img/tiktok-follow.png" alt="Follow us on TikTok">
-        </a>
-      </div>
+    <div class="hero-banner hero-tiktok">
+      <a href="https://www.tiktok.com/@surveycash" target="_blank" rel="noopener noreferrer">
+        <img src="/img/tiktok-follow.png" alt="Follow us on TikTok">
+      </a>
     </div>
-
   </div>
 
   <div class="earn-area">
@@ -2724,6 +2720,7 @@ app.get('/', async (req, res) => {
 
           <a href="/surveys/cpx" class="earn-card clickable cpx-card">
             <div class="cpx-bg"></div>
+
             <div class="earn-card-top">
               <img src="/partners/cpx.png" alt="CPX Research" />
             </div>
