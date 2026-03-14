@@ -2371,7 +2371,7 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    /* HERO */
+    /* HERO BANNERS */
     .hero-banner{
       position:absolute;
       top:22px;
@@ -2383,68 +2383,37 @@ app.get('/', async (req, res) => {
       z-index:10;
     }
 
+    .hero-banner.hero-x{
+      left:560px;
+    }
+
+    .hero-banner.hero-tiktok{
+      left:940px;
+    }
+
     .hero-banner a{
       display:block;
-      width:100%;
     }
 
     .hero-banner img{
       display:block;
+      height:160px;
       border-radius:8px;
     }
 
-    /* Trustpilot skal IKKE ændres */
     .hero-banner.hero-trustpilot img{
       width:500px;
-      height:160px;
       object-fit:cover;
     }
 
-    /* højre kolonne */
-    .hero-socials{
-      position:absolute;
-      top:22px;
-      left:560px;
-      width:368px;
-      height:160px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      z-index:10;
+    .hero-banner.hero-x img{
+      width:340px;
+      object-fit:cover;
     }
 
-    .hero-banner.hero-x,
-    .hero-banner.hero-tiktok{
-      position:static;
-      left:auto;
-      top:auto;
-      width:100%;
-      padding:8px 14px;
-      box-sizing:border-box;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .hero-banner.hero-x{
-      flex:1;
-      min-height:0;
-    }
-
-    .hero-banner.hero-tiktok{
-      flex:1;
-      min-height:0;
-    }
-
-    .hero-banner.hero-x img,
     .hero-banner.hero-tiktok img{
-      width:320px;
-      max-width:100%;
-      height:auto;
-      object-fit:contain;
-      background:#000;
-      padding:4px 14px;
-      border-radius:10px;
+      width:340px;
+      object-fit:cover;
     }
 
     .earn-area{
@@ -2564,47 +2533,50 @@ app.get('/', async (req, res) => {
       background:rgba(255,255,255,.03);
     }
 
-    /* CPX premium card */
-    .cpx-card{
-      overflow:hidden;
-    }
 
-    .cpx-bg{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(
-          to top,
-          rgba(34,197,94,.25) 0%,
-          rgba(34,197,94,.10) 30%,
-          rgba(34,197,94,.04) 55%,
-          transparent 75%
-        );
-      pointer-events:none;
-    }
+/* CPX premium card */
 
-    .cpx-card img{
-      max-width:120px;
-      max-height:36px;
-      margin-bottom:12px;
-    }
+.cpx-card{
+  overflow:hidden;
+}
 
-    .cpx-name{
-      font-size:18px;
-      font-weight:900;
-      color:#ffffff;
-    }
+.cpx-bg{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(34,197,94,.25) 0%,
+      rgba(34,197,94,.10) 30%,
+      rgba(34,197,94,.04) 55%,
+      transparent 75%
+    );
+  pointer-events:none;
+}
 
-    .cpx-pill{
-      margin-top:8px;
-      font-size:12px;
-      font-weight:700;
-      padding:5px 10px;
-      border-radius:999px;
-      background:rgba(34,197,94,.18);
-      border:1px solid rgba(34,197,94,.35);
-      color:#22c55e;
-    }
+.cpx-card img{
+  max-width:120px;
+  max-height:36px;
+  margin-bottom:12px;
+}
+
+.cpx-name{
+  font-size:18px;
+  font-weight:900;
+  color:#ffffff;
+}
+
+.cpx-pill{
+  margin-top:8px;
+  font-size:12px;
+  font-weight:700;
+  padding:5px 10px;
+  border-radius:999px;
+  background:rgba(34,197,94,.18);
+  border:1px solid rgba(34,197,94,.35);
+  color:#22c55e;
+}
+
 
     .partner-glow{
       position:absolute;
@@ -2623,8 +2595,14 @@ app.get('/', async (req, res) => {
     }
 
     @media (max-width: 1200px){
-      .hero-socials{
-        left:560px;
+      .hero-banner.hero-x{
+        left:18px;
+        top:216px;
+      }
+
+      .hero-banner.hero-tiktok{
+        left:380px;
+        top:216px;
       }
     }
 
@@ -2634,21 +2612,23 @@ app.get('/', async (req, res) => {
         height:auto;
       }
 
-      .hero-socials{
+      .hero-banner.hero-x{
         left:18px;
         top:190px;
-        width:328px;
+      }
+
+      .hero-banner.hero-x img{
+        width:300px;
         height:auto;
       }
 
-      .hero-banner.hero-x,
       .hero-banner.hero-tiktok{
-        padding:10px 14px;
+        left:18px;
+        top:336px;
       }
 
-      .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:240px;
+        width:300px;
         height:auto;
       }
     }
@@ -2664,21 +2644,23 @@ app.get('/', async (req, res) => {
         height:auto;
       }
 
-      .hero-socials{
+      .hero-banner.hero-x{
         left:10px;
         top:162px;
-        width:268px;
+      }
+
+      .hero-banner.hero-x img{
+        width:240px;
         height:auto;
       }
 
-      .hero-banner.hero-x,
       .hero-banner.hero-tiktok{
-        padding:8px 10px;
+        left:10px;
+        top:286px;
       }
 
-      .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:200px;
+        width:240px;
         height:auto;
       }
     }
@@ -2691,18 +2673,16 @@ app.get('/', async (req, res) => {
     </a>
   </div>
 
-  <div class="hero-socials">
-    <div class="hero-banner hero-x">
-      <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
-        <img src="/img/x-follow.png" alt="Follow us on X">
-      </a>
-    </div>
+  <div class="hero-banner hero-x">
+    <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
+      <img src="/img/x-follow.png" alt="Follow us on X">
+    </a>
+  </div>
 
-    <div class="hero-banner hero-tiktok">
-      <a href="https://www.tiktok.com/@surveycash" target="_blank" rel="noopener noreferrer">
-        <img src="/img/tiktok-follow.png" alt="Follow us on TikTok">
-      </a>
-    </div>
+  <div class="hero-banner hero-tiktok">
+    <a href="https://www.tiktok.com/@surveycash" target="_blank" rel="noopener noreferrer">
+      <img src="/img/tiktok-follow.png" alt="Follow us on TikTok">
+    </a>
   </div>
 
   <div class="earn-area">
@@ -2739,12 +2719,12 @@ app.get('/', async (req, res) => {
         <div class="earn-grid">
 
           <a href="/surveys/cpx" class="earn-card clickable cpx-card">
-            <div class="cpx-bg"></div>
+  <div class="cpx-bg"></div>
 
-            <div class="earn-card-top">
-              <img src="/partners/cpx.png" alt="CPX Research" />
-            </div>
-          </a>
+  <div class="earn-card-top">
+    <img src="/partners/cpx.png" alt="CPX Research" />
+  </div>
+</a>
 
           <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
           <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
