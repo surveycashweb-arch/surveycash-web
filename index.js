@@ -2371,7 +2371,7 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    /* HERO AREA */
+    /* HERO */
     .hero-area{
       position:absolute;
       top:22px;
@@ -2398,6 +2398,7 @@ app.get('/', async (req, res) => {
       border-radius:8px;
     }
 
+    /* venstre stor trustpilot */
     .hero-banner.hero-trustpilot img{
       width:500px;
       height:160px;
@@ -2408,31 +2409,33 @@ app.get('/', async (req, res) => {
     .hero-socials{
       display:flex;
       flex-direction:column;
-      gap:8px;                 /* mindre mellemrum */
-      height:188px;            /* 160 + 14 + 14 = samme ydre højde som trustpilot */
+      gap:8px;
+      width:368px;                  /* 340 + 14 + 14 */
+      height:188px;                 /* 160 + 14 + 14 = samme ydre højde som trustpilot */
     }
 
     .hero-banner.hero-x,
     .hero-banner.hero-tiktok{
       padding:14px;
+      width:100%;
     }
 
     .hero-banner.hero-x{
-      flex:1.08;               /* lidt højere */
+      height:98px;                  /* lidt højere */
     }
 
     .hero-banner.hero-tiktok{
-      flex:0.92;               /* lidt lavere */
+      height:82px;                  /* lidt lavere */
     }
 
-.hero-banner.hero-x img,
-.hero-banner.hero-tiktok img{
-  width:320px;
-  height:100%;
-  object-fit:contain;
-  background:#000;
-  padding:12px 18px;
-}
+    .hero-banner.hero-x img,
+    .hero-banner.hero-tiktok img{
+      width:340px;
+      height:100%;
+      object-fit:contain;
+      background:#000;
+      padding:8px 12px;
+    }
 
     .earn-area{
       position:absolute;
@@ -2551,7 +2554,7 @@ app.get('/', async (req, res) => {
       background:rgba(255,255,255,.03);
     }
 
-    /* CPX premium card */
+    /* CPX card */
     .cpx-card{
       overflow:hidden;
     }
@@ -2598,13 +2601,18 @@ app.get('/', async (req, res) => {
       }
 
       .hero-socials{
-        width:auto;
+        width:368px;
         height:auto;
       }
 
       .hero-banner.hero-x,
       .hero-banner.hero-tiktok{
-        flex:none;
+        height:auto;
+      }
+
+      .hero-banner.hero-x img,
+      .hero-banner.hero-tiktok img{
+        height:auto;
       }
     }
 
@@ -2621,13 +2629,13 @@ app.get('/', async (req, res) => {
       }
 
       .hero-socials{
-        gap:8px;
+        width:328px;
         height:auto;
       }
 
       .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:280px;
+        width:300px;
         height:auto;
       }
     }
@@ -2640,6 +2648,11 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-trustpilot img{
         width:340px;
+        height:auto;
+      }
+
+      .hero-socials{
+        width:268px;
         height:auto;
       }
 
