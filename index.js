@@ -2429,7 +2429,7 @@ app.get('/', async (req, res) => {
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:12px 14px;
+      padding:10px;
       min-height:0;
       border-radius:14px;
       overflow:hidden;
@@ -2453,15 +2453,15 @@ app.get('/', async (req, res) => {
       height:100%;
     }
 
-.hero-banner.hero-x img,
-.hero-banner.hero-tiktok img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  margin:0;
-  border-radius:8px;
-}
+    .hero-banner.hero-x img,
+    .hero-banner.hero-tiktok img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+      margin:0;
+      border-radius:8px;
+    }
 
     .earn-area{
       position:absolute;
@@ -2657,11 +2657,9 @@ app.get('/', async (req, res) => {
         height:auto;
       }
 
-      .hero-banner.hero-x img,
-      .hero-banner.hero-tiktok img{
-        width:280px;
-        max-width:100%;
-        height:auto;
+      .hero-banner.hero-x,
+      .hero-banner.hero-tiktok{
+        padding:10px;
       }
     }
 
@@ -2685,14 +2683,7 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-x,
       .hero-banner.hero-tiktok{
-        padding:10px 12px;
-      }
-
-      .hero-banner.hero-x img,
-      .hero-banner.hero-tiktok img{
-        width:220px;
-        max-width:100%;
-        height:auto;
+        padding:8px;
       }
     }
 
