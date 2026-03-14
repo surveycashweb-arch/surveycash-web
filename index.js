@@ -2429,7 +2429,7 @@ app.get('/', async (req, res) => {
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:12px 14px;
+      padding:14px;
       min-height:0;
       border-radius:14px;
       overflow:hidden;
@@ -2685,7 +2685,7 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-x,
       .hero-banner.hero-tiktok{
-        padding:10px 12px;
+        padding:12px;
       }
 
       .hero-banner.hero-x img,
