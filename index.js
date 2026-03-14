@@ -2404,8 +2404,8 @@ app.get('/', async (req, res) => {
       position:absolute;
       top:22px;
       left:560px;
-      width:368px;              /* 340 + 14 + 14 */
-      height:188px;             /* 160 + 14 + 14 = samme totale højde som trustpilot */
+      width:368px;
+      height:188px;
       display:flex;
       flex-direction:column;
       gap:8px;
@@ -2420,6 +2420,9 @@ app.get('/', async (req, res) => {
       width:100%;
       padding:14px;
       box-sizing:border-box;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
 
     .hero-banner.hero-x{
@@ -2433,19 +2436,19 @@ app.get('/', async (req, res) => {
     }
 
     .hero-banner.hero-x img{
-      width:340px;
+      width:280px;
       height:100%;
       object-fit:contain;
       background:#000;
-      padding:8px 12px;
+      padding:6px 10px;
     }
 
     .hero-banner.hero-tiktok img{
-      width:340px;
+      width:280px;
       height:100%;
       object-fit:contain;
       background:#000;
-      padding:8px 12px;
+      padding:6px 10px;
     }
 
     .earn-area{
@@ -2644,7 +2647,7 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:300px;
+        width:240px;
         height:auto;
       }
     }
@@ -2669,7 +2672,7 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:240px;
+        width:200px;
         height:auto;
       }
     }
