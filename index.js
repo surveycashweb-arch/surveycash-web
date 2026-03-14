@@ -2436,20 +2436,22 @@ app.get('/', async (req, res) => {
     }
 
     .hero-banner.hero-x img{
-      width:280px;
-      height:100%;
-      object-fit:contain;
-      background:#000;
-      padding:6px 10px;
-    }
+  width:320px;        /* bredere */
+  max-width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#000;
+  padding:6px 14px;
+}
 
-    .hero-banner.hero-tiktok img{
-      width:280px;
-      height:100%;
-      object-fit:contain;
-      background:#000;
-      padding:6px 10px;
-    }
+.hero-banner.hero-tiktok img{
+  width:320px;        /* bredere */
+  max-width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#000;
+  padding:6px 14px;
+}
 
     .earn-area{
       position:absolute;
