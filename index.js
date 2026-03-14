@@ -2416,6 +2416,7 @@ app.get('/', async (req, res) => {
       flex-direction:column;
       gap:8px;
       z-index:10;
+      background:transparent;
     }
 
     .hero-banner.hero-x,
@@ -2432,6 +2433,7 @@ app.get('/', async (req, res) => {
       min-height:0;
       border-radius:14px;
       overflow:hidden;
+      background:#151c2e;
     }
 
     .hero-banner.hero-x{
