@@ -2425,14 +2425,14 @@ app.get('/', async (req, res) => {
       flex:0.92;               /* lidt lavere */
     }
 
-    .hero-banner.hero-x img,
-    .hero-banner.hero-tiktok img{
-      width:340px;
-      height:100%;
-      object-fit:contain;
-      background:#000;
-      padding:8px 12px;
-    }
+.hero-banner.hero-x img,
+.hero-banner.hero-tiktok img{
+  width:320px;
+  height:100%;
+  object-fit:contain;
+  background:#000;
+  padding:12px 18px;
+}
 
     .earn-area{
       position:absolute;
