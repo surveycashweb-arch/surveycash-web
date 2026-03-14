@@ -2392,6 +2392,7 @@ app.get('/', async (req, res) => {
       border-radius:8px;
     }
 
+    /* Trustpilot skal IKKE ændres */
     .hero-banner.hero-trustpilot img{
       width:500px;
       height:160px;
@@ -2403,8 +2404,8 @@ app.get('/', async (req, res) => {
       position:absolute;
       top:22px;
       left:560px;
-      width:368px; /* 340 + 14 + 14 */
-      height:188px; /* 160 + 14 + 14 = samme ydre højde som trustpilot */
+      width:368px;              /* 340 + 14 + 14 */
+      height:188px;             /* 160 + 14 + 14 = samme totale højde som trustpilot */
       display:flex;
       flex-direction:column;
       gap:8px;
@@ -2418,17 +2419,27 @@ app.get('/', async (req, res) => {
       top:auto;
       width:100%;
       padding:14px;
+      box-sizing:border-box;
     }
 
     .hero-banner.hero-x{
-      flex:1.08; /* lidt højere */
+      flex:1.08;
+      min-height:0;
     }
 
     .hero-banner.hero-tiktok{
-      flex:0.92; /* lidt mindre */
+      flex:0.92;
+      min-height:0;
     }
 
-    .hero-banner.hero-x img,
+    .hero-banner.hero-x img{
+      width:340px;
+      height:100%;
+      object-fit:contain;
+      background:#000;
+      padding:8px 12px;
+    }
+
     .hero-banner.hero-tiktok img{
       width:340px;
       height:100%;
