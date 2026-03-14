@@ -2455,11 +2455,10 @@ app.get('/', async (req, res) => {
 
     .hero-banner.hero-x img,
     .hero-banner.hero-tiktok img{
-      width:320px;
-      max-width:100%;
-      height:auto;
+      width:100%;
+      height:100%;
+      object-fit:contain;
       display:block;
-      margin:0 auto;
       border-radius:8px;
     }
 
@@ -2659,9 +2658,9 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:280px;
-        max-width:100%;
-        height:auto;
+        width:100%;
+        height:100%;
+        object-fit:contain;
       }
     }
 
@@ -2690,9 +2689,9 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:220px;
-        max-width:100%;
-        height:auto;
+        width:100%;
+        height:100%;
+        object-fit:contain;
       }
     }
 
