@@ -2386,6 +2386,7 @@ app.get('/', async (req, res) => {
     .hero-banner a{
       display:block;
       width:100%;
+      height:100%;
     }
 
     .hero-banner img{
@@ -2406,7 +2407,7 @@ app.get('/', async (req, res) => {
       top:22px;
       left:560px;
       width:368px;
-      height:188px; /* matcher trustpilot-boksens totale højde */
+      height:188px;
       display:flex;
       flex-direction:column;
       gap:8px;
@@ -2424,28 +2425,22 @@ app.get('/', async (req, res) => {
       align-items:center;
       justify-content:center;
       padding:14px;
+      min-height:0;
     }
 
     .hero-banner.hero-x{
-      flex:1.08;
-      min-height:0;
+      flex:1.15;
     }
 
     .hero-banner.hero-tiktok{
-      flex:0.92;
-      min-height:0;
+      flex:0.85;
     }
 
-    .hero-banner.hero-x img{
-      width:340px;
-      height:86px;
-      object-fit:cover;
-    }
-
+    .hero-banner.hero-x img,
     .hero-banner.hero-tiktok img{
-      width:340px;
-      height:58px;
-      object-fit:cover;
+      width:100%;
+      height:100%;
+      object-fit:contain;
     }
 
     .earn-area{
@@ -2644,7 +2639,7 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:300px;
+        width:100%;
         height:auto;
       }
     }
@@ -2669,7 +2664,7 @@ app.get('/', async (req, res) => {
 
       .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
-        width:240px;
+        width:100%;
         height:auto;
       }
     }
