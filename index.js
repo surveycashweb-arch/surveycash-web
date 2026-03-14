@@ -2385,6 +2385,7 @@ app.get('/', async (req, res) => {
 
     .hero-banner a{
       display:block;
+      width:100%;
     }
 
     .hero-banner img{
@@ -2405,7 +2406,7 @@ app.get('/', async (req, res) => {
       top:22px;
       left:560px;
       width:368px;
-      height:188px;
+      height:160px;
       display:flex;
       flex-direction:column;
       gap:8px;
@@ -2418,7 +2419,7 @@ app.get('/', async (req, res) => {
       left:auto;
       top:auto;
       width:100%;
-      padding:14px;
+      padding:8px 14px;
       box-sizing:border-box;
       display:flex;
       align-items:center;
@@ -2426,32 +2427,25 @@ app.get('/', async (req, res) => {
     }
 
     .hero-banner.hero-x{
-      flex:1.08;
+      flex:1;
       min-height:0;
     }
 
     .hero-banner.hero-tiktok{
-      flex:0.92;
+      flex:1;
       min-height:0;
     }
 
-    .hero-banner.hero-x img{
-  width:320px;        /* bredere */
-  max-width:100%;
-  height:100%;
-  object-fit:contain;
-  background:#000;
-  padding:6px 14px;
-}
-
-.hero-banner.hero-tiktok img{
-  width:320px;        /* bredere */
-  max-width:100%;
-  height:100%;
-  object-fit:contain;
-  background:#000;
-  padding:6px 14px;
-}
+    .hero-banner.hero-x img,
+    .hero-banner.hero-tiktok img{
+      width:320px;
+      max-width:100%;
+      height:auto;
+      object-fit:contain;
+      background:#000;
+      padding:4px 14px;
+      border-radius:10px;
+    }
 
     .earn-area{
       position:absolute;
@@ -2647,6 +2641,11 @@ app.get('/', async (req, res) => {
         height:auto;
       }
 
+      .hero-banner.hero-x,
+      .hero-banner.hero-tiktok{
+        padding:10px 14px;
+      }
+
       .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
         width:240px;
@@ -2670,6 +2669,11 @@ app.get('/', async (req, res) => {
         top:162px;
         width:268px;
         height:auto;
+      }
+
+      .hero-banner.hero-x,
+      .hero-banner.hero-tiktok{
+        padding:8px 10px;
       }
 
       .hero-banner.hero-x img,
