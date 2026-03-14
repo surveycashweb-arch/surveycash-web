@@ -2457,7 +2457,7 @@ app.get('/', async (req, res) => {
     .hero-banner.hero-tiktok img{
       width:100%;
       height:100%;
-      object-fit:contain;
+      object-fit:cover;
       display:block;
       border-radius:8px;
     }
@@ -2660,7 +2660,7 @@ app.get('/', async (req, res) => {
       .hero-banner.hero-tiktok img{
         width:100%;
         height:100%;
-        object-fit:contain;
+        object-fit:cover;
       }
     }
 
@@ -2691,7 +2691,7 @@ app.get('/', async (req, res) => {
       .hero-banner.hero-tiktok img{
         width:100%;
         height:100%;
-        object-fit:contain;
+        object-fit:cover;
       }
     }
 
