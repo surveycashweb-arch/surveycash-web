@@ -2466,8 +2466,8 @@ app.get('/', async (req, res) => {
   width:110%;
   height:100%;
   object-fit:cover;
+  margin-left:-2%;
   display:block;
-  margin-left:-5%;
   border-radius:8px;
 }
 
