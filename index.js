@@ -2371,7 +2371,7 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    /* HERO BANNERS */
+    /* HERO */
     .hero-banner{
       position:absolute;
       top:22px;
@@ -2383,18 +2383,9 @@ app.get('/', async (req, res) => {
       z-index:10;
     }
 
-    .hero-banner.hero-x{
-      left:560px;
-      top:22px;
-    }
-
-    .hero-banner.hero-tiktok{
-      left:560px;
-      top:116px;
-    }
-
     .hero-banner a{
       display:block;
+      width:100%;
     }
 
     .hero-banner img{
@@ -2402,21 +2393,58 @@ app.get('/', async (req, res) => {
       border-radius:8px;
     }
 
+    /* Trustpilot */
     .hero-banner.hero-trustpilot img{
       width:500px;
       height:160px;
       object-fit:cover;
     }
 
+    /* Socials wrapper = samme samlede højde som trustpilot-boksen */
+    .hero-socials{
+      position:absolute;
+      top:22px;
+      left:560px;
+      width:368px;
+      height:188px; /* matcher trustpilot-boksens totale højde */
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      z-index:10;
+    }
+
+    .hero-banner.hero-x,
+    .hero-banner.hero-tiktok{
+      position:static;
+      left:auto;
+      top:auto;
+      width:100%;
+      box-sizing:border-box;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+    }
+
+    .hero-banner.hero-x{
+      flex:1.08;
+      min-height:0;
+    }
+
+    .hero-banner.hero-tiktok{
+      flex:0.92;
+      min-height:0;
+    }
+
     .hero-banner.hero-x img{
       width:340px;
-      height:80px;
+      height:86px;
       object-fit:cover;
     }
 
     .hero-banner.hero-tiktok img{
       width:340px;
-      height:52px;
+      height:58px;
       object-fit:cover;
     }
 
@@ -2596,14 +2624,8 @@ app.get('/', async (req, res) => {
     }
 
     @media (max-width: 1200px){
-      .hero-banner.hero-x{
-        left:18px;
-        top:216px;
-      }
-
-      .hero-banner.hero-tiktok{
-        left:380px;
-        top:216px;
+      .hero-socials{
+        left:560px;
       }
     }
 
@@ -2613,21 +2635,14 @@ app.get('/', async (req, res) => {
         height:auto;
       }
 
-      .hero-banner.hero-x{
+      .hero-socials{
         left:18px;
         top:190px;
-      }
-
-      .hero-banner.hero-x img{
-        width:300px;
+        width:328px;
         height:auto;
       }
 
-      .hero-banner.hero-tiktok{
-        left:18px;
-        top:336px;
-      }
-
+      .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
         width:300px;
         height:auto;
@@ -2645,21 +2660,14 @@ app.get('/', async (req, res) => {
         height:auto;
       }
 
-      .hero-banner.hero-x{
+      .hero-socials{
         left:10px;
         top:162px;
-      }
-
-      .hero-banner.hero-x img{
-        width:240px;
+        width:268px;
         height:auto;
       }
 
-      .hero-banner.hero-tiktok{
-        left:10px;
-        top:286px;
-      }
-
+      .hero-banner.hero-x img,
       .hero-banner.hero-tiktok img{
         width:240px;
         height:auto;
@@ -2674,16 +2682,18 @@ app.get('/', async (req, res) => {
     </a>
   </div>
 
-  <div class="hero-banner hero-x">
-    <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
-      <img src="/img/x-follow.png" alt="Follow us on X">
-    </a>
-  </div>
+  <div class="hero-socials">
+    <div class="hero-banner hero-x">
+      <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
+        <img src="/img/x-follow.png" alt="Follow us on X">
+      </a>
+    </div>
 
-  <div class="hero-banner hero-tiktok">
-    <a href="https://www.tiktok.com/@surveycash" target="_blank" rel="noopener noreferrer">
-      <img src="/img/tiktok-follow.png" alt="Follow us on TikTok">
-    </a>
+    <div class="hero-banner hero-tiktok">
+      <a href="https://www.tiktok.com/@surveycash" target="_blank" rel="noopener noreferrer">
+        <img src="/img/tiktok-follow.png" alt="Follow us on TikTok">
+      </a>
+    </div>
   </div>
 
   <div class="earn-area">
