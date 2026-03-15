@@ -2463,10 +2463,10 @@ app.get('/', async (req, res) => {
 }
 
 .hero-banner.hero-tiktok img{
-  width:108%;
+  width:106%;
   height:100%;
   object-fit:cover;
-  margin-left:-1%;
+  margin-left:0;
   display:block;
   border-radius:8px;
 }
