@@ -2434,6 +2434,7 @@ app.get('/', async (req, res) => {
       border-radius:14px;
       overflow:hidden;
       background:#151c2e;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
     }
 
     .hero-banner.hero-x{
@@ -2454,22 +2455,22 @@ app.get('/', async (req, res) => {
     }
 
     .hero-banner.hero-x img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  margin:0;
-  border-radius:8px;
-}
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+      margin:0;
+      border-radius:8px;
+    }
 
-.hero-banner.hero-tiktok img{
-  width:106%;
-  height:100%;
-  object-fit:cover;
-  margin-left:0;
-  display:block;
-  border-radius:8px;
-}
+    .hero-banner.hero-tiktok img{
+      width:106%;
+      height:100%;
+      object-fit:cover;
+      margin-left:0;
+      display:block;
+      border-radius:8px;
+    }
 
     .earn-area{
       position:absolute;
@@ -2522,9 +2523,7 @@ app.get('/', async (req, res) => {
       aspect-ratio:1 / 1.40;
       border-radius:13px;
       border:1px solid rgba(255,255,255,.06);
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 45%),
-        rgba(18,24,40,.92);
+      background:#151c2e;
       padding:10px 8px;
       overflow:hidden;
       text-decoration:none;
@@ -2533,14 +2532,13 @@ app.get('/', async (req, res) => {
       justify-content:center;
       align-items:center;
       transition:transform .15s ease, border-color .15s ease, background .15s ease;
+      box-shadow:0 10px 30px rgba(0,0,0,.22);
     }
 
     .earn-card:hover{
       transform:translateY(-2px);
       border-color:rgba(255,255,255,.11);
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,.06), transparent 45%),
-        rgba(24,32,52,.98);
+      background:#192338;
     }
 
     .earn-card.clickable{
