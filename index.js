@@ -4364,18 +4364,18 @@ app.get('/cashout', async (req, res) => {
             overflow:hidden;
           }
 
-          .cashout-bottom-fill{
-            position:fixed;
-            left:50%;
-            transform:translateX(-50%);
-            bottom:0;
-            width:100vw;
-            height:185px;
-            background:#151c2e;
-            border-top:1px solid rgba(255,255,255,.04);
-            z-index:0;
-            pointer-events:none;
-          }
+         .cashout-bottom-fill{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:0;
+  width:100vw;
+  height:240px;
+  background:#151c2e;
+  border-top:1px solid rgba(255,255,255,.04);
+  z-index:0;
+  pointer-events:none;
+}
 
           .cashout-head,
           .cashout-section{
