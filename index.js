@@ -5128,6 +5128,7 @@ app.all('/cpa/postback', async (req, res) => {
   try {
     const userId = String(req.query.subid || req.body?.subid || '').trim();
     const amountRaw = req.query.payout || req.body?.payout || 0;
+    const secret = String(req.query.secret || req.body?.secret || '').trim();
     const amount = Number(amountRaw);
 
     console.log('POSTBACK START:', {
@@ -5138,12 +5139,16 @@ app.all('/cpa/postback', async (req, res) => {
       body: req.body,
     });
 
+    if (secret !== process.env.CPA_POSTBACK_SECRET) {
+      console.log('POSTBACK FORBIDDEN: wrong secret');
+      return res.status(403).send('forbidden');
+    }
+
     if (!userId || !Number.isFinite(amount) || amount <= 0) {
       console.log('POSTBACK INVALID INPUT');
       return res.send('invalid');
     }
 
-    // hent profil DIREKTE fra profiles
     const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
       .select('user_id, balance_cents, total_earned_cents')
@@ -5165,7 +5170,6 @@ app.all('/cpa/postback', async (req, res) => {
     const cents = Math.round(amount * 100);
     const currentBalance = Number(profile.balance_cents || 0);
     const currentTotal = Number(profile.total_earned_cents || 0);
-
     const newBalance = currentBalance + cents;
     const newTotal = currentTotal + cents;
 
