@@ -4347,14 +4347,21 @@ app.get('/cashout', async (req, res) => {
           }
 
           main{
+            position:relative;
+            height:calc(100vh - 64px);
             padding-top:0 !important;
+            overflow:hidden !important;
           }
 
           .cashout-page{
+            position:relative;
             width:100%;
+            height:100%;
             max-width:none;
             margin:6px 0 0 0 !important;
-            padding:0 0 60px 40px !important;
+            padding:0 40px 0 40px !important;
+            box-sizing:border-box;
+            overflow:hidden;
           }
 
           .cashout-head{
@@ -4427,7 +4434,7 @@ app.get('/cashout', async (req, res) => {
 
           .method-card{
             width:250px;
-            height:210px;
+            height:185px;
             cursor:pointer;
             border-radius:20px;
             padding:14px 16px 16px;
@@ -4456,7 +4463,7 @@ app.get('/cashout', async (req, res) => {
             font-size:14px;
             letter-spacing:.3px;
             margin:0 0 8px;
-            margin-top:-8px;
+            margin-top:-4px;
             opacity:.9;
           }
 
@@ -4467,14 +4474,14 @@ app.get('/cashout', async (req, res) => {
             display:flex;
             align-items:center;
             justify-content:center;
-            margin-bottom:12px;
+            margin-bottom:10px;
           }
 
-          .method-logo-tile img{ width:198px; max-width:100%; height:auto; }
+          .method-logo-tile img{ width:190px; max-width:100%; height:auto; }
 
           .method-bar{
             margin-top:auto;
-            height:10px;
+            height:8px;
             border-radius:999px;
             background:rgba(255,255,255,.10);
             overflow:hidden;
@@ -4513,7 +4520,107 @@ app.get('/cashout', async (req, res) => {
             color:#cbd5e1;
           }
 
-          @media (max-width:1000px){ .methods-grid{ grid-template-columns:repeat(2, 250px); } }
+          .cashout-bottom{
+            position:absolute;
+            left:40px;
+            right:40px;
+            bottom:16px;
+            height:148px;
+            border-radius:22px;
+            background:rgba(255,255,255,.03);
+            border:1px solid rgba(255,255,255,.08);
+            display:grid;
+            grid-template-columns:1.5fr .8fr .8fr .8fr;
+            gap:26px;
+            padding:22px 26px;
+            box-sizing:border-box;
+            overflow:hidden;
+          }
+
+          .cashout-bottom-brand{
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+            min-width:0;
+          }
+
+          .cashout-bottom-logo{
+            font-size:20px;
+            font-weight:900;
+            color:#fff;
+            line-height:1;
+          }
+
+          .cashout-bottom-logo span{
+            color:#22c55e;
+          }
+
+          .cashout-bottom-text{
+            margin-top:10px;
+            max-width:430px;
+            color:rgba(255,255,255,.68);
+            font-size:13px;
+            line-height:1.45;
+          }
+
+          .cashout-bottom-badges{
+            display:flex;
+            gap:10px;
+            margin-top:14px;
+            flex-wrap:wrap;
+          }
+
+          .cashout-badge{
+            height:34px;
+            padding:0 12px;
+            border-radius:10px;
+            border:1px solid rgba(255,255,255,.12);
+            background:rgba(255,255,255,.04);
+            color:#fff;
+            display:inline-flex;
+            align-items:center;
+            font-weight:700;
+            font-size:12px;
+          }
+
+          .cashout-bottom-col h4{
+            margin:0 0 14px;
+            font-size:15px;
+            font-weight:900;
+            color:#22c55e;
+          }
+
+          .cashout-bottom-col a,
+          .cashout-bottom-col div{
+            display:block;
+            color:#fff;
+            text-decoration:none;
+            font-size:14px;
+            font-weight:700;
+            margin-bottom:14px;
+            opacity:.92;
+          }
+
+          .cashout-bottom-col a:hover{
+            opacity:1;
+          }
+
+          @media (max-width:1200px){
+            .cashout-bottom{
+              grid-template-columns:1.3fr 1fr 1fr;
+              gap:20px;
+            }
+
+            .cashout-bottom-col:last-child{
+              display:none;
+            }
+          }
+
+          @media (max-width:1000px){
+            .methods-grid{ grid-template-columns:repeat(2, 250px); }
+            .cashout-bottom{ display:none; }
+          }
+
           @media (max-width:640px){
             .methods-grid{ grid-template-columns:1fr; }
             .method-card{ width:100%; max-width:320px; }
@@ -4528,11 +4635,9 @@ app.get('/cashout', async (req, res) => {
           }
           .co-backdrop.open{ display:flex; }
 
-          /* layer order */
           #coBackdrop{ z-index:9999; }
           #confirmBackdrop{ z-index:10000; }
 
-          /* ===== Amount modal ===== */
           .co-modal{
             width:min(640px, 100%);
             background:#0b1220;
@@ -4565,7 +4670,7 @@ app.get('/cashout', async (req, res) => {
             grid-template-columns:repeat(3, minmax(0, 1fr));
             gap:10px;
           }
-          @media (max-width: 760px){
+          @media (max-width:760px){
             .amount-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
           }
 
@@ -4650,7 +4755,6 @@ app.get('/cashout', async (req, res) => {
           }
           @media (max-width:520px){ .withdraw-btn{ width:100%; } }
 
-          /* ===== Confirm modal (MATCH co-modal exactly) ===== */
           .co-confirm{
             width:min(640px, 100%);
             background:#0b1220;
@@ -4659,7 +4763,6 @@ app.get('/cashout', async (req, res) => {
             padding:14px 14px 10px;
             box-shadow:0 40px 140px rgba(0,0,0,.65);
             position:relative;
-
             max-height:calc(100vh - 60px);
             overflow:auto;
           }
@@ -4764,20 +4867,18 @@ app.get('/cashout', async (req, res) => {
 
 <div class="cashout-page">
 
-<div class="cashout-head">
-  <h1><span class="cash-accent">Cash</span>Out</h1>
+  <div class="cashout-head">
+    <h1><span class="cash-accent">Cash</span>Out</h1>
 
-  <div class="cashout-topbar">
+    <div class="cashout-topbar">
+      <a href="/payments" class="my-payments-btn">My payments</a>
 
-    <a href="/payments" class="my-payments-btn">My payments</a>
-
-    <div class="cashout-balances">
-      <span>Available: $${formatUsdFromCents(balanceCents)}</span>
-      <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
+      <div class="cashout-balances">
+        <span>Available: $${formatUsdFromCents(balanceCents)}</span>
+        <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
+      </div>
     </div>
-
   </div>
-</div>
 
   ${msg}
 
@@ -4851,6 +4952,44 @@ app.get('/cashout', async (req, res) => {
         <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
       </div>
 
+    </div>
+  </div>
+
+  <div class="cashout-bottom">
+    <div class="cashout-bottom-brand">
+      <div>
+        <div class="cashout-bottom-logo"><span>Survey</span>Cash</div>
+        <div class="cashout-bottom-text">
+          SurveyCash is a rewards platform where users can earn by completing surveys and offers from trusted partners and cash out securely.
+        </div>
+      </div>
+
+      <div class="cashout-bottom-badges">
+        <div class="cashout-badge">Fast payouts</div>
+        <div class="cashout-badge">Secure cashouts</div>
+        <div class="cashout-badge">Live support</div>
+      </div>
+    </div>
+
+    <div class="cashout-bottom-col">
+      <h4>SurveyCash</h4>
+      <a href="/earn">Earn</a>
+      <a href="/cashout">Cash Out</a>
+      <a href="/support">Support</a>
+    </div>
+
+    <div class="cashout-bottom-col">
+      <h4>Resources</h4>
+      <a href="/help">Help Center</a>
+      <a href="/terms">Terms</a>
+      <a href="/privacy">Privacy</a>
+    </div>
+
+    <div class="cashout-bottom-col">
+      <h4>Company</h4>
+      <a href="/contact">Contact</a>
+      <div>Partners</div>
+      <div>Advertise</div>
     </div>
   </div>
 
