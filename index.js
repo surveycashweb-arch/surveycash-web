@@ -2727,24 +2727,18 @@ app.get('/', async (req, res) => {
 
         <div class="earn-grid">
 
-         <a href="/games/wannads" class="earn-card clickable">
-  <div class="partner-glow glow-orange"></div>
-  <div class="earn-card-top">
-    <div class="earn-card-brand">Wannads</div>
-  </div>
-</a>
+          <a href="/games/wannads" class="earn-card clickable">
+            <div class="partner-glow glow-orange"></div>
+            <div class="earn-card-top">
+              <div class="earn-card-brand">Wannads</div>
+            </div>
+          </a>
 
-<a href="/cpagrip" class="earn-card clickable">
-  <div class="partner-glow glow-orange"></div>
-  <div class="earn-card-top">
-    <div class="earn-card-brand">CPAGrip</div>
-  </div>
-</a>
-
-<div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-<div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-<div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-<div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
         </div>
       </section>
@@ -5129,139 +5123,6 @@ app.get('/support', (req, res) => {
   );
 });
 
-
-app.all('/cpa/postback', async (req, res) => {
-  try {
-    const userId = String(req.query.subid || req.body?.subid || '').trim();
-    const amountRaw = req.query.payout || req.body?.payout || 0;
-    const secret = String(req.query.secret || req.body?.secret || '').trim();
-    const transId = String(
-      req.query.trans_id ||
-      req.query.txid ||
-      req.body?.trans_id ||
-      req.body?.txid ||
-      ''
-    ).trim();
-
-    const amount = Number(amountRaw);
-
-    console.log('POSTBACK START:', {
-      userId,
-      amount,
-      amountRaw,
-      transId,
-      query: req.query,
-      body: req.body,
-    });
-
-    if (secret !== process.env.CPA_POSTBACK_SECRET) {
-      console.log('POSTBACK FORBIDDEN: wrong secret');
-      return res.status(403).send('forbidden');
-    }
-
-    if (!userId || !Number.isFinite(amount) || amount <= 0 || !transId) {
-      console.log('POSTBACK INVALID INPUT');
-      return res.send('invalid');
-    }
-
-    const { data: existingTx, error: existingTxError } = await supabaseAdmin
-      .from('cpa_transactions')
-      .select('id')
-      .eq('trans_id', transId)
-      .maybeSingle();
-
-    if (existingTxError) {
-      console.error('TX LOOKUP ERROR:', existingTxError);
-      return res.send('tx lookup error');
-    }
-
-    if (existingTx) {
-      console.log('DUPLICATE BLOCKED:', transId);
-      return res.send('duplicate');
-    }
-
-    const { data: profile, error: profileError } = await supabaseAdmin
-      .from('profiles')
-      .select('user_id, balance_cents, total_earned_cents')
-      .eq('user_id', userId)
-      .single();
-
-    console.log('PROFILE RESULT:', { profile, profileError });
-
-    if (profileError) {
-      console.error('PROFILE FETCH ERROR:', profileError);
-      return res.send('profile error');
-    }
-
-    if (!profile) {
-      console.log('NO USER FOUND:', userId);
-      return res.send('no user');
-    }
-
-    const cents = Math.round(amount * 100);
-    const currentBalance = Number(profile.balance_cents || 0);
-    const currentTotal = Number(profile.total_earned_cents || 0);
-    const newBalance = currentBalance + cents;
-    const newTotal = currentTotal + cents;
-
-    console.log('UPDATE VALUES:', {
-      currentBalance,
-      currentTotal,
-      cents,
-      newBalance,
-      newTotal,
-    });
-
-    const { error: txInsertError } = await supabaseAdmin
-      .from('cpa_transactions')
-      .insert({
-        user_id: userId,
-        partner: 'cpagrip',
-        trans_id: transId,
-        cents: cents,
-        status: 1,
-      });
-
-    if (txInsertError) {
-      console.error('TX INSERT ERROR:', txInsertError);
-      return res.send('tx error');
-    }
-
-    const { data: updatedRows, error: updateError } = await supabaseAdmin
-      .from('profiles')
-      .update({
-        balance_cents: newBalance,
-        total_earned_cents: newTotal,
-      })
-      .eq('user_id', userId)
-      .select();
-
-    console.log('UPDATE RESULT:', { updatedRows, updateError });
-
-    if (updateError) {
-      console.error('SUPABASE UPDATE ERROR:', updateError);
-      return res.send('db error');
-    }
-
-    console.log(`SUCCESS: User ${userId} earned ${cents} cents, transId=${transId}`);
-    return res.send('ok');
-  } catch (e) {
-    console.error('POSTBACK ERROR:', e);
-    return res.send('error');
-  }
-});
-
-
-app.get('/cpagrip', (req, res) => {
-  if (!isLoggedIn(req)) return res.redirect('/');
-
-  const userId = req.user?.id;
-  if (!userId) return res.redirect('/');
-
-  const url = `https://ridefiles.net/1883899?tracking_id=${encodeURIComponent(userId)}`;
-
-  return res.redirect(url);
-});
 
 // ---------- Auth: finish login after email verification ----------
 app.post('/auth/finish', async (req, res) => {
