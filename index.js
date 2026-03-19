@@ -5210,7 +5210,7 @@ app.all('/cpa/postback', async (req, res) => {
       .from('cpa_transactions')
       .insert({
         user_id: userId,
-        partner: 'cpa',
+        partner: 'cpagrip',
         trans_id: transId,
         cents: cents,
         status: 1,
@@ -5245,6 +5245,17 @@ app.all('/cpa/postback', async (req, res) => {
   }
 });
 
+
+app.get('/cpagrip', (req, res) => {
+  if (!isLoggedIn(req)) return res.redirect('/');
+
+  const userId = req.user?.id;
+  if (!userId) return res.redirect('/');
+
+  const url = `https://ridefiles.net/1883899?tracking_id=${encodeURIComponent(userId)}`;
+
+  return res.redirect(url);
+});
 
 // ---------- Auth: finish login after email verification ----------
 app.post('/auth/finish', async (req, res) => {
