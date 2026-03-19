@@ -4337,6 +4337,15 @@ app.get('/cashout', async (req, res) => {
       loggedIn: user,
       bodyHtml: `
         <style>
+          html, body{
+            height:100%;
+            overflow:hidden !important;
+          }
+
+          body{
+            margin:0;
+          }
+
           main,
           .container,
           .page,
@@ -4349,6 +4358,8 @@ app.get('/cashout', async (req, res) => {
           main{
             position:relative;
             height:calc(100vh - 64px);
+            min-height:calc(100vh - 64px);
+            max-height:calc(100vh - 64px);
             padding-top:0 !important;
             overflow:hidden !important;
           }
@@ -4358,24 +4369,24 @@ app.get('/cashout', async (req, res) => {
             width:100%;
             height:100%;
             max-width:none;
-            margin:6px 0 0 0 !important;
-            padding:0 0 0 40px !important;
+            margin:0 !important;
+            padding:6px 0 0 40px !important;
             box-sizing:border-box;
             overflow:hidden;
           }
 
-         .cashout-bottom-fill{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:0;
-  width:100vw;
-  height:240px;
-  background:#151c2e;
-  border-top:1px solid rgba(255,255,255,.04);
-  z-index:0;
-  pointer-events:none;
-}
+          .cashout-bottom-fill{
+            position:fixed;
+            left:50%;
+            transform:translateX(-50%);
+            bottom:0;
+            width:100vw;
+            height:240px;
+            background:#151c2e;
+            border-top:1px solid rgba(255,255,255,.04);
+            z-index:0;
+            pointer-events:none;
+          }
 
           .cashout-head,
           .cashout-section{
