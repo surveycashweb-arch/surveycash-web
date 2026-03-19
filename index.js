@@ -5126,66 +5126,74 @@ app.get('/support', (req, res) => {
 
 app.all('/cpa/postback', async (req, res) => {
   try {
-    // hent data (GET + POST support)
-    const userId = String(req.query.subid || req.body.subid || '').trim();
-    const amountRaw = req.query.payout || req.body.payout;
+    const userId = String(req.query.subid || req.body?.subid || '').trim();
+    const amountRaw = req.query.payout || req.body?.payout || 0;
     const amount = Number(amountRaw);
 
-    console.log('POSTBACK:', {
+    console.log('POSTBACK START:', {
       userId,
       amount,
-      raw: amountRaw,
+      amountRaw,
       query: req.query,
       body: req.body,
     });
 
-    // validation
-    if (!userId || isNaN(amount) || amount <= 0) {
-      console.log('INVALID INPUT');
+    if (!userId || !Number.isFinite(amount) || amount <= 0) {
+      console.log('POSTBACK INVALID INPUT');
       return res.send('invalid');
     }
 
-    // hent profil
-    const profile = await getProfileByUserId(userId);
-    console.log('PROFILE:', profile);
+    // hent profil DIREKTE fra profiles
+    const { data: profile, error: profileError } = await supabaseAdmin
+      .from('profiles')
+      .select('user_id, balance_cents, total_earned_cents')
+      .eq('user_id', userId)
+      .single();
+
+    console.log('PROFILE RESULT:', { profile, profileError });
+
+    if (profileError) {
+      console.error('PROFILE FETCH ERROR:', profileError);
+      return res.send('profile error');
+    }
 
     if (!profile) {
-      console.log('NO USER FOUND FOR:', userId);
+      console.log('NO USER FOUND:', userId);
       return res.send('no user');
     }
 
-    // beregn cents
     const cents = Math.round(amount * 100);
-
     const currentBalance = Number(profile.balance_cents || 0);
     const currentTotal = Number(profile.total_earned_cents || 0);
 
     const newBalance = currentBalance + cents;
     const newTotal = currentTotal + cents;
 
-    console.log('UPDATING:', {
+    console.log('UPDATE VALUES:', {
       currentBalance,
-      newBalance,
       currentTotal,
+      cents,
+      newBalance,
       newTotal,
     });
 
-    // opdater supabase
-    const { error } = await supabaseAdmin
+    const { data: updatedRows, error: updateError } = await supabaseAdmin
       .from('profiles')
       .update({
         balance_cents: newBalance,
         total_earned_cents: newTotal,
       })
-      .eq('user_id', userId);
+      .eq('user_id', userId)
+      .select();
 
-    if (error) {
-      console.error('SUPABASE ERROR:', error);
+    console.log('UPDATE RESULT:', { updatedRows, updateError });
+
+    if (updateError) {
+      console.error('SUPABASE UPDATE ERROR:', updateError);
       return res.send('db error');
     }
 
     console.log(`SUCCESS: User ${userId} earned ${cents} cents`);
-
     return res.send('ok');
   } catch (e) {
     console.error('POSTBACK ERROR:', e);
