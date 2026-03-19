@@ -4303,7 +4303,7 @@ app.get('/cashout', async (req, res) => {
   );
 
   const progressRightText =
-    '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents/100).toFixed(0);
+    '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents / 100).toFixed(0);
 
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
@@ -4346,10 +4346,14 @@ app.get('/cashout', async (req, res) => {
             max-width:none !important;
           }
 
+          main{
+            padding-top:0 !important;
+          }
+
           .cashout-page{
             width:100%;
             max-width:none;
-            margin:40px 0 0 0 !important;
+            margin:6px 0 0 0 !important;
             padding:0 0 60px 40px !important;
           }
 
@@ -4357,14 +4361,15 @@ app.get('/cashout', async (req, res) => {
             display:flex;
             flex-direction:column;
             align-items:flex-start;
-            gap:18px;
-            margin-bottom:20px;
+            gap:12px;
+            margin-bottom:14px;
           }
 
           .cashout-head h1{
             font-size:52px;
             font-weight:900;
-            margin:-10px 0 0 0;
+            margin:0;
+            line-height:1;
             letter-spacing:.5px;
             color:#ffffff;
           }
@@ -4389,29 +4394,31 @@ app.get('/cashout', async (req, res) => {
           .my-payments-btn:hover{ background:#d4a006; transform:translateY(-1px); }
           .my-payments-btn:active{ transform:translateY(0); }
 
+          .cashout-topbar{
+            display:flex;
+            align-items:center;
+            justify-content:flex-start;
+            gap:18px;
+            width:auto;
+            margin-top:0;
+          }
 
-.cashout-topbar{
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  gap:18px;
-  width:auto;
-}
+          .cashout-balances{
+            display:flex;
+            align-items:center;
+            gap:24px;
+            color:#ffffff;
+            font-weight:600;
+            font-size:14px;
+            opacity:.9;
+          }
 
-.cashout-balances{
-  display:flex;
-  align-items:center;
-  gap:24px;
-  color:#ffffff;
-  font-weight:600;
-  font-size:14px;
-  opacity:.9;
-}
-
-          .cashout-section{ margin-top:8px; }
+          .cashout-section{
+            margin-top:4px;
+          }
 
           .methods-grid{
-            margin-top:16px;
+            margin-top:10px;
             display:grid;
             grid-template-columns:repeat(3, 250px);
             justify-content:flex-start;
@@ -4607,35 +4614,34 @@ app.get('/cashout', async (req, res) => {
           .fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
           .need{ margin-top:6px; color:#b8c4d6; font-size:12px; }
 
+          .co-actions{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:14px;
+            margin-top:14px;
+          }
 
-.co-actions{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:14px;
-  margin-top:14px; /* lidt højere op */
-}
+          .withdraw-btn{
+            height:48px;
+            width:300px;
+            max-width:100%;
+            margin:0 auto;
+            border-radius:15px;
+            border:1px solid rgba(251,191,36,.35);
+            background:#fbbf24;
+            color:#0b1220;
+            font-weight:900;
+            font-size:14px;
+            letter-spacing:.2px;
+            cursor:pointer;
+            transition:.2s ease;
+          }
 
-.withdraw-btn{
-  height:48px;      /* lidt mindre */
-  width:300px;      /* lidt smallere */
-  max-width:100%;
-  margin:0 auto;
-  border-radius:15px;
-  border:1px solid rgba(251,191,36,.35);
-  background:#fbbf24;
-  color:#0b1220;
-  font-weight:900;
-  font-size:14px;   /* lidt mindre tekst */
-  letter-spacing:.2px;
-  cursor:pointer;
-  transition:.2s ease;
-}
-
-                    .withdraw-btn:hover:not(:disabled){
-  transform:translateY(-2px);
-  box-shadow:none;
-}
+          .withdraw-btn:hover:not(:disabled){
+            transform:translateY(-2px);
+            box-shadow:none;
+          }
           .withdraw-btn:disabled{
             opacity:.45;
             cursor:not-allowed;
@@ -4646,11 +4652,11 @@ app.get('/cashout', async (req, res) => {
 
           /* ===== Confirm modal (MATCH co-modal exactly) ===== */
           .co-confirm{
-            width:min(640px, 100%);              /* SAME as .co-modal */
+            width:min(640px, 100%);
             background:#0b1220;
             border:1px solid rgba(255,255,255,.08);
-            border-radius:18px;                 /* SAME radius */
-            padding:14px 14px 10px;             /* SAME padding */
+            border-radius:18px;
+            padding:14px 14px 10px;
             box-shadow:0 40px 140px rgba(0,0,0,.65);
             position:relative;
 
