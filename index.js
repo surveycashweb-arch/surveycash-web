@@ -5124,6 +5124,42 @@ app.get('/support', (req, res) => {
 });
 
 
+app.all('/cpa/postback', async (req, res) => {
+  try {
+    const userId = String(req.query.subid || req.body.subid || '');
+    const amount = Number(req.query.payout || req.body.payout || 0);
+
+    console.log('POSTBACK:', { userId, amount });
+
+    if (!userId || amount <= 0) {
+      return res.send('invalid');
+    }
+
+    const profile = await getProfileByUserId(userId);
+    if (!profile) return res.send('no user');
+
+    const cents = Math.round(amount * 100);
+
+    const newBalance = Number(profile.balance_cents || 0) + cents;
+    const newTotal = Number(profile.total_earned_cents || 0) + cents;
+
+    await supabaseAdmin
+      .from('profiles')
+      .update({
+        balance_cents: newBalance,
+        total_earned_cents: newTotal,
+      })
+      .eq('user_id', userId);
+
+    console.log(`User ${userId} earned ${cents} cents`);
+
+    res.send('ok');
+  } catch (e) {
+    console.error('POSTBACK ERROR:', e);
+    res.send('error');
+  }
+});
+
 // ---------- Auth: finish login after email verification ----------
 app.post('/auth/finish', async (req, res) => {
   try {
