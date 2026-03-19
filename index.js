@@ -5129,12 +5129,21 @@ app.all('/cpa/postback', async (req, res) => {
     const userId = String(req.query.subid || req.body?.subid || '').trim();
     const amountRaw = req.query.payout || req.body?.payout || 0;
     const secret = String(req.query.secret || req.body?.secret || '').trim();
+    const transId = String(
+      req.query.trans_id ||
+      req.query.txid ||
+      req.body?.trans_id ||
+      req.body?.txid ||
+      ''
+    ).trim();
+
     const amount = Number(amountRaw);
 
     console.log('POSTBACK START:', {
       userId,
       amount,
       amountRaw,
+      transId,
       query: req.query,
       body: req.body,
     });
@@ -5144,9 +5153,25 @@ app.all('/cpa/postback', async (req, res) => {
       return res.status(403).send('forbidden');
     }
 
-    if (!userId || !Number.isFinite(amount) || amount <= 0) {
+    if (!userId || !Number.isFinite(amount) || amount <= 0 || !transId) {
       console.log('POSTBACK INVALID INPUT');
       return res.send('invalid');
+    }
+
+    const { data: existingTx, error: existingTxError } = await supabaseAdmin
+      .from('cpa_transactions')
+      .select('id')
+      .eq('trans_id', transId)
+      .maybeSingle();
+
+    if (existingTxError) {
+      console.error('TX LOOKUP ERROR:', existingTxError);
+      return res.send('tx lookup error');
+    }
+
+    if (existingTx) {
+      console.log('DUPLICATE BLOCKED:', transId);
+      return res.send('duplicate');
     }
 
     const { data: profile, error: profileError } = await supabaseAdmin
@@ -5181,6 +5206,21 @@ app.all('/cpa/postback', async (req, res) => {
       newTotal,
     });
 
+    const { error: txInsertError } = await supabaseAdmin
+      .from('cpa_transactions')
+      .insert({
+        user_id: userId,
+        partner: 'cpa',
+        trans_id: transId,
+        cents: cents,
+        status: 1,
+      });
+
+    if (txInsertError) {
+      console.error('TX INSERT ERROR:', txInsertError);
+      return res.send('tx error');
+    }
+
     const { data: updatedRows, error: updateError } = await supabaseAdmin
       .from('profiles')
       .update({
@@ -5197,13 +5237,14 @@ app.all('/cpa/postback', async (req, res) => {
       return res.send('db error');
     }
 
-    console.log(`SUCCESS: User ${userId} earned ${cents} cents`);
+    console.log(`SUCCESS: User ${userId} earned ${cents} cents, transId=${transId}`);
     return res.send('ok');
   } catch (e) {
     console.error('POSTBACK ERROR:', e);
     return res.send('error');
   }
 });
+
 
 // ---------- Auth: finish login after email verification ----------
 app.post('/auth/finish', async (req, res) => {
