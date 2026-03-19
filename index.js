@@ -5126,24 +5126,52 @@ app.get('/support', (req, res) => {
 
 app.all('/cpa/postback', async (req, res) => {
   try {
-    const userId = String(req.query.subid || req.body.subid || '');
-    const amount = Number(req.query.payout || req.body.payout || 0);
+    // hent data (GET + POST support)
+    const userId = String(req.query.subid || req.body.subid || '').trim();
+    const amountRaw = req.query.payout || req.body.payout;
+    const amount = Number(amountRaw);
 
-    console.log('POSTBACK:', { userId, amount });
+    console.log('POSTBACK:', {
+      userId,
+      amount,
+      raw: amountRaw,
+      query: req.query,
+      body: req.body,
+    });
 
-    if (!userId || amount <= 0) {
+    // validation
+    if (!userId || isNaN(amount) || amount <= 0) {
+      console.log('INVALID INPUT');
       return res.send('invalid');
     }
 
+    // hent profil
     const profile = await getProfileByUserId(userId);
-    if (!profile) return res.send('no user');
+    console.log('PROFILE:', profile);
 
+    if (!profile) {
+      console.log('NO USER FOUND FOR:', userId);
+      return res.send('no user');
+    }
+
+    // beregn cents
     const cents = Math.round(amount * 100);
 
-    const newBalance = Number(profile.balance_cents || 0) + cents;
-    const newTotal = Number(profile.total_earned_cents || 0) + cents;
+    const currentBalance = Number(profile.balance_cents || 0);
+    const currentTotal = Number(profile.total_earned_cents || 0);
 
-    await supabaseAdmin
+    const newBalance = currentBalance + cents;
+    const newTotal = currentTotal + cents;
+
+    console.log('UPDATING:', {
+      currentBalance,
+      newBalance,
+      currentTotal,
+      newTotal,
+    });
+
+    // opdater supabase
+    const { error } = await supabaseAdmin
       .from('profiles')
       .update({
         balance_cents: newBalance,
@@ -5151,12 +5179,17 @@ app.all('/cpa/postback', async (req, res) => {
       })
       .eq('user_id', userId);
 
-    console.log(`User ${userId} earned ${cents} cents`);
+    if (error) {
+      console.error('SUPABASE ERROR:', error);
+      return res.send('db error');
+    }
 
-    res.send('ok');
+    console.log(`SUCCESS: User ${userId} earned ${cents} cents`);
+
+    return res.send('ok');
   } catch (e) {
     console.error('POSTBACK ERROR:', e);
-    res.send('error');
+    return res.send('error');
   }
 });
 
