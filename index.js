@@ -4347,14 +4347,38 @@ app.get('/cashout', async (req, res) => {
           }
 
           main{
+            position:relative;
+            height:calc(100vh - 64px);
             padding-top:0 !important;
+            overflow:hidden !important;
           }
 
           .cashout-page{
+            position:relative;
             width:100%;
+            height:100%;
             max-width:none;
             margin:6px 0 0 0 !important;
-            padding:0 0 60px 40px !important;
+            padding:0 0 0 40px !important;
+            box-sizing:border-box;
+            overflow:hidden;
+          }
+
+          .cashout-bottom-fill{
+            position:absolute;
+            left:0;
+            right:0;
+            bottom:0;
+            height:185px;
+            background:#151c2e;
+            border-top:1px solid rgba(255,255,255,.04);
+            z-index:0;
+          }
+
+          .cashout-head,
+          .cashout-section{
+            position:relative;
+            z-index:1;
           }
 
           .cashout-head{
@@ -4764,20 +4788,22 @@ app.get('/cashout', async (req, res) => {
 
 <div class="cashout-page">
 
-<div class="cashout-head">
-  <h1><span class="cash-accent">Cash</span>Out</h1>
+  <div class="cashout-bottom-fill"></div>
 
-  <div class="cashout-topbar">
+  <div class="cashout-head">
+    <h1><span class="cash-accent">Cash</span>Out</h1>
 
-    <a href="/payments" class="my-payments-btn">My payments</a>
+    <div class="cashout-topbar">
 
-    <div class="cashout-balances">
-      <span>Available: $${formatUsdFromCents(balanceCents)}</span>
-      <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
+      <a href="/payments" class="my-payments-btn">My payments</a>
+
+      <div class="cashout-balances">
+        <span>Available: $${formatUsdFromCents(balanceCents)}</span>
+        <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
+      </div>
+
     </div>
-
   </div>
-</div>
 
   ${msg}
 
