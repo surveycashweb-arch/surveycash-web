@@ -4408,7 +4408,7 @@ app.get('/cashout', async (req, res) => {
   opacity:.9;
 }
 
-          .cashout-section{ margin-top:22px; }
+          .cashout-section{ margin-top:8px; }
 
           .methods-grid{
             margin-top:16px;
