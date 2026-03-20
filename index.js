@@ -4394,7 +4394,7 @@ app.get('/cashout', async (req, res) => {
             transform:translateX(-50%);
             bottom:0;
             width:100vw;
-            height:240px;
+            height:220px;
             z-index:1;
             display:flex;
             justify-content:center;
