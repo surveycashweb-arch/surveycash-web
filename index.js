@@ -4949,7 +4949,7 @@ app.get('/cashout', async (req, res) => {
 
       <div class="footer-col">
         <div class="footer-col-title">SurveyCash</div>
-        <a href="/earn" class="footer-link">Earn</a>
+        <a href="/" class="footer-link">Earn</a>
         <a href="/cashout" class="footer-link">Cash Out</a>
         <a href="/support" class="footer-link">Support</a>
       </div>
