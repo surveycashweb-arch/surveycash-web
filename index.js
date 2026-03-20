@@ -4381,7 +4381,7 @@ app.get('/cashout', async (req, res) => {
             transform:translateX(-50%);
             bottom:0;
             width:100vw;
-            height:240px;
+            height:220px;
             background:#151c2e;
             border-top:1px solid rgba(255,255,255,.04);
             z-index:0;
