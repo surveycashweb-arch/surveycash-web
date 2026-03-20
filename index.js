@@ -4404,11 +4404,11 @@ app.get('/cashout', async (req, res) => {
 
           .cashout-footer-inner{
             width:100%;
-            max-width:1180px;
+            max-width:1280px;
             padding:26px 36px 0;
             display:grid;
-            grid-template-columns:1.7fr 1fr 1fr 1fr;
-            gap:44px;
+            grid-template-columns:1.7fr 1fr 1fr 1fr 1fr;
+            gap:36px;
             box-sizing:border-box;
             pointer-events:auto;
           }
@@ -4648,13 +4648,24 @@ app.get('/cashout', async (req, res) => {
             opacity:1;
           }
 
+          @media (max-width:1200px){
+            .cashout-footer-inner{
+              grid-template-columns:1.7fr 1fr 1fr 1fr;
+              gap:28px;
+            }
+
+            .footer-col.social{
+              display:none;
+            }
+          }
+
           @media (max-width:1100px){
             .cashout-footer-inner{
               grid-template-columns:1.5fr 1fr 1fr;
               gap:28px;
             }
 
-            .footer-col.company{
+            .footer-col.legal{
               display:none;
             }
           }
@@ -4938,21 +4949,25 @@ app.get('/cashout', async (req, res) => {
         <div class="footer-col-title">SurveyCash</div>
         <a href="/earn" class="footer-link">Earn</a>
         <a href="/cashout" class="footer-link">Cash Out</a>
-        <a href="/support" class="footer-link">How do you earn?</a>
+        <a href="/support" class="footer-link">Support</a>
       </div>
 
       <div class="footer-col">
-        <div class="footer-col-title">Resources</div>
-        <a href="/support" class="footer-link">Live Support</a>
-        <a href="/support" class="footer-link">Academy</a>
-        <a href="/support" class="footer-link">Help Center</a>
+        <div class="footer-col-title">Help</div>
+        <a href="/faq" class="footer-link">FAQ</a>
+        <a href="/contact" class="footer-link">Contact</a>
       </div>
 
-      <div class="footer-col company">
-        <div class="footer-col-title">Company</div>
-        <a href="/contact" class="footer-link">Contact</a>
-        <a href="/partners" class="footer-link">Partners</a>
-        <a href="/advertise" class="footer-link">Advertise with us</a>
+      <div class="footer-col legal">
+        <div class="footer-col-title">Legal</div>
+        <a href="/terms" class="footer-link">Terms</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+      </div>
+
+      <div class="footer-col social">
+        <div class="footer-col-title">Social</div>
+        <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
       </div>
 
     </div>
