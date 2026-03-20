@@ -4955,10 +4955,10 @@ app.get('/cashout', async (req, res) => {
       </div>
 
       <div class="footer-col">
-        <div class="footer-col-title">Help</div>
-        <a href="/faq" class="footer-link">FAQ</a>
-        <a href="/contact" class="footer-link">Contact</a>
-      </div>
+  <div class="footer-col-title">Help</div>
+  <a href="/support" class="footer-link">FAQ</a>
+  <a href="/support" class="footer-link">Contact</a>
+</div>
 
       <div class="footer-col legal">
         <div class="footer-col-title">Info</div>
@@ -4968,8 +4968,8 @@ app.get('/cashout', async (req, res) => {
 
       <div class="footer-col social">
         <div class="footer-col-title">Social</div>
-        <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
-        <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
+        <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+        <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
       </div>
 
     </div>
