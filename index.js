@@ -4630,6 +4630,10 @@ app.get('/cashout', async (req, res) => {
   text-decoration:underline;
 }
 
+.footer-trust-link span{
+  font-size:18px;
+}
+
           .footer-col-title{
             color:#fbbf24;
             font-size:16px;
