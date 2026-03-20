@@ -4631,7 +4631,7 @@ app.get('/cashout', async (req, res) => {
 }
 
 .footer-trust-link span{
-  font-size:18px;
+  font-size:14px;
 }
 
           .footer-col-title{
