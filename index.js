@@ -4589,8 +4589,12 @@ app.get('/cashout', async (req, res) => {
             margin-bottom:18px;
           }
 
-          .footer-logo .green{
-            color:#22c55e;
+          .footer-logo .white{
+            color:#ffffff;
+          }
+
+          .footer-logo .accent{
+            color:#fbbf24;
           }
 
           .footer-brand-text{
@@ -4628,7 +4632,7 @@ app.get('/cashout', async (req, res) => {
           }
 
           .footer-col-title{
-            color:#22c55e;
+            color:#fbbf24;
             font-size:16px;
             font-weight:900;
             margin:0 0 22px;
@@ -4926,7 +4930,7 @@ app.get('/cashout', async (req, res) => {
     <div class="cashout-footer-inner">
 
       <div class="footer-brand">
-        <div class="footer-logo"><span class="green">Survey</span>Cash</div>
+        <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
 
         <div class="footer-brand-text">
           SurveyCash is a rewards platform where users can earn money and rewards by completing offers, surveys and tasks, with fast and secure payout methods.
