@@ -4959,7 +4959,7 @@ app.get('/cashout', async (req, res) => {
       </div>
 
       <div class="footer-col legal">
-        <div class="footer-col-title">Legal</div>
+        <div class="footer-col-title">Info</div>
         <a href="/terms" class="footer-link">Terms</a>
         <a href="/privacy" class="footer-link">Privacy</a>
       </div>
