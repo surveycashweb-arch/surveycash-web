@@ -4613,7 +4613,7 @@ app.get('/cashout', async (req, res) => {
 .footer-trust-link{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:10px;
   color:#ffffff;
   text-decoration:none;
   font-size:12px;
@@ -4621,7 +4621,7 @@ app.get('/cashout', async (req, res) => {
 }
 
 .footer-trust-img{
-  height:14px;
+  height:42px;   /* 14px → 42px (3x større) */
   width:auto;
   display:block;
 }
@@ -4936,9 +4936,9 @@ app.get('/cashout', async (req, res) => {
 </div>
 
 <div class="footer-trust">
-  <a href="DIN-TRUSTPILOT-LINK-HER" target="_blank" rel="noopener noreferrer" class="footer-trust-link">
-    <img src="/img/trustpilot-mission.png" alt="Trustpilot" class="footer-trust-img">
+  <a href="DIN-TRUSTPILOT-LINK-HER" target="_blank" class="footer-trust-link">
     <span>Rate us on Trustpilot</span>
+    <img src="/img/trustpilot-mission.png" class="footer-trust-img">
   </a>
 </div>
       </div>
