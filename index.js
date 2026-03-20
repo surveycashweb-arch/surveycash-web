@@ -2360,6 +2360,7 @@ app.get('/', async (req, res) => {
     html, body{
       height:100%;
       overflow:hidden;
+      background:#0f172a;
     }
 
     main{
@@ -2373,7 +2374,7 @@ app.get('/', async (req, res) => {
     }
 
     .earn-area{
-      background:#151c2e;
+      background:#0f172a;
       padding:24px 0 20px;
       min-height:calc(100vh - 64px);
     }
