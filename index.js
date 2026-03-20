@@ -4364,16 +4364,16 @@ app.get('/cashout', async (req, res) => {
             overflow:hidden !important;
           }
 
-          .cashout-page{
-            position:relative;
-            width:100%;
-            height:100%;
-            max-width:none;
-            margin:0 !important;
-            padding:6px 0 0 40px !important;
-            box-sizing:border-box;
-            overflow:hidden;
-          }
+.cashout-page{
+  position:relative;
+  width:100%;
+  height:100%;
+  max-width:none;
+  margin:20px 0 0 0 !important; /* 👈 DET HER */
+  padding:0 0 0 40px !important;
+  box-sizing:border-box;
+  overflow:hidden;
+}
 
           .cashout-bottom-fill{
             position:fixed;
