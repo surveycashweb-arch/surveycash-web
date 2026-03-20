@@ -4364,16 +4364,16 @@ app.get('/cashout', async (req, res) => {
             overflow:hidden !important;
           }
 
-.cashout-page{
-  position:relative;
-  width:100%;
-  height:100%;
-  max-width:none;
-  margin:20px 0 0 0 !important; /* 👈 DET HER */
-  padding:0 0 0 40px !important;
-  box-sizing:border-box;
-  overflow:hidden;
-}
+          .cashout-page{
+            position:relative;
+            width:100%;
+            height:100%;
+            max-width:none;
+            margin:20px 0 0 0 !important;
+            padding:0 0 0 40px !important;
+            box-sizing:border-box;
+            overflow:hidden;
+          }
 
           .cashout-bottom-fill{
             position:fixed;
@@ -4388,10 +4388,35 @@ app.get('/cashout', async (req, res) => {
             pointer-events:none;
           }
 
+          .cashout-footer-content{
+            position:fixed;
+            left:50%;
+            transform:translateX(-50%);
+            bottom:0;
+            width:100vw;
+            height:240px;
+            z-index:1;
+            display:flex;
+            justify-content:center;
+            box-sizing:border-box;
+            pointer-events:none;
+          }
+
+          .cashout-footer-inner{
+            width:100%;
+            max-width:1180px;
+            padding:26px 36px 0;
+            display:grid;
+            grid-template-columns:1.7fr 1fr 1fr 1fr;
+            gap:44px;
+            box-sizing:border-box;
+            pointer-events:auto;
+          }
+
           .cashout-head,
           .cashout-section{
             position:relative;
-            z-index:1;
+            z-index:2;
           }
 
           .cashout-head{
@@ -4550,7 +4575,116 @@ app.get('/cashout', async (req, res) => {
             color:#cbd5e1;
           }
 
-          @media (max-width:1000px){ .methods-grid{ grid-template-columns:repeat(2, 250px); } }
+          .footer-brand{
+            display:flex;
+            flex-direction:column;
+            align-items:flex-start;
+          }
+
+          .footer-logo{
+            font-size:22px;
+            font-weight:900;
+            line-height:1;
+            color:#fff;
+            margin-bottom:18px;
+          }
+
+          .footer-logo .green{
+            color:#22c55e;
+          }
+
+          .footer-brand-text{
+            max-width:380px;
+            color:rgba(255,255,255,.62);
+            font-size:14px;
+            line-height:1.55;
+            margin-bottom:18px;
+          }
+
+          .footer-store-row{
+            display:flex;
+            gap:12px;
+            margin-bottom:18px;
+            flex-wrap:wrap;
+          }
+
+          .footer-store-btn{
+            height:42px;
+            padding:0 16px;
+            border-radius:10px;
+            border:1px solid rgba(255,255,255,.22);
+            background:#0b1220;
+            color:#fff;
+            font-size:13px;
+            font-weight:800;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            text-decoration:none;
+          }
+
+          .footer-trust{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            color:#fff;
+            font-size:12px;
+          }
+
+          .footer-stars{
+            display:inline-flex;
+            gap:4px;
+          }
+
+          .footer-star{
+            width:18px;
+            height:18px;
+            border-radius:2px;
+            background:#00b67a;
+            color:#fff;
+            font-size:11px;
+            font-weight:900;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+          }
+
+          .footer-col-title{
+            color:#22c55e;
+            font-size:16px;
+            font-weight:900;
+            margin:0 0 22px;
+          }
+
+          .footer-link{
+            display:block;
+            color:#ffffff;
+            text-decoration:none;
+            font-size:15px;
+            font-weight:700;
+            margin-bottom:22px;
+            opacity:.95;
+          }
+
+          .footer-link:hover{
+            opacity:1;
+          }
+
+          @media (max-width:1100px){
+            .cashout-footer-inner{
+              grid-template-columns:1.5fr 1fr 1fr;
+              gap:28px;
+            }
+
+            .footer-col.company{
+              display:none;
+            }
+          }
+
+          @media (max-width:1000px){
+            .methods-grid{ grid-template-columns:repeat(2, 250px); }
+          }
+
           @media (max-width:640px){
             .methods-grid{ grid-template-columns:1fr; }
             .method-card{ width:100%; max-width:320px; }
@@ -4565,11 +4699,9 @@ app.get('/cashout', async (req, res) => {
           }
           .co-backdrop.open{ display:flex; }
 
-          /* layer order */
           #coBackdrop{ z-index:9999; }
           #confirmBackdrop{ z-index:10000; }
 
-          /* ===== Amount modal ===== */
           .co-modal{
             width:min(640px, 100%);
             background:#0b1220;
@@ -4687,7 +4819,6 @@ app.get('/cashout', async (req, res) => {
           }
           @media (max-width:520px){ .withdraw-btn{ width:100%; } }
 
-          /* ===== Confirm modal (MATCH co-modal exactly) ===== */
           .co-confirm{
             width:min(640px, 100%);
             background:#0b1220;
@@ -4696,7 +4827,6 @@ app.get('/cashout', async (req, res) => {
             padding:14px 14px 10px;
             box-shadow:0 40px 140px rgba(0,0,0,.65);
             position:relative;
-
             max-height:calc(100vh - 60px);
             overflow:auto;
           }
@@ -4802,6 +4932,58 @@ app.get('/cashout', async (req, res) => {
 <div class="cashout-page">
 
   <div class="cashout-bottom-fill"></div>
+
+  <div class="cashout-footer-content">
+    <div class="cashout-footer-inner">
+
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="green">Survey</span>Cash</div>
+
+        <div class="footer-brand-text">
+          SurveyCash is a rewards platform where users can earn money and rewards by completing offers, surveys and tasks, with fast and secure payout methods.
+        </div>
+
+        <div class="footer-store-row">
+          <a href="#" class="footer-store-btn">Get it on Google Play</a>
+          <a href="#" class="footer-store-btn">Download on the App Store</a>
+        </div>
+
+        <div class="footer-trust">
+          <span>Excellent</span>
+          <div class="footer-stars">
+            <span class="footer-star">★</span>
+            <span class="footer-star">★</span>
+            <span class="footer-star">★</span>
+            <span class="footer-star">★</span>
+            <span class="footer-star">★</span>
+          </div>
+          <span>Trustpilot</span>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">SurveyCash</div>
+        <a href="/earn" class="footer-link">Earn</a>
+        <a href="/cashout" class="footer-link">Cash Out</a>
+        <a href="/support" class="footer-link">How do you earn?</a>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">Resources</div>
+        <a href="/support" class="footer-link">Live Support</a>
+        <a href="/support" class="footer-link">Academy</a>
+        <a href="/support" class="footer-link">Help Center</a>
+      </div>
+
+      <div class="footer-col company">
+        <div class="footer-col-title">Company</div>
+        <a href="/contact" class="footer-link">Contact</a>
+        <a href="/partners" class="footer-link">Partners</a>
+        <a href="/advertise" class="footer-link">Advertise with us</a>
+      </div>
+
+    </div>
+  </div>
 
   <div class="cashout-head">
     <h1><span class="cash-accent">Cash</span>Out</h1>
@@ -5153,7 +5335,7 @@ app.get('/cashout', async (req, res) => {
       `,
     })
   );
-});
+}); 
 
 app.get('/support', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
