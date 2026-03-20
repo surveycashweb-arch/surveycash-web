@@ -4605,24 +4605,30 @@ app.get('/cashout', async (req, res) => {
             margin-bottom:18px;
           }
 
-          .footer-trust{
-            display:flex;
-            align-items:center;
-            gap:10px;
-            color:#fff;
-            font-size:12px;
-          }
+.footer-trust{
+  display:flex;
+  align-items:center;
+}
 
-          .footer-trust-link{
-            color:#ffffff;
-            text-decoration:none;
-            font-size:12px;
-            font-weight:700;
-          }
+.footer-trust-link{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#ffffff;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:700;
+}
 
-          .footer-trust-link:hover{
-            text-decoration:underline;
-          }
+.footer-trust-img{
+  height:14px;
+  width:auto;
+  display:block;
+}
+
+.footer-trust-link:hover{
+  text-decoration:underline;
+}
 
           .footer-col-title{
             color:#fbbf24;
@@ -4926,12 +4932,13 @@ app.get('/cashout', async (req, res) => {
         <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
 
         <div class="footer-brand-text">
-  SurveyCash is built to make earning simple — complete surveys, explore offers and turn your time online into real rewards with quick payouts.
+  SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
 </div>
 
 <div class="footer-trust">
   <a href="DIN-TRUSTPILOT-LINK-HER" target="_blank" rel="noopener noreferrer" class="footer-trust-link">
-    Rate us on Trustpilot
+    <img src="/img/trustpilot-mission.png" alt="Trustpilot" class="footer-trust-img">
+    <span>Rate us on Trustpilot</span>
   </a>
 </div>
       </div>
