@@ -4631,6 +4631,17 @@ app.get('/cashout', async (req, res) => {
             justify-content:center;
           }
 
+          .footer-trust-link{
+            color:#ffffff;
+            text-decoration:none;
+            font-size:12px;
+            font-weight:700;
+          }
+
+          .footer-trust-link:hover{
+            text-decoration:underline;
+          }
+
           .footer-col-title{
             color:#fbbf24;
             font-size:16px;
@@ -4933,7 +4944,7 @@ app.get('/cashout', async (req, res) => {
         <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
 
         <div class="footer-brand-text">
-          SurveyCash is a rewards platform where users can earn money and rewards by completing offers, surveys and tasks, with fast and secure payout methods.
+          SurveyCash is a rewards platform where you can earn money through surveys, offers and online tasks, with quick payouts and a simple earning experience.
         </div>
 
         <div class="footer-trust">
@@ -4945,7 +4956,9 @@ app.get('/cashout', async (req, res) => {
             <span class="footer-star">★</span>
             <span class="footer-star">★</span>
           </div>
-          <span>Trustpilot</span>
+          <a href="DIN-TRUSTPILOT-LINK-HER" target="_blank" rel="noopener noreferrer" class="footer-trust-link">
+            Rate us on Trustpilot
+          </a>
         </div>
       </div>
 
