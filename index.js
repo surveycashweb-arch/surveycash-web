@@ -4940,7 +4940,7 @@ app.get('/cashout', async (req, res) => {
 </div>
 
 <div class="footer-trust">
-  <a href="DIN-TRUSTPILOT-LINK-HER" target="_blank" class="footer-trust-link">
+  <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
     <span>Rate us on Trustpilot</span>
     <img src="/img/trustpilot-mission.png" class="footer-trust-img">
   </a>
