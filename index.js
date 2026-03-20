@@ -2364,120 +2364,18 @@ app.get('/', async (req, res) => {
 
     main{
       position:relative;
-      height:calc(100vh - 64px);
+      min-height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
-      overflow:hidden;
+      overflow:auto;
+      background:#0f172a;
     }
-
-    /* HERO */
-    .hero-banner{
-      position:absolute;
-      top:22px;
-      left:18px;
-      background:#151c2e;
-      padding:14px;
-      border-radius:14px;
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
-      z-index:10;
-      overflow:hidden;
-    }
-
-    .hero-banner a{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:100%;
-      height:100%;
-    }
-
-    .hero-banner img{
-      display:block;
-      border-radius:8px;
-    }
-
-    /* Trustpilot */
-    .hero-banner.hero-trustpilot img{
-      width:500px;
-      height:160px;
-      object-fit:cover;
-      border-radius:8px;
-    }
-
-    /* Socials wrapper */
-    .hero-socials{
-      position:absolute;
-      top:22px;
-      left:560px;
-      width:368px;
-      height:188px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      z-index:10;
-      background:transparent;
-    }
-
-    .hero-banner.hero-x,
-    .hero-banner.hero-tiktok{
-      position:static;
-      left:auto;
-      top:auto;
-      width:100%;
-      box-sizing:border-box;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px;
-      min-height:0;
-      border-radius:14px;
-      overflow:hidden;
-      background:#151c2e;
-    }
-
-    .hero-banner.hero-x{
-      flex:1.15;
-    }
-
-    .hero-banner.hero-tiktok{
-      flex:0.85;
-    }
-
-    .hero-banner.hero-x a,
-    .hero-banner.hero-tiktok a{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:100%;
-      height:100%;
-    }
-
-    .hero-banner.hero-x img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  margin:0;
-  border-radius:8px;
-}
-
-.hero-banner.hero-tiktok img{
-  width:106%;
-  height:100%;
-  object-fit:cover;
-  margin-left:0;
-  display:block;
-  border-radius:8px;
-}
 
     .earn-area{
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:0;
       background:#151c2e;
       padding:24px 0 20px;
+      min-height:calc(100vh - 64px);
     }
 
     .earn-wrap{
@@ -2588,7 +2486,6 @@ app.get('/', async (req, res) => {
       background:rgba(255,255,255,.03);
     }
 
-    /* CPX premium card */
     .cpx-card{
       overflow:hidden;
     }
@@ -2613,23 +2510,6 @@ app.get('/', async (req, res) => {
       margin-bottom:12px;
     }
 
-    .cpx-name{
-      font-size:18px;
-      font-weight:900;
-      color:#ffffff;
-    }
-
-    .cpx-pill{
-      margin-top:8px;
-      font-size:12px;
-      font-weight:700;
-      padding:5px 10px;
-      border-radius:999px;
-      background:rgba(34,197,94,.18);
-      border:1px solid rgba(34,197,94,.35);
-      color:#22c55e;
-    }
-
     .partner-glow{
       position:absolute;
       inset:auto 0 0 0;
@@ -2646,76 +2526,39 @@ app.get('/', async (req, res) => {
       background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
-    @media (max-width: 1200px){
-      .hero-socials{
-        left:560px;
+    @media (max-width: 1100px){
+      .earn-wrap{
+        width:100%;
+        max-width:100%;
+      }
+
+      .earn-grid{
+        grid-template-columns:repeat(4, 1fr);
       }
     }
 
     @media (max-width: 760px){
-      .hero-banner.hero-trustpilot img{
-        width:420px;
-        height:auto;
+      .earn-grid{
+        grid-template-columns:repeat(2, 1fr);
       }
 
-      .hero-socials{
-        left:18px;
-        top:190px;
-        width:328px;
-        height:auto;
-      }
-
-      .hero-banner.hero-x,
-      .hero-banner.hero-tiktok{
-        padding:10px;
+      .earn-section-title{
+        font-size:22px;
       }
     }
 
     @media (max-width: 560px){
-      .hero-banner{
-        left:10px;
-        top:18px;
+      .earn-wrap{
+        padding:0 10px;
       }
 
-      .hero-banner.hero-trustpilot img{
-        width:340px;
-        height:auto;
-      }
-
-      .hero-socials{
-        left:10px;
-        top:162px;
-        width:268px;
-        height:auto;
-      }
-
-      .hero-banner.hero-x,
-      .hero-banner.hero-tiktok{
-        padding:8px;
+      .earn-grid{
+        grid-template-columns:1fr 1fr;
+        gap:8px;
       }
     }
 
   </style>
-
-  <div class="hero-banner hero-trustpilot">
-    <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener noreferrer">
-      <img src="/img/trustpilot-mission.png" alt="Rate us on Trustpilot">
-    </a>
-  </div>
-
-  <div class="hero-socials">
-    <div class="hero-banner hero-x">
-      <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer">
-        <img src="/img/x-follow.png" alt="Follow us on X">
-      </a>
-    </div>
-
-    <div class="hero-banner hero-tiktok">
-      <a href="https://www.tiktok.com/@surveycash" target="_blank" rel="noopener noreferrer">
-        <img src="/img/tiktok-follow.png" alt="Follow us on TikTok">
-      </a>
-    </div>
-  </div>
 
   <div class="earn-area">
     <div class="earn-wrap">
