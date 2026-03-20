@@ -4601,28 +4601,6 @@ app.get('/cashout', async (req, res) => {
             margin-bottom:18px;
           }
 
-          .footer-store-row{
-            display:flex;
-            gap:12px;
-            margin-bottom:18px;
-            flex-wrap:wrap;
-          }
-
-          .footer-store-btn{
-            height:42px;
-            padding:0 16px;
-            border-radius:10px;
-            border:1px solid rgba(255,255,255,.22);
-            background:#0b1220;
-            color:#fff;
-            font-size:13px;
-            font-weight:800;
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            text-decoration:none;
-          }
-
           .footer-trust{
             display:flex;
             align-items:center;
@@ -4941,11 +4919,6 @@ app.get('/cashout', async (req, res) => {
 
         <div class="footer-brand-text">
           SurveyCash is a rewards platform where users can earn money and rewards by completing offers, surveys and tasks, with fast and secure payout methods.
-        </div>
-
-        <div class="footer-store-row">
-          <a href="#" class="footer-store-btn">Get it on Google Play</a>
-          <a href="#" class="footer-store-btn">Download on the App Store</a>
         </div>
 
         <div class="footer-trust">
