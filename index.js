@@ -2359,25 +2359,33 @@ app.get('/', async (req, res) => {
 
     html, body{
       height:100%;
-      overflow:hidden;
+      overflow:auto;
       background:#111827;
     }
 
     main{
       position:relative;
-      height:calc(100vh - 64px);
+      min-height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
-      overflow:hidden;
+      overflow:auto;
+      background:#111827;
+    }
+
+    .earn-page{
+      position:relative;
+      width:100%;
+      min-height:calc(100vh - 64px);
+      padding-bottom:220px;
+      box-sizing:border-box;
       background:#111827;
     }
 
     .earn-area{
       background:#111827;
       padding:24px 0 20px;
-      height:calc(100vh - 64px);
-      overflow:hidden;
+      min-height:calc(100vh - 64px);
     }
 
     .earn-wrap{
@@ -2528,7 +2536,136 @@ app.get('/', async (req, res) => {
       background:linear-gradient(to top, rgba(249,115,22,.18) 0%, rgba(249,115,22,.06) 40%, rgba(249,115,22,0) 100%);
     }
 
-    @media (max-width: 1100px){
+    .earn-bottom-fill{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      width:100%;
+      height:220px;
+      background:#151c2e;
+      border-top:1px solid rgba(255,255,255,.04);
+      z-index:0;
+      pointer-events:none;
+    }
+
+    .earn-footer-content{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+      width:100%;
+      height:220px;
+      z-index:1;
+      display:flex;
+      justify-content:center;
+      box-sizing:border-box;
+      pointer-events:none;
+    }
+
+    .earn-footer-inner{
+      width:100%;
+      max-width:1280px;
+      padding:26px 36px 0;
+      display:grid;
+      grid-template-columns:1.7fr 1fr 1fr 1fr 1fr;
+      gap:36px;
+      box-sizing:border-box;
+      pointer-events:auto;
+    }
+
+    .footer-brand{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+    }
+
+    .footer-logo{
+      font-size:22px;
+      font-weight:900;
+      line-height:1;
+      color:#fff;
+      margin-bottom:18px;
+    }
+
+    .footer-logo .white{
+      color:#ffffff;
+    }
+
+    .footer-logo .accent{
+      color:#fbbf24;
+    }
+
+    .footer-brand-text{
+      max-width:380px;
+      color:rgba(255,255,255,.62);
+      font-size:14px;
+      line-height:1.55;
+      margin-bottom:18px;
+    }
+
+    .footer-trust{
+      display:flex;
+      align-items:center;
+    }
+
+    .footer-trust-link{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:#ffffff;
+      text-decoration:none;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .footer-trust-img{
+      height:42px;
+      width:auto;
+      display:block;
+    }
+
+    .footer-trust-link:hover{
+      text-decoration:underline;
+    }
+
+    .footer-trust-link span{
+      font-size:14px;
+    }
+
+    .footer-col-title{
+      color:#fbbf24;
+      font-size:16px;
+      font-weight:900;
+      margin:0 0 22px;
+    }
+
+    .footer-link{
+      display:block;
+      color:#ffffff;
+      text-decoration:none;
+      font-size:15px;
+      font-weight:700;
+      margin-bottom:22px;
+      opacity:.95;
+    }
+
+    .footer-link:hover{
+      opacity:1;
+    }
+
+    @media (max-width:1200px){
+      .earn-footer-inner{
+        grid-template-columns:1.7fr 1fr 1fr 1fr;
+        gap:28px;
+      }
+
+      .footer-col.social{
+        display:none;
+      }
+    }
+
+    @media (max-width:1100px){
       .earn-wrap{
         width:100%;
         max-width:100%;
@@ -2536,6 +2673,15 @@ app.get('/', async (req, res) => {
 
       .earn-grid{
         grid-template-columns:repeat(4, 1fr);
+      }
+
+      .earn-footer-inner{
+        grid-template-columns:1.5fr 1fr 1fr;
+        gap:28px;
+      }
+
+      .footer-col.legal{
+        display:none;
       }
     }
 
@@ -2562,54 +2708,104 @@ app.get('/', async (req, res) => {
 
   </style>
 
-  <div class="earn-area">
-    <div class="earn-wrap">
+  <div class="earn-page">
+    <div class="earn-area">
+      <div class="earn-wrap">
 
-      <section class="earn-section">
-        <div class="earn-head">
-          <h2 class="earn-section-title">Offers</h2>
+        <section class="earn-section">
+          <div class="earn-head">
+            <h2 class="earn-section-title">Offers</h2>
+          </div>
+
+          <div class="earn-grid">
+
+            <a href="/games/wannads" class="earn-card clickable">
+              <div class="partner-glow glow-orange"></div>
+              <div class="earn-card-top">
+                <div class="earn-card-brand">Wannads</div>
+              </div>
+            </a>
+
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+
+          </div>
+        </section>
+
+        <section class="earn-section">
+          <div class="earn-head">
+            <h2 class="earn-section-title">Surveys</h2>
+          </div>
+
+          <div class="earn-grid">
+
+            <a href="/surveys/cpx" class="earn-card clickable cpx-card">
+              <div class="cpx-bg"></div>
+
+              <div class="earn-card-top">
+                <img src="/partners/cpx.png" alt="CPX Research" />
+              </div>
+            </a>
+
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <div class="earn-bottom-fill"></div>
+
+    <div class="earn-footer-content">
+      <div class="earn-footer-inner">
+
+        <div class="footer-brand">
+          <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
+
+          <div class="footer-brand-text">
+            SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
+          </div>
+
+          <div class="footer-trust">
+            <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
+              <span>Rate us on Trustpilot</span>
+              <img src="/img/trustpilot-mission.png" class="footer-trust-img">
+            </a>
+          </div>
         </div>
 
-        <div class="earn-grid">
-
-          <a href="/games/wannads" class="earn-card clickable">
-            <div class="partner-glow glow-orange"></div>
-            <div class="earn-card-top">
-              <div class="earn-card-brand">Wannads</div>
-            </div>
-          </a>
-
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-
-        </div>
-      </section>
-
-      <section class="earn-section">
-        <div class="earn-head">
-          <h2 class="earn-section-title">Surveys</h2>
+        <div class="footer-col">
+          <div class="footer-col-title">SurveyCash</div>
+          <a href="/" class="footer-link">Earn</a>
+          <a href="/cashout" class="footer-link">Cash Out</a>
+          <a href="/support" class="footer-link">Support</a>
         </div>
 
-        <div class="earn-grid">
-
-          <a href="/surveys/cpx" class="earn-card clickable cpx-card">
-            <div class="cpx-bg"></div>
-
-            <div class="earn-card-top">
-              <img src="/partners/cpx.png" alt="CPX Research" />
-            </div>
-          </a>
-
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-          <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-
+        <div class="footer-col">
+          <div class="footer-col-title">Help</div>
+          <a href="/support" class="footer-link">FAQ</a>
+          <a href="/support" class="footer-link">Contact</a>
         </div>
-      </section>
 
+        <div class="footer-col legal">
+          <div class="footer-col-title">Info</div>
+          <a href="/terms" class="footer-link">Terms</a>
+          <a href="/privacy" class="footer-link">Privacy</a>
+        </div>
+
+        <div class="footer-col social">
+          <div class="footer-col-title">Social</div>
+          <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+          <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
+        </div>
+
+      </div>
     </div>
   </div>
   `;
