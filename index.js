@@ -2359,33 +2359,34 @@ app.get('/', async (req, res) => {
 
     html, body{
       height:100%;
-      overflow:auto;
+      overflow:hidden;
       background:#111827;
     }
 
     main{
       position:relative;
-      min-height:calc(100vh - 64px);
+      height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
-      overflow:auto;
+      overflow:hidden;
       background:#111827;
     }
 
     .earn-page{
       position:relative;
       width:100%;
-      min-height:calc(100vh - 64px);
-      padding-bottom:220px;
+      height:calc(100vh - 64px);
       box-sizing:border-box;
       background:#111827;
+      overflow:hidden;
     }
 
     .earn-area{
       background:#111827;
       padding:24px 0 20px;
-      min-height:calc(100vh - 64px);
+      height:calc(100vh - 64px);
+      overflow:hidden;
     }
 
     .earn-wrap{
@@ -2537,11 +2538,11 @@ app.get('/', async (req, res) => {
     }
 
     .earn-bottom-fill{
-      position:absolute;
-      left:0;
-      right:0;
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
       bottom:0;
-      width:100%;
+      width:100vw;
       height:220px;
       background:#151c2e;
       border-top:1px solid rgba(255,255,255,.04);
@@ -2550,11 +2551,11 @@ app.get('/', async (req, res) => {
     }
 
     .earn-footer-content{
-      position:absolute;
+      position:fixed;
       left:50%;
       transform:translateX(-50%);
       bottom:0;
-      width:100%;
+      width:100vw;
       height:220px;
       z-index:1;
       display:flex;
