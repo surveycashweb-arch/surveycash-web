@@ -2359,24 +2359,25 @@ app.get('/', async (req, res) => {
 
     html, body{
       height:100%;
-      overflow:auto;
+      overflow:hidden;
       background:#111827;
     }
 
     main{
       position:relative;
-      min-height:calc(100vh - 64px);
+      height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
-      overflow:auto;
+      overflow:hidden;
       background:#111827;
     }
 
     .earn-area{
       background:#111827;
       padding:24px 0 20px;
-      min-height:calc(100vh - 64px);
+      height:calc(100vh - 64px);
+      overflow:hidden;
     }
 
     .earn-wrap{
