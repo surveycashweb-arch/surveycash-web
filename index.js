@@ -5505,24 +5505,18 @@ app.get('/support', (req, res) => {
       height:calc(100vh - 64px - 220px - 28px);
     }
 
-    .support-card{
-      position:relative;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.08);
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 38%),
-        rgba(18,24,40,.88);
-      box-shadow:0 16px 50px rgba(0,0,0,.20);
-      overflow:hidden;
-    }
+.support-card{
+  position:relative;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.06);
+  background:#111827;
+  box-shadow:0 10px 35px rgba(0,0,0,.25);
+  overflow:hidden;
+}
 
-    .support-card::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:linear-gradient(to bottom, rgba(255,255,255,.03), rgba(255,255,255,0));
-    }
+.support-card::before{
+  display:none;
+}
 
     .faq-card{
       padding:26px 26px 22px;
@@ -5577,14 +5571,13 @@ app.get('/support', (req, res) => {
       flex:1;
     }
 
-    .faq-item{
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.07);
-      background:rgba(255,255,255,.025);
-      padding:14px 14px 13px;
-      min-height:88px;
-      transition:transform .15s ease, border-color .15s ease, background .15s ease;
-    }
+.faq-item{
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.06);
+  background:#111827;
+  padding:12px 12px 11px;
+  min-height:72px;
+}
 
     .faq-item:hover{
       transform:translateY(-2px);
