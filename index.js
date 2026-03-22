@@ -3378,34 +3378,75 @@ app.get('/privacy', (req, res) => {
       <head>
         <title>Privacy Policy - SurveyCash</title>
         <style>
-          body { font-family: Arial; padding: 40px; background:#0f172a; color:#e5e7eb; }
+          body { font-family: Arial; padding: 40px; background:#0f172a; color:#e5e7eb; line-height:1.6; }
           h1 { color:#facc15; }
+          h3 { color:#facc15; margin-top:28px; }
+          p { max-width:800px; }
         </style>
       </head>
       <body>
         <h1>Privacy Policy</h1>
 
-        <p>SurveyCash respects your privacy.</p>
+        <p><strong>Last updated: March 2026</strong></p>
 
         <p>
-          We may collect basic information such as IP address, device data,
-          and usage data to prevent fraud and ensure proper reward attribution.
+        SurveyCash respects your privacy and is committed to protecting your personal information.
         </p>
 
+        <h3>Information We Collect</h3>
         <p>
-          SurveyCash uses third-party survey and offer providers.
-          These partners may collect additional data according to their own privacy policies.
+        We may collect basic information such as email address, IP address, device information,
+        browser information, and usage data to operate the platform, prevent fraud, and ensure
+        proper reward attribution.
         </p>
 
-        <p>We do not sell personal data.</p>
+        <h3>How We Use Information</h3>
+        <p>
+        The information collected may be used to operate the SurveyCash platform,
+        verify user activity, prevent fraudulent behavior, process rewards and payouts,
+        and communicate with users regarding their accounts.
+        </p>
 
-        <p>By using SurveyCash, you agree to this Privacy Policy.</p>
+        <h3>Third-Party Services</h3>
+        <p>
+        SurveyCash works with third-party survey and offer providers. These partners may
+        collect additional data according to their own privacy policies when users
+        participate in surveys or offers.
+        </p>
 
-        <p>Contact: surveycashweb@gmail.com</p>
+        <h3>Data Protection</h3>
+        <p>
+        We take reasonable measures to protect user data from unauthorized access,
+        misuse, or disclosure.
+        </p>
+
+        <h3>Data Sharing</h3>
+        <p>
+        SurveyCash does not sell personal information. Limited information may be shared
+        with trusted partners only when necessary to provide surveys, offers, or rewards.
+        </p>
+
+        <h3>Cookies</h3>
+        <p>
+        SurveyCash may use cookies or similar technologies to improve user experience,
+        analyze platform usage, and prevent fraudulent activity.
+        </p>
+
+        <h3>Policy Updates</h3>
+        <p>
+        This Privacy Policy may be updated from time to time. Continued use of the
+        platform after updates indicates acceptance of the revised policy.
+        </p>
+
+        <h3>Contact</h3>
+        <p>
+        contact@surveycash.website
+        </p>
       </body>
     </html>
   `);
 });
+
 
 // ---------- Terms of Service ----------
 app.get('/terms', (req, res) => {
@@ -3414,36 +3455,76 @@ app.get('/terms', (req, res) => {
       <head>
         <title>Terms of Service - SurveyCash</title>
         <style>
-          body { font-family: Arial; padding: 40px; background:#0f172a; color:#e5e7eb; }
+          body { font-family: Arial; padding: 40px; background:#0f172a; color:#e5e7eb; line-height:1.6; }
           h1 { color:#facc15; }
+          h3 { color:#facc15; margin-top:28px; }
+          p { max-width:800px; }
         </style>
       </head>
       <body>
         <h1>Terms of Service</h1>
 
-        <p>By using SurveyCash, you agree to use the platform fairly and honestly.</p>
+        <p><strong>Last updated: March 2026</strong></p>
 
         <p>
-          Rewards are granted only after confirmation from our partners.
+        By accessing or using SurveyCash, you agree to comply with these Terms of Service.
         </p>
 
+        <h3>Use of the Platform</h3>
         <p>
-          Fraud, abuse, or manipulation may result in account suspension
-          and loss of rewards.
+        SurveyCash allows users to earn rewards by completing surveys and partner offers.
+        Users must provide accurate information and use the platform fairly and honestly.
         </p>
 
+        <h3>Eligibility</h3>
         <p>
-          SurveyCash is not responsible for third-party survey availability
-          or disqualifications.
+        Users must be at least 18 years old to use SurveyCash. Only one account per person
+        is allowed. The use of VPNs, proxies, bots, or multiple accounts to manipulate
+        rewards is strictly prohibited.
         </p>
 
-        <p>Terms may be updated at any time.</p>
+        <h3>Rewards and Credits</h3>
+        <p>
+        Rewards are granted only after confirmation from our survey and offer partners.
+        SurveyCash reserves the right to adjust or revoke rewards if partner validation
+        fails or suspicious activity is detected.
+        </p>
 
-        <p>Contact: surveycashweb@gmail.com</p>
+        <h3>Fraud and Abuse</h3>
+        <p>
+        Any attempt to manipulate surveys, offers, or the reward system may result in
+        account suspension, termination, and loss of rewards. This includes the use of
+        VPNs, bots, multiple accounts, or other fraudulent methods.
+        </p>
+
+        <h3>Third-Party Providers</h3>
+        <p>
+        SurveyCash works with third-party survey and offer providers. We are not responsible
+        for survey availability, qualification decisions, offer availability, or technical
+        issues originating from these partners.
+        </p>
+
+        <h3>Account Responsibility</h3>
+        <p>
+        Users are responsible for maintaining the security of their accounts and login
+        credentials.
+        </p>
+
+        <h3>Changes to Terms</h3>
+        <p>
+        SurveyCash may update these Terms at any time. Continued use of the platform
+        constitutes acceptance of the updated Terms.
+        </p>
+
+        <h3>Contact</h3>
+        <p>
+        contact@surveycash.website
+        </p>
       </body>
     </html>
   `);
 });
+
 
 // ---------- Email verified landing (auto-login) ----------
 app.get('/verified', (req, res) => {
