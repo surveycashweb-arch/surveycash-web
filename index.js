@@ -5495,15 +5495,17 @@ app.get('/support', (req, res) => {
   overflow:hidden;
 }
 
-    .support-shell{
-      position:relative;
-      z-index:2;
-      display:grid;
-      grid-template-columns:1.7fr .95fr;
-      gap:18px;
-      align-items:stretch;
-      height:calc(100vh - 64px - 220px - 40px);
-    }
+.support-shell{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:1.25fr .7fr;
+  gap:18px;
+  align-items:stretch;
+  height:calc(100vh - 64px - 220px - 40px);
+  max-width:960px;
+  margin:0 auto;
+}
 
 .support-card{
   position:relative;
