@@ -5490,7 +5490,7 @@ main{
   height:calc(100vh - 64px - 220px);
   max-width:none;
   margin:0 !important;
-  padding:28px 22px 28px;
+  padding:36px 22px 36px;
   box-sizing:border-box;
   overflow:hidden;
 
