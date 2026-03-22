@@ -5572,8 +5572,8 @@ app.get('/support', (req, res) => {
     .faq-grid{
       margin-top:22px;
       display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
+      grid-template-columns:repeat(2, 1fr);
+      gap:12px;
       flex:1;
     }
 
@@ -5581,8 +5581,8 @@ app.get('/support', (req, res) => {
       border-radius:16px;
       border:1px solid rgba(255,255,255,.07);
       background:rgba(255,255,255,.025);
-      padding:16px 16px 15px;
-      min-height:112px;
+      padding:14px 14px 13px;
+      min-height:88px;
       transition:transform .15s ease, border-color .15s ease, background .15s ease;
     }
 
@@ -5904,6 +5904,26 @@ app.get('/support', (req, res) => {
             <p class="faq-q"><span class="faq-icon">?</span>Can I use a VPN?</p>
             <p class="faq-a">No. VPNs, proxies, bots, and multiple accounts are not allowed on SurveyCash.</p>
           </div>
+
+          <div class="faq-item">
+            <p class="faq-q"><span class="faq-icon">?</span>What is the minimum payout?</p>
+            <p class="faq-a">The current minimum payout is shown in your Cash Out section.</p>
+          </div>
+
+          <div class="faq-item">
+            <p class="faq-q"><span class="faq-icon">?</span>Why is my payout still pending?</p>
+            <p class="faq-a">Some payouts require extra review before they are approved and completed.</p>
+          </div>
+
+          <div class="faq-item">
+            <p class="faq-q"><span class="faq-icon">?</span>Do I need to verify my email?</p>
+            <p class="faq-a">Yes. Email verification helps protect your account and prevent fraud.</p>
+          </div>
+
+          <div class="faq-item">
+            <p class="faq-q"><span class="faq-icon">?</span>Can I have more than one account?</p>
+            <p class="faq-a">No. Only one account per person is allowed on SurveyCash.</p>
+          </div>
         </div>
 
         <div class="faq-bottom-note">
@@ -5921,7 +5941,7 @@ app.get('/support', (req, res) => {
           </div>
 
           <p class="contact-sub">
-            Need help with rewards, surveys, or payouts? This is the contact area UI for Support.
+            Need help with account access, verification, or payout support? This is the contact area UI for Support.
           </p>
 
           <div class="contact-panel">
@@ -5937,7 +5957,7 @@ app.get('/support', (req, res) => {
 
             <div class="contact-row">
               <span class="contact-label">Best for</span>
-              <div class="contact-value">Account issues, reward questions, payout help</div>
+              <div class="contact-value">Account issues, payout help, verification support</div>
             </div>
           </div>
         </div>
