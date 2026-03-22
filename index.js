@@ -5487,9 +5487,9 @@ main{
 .support-page{
   position:relative;
   width:100%;
-  height:calc(100vh - 64px - 180px);
+  height:calc(100vh - 64px - 220px);
   max-width:none;
-  margin:0 !important;
+  margin:40px 0;
   padding:0 22px;
   box-sizing:border-box;
   overflow:hidden;
