@@ -5919,10 +5919,7 @@ app.get('/support', (req, res) => {
             <p class="faq-a">No. Only one account per person is allowed on SurveyCash.</p>
           </div>
         </div>
-
-<div class="faq-bottom-note">
-  More FAQ answers can be added later.
-</div>
+</div>  <!-- LUKKER FAQ CARD -->
 
       <div class="support-card contact-card">
         <div class="contact-top">
