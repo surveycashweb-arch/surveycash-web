@@ -5920,6 +5920,8 @@ app.get('/support', (req, res) => {
           </div>
         </div>
 
+<div style="height:40px;"></div>
+
       <div class="support-card contact-card">
         <div class="contact-top">
           <div class="contact-badge">✉</div>
