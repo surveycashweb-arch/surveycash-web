@@ -5503,7 +5503,7 @@ app.get('/support', (req, res) => {
   gap:18px;
   align-items:stretch;
   height:calc(100vh - 64px - 220px - 40px);
-  max-width:960px;
+  max-width:1100px;
   margin:0 auto;
 }
 
@@ -5528,7 +5528,7 @@ app.get('/support', (req, res) => {
 }
 
     .contact-card{
-      padding:26px 24px 22px;
+      padding:20px 20px 18px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
@@ -5578,8 +5578,8 @@ app.get('/support', (req, res) => {
   border-radius:14px;
   border:1px solid rgba(255,255,255,.06);
   background:#111827;
-  padding:12px;
-  min-height:70px;
+  padding:10px;
+  min-height:55px;
 }
 
  .faq-item:hover{
