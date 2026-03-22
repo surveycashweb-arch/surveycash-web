@@ -5508,6 +5508,7 @@ main{
   align-items:stretch;
   max-width:1400px;
   width:100%;
+  max-height:calc(100% - 72px);
 }
 
 .support-card{
