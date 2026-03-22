@@ -5484,16 +5484,16 @@ app.get('/support', (req, res) => {
       background:#111827;
     }
 
-    .support-page{
-      position:relative;
-      width:100%;
-      height:100%;
-      max-width:none;
-      margin:0 !important;
-      padding:18px 22px 0 !important;
-      box-sizing:border-box;
-      overflow:hidden;
-    }
+.support-page{
+  position:relative;
+  width:100%;
+  height:100%;
+  max-width:none;
+  margin:0 !important;
+  padding:18px 22px 18px !important;
+  box-sizing:border-box;
+  overflow:hidden;
+}
 
     .support-shell{
       position:relative;
