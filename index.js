@@ -5574,16 +5574,16 @@ app.get('/support', (req, res) => {
 .faq-item{
   border-radius:14px;
   border:1px solid rgba(255,255,255,.06);
-  background:#111827;
-  padding:12px 12px 11px;
-  min-height:72px;
+  background:#151c2e;
+  padding:12px;
+  min-height:70px;
 }
 
-    .faq-item:hover{
-      transform:translateY(-2px);
-      border-color:rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-    }
+ .faq-item:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.12);
+  background:#1b2438;
+}
 
     .faq-q{
       display:flex;
