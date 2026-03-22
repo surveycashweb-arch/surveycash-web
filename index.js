@@ -5459,63 +5459,150 @@ app.get('/support', (req, res) => {
       'Support — SurveyCash',
       '/support',
       `
-      <div class="cashout-bottom-fill"></div>
+<style>
 
-      <div class="cashout-footer-content">
-        <div class="cashout-footer-inner">
+.cashout-bottom-fill{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:0;
+  width:100vw;
+  height:220px;
+  background:#151c2e;
+  border-top:1px solid rgba(255,255,255,.04);
+  z-index:0;
+}
 
-          <div class="footer-brand">
-            <div class="footer-logo">
-              <span class="white">Survey</span><span class="accent">Cash</span>
-            </div>
+.cashout-footer-content{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:0;
+  width:100vw;
+  height:220px;
+  display:flex;
+  justify-content:center;
+  z-index:1;
+}
 
-            <div class="footer-brand-text">
-              SurveyCash is built to make earning simple. Complete surveys,
-              explore offers and turn your time online into real rewards with quick payouts.
-            </div>
+.cashout-footer-inner{
+  width:100%;
+  max-width:1280px;
+  padding:26px 36px 0;
+  display:grid;
+  grid-template-columns:1.7fr 1fr 1fr 1fr 1fr;
+  gap:36px;
+}
 
-            <div class="footer-trust">
-              <a href="https://www.trustpilot.com/review/surveycash.website"
-                 target="_blank"
-                 class="footer-trust-link">
-                <span>Rate us on Trustpilot</span>
-                <img src="/img/trustpilot-mission.png" class="footer-trust-img">
-              </a>
-            </div>
-          </div>
+.footer-logo{
+  font-size:22px;
+  font-weight:900;
+  color:#fff;
+  margin-bottom:18px;
+}
 
-          <div class="footer-col">
-            <div class="footer-col-title">SurveyCash</div>
-            <a href="/" class="footer-link">Earn</a>
-            <a href="/cashout" class="footer-link">Cash Out</a>
-            <a href="/support" class="footer-link">Support</a>
-          </div>
+.footer-logo .accent{
+  color:#fbbf24;
+}
 
-          <div class="footer-col">
-            <div class="footer-col-title">Help</div>
-            <a href="/support" class="footer-link">FAQ</a>
-            <a href="/support" class="footer-link">Contact</a>
-          </div>
+.footer-brand-text{
+  max-width:380px;
+  color:rgba(255,255,255,.62);
+  font-size:14px;
+  line-height:1.55;
+  margin-bottom:18px;
+}
 
-          <div class="footer-col legal">
-            <div class="footer-col-title">Info</div>
-            <a href="/terms" class="footer-link">Terms</a>
-            <a href="/privacy" class="footer-link">Privacy</a>
-          </div>
+.footer-trust{
+  display:flex;
+  align-items:center;
+}
 
-          <div class="footer-col social">
-            <div class="footer-col-title">Social</div>
-            <a href="https://www.tiktok.com/@surveycashh?lang=da"
-               target="_blank"
-               class="footer-link">TikTok</a>
+.footer-trust-link{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#ffffff;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:700;
+}
 
-            <a href="https://x.com/SurveyCashh"
-               target="_blank"
-               class="footer-link">X</a>
-          </div>
+.footer-trust-img{
+  height:42px;
+  width:auto;
+}
 
-        </div>
+.footer-col-title{
+  color:#fbbf24;
+  font-size:16px;
+  font-weight:900;
+  margin-bottom:22px;
+}
+
+.footer-link{
+  display:block;
+  color:#ffffff;
+  text-decoration:none;
+  font-size:15px;
+  font-weight:700;
+  margin-bottom:22px;
+}
+
+</style>
+
+<div class="cashout-bottom-fill"></div>
+
+<div class="cashout-footer-content">
+  <div class="cashout-footer-inner">
+
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <span>Survey</span><span class="accent">Cash</span>
       </div>
+
+      <div class="footer-brand-text">
+        SurveyCash is built to make earning simple. Complete surveys,
+        explore offers and turn your time online into real rewards with quick payouts.
+      </div>
+
+      <div class="footer-trust">
+        <a href="https://www.trustpilot.com/review/surveycash.website"
+           target="_blank"
+           class="footer-trust-link">
+          <span>Rate us on Trustpilot</span>
+          <img src="/img/trustpilot-mission.png" class="footer-trust-img">
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <div class="footer-col-title">SurveyCash</div>
+      <a href="/" class="footer-link">Earn</a>
+      <a href="/cashout" class="footer-link">Cash Out</a>
+      <a href="/support" class="footer-link">Support</a>
+    </div>
+
+    <div class="footer-col">
+      <div class="footer-col-title">Help</div>
+      <a href="/support" class="footer-link">FAQ</a>
+      <a href="/support" class="footer-link">Contact</a>
+    </div>
+
+    <div class="footer-col">
+      <div class="footer-col-title">Info</div>
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="/privacy" class="footer-link">Privacy</a>
+    </div>
+
+    <div class="footer-col">
+      <div class="footer-col-title">Social</div>
+      <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" class="footer-link">TikTok</a>
+      <a href="https://x.com/SurveyCashh" target="_blank" class="footer-link">X</a>
+    </div>
+
+  </div>
+</div>
       `
     )
   );
