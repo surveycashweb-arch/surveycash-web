@@ -5489,8 +5489,8 @@ main{
   width:100%;
   height:calc(100vh - 64px - 220px);
   max-width:none;
-  margin:40px 0;
-  padding:0 22px;
+  margin:0 !important;
+  padding:28px 22px 28px;
   box-sizing:border-box;
   overflow:hidden;
 
