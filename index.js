@@ -5453,325 +5453,31 @@ app.get('/cashout', async (req, res) => {
 app.get('/support', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
-  const bodyHtml = `
-    <style>
-      html, body{
-        height:100%;
-        overflow:hidden !important;
-        background:#111827;
-      }
+  res.send(
+    page(
+      req,
+      'Support — SurveyCash',
+      '/support',
+      `
+      <div class="cashout-bottom-fill"></div>
 
-      body{
-        margin:0;
-      }
-
-      main,
-      .container,
-      .page,
-      .content{
-        margin-left:0 !important;
-        margin-right:0 !important;
-        max-width:none !important;
-      }
-
-      main{
-        position:relative;
-        height:calc(100vh - 64px);
-        min-height:calc(100vh - 64px);
-        max-height:calc(100vh - 64px);
-        padding-top:0 !important;
-        overflow:hidden !important;
-        background:#111827;
-      }
-
-      .support-page{
-        position:relative;
-        width:100%;
-        height:100%;
-        max-width:none;
-        margin:20px 0 0 0 !important;
-        padding:0 0 0 40px !important;
-        box-sizing:border-box;
-        overflow:hidden;
-      }
-
-      .support-bottom-fill{
-        position:fixed;
-        left:50%;
-        transform:translateX(-50%);
-        bottom:0;
-        width:100vw;
-        height:220px;
-        background:#151c2e;
-        border-top:1px solid rgba(255,255,255,.04);
-        z-index:0;
-        pointer-events:none;
-      }
-
-      .support-footer-content{
-        position:fixed;
-        left:50%;
-        transform:translateX(-50%);
-        bottom:0;
-        width:100vw;
-        height:220px;
-        z-index:1;
-        display:flex;
-        justify-content:center;
-        box-sizing:border-box;
-        pointer-events:none;
-      }
-
-      .support-footer-inner{
-        width:100%;
-        max-width:1280px;
-        padding:26px 36px 0;
-        display:grid;
-        grid-template-columns:1.7fr 1fr 1fr 1fr 1fr;
-        gap:36px;
-        box-sizing:border-box;
-        pointer-events:auto;
-      }
-
-      .support-head,
-      .support-content{
-        position:relative;
-        z-index:2;
-      }
-
-      .support-head{
-        display:flex;
-        flex-direction:column;
-        align-items:flex-start;
-        gap:10px;
-        margin-bottom:18px;
-      }
-
-      .support-head h1{
-        font-size:52px;
-        font-weight:900;
-        margin:0;
-        line-height:1;
-        letter-spacing:.5px;
-        color:#ffffff;
-      }
-
-      .support-accent{
-        color:#eab308;
-      }
-
-      .support-sub{
-        margin:0;
-        color:#94a3b8;
-        font-size:15px;
-        line-height:1.6;
-        max-width:760px;
-      }
-
-      .support-content{
-        display:grid;
-        grid-template-columns:repeat(2, minmax(0, 420px));
-        gap:18px 22px;
-        align-content:start;
-      }
-
-      .faq-card{
-        background:rgba(255,255,255,.03);
-        border:1px solid rgba(255,255,255,.08);
-        border-radius:20px;
-        padding:18px 18px 16px;
-        box-shadow:0 10px 30px rgba(0,0,0,.14);
-      }
-
-      .faq-card h2{
-        margin:0 0 14px;
-        font-size:22px;
-        font-weight:900;
-        color:#facc15;
-      }
-
-      .faq-item{
-        padding:0 0 14px;
-        margin:0 0 14px;
-        border-bottom:1px solid rgba(255,255,255,.08);
-      }
-
-      .faq-item:last-child{
-        border-bottom:0;
-        margin-bottom:0;
-        padding-bottom:0;
-      }
-
-      .faq-q{
-        margin:0 0 7px;
-        font-size:16px;
-        font-weight:800;
-        color:#ffffff;
-      }
-
-      .faq-a{
-        margin:0;
-        color:#cbd5e1;
-        font-size:14px;
-        line-height:1.65;
-      }
-
-      .contact-card{
-        background:linear-gradient(180deg, rgba(250,204,21,.08), rgba(255,255,255,.03));
-        border:1px solid rgba(250,204,21,.18);
-      }
-
-      .support-email{
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        min-height:44px;
-        padding:0 16px;
-        border-radius:12px;
-        text-decoration:none;
-        font-weight:800;
-        font-size:14px;
-        color:#ffffff;
-        background:rgba(255,255,255,.05);
-        border:1px solid rgba(255,255,255,.10);
-        margin-top:8px;
-      }
-
-      .support-email:hover{
-        background:rgba(255,255,255,.08);
-      }
-
-      .footer-brand{
-        display:flex;
-        flex-direction:column;
-        align-items:flex-start;
-      }
-
-      .footer-logo{
-        font-size:22px;
-        font-weight:900;
-        line-height:1;
-        color:#fff;
-        margin-bottom:18px;
-      }
-
-      .footer-logo .white{
-        color:#ffffff;
-      }
-
-      .footer-logo .accent{
-        color:#fbbf24;
-      }
-
-      .footer-brand-text{
-        max-width:380px;
-        color:rgba(255,255,255,.62);
-        font-size:14px;
-        line-height:1.55;
-        margin-bottom:18px;
-      }
-
-      .footer-trust{
-        display:flex;
-        align-items:center;
-      }
-
-      .footer-trust-link{
-        display:flex;
-        align-items:center;
-        gap:10px;
-        color:#ffffff;
-        text-decoration:none;
-        font-size:12px;
-        font-weight:700;
-      }
-
-      .footer-trust-img{
-        height:42px;
-        width:auto;
-        display:block;
-      }
-
-      .footer-trust-link:hover{
-        text-decoration:underline;
-      }
-
-      .footer-trust-link span{
-        font-size:14px;
-      }
-
-      .footer-col-title{
-        color:#fbbf24;
-        font-size:16px;
-        font-weight:900;
-        margin:0 0 22px;
-      }
-
-      .footer-link{
-        display:block;
-        color:#ffffff;
-        text-decoration:none;
-        font-size:15px;
-        font-weight:700;
-        margin-bottom:22px;
-        opacity:.95;
-      }
-
-      .footer-link:hover{
-        opacity:1;
-      }
-
-      @media (max-width:1200px){
-        .support-footer-inner{
-          grid-template-columns:1.7fr 1fr 1fr 1fr;
-          gap:28px;
-        }
-
-        .footer-col.social{
-          display:none;
-        }
-      }
-
-      @media (max-width:1100px){
-        .support-footer-inner{
-          grid-template-columns:1.5fr 1fr 1fr;
-          gap:28px;
-        }
-
-        .footer-col.legal{
-          display:none;
-        }
-
-        .support-content{
-          grid-template-columns:1fr 1fr;
-          max-width:900px;
-        }
-      }
-
-      @media (max-width:900px){
-        .support-content{
-          grid-template-columns:1fr;
-          max-width:520px;
-        }
-      }
-    </style>
-
-    <div class="support-page">
-
-      <div class="support-bottom-fill"></div>
-
-      <div class="support-footer-content">
-        <div class="support-footer-inner">
+      <div class="cashout-footer-content">
+        <div class="cashout-footer-inner">
 
           <div class="footer-brand">
-            <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
+            <div class="footer-logo">
+              <span class="white">Survey</span><span class="accent">Cash</span>
+            </div>
 
             <div class="footer-brand-text">
-              SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
+              SurveyCash is built to make earning simple. Complete surveys,
+              explore offers and turn your time online into real rewards with quick payouts.
             </div>
 
             <div class="footer-trust">
-              <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
+              <a href="https://www.trustpilot.com/review/surveycash.website"
+                 target="_blank"
+                 class="footer-trust-link">
                 <span>Rate us on Trustpilot</span>
                 <img src="/img/trustpilot-mission.png" class="footer-trust-img">
               </a>
@@ -5799,100 +5505,18 @@ app.get('/support', (req, res) => {
 
           <div class="footer-col social">
             <div class="footer-col-title">Social</div>
-            <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
-            <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
+            <a href="https://www.tiktok.com/@surveycashh?lang=da"
+               target="_blank"
+               class="footer-link">TikTok</a>
+
+            <a href="https://x.com/SurveyCashh"
+               target="_blank"
+               class="footer-link">X</a>
           </div>
 
         </div>
       </div>
-
-      <div class="support-head">
-        <h1><span class="support-accent">Support</span> & FAQ</h1>
-        <p class="support-sub">
-          Need help with SurveyCash? Here are answers to the most common questions about surveys, offers, payouts, and account security.
-        </p>
-      </div>
-
-      <div class="support-content">
-
-        <div class="faq-card">
-          <h2>Getting Started</h2>
-
-          <div class="faq-item">
-            <p class="faq-q">How do I earn on SurveyCash?</p>
-            <p class="faq-a">You can earn rewards by completing surveys and partner offers available on the platform.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q">Do I need to verify my email?</p>
-            <p class="faq-a">Yes. Email verification helps protect accounts, prevent fraud, and ensure correct reward attribution.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q">Why can’t I see many surveys or offers?</p>
-            <p class="faq-a">Availability depends on your country, demographics, device type, and partner inventory.</p>
-          </div>
-        </div>
-
-        <div class="faq-card">
-          <h2>Surveys & Offers</h2>
-
-          <div class="faq-item">
-            <p class="faq-q">Why was I disqualified from a survey?</p>
-            <p class="faq-a">Survey providers decide qualification based on demographics and quality checks. Disqualifications are normal.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q">I completed a survey but did not receive credit.</p>
-            <p class="faq-a">Rewards are credited only after confirmation from our partners. Some credits appear instantly, while others take more time.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q">Can I use a VPN, proxy, or multiple accounts?</p>
-            <p class="faq-a">No. The use of VPNs, proxies, bots, or multiple accounts is strictly prohibited and may result in suspension.</p>
-          </div>
-        </div>
-
-        <div class="faq-card">
-          <h2>Payouts</h2>
-
-          <div class="faq-item">
-            <p class="faq-q">What is the minimum payout?</p>
-            <p class="faq-a">The current minimum payout is shown in your Cash Out section.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q">How long do payouts take?</p>
-            <p class="faq-a">Some payouts are processed quickly, while others may take up to 24–48 hours or longer if additional review is required.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q">Why is my payout still processing?</p>
-            <p class="faq-a">Some payouts require partner confirmation, fraud checks, or manual review before completion.</p>
-          </div>
-        </div>
-
-        <div class="faq-card contact-card">
-          <h2>Contact Support</h2>
-
-          <div class="faq-item">
-            <p class="faq-q">Need help with your account?</p>
-            <p class="faq-a">For account, reward, or payout questions, contact us by email and include your account email plus a short description of the issue.</p>
-          </div>
-
-          <a class="support-email" href="mailto:contact@surveycash.website">contact@surveycash.website</a>
-        </div>
-
-      </div>
-    </div>
-  `;
-
-  res.send(
-    page(
-      req,
-      'Support — SurveyCash',
-      '/support',
-      bodyHtml
+      `
     )
   );
 });
