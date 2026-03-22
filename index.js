@@ -5460,7 +5460,6 @@ app.get('/support', (req, res) => {
       '/support',
       `
 <style>
-
 .cashout-bottom-fill{
   position:fixed;
   left:50%;
@@ -5471,6 +5470,7 @@ app.get('/support', (req, res) => {
   background:#151c2e;
   border-top:1px solid rgba(255,255,255,.04);
   z-index:0;
+  pointer-events:none;
 }
 
 .cashout-footer-content{
@@ -5480,9 +5480,11 @@ app.get('/support', (req, res) => {
   bottom:0;
   width:100vw;
   height:220px;
+  z-index:1;
   display:flex;
   justify-content:center;
-  z-index:1;
+  box-sizing:border-box;
+  pointer-events:none;
 }
 
 .cashout-footer-inner{
@@ -5492,13 +5494,26 @@ app.get('/support', (req, res) => {
   display:grid;
   grid-template-columns:1.7fr 1fr 1fr 1fr 1fr;
   gap:36px;
+  box-sizing:border-box;
+  pointer-events:auto;
+}
+
+.footer-brand{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
 }
 
 .footer-logo{
   font-size:22px;
   font-weight:900;
+  line-height:1;
   color:#fff;
   margin-bottom:18px;
+}
+
+.footer-logo .white{
+  color:#ffffff;
 }
 
 .footer-logo .accent{
@@ -5531,13 +5546,22 @@ app.get('/support', (req, res) => {
 .footer-trust-img{
   height:42px;
   width:auto;
+  display:block;
+}
+
+.footer-trust-link:hover{
+  text-decoration:underline;
+}
+
+.footer-trust-link span{
+  font-size:14px;
 }
 
 .footer-col-title{
   color:#fbbf24;
   font-size:16px;
   font-weight:900;
-  margin-bottom:22px;
+  margin:0 0 22px;
 }
 
 .footer-link{
@@ -5547,8 +5571,34 @@ app.get('/support', (req, res) => {
   font-size:15px;
   font-weight:700;
   margin-bottom:22px;
+  opacity:.95;
 }
 
+.footer-link:hover{
+  opacity:1;
+}
+
+@media (max-width:1200px){
+  .cashout-footer-inner{
+    grid-template-columns:1.7fr 1fr 1fr 1fr;
+    gap:28px;
+  }
+
+  .footer-col.social{
+    display:none;
+  }
+}
+
+@media (max-width:1100px){
+  .cashout-footer-inner{
+    grid-template-columns:1.5fr 1fr 1fr;
+    gap:28px;
+  }
+
+  .footer-col.legal{
+    display:none;
+  }
+}
 </style>
 
 <div class="cashout-bottom-fill"></div>
@@ -5558,18 +5608,15 @@ app.get('/support', (req, res) => {
 
     <div class="footer-brand">
       <div class="footer-logo">
-        <span>Survey</span><span class="accent">Cash</span>
+        <span class="white">Survey</span><span class="accent">Cash</span>
       </div>
 
       <div class="footer-brand-text">
-        SurveyCash is built to make earning simple. Complete surveys,
-        explore offers and turn your time online into real rewards with quick payouts.
+        SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
       </div>
 
       <div class="footer-trust">
-        <a href="https://www.trustpilot.com/review/surveycash.website"
-           target="_blank"
-           class="footer-trust-link">
+        <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
           <span>Rate us on Trustpilot</span>
           <img src="/img/trustpilot-mission.png" class="footer-trust-img">
         </a>
@@ -5589,16 +5636,16 @@ app.get('/support', (req, res) => {
       <a href="/support" class="footer-link">Contact</a>
     </div>
 
-    <div class="footer-col">
+    <div class="footer-col legal">
       <div class="footer-col-title">Info</div>
       <a href="/terms" class="footer-link">Terms</a>
       <a href="/privacy" class="footer-link">Privacy</a>
     </div>
 
-    <div class="footer-col">
+    <div class="footer-col social">
       <div class="footer-col-title">Social</div>
-      <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" class="footer-link">TikTok</a>
-      <a href="https://x.com/SurveyCashh" target="_blank" class="footer-link">X</a>
+      <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+      <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
     </div>
 
   </div>
