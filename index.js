@@ -5490,9 +5490,12 @@ app.get('/support', (req, res) => {
   height:100%;
   max-width:none;
   margin:0 !important;
-  padding:18px 22px 18px !important;
+  padding:0 22px;
   box-sizing:border-box;
-  overflow:hidden;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .support-shell{
