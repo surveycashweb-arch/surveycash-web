@@ -5487,7 +5487,7 @@ main{
 .support-page{
   position:relative;
   width:100%;
-  height:calc(100vh - 64px - 220px);
+  height:calc(100vh - 64px - 180px);
   max-width:none;
   margin:0 !important;
   padding:0 22px;
