@@ -5474,62 +5474,62 @@ app.get('/support', (req, res) => {
       max-width:none !important;
     }
 
-main{
-  position:relative;
-  height:calc(100vh - 64px);
-  min-height:calc(100vh - 64px);
-  max-height:calc(100vh - 64px);
-  padding-top:0 !important;
-  overflow:hidden !important;
-  background:#111827;
-}
+    main{
+      position:relative;
+      height:calc(100vh - 64px);
+      min-height:calc(100vh - 64px);
+      max-height:calc(100vh - 64px);
+      padding-top:0 !important;
+      overflow:hidden !important;
+      background:#111827;
+    }
 
-.support-page{
-  position:relative;
-  width:100%;
-  height:calc(100vh - 64px - 220px);
-  max-width:none;
-  margin:0 !important;
-  padding:36px 22px 36px;
-  box-sizing:border-box;
-  overflow:hidden;
+    .support-page{
+      position:relative;
+      width:100%;
+      height:calc(100vh - 64px - 220px);
+      max-width:none;
+      margin:0 !important;
+      padding:0 22px;
+      box-sizing:border-box;
+      overflow:hidden;
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-.support-shell{
-  position:relative;
-  z-index:2;
-  display:grid;
-  grid-template-columns:1.25fr .7fr;
-  gap:18px;
-  align-items:stretch;
-  max-width:1400px;
-  width:100%;
-  max-height:calc(100% - 72px);
-}
+    .support-shell{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:1.25fr .7fr;
+      gap:18px;
+      align-items:stretch;
+      max-width:1400px;
+      width:100%;
+      height:calc(100% - 80px);
+    }
 
-.support-card{
-  position:relative;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.06);
-  background:#111827;
-  box-shadow:0 10px 35px rgba(0,0,0,.25);
-  overflow:hidden;
-}
+    .support-card{
+      position:relative;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.06);
+      background:#111827;
+      box-shadow:0 10px 35px rgba(0,0,0,.25);
+      overflow:hidden;
+    }
 
-.support-card::before{
-  display:none;
-}
+    .support-card::before{
+      display:none;
+    }
 
-.faq-card{
-  padding:24px;
-  display:flex;
-  flex-direction:column;
-  background:#151c2e;
-}
+    .faq-card{
+      padding:24px;
+      display:flex;
+      flex-direction:column;
+      background:#151c2e;
+    }
 
     .contact-card{
       padding:20px 20px 18px;
@@ -5578,19 +5578,19 @@ main{
       flex:1;
     }
 
-.faq-item{
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.06);
-  background:#111827;
-  padding:10px;
-  min-height:55px;
-}
+    .faq-item{
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.06);
+      background:#111827;
+      padding:10px;
+      min-height:55px;
+    }
 
- .faq-item:hover{
-  transform:translateY(-2px);
-  border-color:rgba(255,255,255,.12);
-  background:#1b2438;
-}
+    .faq-item:hover{
+      transform:translateY(-2px);
+      border-color:rgba(255,255,255,.12);
+      background:#1b2438;
+    }
 
     .faq-q{
       display:flex;
@@ -5623,17 +5623,6 @@ main{
       color:#aeb9ca;
       font-size:14px;
       line-height:1.6;
-    }
-
-    .faq-bottom-note{
-      margin-top:14px;
-      padding:14px 16px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.06);
-      background:rgba(255,255,255,.03);
-      color:#cbd5e1;
-      font-size:14px;
-      line-height:1.55;
     }
 
     .contact-top{
@@ -5925,7 +5914,7 @@ main{
             <p class="faq-a">No. Only one account per person is allowed on SurveyCash.</p>
           </div>
         </div>
-</div>  <!-- LUKKER FAQ CARD -->
+      </div>
 
       <div class="support-card contact-card">
         <div class="contact-top">
@@ -5947,14 +5936,14 @@ main{
             </div>
 
             <div class="contact-row">
-  <span class="contact-label">Response time</span>
-  <div class="contact-value">Usually within 1–3 business days</div>
-</div>
+              <span class="contact-label">Response time</span>
+              <div class="contact-value">Usually within 1–3 business days</div>
+            </div>
 
-<div class="contact-row">
-  <span class="contact-label">Best for</span>
-  <div class="contact-value">Account issues, payout help</div>
-</div>
+            <div class="contact-row">
+              <span class="contact-label">Best for</span>
+              <div class="contact-value">Account issues, payout help</div>
+            </div>
           </div>
         </div>
 
