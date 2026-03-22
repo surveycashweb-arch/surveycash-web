@@ -5920,7 +5920,7 @@ app.get('/support', (req, res) => {
           </div>
         </div>
 
-<div style="height:40px;"></div>
+<div class="faq-bottom-note" style="visibility:hidden; border:none; background:transparent; padding:0; height:34px; margin-top:14px;"></div>
 
       <div class="support-card contact-card">
         <div class="contact-top">
