@@ -5453,204 +5453,560 @@ app.get('/cashout', async (req, res) => {
 app.get('/support', (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
+  const bodyHtml = `
+  <style>
+    html, body{
+      height:100%;
+      overflow:hidden !important;
+      background:#111827;
+    }
+
+    body{
+      margin:0;
+    }
+
+    main,
+    .container,
+    .page,
+    .content{
+      margin-left:0 !important;
+      margin-right:0 !important;
+      max-width:none !important;
+    }
+
+    main{
+      position:relative;
+      height:calc(100vh - 64px);
+      min-height:calc(100vh - 64px);
+      max-height:calc(100vh - 64px);
+      padding-top:0 !important;
+      overflow:hidden !important;
+      background:#111827;
+    }
+
+    .support-page{
+      position:relative;
+      width:100%;
+      height:100%;
+      max-width:none;
+      margin:0 !important;
+      padding:18px 22px 0 !important;
+      box-sizing:border-box;
+      overflow:hidden;
+    }
+
+    .support-shell{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:1.7fr .95fr;
+      gap:18px;
+      align-items:stretch;
+      height:calc(100vh - 64px - 220px - 28px);
+    }
+
+    .support-card{
+      position:relative;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 38%),
+        rgba(18,24,40,.88);
+      box-shadow:0 16px 50px rgba(0,0,0,.20);
+      overflow:hidden;
+    }
+
+    .support-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:linear-gradient(to bottom, rgba(255,255,255,.03), rgba(255,255,255,0));
+    }
+
+    .faq-card{
+      padding:26px 26px 22px;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .contact-card{
+      padding:26px 24px 22px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      background:
+        radial-gradient(circle at top left, rgba(251,191,36,.10), transparent 35%),
+        rgba(18,24,40,.92);
+    }
+
+    .support-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#fbbf24;
+      margin-bottom:10px;
+    }
+
+    .support-title{
+      margin:0;
+      font-size:34px;
+      line-height:1.02;
+      font-weight:900;
+      color:#ffffff;
+      letter-spacing:-.02em;
+    }
+
+    .support-sub{
+      margin:12px 0 0;
+      max-width:680px;
+      color:#94a3b8;
+      font-size:15px;
+      line-height:1.6;
+    }
+
+    .faq-grid{
+      margin-top:22px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      flex:1;
+    }
+
+    .faq-item{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.07);
+      background:rgba(255,255,255,.025);
+      padding:16px 16px 15px;
+      min-height:112px;
+      transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .faq-item:hover{
+      transform:translateY(-2px);
+      border-color:rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+    }
+
+    .faq-q{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      margin:0 0 8px;
+      font-size:16px;
+      font-weight:800;
+      color:#ffffff;
+      line-height:1.35;
+    }
+
+    .faq-icon{
+      flex:0 0 24px;
+      width:24px;
+      height:24px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(251,191,36,.14);
+      color:#fbbf24;
+      font-size:13px;
+      font-weight:900;
+      margin-top:1px;
+    }
+
+    .faq-a{
+      margin:0;
+      color:#aeb9ca;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .faq-bottom-note{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.03);
+      color:#cbd5e1;
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .contact-top{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .contact-badge{
+      width:58px;
+      height:58px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg, rgba(251,191,36,.22), rgba(251,191,36,.08));
+      border:1px solid rgba(251,191,36,.20);
+      color:#fbbf24;
+      font-size:28px;
+      box-shadow:0 10px 30px rgba(251,191,36,.08);
+    }
+
+    .contact-title{
+      margin:0;
+      font-size:31px;
+      line-height:1.02;
+      font-weight:900;
+      color:#ffffff;
+      letter-spacing:-.02em;
+    }
+
+    .contact-sub{
+      margin:0;
+      color:#9fb0c6;
+      font-size:15px;
+      line-height:1.65;
+    }
+
+    .contact-panel{
+      margin-top:18px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .contact-row{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.07);
+      background:rgba(255,255,255,.03);
+      padding:14px 15px;
+    }
+
+    .contact-label{
+      display:block;
+      color:#fbbf24;
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.10em;
+      margin-bottom:7px;
+    }
+
+    .contact-value{
+      color:#ffffff;
+      font-size:15px;
+      font-weight:700;
+      line-height:1.45;
+    }
+
+    .contact-mock-btn{
+      margin-top:6px;
+      width:100%;
+      height:50px;
+      border:none;
+      border-radius:16px;
+      background:#fbbf24;
+      color:#0b1220;
+      font-size:15px;
+      font-weight:900;
+      letter-spacing:.02em;
+      box-shadow:0 12px 30px rgba(251,191,36,.14);
+      cursor:default;
+    }
+
+    .contact-foot{
+      margin-top:14px;
+      color:#8ea0b8;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .cashout-bottom-fill{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+      width:100vw;
+      height:220px;
+      background:#151c2e;
+      border-top:1px solid rgba(255,255,255,.04);
+      z-index:0;
+      pointer-events:none;
+    }
+
+    .cashout-footer-content{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+      width:100vw;
+      height:220px;
+      z-index:1;
+      display:flex;
+      justify-content:center;
+      box-sizing:border-box;
+      pointer-events:none;
+    }
+
+    .cashout-footer-inner{
+      width:100%;
+      max-width:1280px;
+      padding:26px 36px 0;
+      display:grid;
+      grid-template-columns:1.7fr 1fr 1fr 1fr 1fr;
+      gap:36px;
+      box-sizing:border-box;
+      pointer-events:auto;
+    }
+
+    .footer-brand{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+    }
+
+    .footer-logo{
+      font-size:22px;
+      font-weight:900;
+      line-height:1;
+      color:#fff;
+      margin-bottom:18px;
+    }
+
+    .footer-logo .white{
+      color:#ffffff;
+    }
+
+    .footer-logo .accent{
+      color:#fbbf24;
+    }
+
+    .footer-brand-text{
+      max-width:380px;
+      color:rgba(255,255,255,.62);
+      font-size:14px;
+      line-height:1.55;
+      margin-bottom:18px;
+    }
+
+    .footer-trust{
+      display:flex;
+      align-items:center;
+    }
+
+    .footer-trust-link{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:#ffffff;
+      text-decoration:none;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .footer-trust-img{
+      height:42px;
+      width:auto;
+      display:block;
+    }
+
+    .footer-trust-link:hover{
+      text-decoration:underline;
+    }
+
+    .footer-trust-link span{
+      font-size:14px;
+    }
+
+    .footer-col-title{
+      color:#fbbf24;
+      font-size:16px;
+      font-weight:900;
+      margin:0 0 22px;
+    }
+
+    .footer-link{
+      display:block;
+      color:#ffffff;
+      text-decoration:none;
+      font-size:15px;
+      font-weight:700;
+      margin-bottom:22px;
+      opacity:.95;
+    }
+
+    .footer-link:hover{
+      opacity:1;
+    }
+
+    @media (max-width:1200px){
+      .cashout-footer-inner{
+        grid-template-columns:1.7fr 1fr 1fr 1fr;
+        gap:28px;
+      }
+
+      .footer-col.social{
+        display:none;
+      }
+    }
+
+    @media (max-width:1100px){
+      .support-shell{
+        grid-template-columns:1.25fr .95fr;
+      }
+
+      .faq-grid{
+        grid-template-columns:1fr;
+      }
+
+      .cashout-footer-inner{
+        grid-template-columns:1.5fr 1fr 1fr;
+        gap:28px;
+      }
+
+      .footer-col.legal{
+        display:none;
+      }
+    }
+  </style>
+
+  <div class="support-page">
+
+    <div class="support-shell">
+      <div class="support-card faq-card">
+        <div class="support-kicker">Help Center</div>
+        <h1 class="support-title">Frequently asked questions</h1>
+        <p class="support-sub">
+          Quick answers for the most common SurveyCash questions. Clean, simple, and easy to scan.
+        </p>
+
+        <div class="faq-grid">
+          <div class="faq-item">
+            <p class="faq-q"><span class="faq-icon">?</span>How do I earn on SurveyCash?</p>
+            <p class="faq-a">Complete surveys and partner offers to earn rewards on your account balance.</p>
+          </div>
+
+          <div class="faq-item">
+            <p class="faq-q"><span class="faq-icon">?</span>Why was I disqualified?</p>
+            <p class="faq-a">Survey providers use qualification checks based on profile match and availability.</p>
+          </div>
+
+          <div class="faq-item">
+            <p class="faq-q"><span class="faq-icon">?</span>How long do payouts take?</p>
+            <p class="faq-a">Some payouts are fast, while others may take additional review time before completion.</p>
+          </div>
+
+          <div class="faq-item">
+            <p class="faq-q"><span class="faq-icon">?</span>Can I use a VPN?</p>
+            <p class="faq-a">No. VPNs, proxies, bots, and multiple accounts are not allowed on SurveyCash.</p>
+          </div>
+        </div>
+
+        <div class="faq-bottom-note">
+          More FAQ answers and full support functionality can be added here later.
+        </div>
+      </div>
+
+      <div class="support-card contact-card">
+        <div class="contact-top">
+          <div class="contact-badge">✉</div>
+
+          <div>
+            <div class="support-kicker">Direct Support</div>
+            <h2 class="contact-title">Contact us</h2>
+          </div>
+
+          <p class="contact-sub">
+            Need help with rewards, surveys, or payouts? This is the contact area UI for Support.
+          </p>
+
+          <div class="contact-panel">
+            <div class="contact-row">
+              <span class="contact-label">Email</span>
+              <div class="contact-value">contact@surveycash.website</div>
+            </div>
+
+            <div class="contact-row">
+              <span class="contact-label">Response time</span>
+              <div class="contact-value">Usually within 24–48 hours</div>
+            </div>
+
+            <div class="contact-row">
+              <span class="contact-label">Best for</span>
+              <div class="contact-value">Account issues, reward questions, payout help</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button class="contact-mock-btn" type="button">Contact support</button>
+          <div class="contact-foot">
+            UI only for now — mail functionality can be added later.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cashout-bottom-fill"></div>
+
+    <div class="cashout-footer-content">
+      <div class="cashout-footer-inner">
+
+        <div class="footer-brand">
+          <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
+
+          <div class="footer-brand-text">
+            SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
+          </div>
+
+          <div class="footer-trust">
+            <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
+              <span>Rate us on Trustpilot</span>
+              <img src="/img/trustpilot-mission.png" class="footer-trust-img">
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">SurveyCash</div>
+          <a href="/" class="footer-link">Earn</a>
+          <a href="/cashout" class="footer-link">Cash Out</a>
+          <a href="/support" class="footer-link">Support</a>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Help</div>
+          <a href="/support" class="footer-link">FAQ</a>
+          <a href="/support" class="footer-link">Contact</a>
+        </div>
+
+        <div class="footer-col legal">
+          <div class="footer-col-title">Info</div>
+          <a href="/terms" class="footer-link">Terms</a>
+          <a href="/privacy" class="footer-link">Privacy</a>
+        </div>
+
+        <div class="footer-col social">
+          <div class="footer-col-title">Social</div>
+          <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+          <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  `;
+
   res.send(
     page(
       req,
       'Support — SurveyCash',
       '/support',
-      `
-<style>
-.cashout-bottom-fill{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:0;
-  width:100vw;
-  height:220px;
-  background:#151c2e;
-  border-top:1px solid rgba(255,255,255,.04);
-  z-index:0;
-  pointer-events:none;
-}
-
-.cashout-footer-content{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:0;
-  width:100vw;
-  height:220px;
-  z-index:1;
-  display:flex;
-  justify-content:center;
-  box-sizing:border-box;
-  pointer-events:none;
-}
-
-.cashout-footer-inner{
-  width:100%;
-  max-width:1280px;
-  padding:26px 36px 0;
-  display:grid;
-  grid-template-columns:1.7fr 1fr 1fr 1fr 1fr;
-  gap:36px;
-  box-sizing:border-box;
-  pointer-events:auto;
-}
-
-.footer-brand{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-}
-
-.footer-logo{
-  font-size:22px;
-  font-weight:900;
-  line-height:1;
-  color:#fff;
-  margin-bottom:18px;
-}
-
-.footer-logo .white{
-  color:#ffffff;
-}
-
-.footer-logo .accent{
-  color:#fbbf24;
-}
-
-.footer-brand-text{
-  max-width:380px;
-  color:rgba(255,255,255,.62);
-  font-size:14px;
-  line-height:1.55;
-  margin-bottom:18px;
-}
-
-.footer-trust{
-  display:flex;
-  align-items:center;
-}
-
-.footer-trust-link{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  color:#ffffff;
-  text-decoration:none;
-  font-size:12px;
-  font-weight:700;
-}
-
-.footer-trust-img{
-  height:42px;
-  width:auto;
-  display:block;
-}
-
-.footer-trust-link:hover{
-  text-decoration:underline;
-}
-
-.footer-trust-link span{
-  font-size:14px;
-}
-
-.footer-col-title{
-  color:#fbbf24;
-  font-size:16px;
-  font-weight:900;
-  margin:0 0 22px;
-}
-
-.footer-link{
-  display:block;
-  color:#ffffff;
-  text-decoration:none;
-  font-size:15px;
-  font-weight:700;
-  margin-bottom:22px;
-  opacity:.95;
-}
-
-.footer-link:hover{
-  opacity:1;
-}
-
-@media (max-width:1200px){
-  .cashout-footer-inner{
-    grid-template-columns:1.7fr 1fr 1fr 1fr;
-    gap:28px;
-  }
-
-  .footer-col.social{
-    display:none;
-  }
-}
-
-@media (max-width:1100px){
-  .cashout-footer-inner{
-    grid-template-columns:1.5fr 1fr 1fr;
-    gap:28px;
-  }
-
-  .footer-col.legal{
-    display:none;
-  }
-}
-</style>
-
-<div class="cashout-bottom-fill"></div>
-
-<div class="cashout-footer-content">
-  <div class="cashout-footer-inner">
-
-    <div class="footer-brand">
-      <div class="footer-logo">
-        <span class="white">Survey</span><span class="accent">Cash</span>
-      </div>
-
-      <div class="footer-brand-text">
-        SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
-      </div>
-
-      <div class="footer-trust">
-        <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
-          <span>Rate us on Trustpilot</span>
-          <img src="/img/trustpilot-mission.png" class="footer-trust-img">
-        </a>
-      </div>
-    </div>
-
-    <div class="footer-col">
-      <div class="footer-col-title">SurveyCash</div>
-      <a href="/" class="footer-link">Earn</a>
-      <a href="/cashout" class="footer-link">Cash Out</a>
-      <a href="/support" class="footer-link">Support</a>
-    </div>
-
-    <div class="footer-col">
-      <div class="footer-col-title">Help</div>
-      <a href="/support" class="footer-link">FAQ</a>
-      <a href="/support" class="footer-link">Contact</a>
-    </div>
-
-    <div class="footer-col legal">
-      <div class="footer-col-title">Info</div>
-      <a href="/terms" class="footer-link">Terms</a>
-      <a href="/privacy" class="footer-link">Privacy</a>
-    </div>
-
-    <div class="footer-col social">
-      <div class="footer-col-title">Social</div>
-      <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
-      <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
-    </div>
-
-  </div>
-</div>
-      `
+      bodyHtml
     )
   );
 });
