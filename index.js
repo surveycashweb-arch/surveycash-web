@@ -5951,14 +5951,14 @@ app.get('/support', (req, res) => {
             </div>
 
             <div class="contact-row">
-              <span class="contact-label">Response time</span>
-              <div class="contact-value">Usually within 24–48 hours</div>
-            </div>
+  <span class="contact-label">Response time</span>
+  <div class="contact-value">Usually within 1–3 business days</div>
+</div>
 
-            <div class="contact-row">
-              <span class="contact-label">Best for</span>
-              <div class="contact-value">Account issues, payout help, verification support</div>
-            </div>
+<div class="contact-row">
+  <span class="contact-label">Best for</span>
+  <div class="contact-value">Account issues, payout help</div>
+</div>
           </div>
         </div>
 
