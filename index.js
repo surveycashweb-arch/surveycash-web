@@ -5575,7 +5575,7 @@ app.get('/support', (req, res) => {
 .faq-item{
   border-radius:14px;
   border:1px solid rgba(255,255,255,.06);
-  background:#151c2e;
+  background:#111827;
   padding:12px;
   min-height:70px;
 }
