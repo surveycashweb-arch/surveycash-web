@@ -5502,8 +5502,8 @@ app.get('/support', (req, res) => {
   grid-template-columns:1.25fr .7fr;
   gap:18px;
   align-items:stretch;
-  height:calc(100vh - 64px - 220px - 40px);
-  max-width:1100px;
+  height:calc(100vh - 64px - 220px - 120px);
+  max-width:1400px;
   margin:0 auto;
 }
 
