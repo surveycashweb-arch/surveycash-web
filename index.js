@@ -5502,7 +5502,7 @@ app.get('/support', (req, res) => {
       grid-template-columns:1.7fr .95fr;
       gap:18px;
       align-items:stretch;
-      height:calc(100vh - 64px - 220px - 28px);
+      height:calc(100vh - 64px - 220px - 40px);
     }
 
 .support-card{
