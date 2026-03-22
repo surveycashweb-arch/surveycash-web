@@ -5518,11 +5518,12 @@ app.get('/support', (req, res) => {
   display:none;
 }
 
-    .faq-card{
-      padding:26px 26px 22px;
-      display:flex;
-      flex-direction:column;
-    }
+.faq-card{
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  background:#151c2e;
+}
 
     .contact-card{
       padding:26px 24px 22px;
@@ -5918,11 +5919,6 @@ app.get('/support', (req, res) => {
             <p class="faq-a">No. Only one account per person is allowed on SurveyCash.</p>
           </div>
         </div>
-
-        <div class="faq-bottom-note">
-          More FAQ answers and full support functionality can be added here later.
-        </div>
-      </div>
 
       <div class="support-card contact-card">
         <div class="contact-top">
