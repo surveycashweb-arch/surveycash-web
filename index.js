@@ -5474,24 +5474,25 @@ app.get('/support', (req, res) => {
       max-width:none !important;
     }
 
-    main{
-      position:relative;
-      height:calc(100vh - 64px);
-      min-height:calc(100vh - 64px);
-      max-height:calc(100vh - 64px);
-      padding-top:0 !important;
-      overflow:hidden !important;
-      background:#111827;
-    }
+main{
+  position:relative;
+  height:calc(100vh - 64px);
+  min-height:calc(100vh - 64px);
+  max-height:calc(100vh - 64px);
+  padding-top:0 !important;
+  overflow:hidden !important;
+  background:#111827;
+}
 
 .support-page{
   position:relative;
   width:100%;
-  height:100%;
+  height:calc(100vh - 64px - 220px);
   max-width:none;
   margin:0 !important;
   padding:0 22px;
   box-sizing:border-box;
+  overflow:hidden;
 
   display:flex;
   align-items:center;
@@ -5505,9 +5506,8 @@ app.get('/support', (req, res) => {
   grid-template-columns:1.25fr .7fr;
   gap:18px;
   align-items:stretch;
-  height:calc(100vh - 64px - 220px - 120px);
   max-width:1400px;
-  margin:0 auto;
+  width:100%;
 }
 
 .support-card{
