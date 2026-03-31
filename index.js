@@ -5642,26 +5642,29 @@ app.get('/support', (req, res) => {
   border-radius:16px;
   border:1px solid rgba(255,255,255,.07);
   background:#111827;
-  padding:18px 18px;
-  min-height:72px;
+  padding:22px 20px;
+  min-height:82px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
 }
 
-    .contact-label{
-      display:block;
-      color:#fbbf24;
-      font-size:12px;
-      font-weight:800;
-      text-transform:uppercase;
-      letter-spacing:.10em;
-      margin-bottom:7px;
-    }
+.contact-label{
+  display:block;
+  color:#fbbf24;
+  font-size:13px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.10em;
+  margin-bottom:8px;
+}
 
-    .contact-value{
-      color:#ffffff;
-      font-size:15px;
-      font-weight:700;
-      line-height:1.45;
-    }
+.contact-value{
+  color:#ffffff;
+  font-size:16px;
+  font-weight:700;
+  line-height:1.5;
+}
 
 .contact-read-faq{
   text-align:center;
