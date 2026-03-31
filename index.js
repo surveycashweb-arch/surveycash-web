@@ -5562,13 +5562,6 @@ app.get('/support', (req, res) => {
       letter-spacing:-.02em;
     }
 
-    .support-sub{
-      margin:12px 0 0;
-      max-width:680px;
-      color:#94a3b8;
-      font-size:15px;
-      line-height:1.6;
-    }
 
 .faq-grid{
   margin-top:16px;
@@ -5617,13 +5610,6 @@ app.get('/support', (req, res) => {
       font-weight:900;
       margin-top:1px;
     }
-
-.faq-a{
-  margin:0;
-  color:#aeb9ca;
-  font-size:13px;
-  line-height:1.4;
-}
 
     .contact-top{
       display:flex;
@@ -5865,56 +5851,24 @@ app.get('/support', (req, res) => {
 
   <div class="support-page">
 
-    <div class="support-shell">
-      <div class="support-card faq-card">
-        <div class="support-kicker">Help Center</div>
-        <h1 class="support-title">Frequently asked questions</h1>
-        <p class="support-sub">
-          Quick answers for the most common SurveyCash questions. Clean, simple, and easy to scan.
-        </p>
+  <div class="support-shell">
+    <div class="support-card faq-card">
+      <div class="support-kicker">Help Center</div>
+      <h1 class="support-title">Frequently asked questions</h1>
+       
+      <div class="faq-grid">
 
-        <div class="faq-grid">
-          <div class="faq-item">
-            <p class="faq-q"><span class="faq-icon">?</span>How do I earn on SurveyCash?</p>
-            <p class="faq-a">Complete surveys and partner offers to earn rewards on your account balance.</p>
-          </div>
+        <div class="faq-item"><span class="faq-icon">?</span></div>
+        <div class="faq-item"><span class="faq-icon">?</span></div>
+        <div class="faq-item"><span class="faq-icon">?</span></div>
+        <div class="faq-item"><span class="faq-icon">?</span></div>
+        <div class="faq-item"><span class="faq-icon">?</span></div>
+        <div class="faq-item"><span class="faq-icon">?</span></div>
+        <div class="faq-item"><span class="faq-icon">?</span></div>
+        <div class="faq-item"><span class="faq-icon">?</span></div>
 
-          <div class="faq-item">
-            <p class="faq-q"><span class="faq-icon">?</span>Why was I disqualified?</p>
-            <p class="faq-a">Survey providers use qualification checks based on profile match and availability.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q"><span class="faq-icon">?</span>How long do payouts take?</p>
-            <p class="faq-a">Some payouts are fast, while others may take additional review time before completion.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q"><span class="faq-icon">?</span>Can I use a VPN?</p>
-            <p class="faq-a">No. VPNs, proxies, bots, and multiple accounts are not allowed on SurveyCash.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q"><span class="faq-icon">?</span>What is the minimum payout?</p>
-            <p class="faq-a">The current minimum payout is shown in your Cash Out section.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q"><span class="faq-icon">?</span>Why is my payout still pending?</p>
-            <p class="faq-a">Some payouts require extra review before they are approved and completed.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q"><span class="faq-icon">?</span>Do I need to verify my email?</p>
-            <p class="faq-a">Yes. Email verification helps protect your account and prevent fraud.</p>
-          </div>
-
-          <div class="faq-item">
-            <p class="faq-q"><span class="faq-icon">?</span>Can I have more than one account?</p>
-            <p class="faq-a">No. Only one account per person is allowed on SurveyCash.</p>
-          </div>
-        </div>
       </div>
+    </div>
 
       <div class="support-card contact-card">
         <div class="contact-top">
