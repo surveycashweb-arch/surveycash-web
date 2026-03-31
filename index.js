@@ -5652,11 +5652,11 @@ app.get('/support', (req, res) => {
 .contact-label{
   display:block;
   color:#fbbf24;
-  font-size:12px;
+  font-size:14px;
   font-weight:900;
   text-transform:uppercase;
-  letter-spacing:.12em;
-  margin-bottom:10px;
+  letter-spacing:.10em;
+  margin-bottom:6px;
 }
 
 .contact-value{
