@@ -5531,15 +5531,13 @@ app.get('/support', (req, res) => {
       background:#151c2e;
     }
 
-    .contact-card{
-      padding:20px 20px 18px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      background:
-        radial-gradient(circle at top left, rgba(251,191,36,.10), transparent 35%),
-        rgba(18,24,40,.92);
-    }
+.contact-card{
+  padding:20px 20px 18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  background:#151c2e;
+}
 
     .support-kicker{
       display:inline-flex;
