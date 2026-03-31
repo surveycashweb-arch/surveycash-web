@@ -5642,8 +5642,8 @@ app.get('/support', (req, res) => {
   border-radius:16px;
   border:1px solid rgba(255,255,255,.07);
   background:#111827;
-  padding:22px 22px;
-  min-height:90px;
+  padding:16px 18px;
+  min-height:64px;
   display:flex;
   flex-direction:column;
   justify-content:center;
