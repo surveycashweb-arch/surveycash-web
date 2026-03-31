@@ -5642,7 +5642,8 @@ app.get('/support', (req, res) => {
   border-radius:16px;
   border:1px solid rgba(255,255,255,.07);
   background:#111827;
-  padding:14px 15px;
+  padding:18px 18px;
+  min-height:72px;
 }
 
     .contact-label{
@@ -5665,8 +5666,9 @@ app.get('/support', (req, res) => {
 .contact-read-faq{
   text-align:center;
   color:#9fb0c6;
-  font-size:13px;
-  margin-bottom:10px;
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:14px;
 }
 
     .contact-mock-btn{
