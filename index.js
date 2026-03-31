@@ -5638,12 +5638,12 @@ app.get('/support', (req, res) => {
       gap:12px;
     }
 
-    .contact-row{
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.07);
-      background:rgba(255,255,255,.03);
-      padding:14px 15px;
-    }
+.contact-row{
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.07);
+  background:#111827;
+  padding:14px 15px;
+}
 
     .contact-label{
       display:block;
@@ -5862,10 +5862,6 @@ app.get('/support', (req, res) => {
             <h2 class="contact-title">Contact us</h2>
           </div>
 
-          <p class="contact-sub">
-            Need help with account access, verification, or payout support? This is the contact area UI for Support.
-          </p>
-
           <div class="contact-panel">
             <div class="contact-row">
               <span class="contact-label">Email</span>
@@ -5886,9 +5882,6 @@ app.get('/support', (req, res) => {
 
         <div>
           <button class="contact-mock-btn" type="button">Contact support</button>
-          <div class="contact-foot">
-            UI only for now — mail functionality can be added later.
-          </div>
         </div>
       </div>
     </div>
