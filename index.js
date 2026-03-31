@@ -5615,20 +5615,6 @@ app.get('/support', (req, res) => {
       gap:14px;
     }
 
-    .contact-badge{
-      width:58px;
-      height:58px;
-      border-radius:18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:linear-gradient(180deg, rgba(251,191,36,.22), rgba(251,191,36,.08));
-      border:1px solid rgba(251,191,36,.20);
-      color:#fbbf24;
-      font-size:28px;
-      box-shadow:0 10px 30px rgba(251,191,36,.08);
-    }
-
     .contact-title{
       margin:0;
       font-size:31px;
@@ -5870,7 +5856,6 @@ app.get('/support', (req, res) => {
 
       <div class="support-card contact-card">
         <div class="contact-top">
-          <div class="contact-badge">✉</div>
 
           <div>
             <div class="support-kicker">Direct Support</div>
