@@ -5662,6 +5662,13 @@ app.get('/support', (req, res) => {
       line-height:1.45;
     }
 
+.contact-read-faq{
+  text-align:center;
+  color:#9fb0c6;
+  font-size:13px;
+  margin-bottom:10px;
+}
+
     .contact-mock-btn{
       margin-top:6px;
       width:100%;
@@ -5881,8 +5888,9 @@ app.get('/support', (req, res) => {
         </div>
 
         <div>
-          <button class="contact-mock-btn" type="button">Contact support</button>
-        </div>
+  <div class="contact-read-faq">Read FAQ before contacting us</div>
+  <button class="contact-mock-btn" type="button">Contact support</button>
+</div>
       </div>
     </div>
 
