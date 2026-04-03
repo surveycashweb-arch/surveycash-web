@@ -2821,6 +2821,11 @@ app.get('/', async (req, res) => {
   );
 });
 
+
+app.get('/ping', (req, res) => {
+  res.send('ok');
+});
+
 // --------- Account / profil-side (ny version) ----------
 app.get('/account', (req, res) => {
   const user = getUserFromReq(req);
