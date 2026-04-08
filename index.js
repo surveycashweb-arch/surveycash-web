@@ -5026,12 +5026,17 @@ if (ok) {
 
       <div class="co-field-label">PayPal account*</div>
 
-      <input class="co-input" id="paypalEmailInput" type="email"
-             value="" placeholder="Enter PayPal email" autocomplete="email" />
+<input class="co-input" id="paypalEmailInput" type="email"
+       value="" placeholder="Enter PayPal email" autocomplete="email" />
 
-      <div class="co-help">
-        Your reward will be sent to this address. Make sure this email is linked to your PayPal account.
-      </div>
+<div class="co-field-label" style="margin-top:10px;">Confirm PayPal account*</div>
+
+<input class="co-input" id="paypalEmailConfirmInput" type="email"
+       value="" placeholder="Confirm PayPal email" autocomplete="email" />
+
+<div class="co-help">
+  Your reward will be sent to this address. Make sure this email is linked to your PayPal account.
+</div>
 
       <div class="co-rows">
   <div class="co-row">
@@ -5078,6 +5083,7 @@ if (ok) {
     const btnConfirm = document.getElementById('btnConfirm');
 
     const paypalEmailInput = document.getElementById('paypalEmailInput');
+const paypalEmailConfirmInput = document.getElementById('paypalEmailConfirmInput');
     const paypalEmailHidden = document.getElementById('paypalEmailHidden');
     const amountHidden = document.getElementById('amountCents');
 
@@ -5120,7 +5126,8 @@ function openConfirm(){
       amountHidden.value = String(selectedCents);
 
       paypalEmailInput.value = '';
-      paypalEmailHidden.value = '';
+paypalEmailConfirmInput.value = '';
+paypalEmailHidden.value = '';
 
       chk1.checked = false;
       chk2.checked = false;
@@ -5173,12 +5180,16 @@ function openConfirm(){
     }
 
     function validateConfirm(){
-      const e = (paypalEmailInput.value || '').trim();
-      paypalEmailHidden.value = e;
+  const e1 = (paypalEmailInput.value || '').trim();
+  const e2 = (paypalEmailConfirmInput.value || '').trim();
 
-      const ok = chk1.checked && chk2.checked && emailValid(e);
-      btnConfirm.disabled = !ok;
-    }
+  paypalEmailHidden.value = e1;
+
+  const emailsMatch = e1 !== '' && e1 === e2;
+  const ok = chk1.checked && chk2.checked && emailValid(e1) && emailValid(e2) && emailsMatch;
+
+  btnConfirm.disabled = !ok;
+}
 
     if(openBtn) openBtn.addEventListener('click', openModal);
     if(closeBtn) closeBtn.addEventListener('click', closeModal);
@@ -5217,6 +5228,7 @@ function openConfirm(){
     if(chk1) chk1.addEventListener('change', validateConfirm);
     if(chk2) chk2.addEventListener('change', validateConfirm);
     if(paypalEmailInput) paypalEmailInput.addEventListener('input', validateConfirm);
+if(paypalEmailConfirmInput) paypalEmailConfirmInput.addEventListener('input', validateConfirm);
 
     refreshBars();
     validateAmount();
