@@ -4199,14 +4199,14 @@ app.get('/cashout', async (req, res) => {
 
   // 4) Messages
   let msg = '';
-if (paid) {
-  msg = `<div class="notice success">Cash out status: <b>PAID</b> ✅</div>`;
+if (ok) {
+  msg = `<div class="notice success">Cash out request received. We will process it manually.</div>`;
 } else if (err === 'open') {
-  msg = `<div class="notice error">You already have a cashout in progress. Please wait until it is paid.</div>`;
-} else if (ok || wId || hasOpenWithdrawal) {
-  msg = `<div class="notice success">Cash out status: <b>PROCESSING</b>…</div>`;
+  msg = `<div class="notice error">You already have a cashout in progress.</div>`;
 } else if (err) {
   msg = `<div class="notice error">Cash out failed.</div>`;
+} else if (hasOpenWithdrawal) {
+  msg = `<div class="notice success">Cash out status: <b>PROCESSING</b>…</div>`;
 }
 
   const paypalImg = '/img/paypal.png';
