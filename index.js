@@ -4935,8 +4935,6 @@ if (ok) {
     </div>
   </div>
 
-  ${msg}
-
 
 ${hasOpenWithdrawal ? `
 <div class="payout-pending-box">
