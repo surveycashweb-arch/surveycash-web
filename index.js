@@ -4180,19 +4180,22 @@ app.get('/cashout', async (req, res) => {
 
   // 2) Check if there is an active cashout (pending/processing)
   let hasOpenWithdrawal = false;
+let openWithdrawalEmail = '';
+
 
   try {
     const { data, error } = await supabaseAdmin
       .from('withdrawals')
-      .select('id,status')
+      .select('id,status,paypal_email')
       .eq('user_id', user.id)
       .in('status', ['pending', 'processing'])
       .order('id', { ascending: false })
       .limit(1);
 
     if (!error && Array.isArray(data) && data.length > 0) {
-      hasOpenWithdrawal = true;
-    }
+  hasOpenWithdrawal = true;
+  openWithdrawalEmail = data[0].paypal_email || '';
+}
   } catch (e) {
     console.error('open withdrawal check (GET /cashout) failed:', e);
   }
@@ -4290,6 +4293,32 @@ if (ok) {
             box-sizing:border-box;
             overflow:hidden;
           }
+
+
+.payout-pending-box{
+  position:absolute;
+  right:120px;
+  top:160px;
+  width:360px;
+  padding:28px;
+  border-radius:16px;
+  background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.45);
+  color:#e5e7eb;   /* add denne */
+}
+
+.payout-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.payout-text{
+  font-size:14px;
+  color:#cbd5e1;
+  line-height:1.5;
+}
+
 
           .cashout-bottom-fill{
             position:fixed;
@@ -4907,6 +4936,17 @@ if (ok) {
   </div>
 
   ${msg}
+
+
+${hasOpenWithdrawal ? `
+<div class="payout-pending-box">
+  <div class="payout-title">Payout pending</div>
+  <div class="payout-text">
+    Rewards will be sent to <b>${escapeHtml(openWithdrawalEmail)}</b>
+  </div>
+</div>
+` : ``}
+
 
   <div class="cashout-section">
     <div class="methods-grid">
