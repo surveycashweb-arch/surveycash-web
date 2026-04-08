@@ -5343,18 +5343,51 @@ app.post('/withdraw', async (req, res) => {
 
 const ADMIN_EMAIL = 'surveycashweb@gmail.com';
 
+
+
 app.get('/admin/withdrawals', async (req, res) => {
   if (!isLoggedIn(req) || req.user.email !== ADMIN_EMAIL) {
     return res.sendStatus(403);
   }
 
-  const { data, error } = await supabaseAdmin
+  const status = String(req.query.status || 'pending').toLowerCase();
+
+  let query = supabaseAdmin
     .from('withdrawals')
     .select('*')
-    .in('status', ['pending', 'processing'])
-    .order('created_at', { ascending: true });
+    .order('created_at', { ascending: false });
+
+  if (status === 'pending') {
+    query = query.in('status', ['pending', 'processing']);
+  } else if (status === 'paid') {
+    query = query.eq('status', 'paid');
+  } else if (status === 'failed') {
+    query = query.eq('status', 'failed');
+  } else if (status === 'all') {
+    // ingen ekstra filter
+  } else {
+    query = query.in('status', ['pending', 'processing']);
+  }
+
+  const { data, error } = await query;
 
   if (error) return res.status(500).send(error.message);
+
+  function timeAgo(value) {
+    if (!value) return '';
+    const then = new Date(value).getTime();
+    const now = Date.now();
+    const diff = Math.max(0, now - then);
+
+    const mins = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (mins < 1) return 'just now';
+    if (mins < 60) return mins + ' min ago';
+    if (hours < 24) return hours + ' hour' + (hours !== 1 ? 's' : '') + ' ago';
+    return days + ' day' + (days !== 1 ? 's' : '') + ' ago';
+  }
 
   const rows = (data || []).map((w) => `
     <tr>
@@ -5362,32 +5395,48 @@ app.get('/admin/withdrawals', async (req, res) => {
       <td>${escapeHtml(w.paypal_email || '')}</td>
       <td>$${formatUsdFromCents(Number(w.amount_cents || 0))}</td>
       <td>${escapeHtml(w.status || '')}</td>
+      <td>${escapeHtml(String(w.created_at || ''))}<br><span style="opacity:.7;font-size:12px;">${timeAgo(w.created_at)}</span></td>
       <td>
-        <form method="POST" action="/admin/withdrawals/${w.id}/paid" style="display:inline">
-          <button type="submit">Mark paid</button>
-        </form>
-        <form method="POST" action="/admin/withdrawals/${w.id}/failed" style="display:inline; margin-left:8px;">
-          <button type="submit">Mark failed</button>
-        </form>
+        ${w.status === 'pending' || w.status === 'processing' ? `
+          <form method="POST" action="/admin/withdrawals/${w.id}/paid" style="display:inline">
+            <button type="submit">Mark paid</button>
+          </form>
+          <form method="POST" action="/admin/withdrawals/${w.id}/failed" style="display:inline; margin-left:8px;">
+            <button type="submit">Mark failed</button>
+          </form>
+        ` : '-'}
       </td>
     </tr>
   `).join('');
 
+  const filterLink = (value, label) => {
+    const active = status === value ? 'font-weight:900;text-decoration:underline;' : '';
+    return `<a href="/admin/withdrawals?status=${value}" style="margin-right:14px;${active}">${label}</a>`;
+  };
+
   res.send(`
     <h1>Withdrawals</h1>
+
+    <div style="margin-bottom:14px;">
+      ${filterLink('pending', 'Pending')}
+      ${filterLink('paid', 'Paid')}
+      ${filterLink('failed', 'Failed')}
+      ${filterLink('all', 'All')}
+    </div>
+
     <table border="1" cellpadding="8" cellspacing="0">
       <tr>
         <th>ID</th>
         <th>PayPal email</th>
         <th>Amount</th>
         <th>Status</th>
+        <th>Created</th>
         <th>Actions</th>
       </tr>
-      ${rows || '<tr><td colspan="5">No withdrawals</td></tr>'}
+      ${rows || '<tr><td colspan="6">No withdrawals</td></tr>'}
     </table>
   `);
 });
-
 
 
 app.post('/admin/withdrawals/:id/paid', async (req, res) => {
