@@ -207,103 +207,6 @@ async function getProfileByUserId(userId) {
   return data;
 }
 
-const PAYPAL_ENV = process.env.PAYPAL_ENV || 'sandbox';
-const PAYPAL_BASE =
-  PAYPAL_ENV === 'live'
-    ? 'https://api-m.paypal.com'
-    : 'https://api-m.sandbox.paypal.com';
-
-async function paypalGetAccessToken() {
-  const clientId = process.env.PAYPAL_CLIENT_ID;
-  const secret = process.env.PAYPAL_CLIENT_SECRET;
-
-  const basic = Buffer.from(`${clientId}:${secret}`).toString('base64');
-
-  const r = await fetch(`${PAYPAL_BASE}/v1/oauth2/token`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${basic}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: 'grant_type=client_credentials',
-  });
-
-  const data = await r.json();
-  if (!r.ok) throw new Error(JSON.stringify(data));
-  return data.access_token;
-}
-
-async function paypalCreatePayout({ receiverEmail, amountUsd, withdrawalId }) {
-  const token = await paypalGetAccessToken();
-
-  const payload = {
-    sender_batch_header: {
-      sender_batch_id: `sc_${withdrawalId}_${Date.now()}`,
-      email_subject: 'You have a payout from SurveyCash',
-    },
-    items: [
-      {
-        recipient_type: 'EMAIL',
-        receiver: receiverEmail,
-        amount: { value: amountUsd.toFixed(2), currency: 'USD' },
-        note: 'SurveyCash payout',
-        sender_item_id: String(withdrawalId),
-      },
-    ],
-  };
-
-  const r = await fetch(`${PAYPAL_BASE}/v1/payments/payouts`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-
-  const data = await r.json();
-  if (!r.ok) throw new Error(JSON.stringify(data));
-
-  return data.batch_header.payout_batch_id;
-}
-
-async function paypalGetPayoutBatch(payoutBatchId) {
-  const token = await paypalGetAccessToken();
-
-  const r = await fetch(`${PAYPAL_BASE}/v1/payments/payouts/${payoutBatchId}`, {
-    method: 'GET',
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  const data = await r.json();
-  if (!r.ok) throw new Error(JSON.stringify(data));
-  return data;
-}
-
-
-// Returnerer: 'processing' | 'paid' | 'failed'
-function mapPayPalBatchStatus(batch) {
-  // 1) item status (mest præcis)
-  const itemStatus = String(
-    batch?.items?.[0]?.transaction_status ||
-    batch?.items?.[0]?.transaction_status?.status ||
-    ''
-  ).toUpperCase();
-
-  // Typiske item statuses: SUCCESS, PENDING, FAILED, RETURNED, UNCLAIMED, ONHOLD, BLOCKED, REFUNDED
-  if (itemStatus === 'SUCCESS') return 'paid';
-  if (itemStatus === 'FAILED' || itemStatus === 'RETURNED' || itemStatus === 'BLOCKED' || itemStatus === 'REFUNDED') {
-    return 'failed';
-  }
-  if (itemStatus) return 'processing';
-
-  // 2) fallback til batch header
-  const batchStatus = String(batch?.batch_header?.batch_status || '').toUpperCase();
-  if (batchStatus === 'SUCCESS') return 'paid';
-  if (batchStatus === 'DENIED' || batchStatus === 'CANCELED' || batchStatus === 'FAILED') return 'failed';
-  return 'processing';
-}
-
 
 // kun brugt til statistik – uafhængig af anden user-logik
 function loadUsersForStats() {
@@ -398,19 +301,18 @@ async function loadUserFromCookie(req, res, next) {
       return next();
     }
 
-req.user = {
-  id: profile.user_id,
-  email: profile.email,
-  username: profile.username,
-  createdAt: new Date(profile.created_at).getTime(),
-  balanceCents: Number(profile.balance_cents || 0),
-  pendingCents: Number(profile.pending_cents || 0),
-  totalEarnedCents: Number(profile.total_earned_cents || 0),
-  completedSurveys: Number(profile.completed_surveys || 0),
-  completedOffers: Number(profile.completed_offers || 0),
-  usernameChangedAt: Number(profile.username_changed_at || 0),
-  passwordChangedAt: Number(profile.password_changed_at || 0),
-};
+    req.user = {
+      id: profile.user_id,
+      email: profile.email,
+      username: profile.username,
+      createdAt: new Date(profile.created_at).getTime(),
+      balanceCents: Number(profile.balance_cents || 0),
+      totalEarnedCents: Number(profile.total_earned_cents || 0),
+      completedSurveys: Number(profile.completed_surveys || 0),
+      completedOffers: Number(profile.completed_offers || 0),
+      usernameChangedAt: Number(profile.username_changed_at || 0),
+      passwordChangedAt: Number(profile.password_changed_at || 0),
+    };
 
     return next();
   } catch (e) {
@@ -4262,9 +4164,7 @@ app.get('/cashout', async (req, res) => {
   if (!user?.id) return res.redirect('/');
 
   const ok = req.query.ok === '1';
-  const paid = req.query.paid === '1';
   const err = String(req.query.err || '');
-  const wIdFromQuery = Number(req.query.w || 0);
 
   // 1) Get profile (balance + pending)
   let profile;
@@ -4280,7 +4180,6 @@ app.get('/cashout', async (req, res) => {
 
   // 2) Check if there is an active cashout (pending/processing)
   let hasOpenWithdrawal = false;
-  let openWithdrawalId = 0;
 
   try {
     const { data, error } = await supabaseAdmin
@@ -4293,56 +4192,22 @@ app.get('/cashout', async (req, res) => {
 
     if (!error && Array.isArray(data) && data.length > 0) {
       hasOpenWithdrawal = true;
-      openWithdrawalId = Number(data[0].id || 0);
     }
   } catch (e) {
     console.error('open withdrawal check (GET /cashout) failed:', e);
   }
 
-  // 3) Determine which withdrawal-id to auto-check
-  const wId = wIdFromQuery || openWithdrawalId;
-
-  const autoCheckScript = wId
-    ? `
-    <script>
-    (async function () {
-      const id = ${wId};
-      const maxTries = 20;
-      const delayMs = 2000;
-
-      for (let i = 0; i < maxTries; i++) {
-        try {
-          const r = await fetch('/withdrawals/' + id + '/check', { method: 'POST' });
-          const data = await r.json();
-
-          if (data && data.status === 'paid') {
-            window.location.href = '/cashout?paid=1';
-            return;
-          }
-          if (data && data.status === 'failed') {
-            window.location.href = '/cashout?err=server';
-            return;
-          }
-        } catch (e) {}
-
-        await new Promise(r => setTimeout(r, delayMs));
-      }
-    })();
-    </script>
-    `
-    : '';
-
   // 4) Messages
   let msg = '';
-  if (paid) {
-    msg = `<div class="notice success">Cash out status: <b>PAID</b> ✅</div>`;
-  } else if (err === 'open') {
-    msg = `<div class="notice error">You already have a cashout in progress. Please wait until it is paid.</div>`;
-  } else if (ok || wId || hasOpenWithdrawal) {
-    msg = `<div class="notice success">Cash out status: <b>PROCESSING</b>…</div>`;
-  } else if (err) {
-    msg = `<div class="notice error">Cash out failed.</div>`;
-  }
+if (paid) {
+  msg = `<div class="notice success">Cash out status: <b>PAID</b> ✅</div>`;
+} else if (err === 'open') {
+  msg = `<div class="notice error">You already have a cashout in progress. Please wait until it is paid.</div>`;
+} else if (ok || wId || hasOpenWithdrawal) {
+  msg = `<div class="notice success">Cash out status: <b>PROCESSING</b>…</div>`;
+} else if (err) {
+  msg = `<div class="notice error">Cash out failed.</div>`;
+}
 
   const paypalImg = '/img/paypal.png';
 
@@ -5193,7 +5058,7 @@ app.get('/cashout', async (req, res) => {
         <label><input type="checkbox" id="chk2"> I understand this order is non-refundable</label>
       </div>
 
-      <form id="cashout-form" method="POST" action="/cashout/paypal">
+      <form id="cashout-form" method="POST" action="/withdraw">
         <input type="hidden" name="amountCents" id="amountCents" value="" />
         <input type="hidden" name="paypalEmail" id="paypalEmailHidden" value="" />
 
@@ -5372,26 +5237,45 @@ app.get('/cashout', async (req, res) => {
   })();
   </script>
 
-  ${autoCheckScript}
-      `,
+        `,
     })
   );
 }); 
+
 
 app.post('/withdraw', async (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
   try {
     const user = req.user;
-    const amountCents = Number(req.body.amount_cents || 0);
-    const paypalEmail = String(req.body.paypal_email || '').trim();
+    if (!user?.id) return res.redirect('/');
+
+    const amountCents = Number(req.body.amountCents || 0);
+    const paypalEmail = String(req.body.paypalEmail || '').trim().toLowerCase();
 
     if (!CASHOUT_ALLOWED_SET.has(amountCents)) {
-      return res.redirect('/cashout?err=invalid_amount');
+      return res.redirect('/cashout?err=amount');
     }
 
     if (!isValidEmail(paypalEmail)) {
-      return res.redirect('/cashout?err=invalid_email');
+      return res.redirect('/cashout?err=email');
+    }
+
+    const { data: openWs, error: openErr } = await supabaseAdmin
+      .from('withdrawals')
+      .select('id,status')
+      .eq('user_id', user.id)
+      .in('status', ['pending', 'processing'])
+      .order('id', { ascending: false })
+      .limit(1);
+
+    if (openErr) {
+      console.error('open withdrawal check error:', openErr);
+      return res.redirect('/cashout?err=server');
+    }
+
+    if (Array.isArray(openWs) && openWs.length > 0) {
+      return res.redirect('/cashout?err=open');
     }
 
     const { data: profile, error: pErr } = await supabaseAdmin
@@ -5401,6 +5285,7 @@ app.post('/withdraw', async (req, res) => {
       .single();
 
     if (pErr || !profile) {
+      console.error('profile fetch error:', pErr);
       return res.redirect('/cashout?err=server');
     }
 
@@ -5408,10 +5293,10 @@ app.post('/withdraw', async (req, res) => {
     const pending = Number(profile.pending_cents || 0);
 
     if (balance < amountCents) {
-      return res.redirect('/cashout?err=insufficient');
+      return res.redirect('/cashout?err=balance');
     }
 
-    const { error: profileErr } = await supabaseAdmin
+    const { error: balErr } = await supabaseAdmin
       .from('profiles')
       .update({
         balance_cents: balance - amountCents,
@@ -5419,7 +5304,8 @@ app.post('/withdraw', async (req, res) => {
       })
       .eq('user_id', user.id);
 
-    if (profileErr) {
+    if (balErr) {
+      console.error('profile update error:', balErr);
       return res.redirect('/cashout?err=server');
     }
 
@@ -5427,14 +5313,15 @@ app.post('/withdraw', async (req, res) => {
       .from('withdrawals')
       .insert({
         user_id: user.id,
-        email: paypalEmail,
         amount_cents: amountCents,
+        paypal_email: paypalEmail,
         status: 'pending',
-        method: 'paypal',
         error_text: null,
       });
 
     if (wErr) {
+      console.error('withdraw insert error:', wErr);
+
       await supabaseAdmin
         .from('profiles')
         .update({
@@ -5454,9 +5341,12 @@ app.post('/withdraw', async (req, res) => {
 });
 
 
+const ADMIN_EMAIL = 'surveycashweb@gmail.com';
 
 app.get('/admin/withdrawals', async (req, res) => {
-  if (!isLoggedIn(req)) return res.sendStatus(403);
+  if (!isLoggedIn(req) || req.user.email !== ADMIN_EMAIL) {
+    return res.sendStatus(403);
+  }
 
   const { data, error } = await supabaseAdmin
     .from('withdrawals')
@@ -5469,9 +5359,9 @@ app.get('/admin/withdrawals', async (req, res) => {
   const rows = (data || []).map((w) => `
     <tr>
       <td>${w.id}</td>
-      <td>${w.email || ''}</td>
+      <td>${escapeHtml(w.paypal_email || '')}</td>
       <td>$${formatUsdFromCents(Number(w.amount_cents || 0))}</td>
-      <td>${w.status}</td>
+      <td>${escapeHtml(w.status || '')}</td>
       <td>
         <form method="POST" action="/admin/withdrawals/${w.id}/paid" style="display:inline">
           <button type="submit">Mark paid</button>
@@ -5501,7 +5391,9 @@ app.get('/admin/withdrawals', async (req, res) => {
 
 
 app.post('/admin/withdrawals/:id/paid', async (req, res) => {
-  if (!isLoggedIn(req)) return res.sendStatus(403);
+  if (!isLoggedIn(req) || req.user.email !== ADMIN_EMAIL) {
+    return res.sendStatus(403);
+  }
 
   const id = Number(req.params.id);
   if (!id) return res.sendStatus(400);
@@ -5540,9 +5432,10 @@ app.post('/admin/withdrawals/:id/paid', async (req, res) => {
 
 
 
-
 app.post('/admin/withdrawals/:id/failed', async (req, res) => {
-  if (!isLoggedIn(req)) return res.sendStatus(403);
+  if (!isLoggedIn(req) || req.user.email !== ADMIN_EMAIL) {
+    return res.sendStatus(403);
+  }
 
   const id = Number(req.params.id);
   if (!id) return res.sendStatus(400);
@@ -5561,7 +5454,6 @@ app.post('/admin/withdrawals/:id/failed', async (req, res) => {
 
   res.redirect('/admin/withdrawals');
 });
-
 
 
 
@@ -6561,6 +6453,102 @@ if (!CASHOUT_ALLOWED_SET.has(amountCents)) {
 });
 
 
+app.post('/withdrawals/:id/check', async (req, res) => {
+  if (!isLoggedIn(req)) return res.sendStatus(401);
+
+  const id = Number(req.params.id);
+  const userId = req.user.id;
+
+  // 1) hent withdrawal
+  const { data: w, error: wErr } = await supabaseAdmin
+    .from('withdrawals')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (wErr || !w) return res.sendStatus(404);
+  if (w.user_id !== userId) return res.sendStatus(403);
+
+  // skal have batch_id for at kunne checke
+  if (!w.paypal_batch_id) {
+    return res.status(400).json({ ok: false, error: 'missing_paypal_batch_id' });
+  }
+
+  // hvis allerede færdig, gør intet
+  if (w.status === 'paid' || w.status === 'failed') {
+    return res.json({ ok: true, status: w.status, note: 'already_final' });
+  }
+
+  try {
+    // 2) spørg PayPal
+    const batch = await paypalGetPayoutBatch(w.paypal_batch_id);
+    const nextStatus = mapPayPalBatchStatus(batch);
+
+if (nextStatus === 'paid') {
+  // 1) markér kun som paid hvis den ikke allerede er paid (idempotent)
+  const { data: upd, error: updErr } = await supabaseAdmin
+    .from('withdrawals')
+    .update({ status: 'paid', error_text: null })
+    .eq('id', w.id)
+    .neq('status', 'paid')
+    .select('id')
+    .maybeSingle();
+
+  if (updErr) {
+    return res.status(500).json({ ok: false, error: String(updErr.message || updErr) });
+  }
+
+  // 2) træk kun pending ned hvis vi faktisk ændrede status til paid
+  if (upd) {
+    const { data: prof, error: pErr } = await supabaseAdmin
+      .from('profiles')
+      .select('pending_cents')
+      .eq('user_id', w.user_id)
+      .single();
+
+    if (!pErr && prof) {
+      const pendingNow = Number(prof.pending_cents || 0);
+      const amount = Number(w.amount_cents || 0);
+
+      await supabaseAdmin
+        .from('profiles')
+        .update({
+          pending_cents: Math.max(0, pendingNow - amount),
+        })
+        .eq('user_id', w.user_id);
+    }
+  }
+
+  return res.json({ ok: true, status: 'paid' });
+}
+
+
+    if (nextStatus === 'failed') {
+      await supabaseAdmin
+        .from('withdrawals')
+        .update({ status: 'failed', error_text: 'PayPal payout failed/denied' })
+        .eq('id', w.id);
+
+      // refund pending -> balance
+      await supabaseAdmin.rpc('fail_cashout_return_funds', {
+        p_withdrawal_id: w.id,
+      });
+
+      return res.json({ ok: true, status: 'failed' });
+    }
+
+    // stadig processing
+    await supabaseAdmin
+      .from('withdrawals')
+      .update({ status: 'processing' })
+      .eq('id', w.id);
+
+    return res.json({ ok: true, status: 'processing' });
+  } catch (e) {
+    console.error('check payout error:', e);
+    return res.status(500).json({ ok: false, error: String(e.message || e) });
+  }
+});
 
 
 // ---------- Health API ----------
