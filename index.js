@@ -5034,19 +5034,11 @@ if (ok) {
       </div>
 
       <div class="co-rows">
-        <div class="co-row">
-          <span>Payout fee</span>
-          <span id="feePayout">$0.00 (5%)</span>
-        </div>
-        <div class="co-row">
-          <span>PayPal consumer fee</span>
-          <span id="feePaypal">$1</span>
-        </div>
-        <div class="co-row">
-          <strong>Amount</strong>
-          <strong id="confirmAmount">$0.00</strong>
-        </div>
-      </div>
+  <div class="co-row">
+    <strong>Amount</strong>
+    <strong id="confirmAmount">$0.00</strong>
+  </div>
+</div>
 
       <div class="co-receive">
         <span>You receive</span>
@@ -5119,16 +5111,11 @@ if (ok) {
       backdrop.setAttribute('aria-hidden','true');
     }
 
-    function openConfirm(){
-      const amountUsd = selectedCents / 100;
-      const payoutFee = amountUsd * 0.05;
-      const paypalFee = 1.00;
-      const receive = Math.max(0, amountUsd - payoutFee - paypalFee);
+function openConfirm(){
+  const amountUsd = selectedCents / 100;
 
-      feePayoutEl.textContent = fmt(payoutFee) + ' (5%)';
-      feePaypalEl.textContent = '$1';
-      confirmAmountEl.textContent = fmt(amountUsd);
-      confirmReceiveEl.textContent = fmt(receive);
+  confirmAmountEl.textContent = fmt(amountUsd);
+  confirmReceiveEl.textContent = fmt(amountUsd);
 
       amountHidden.value = String(selectedCents);
 
