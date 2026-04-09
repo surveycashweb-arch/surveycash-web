@@ -5016,6 +5016,18 @@ ${hasOpenWithdrawal ? `
         <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
       </div>
 
+<div class="method-card placeholder">
+  <div class="method-title">More payout methods</div>
+  <div class="method-logo-tile">
+    <div class="soon-wrap">
+      <div class="soon-top">Soon</div>
+      <span class="soon-pill">Coming soon</span>
+    </div>
+  </div>
+  <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+  <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
+</div>
+
     </div>
   </div>
 
