@@ -4978,8 +4978,6 @@ ${hasOpenWithdrawal ? `
         <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
       </div>
 
-      <span class="spacer"></span>
-
       <div class="method-card placeholder">
         <div class="method-title">More payout methods</div>
         <div class="method-logo-tile">
