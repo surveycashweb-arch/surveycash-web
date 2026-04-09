@@ -5074,6 +5074,8 @@ ${hasOpenWithdrawal ? `
 
 <div class="co-help">
   Your reward will be sent to this address. Make sure this email is linked to your PayPal account.
+  <br><br>
+  Payments are processed within <b>0-72 hours</b>.
 </div>
 
       <div class="co-rows">
