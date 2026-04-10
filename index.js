@@ -941,7 +941,6 @@ document.addEventListener('click', function (e) {
     text-decoration:none;
   }
 
-  /* ===== Header: saldo + klokke + profil ===== */
   .profile-wrap {
     position: relative;
     display: flex;
@@ -949,7 +948,6 @@ document.addEventListener('click', function (e) {
     gap: 10px;
   }
 
-  /* Freecash-style balance pill – gul $ + hvidt tal */
   .balance-pill {
     display: flex;
     align-items: center;
@@ -1042,7 +1040,6 @@ document.addEventListener('click', function (e) {
   position:relative;
 }
 
-/* gammel Freecash-style bell */
 .notif-bell{
   position:relative;
   border:none;
@@ -4863,6 +4860,161 @@ if (ok) {
             background:rgba(251,191,36,.18);
             color:#fbbf24;
           }
+
+          .payments-backdrop{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.55);
+            display:none;
+            align-items:center;
+            justify-content:center;
+            padding:16px;
+            z-index:10001;
+          }
+
+          .payments-backdrop.open{
+            display:flex;
+          }
+
+          .payments-modal{
+            width:min(760px, 100%);
+            max-height:calc(100vh - 40px);
+            overflow:auto;
+            background:#0b1220;
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:18px;
+            padding:16px;
+            box-shadow:0 40px 140px rgba(0,0,0,.65);
+            position:relative;
+          }
+
+          .payments-close{
+            position:absolute;
+            top:10px;
+            right:10px;
+            width:36px;
+            height:36px;
+            border-radius:999px;
+            background:rgba(255,255,255,.06);
+            border:1px solid rgba(255,255,255,.10);
+            color:#fff;
+            cursor:pointer;
+          }
+
+          .payments-title{
+            font-size:24px;
+            font-weight:900;
+            color:#fff;
+            margin:0 0 4px;
+          }
+
+          .payments-subtitle{
+            color:#94a3b8;
+            font-size:14px;
+            margin-bottom:14px;
+          }
+
+          .payments-tabs{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-bottom:14px;
+          }
+
+          .payments-tab{
+            border:1px solid rgba(255,255,255,.10);
+            background:rgba(255,255,255,.04);
+            color:#fff;
+            border-radius:999px;
+            padding:10px 14px;
+            font-weight:800;
+            cursor:pointer;
+          }
+
+          .payments-tab.active{
+            background:#fbbf24;
+            color:#0b1220;
+            border-color:rgba(251,191,36,.45);
+          }
+
+          .payments-list{
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+          }
+
+          .payment-item{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:14px;
+            padding:14px;
+            border-radius:14px;
+            background:rgba(255,255,255,.03);
+            border:1px solid rgba(255,255,255,.08);
+          }
+
+          .payment-left{
+            min-width:0;
+          }
+
+          .payment-amount{
+            color:#fff;
+            font-size:18px;
+            font-weight:900;
+            margin-bottom:4px;
+          }
+
+          .payment-meta{
+            color:#b8c4d6;
+            font-size:13px;
+            line-height:1.5;
+          }
+
+          .payment-status{
+            min-width:100px;
+            text-align:center;
+            padding:8px 12px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:900;
+            text-transform:uppercase;
+          }
+
+          .payment-status.pending{
+            background:rgba(251,191,36,.12);
+            color:#fbbf24;
+            border:1px solid rgba(251,191,36,.22);
+          }
+
+          .payment-status.processing{
+            background:rgba(59,130,246,.12);
+            color:#60a5fa;
+            border:1px solid rgba(59,130,246,.22);
+          }
+
+          .payment-status.paid{
+            background:rgba(34,197,94,.12);
+            color:#22c55e;
+            border:1px solid rgba(34,197,94,.22);
+          }
+
+          .payment-status.failed{
+            background:rgba(239,68,68,.12);
+            color:#f87171;
+            border:1px solid rgba(239,68,68,.22);
+          }
+
+          .payments-empty,
+          .payments-loading,
+          .payments-error{
+            padding:16px;
+            border-radius:14px;
+            background:rgba(255,255,255,.03);
+            border:1px solid rgba(255,255,255,.08);
+            color:#cbd5e1;
+          }
+
         </style>
 
         <script>
@@ -4925,7 +5077,7 @@ if (ok) {
 
     <div class="cashout-topbar">
 
-      <a href="/payments" class="my-payments-btn">My payments</a>
+      <button type="button" id="openPaymentsBtn" class="my-payments-btn">My payments</button>
 
       <div class="cashout-balances">
         <span>Available: $${formatUsdFromCents(balanceCents)}</span>
@@ -5116,17 +5268,48 @@ ${hasOpenWithdrawal ? `
     </div>
   </div>
 
+
+  <div class="payments-backdrop" id="paymentsBackdrop" aria-hidden="true">
+    <div class="payments-modal" role="dialog" aria-modal="true" aria-labelledby="paymentsTitle">
+      <button class="payments-close" id="closePaymentsBtn" type="button" aria-label="Close">✕</button>
+
+      <div class="payments-title" id="paymentsTitle">My payments</div>
+      <div class="payments-subtitle">View your payout history</div>
+
+      <div class="payments-tabs">
+        <button type="button" class="payments-tab active" data-filter="all">All</button>
+        <button type="button" class="payments-tab" data-filter="pending">Pending</button>
+        <button type="button" class="payments-tab" data-filter="processing">Processing</button>
+        <button type="button" class="payments-tab" data-filter="paid">Paid</button>
+        <button type="button" class="payments-tab" data-filter="failed">Failed</button>
+      </div>
+
+      <div class="payments-list" id="paymentsList">
+        <div class="payments-loading">Loading payments...</div>
+      </div>
+    </div>
+  </div>
+
+
   <script>
-  (function(){
-    const availableUsd = Number(window.AVAILABLE_USD || 0);
-    const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
+(function(){
+  const availableUsd = Number(window.AVAILABLE_USD || 0);
+  const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
 
-    const openBtn = document.getElementById('openPayPal');
+  const openBtn = document.getElementById('openPayPal');
+  const openPaymentsBtn = document.getElementById('openPaymentsBtn');
+  const paymentsBackdrop = document.getElementById('paymentsBackdrop');
+  const closePaymentsBtn = document.getElementById('closePaymentsBtn');
+  const paymentsList = document.getElementById('paymentsList');
+  const paymentsTabs = Array.from(document.querySelectorAll('.payments-tab'));
 
-    const backdrop = document.getElementById('coBackdrop');
-    const closeBtn = document.getElementById('coClose');
-    const amountGrid = document.getElementById('amountGrid');
-    const withdrawBtn = document.getElementById('withdrawBtn');
+  let allPayments = [];
+  let currentPaymentsFilter = 'all';
+
+  const backdrop = document.getElementById('coBackdrop');
+  const closeBtn = document.getElementById('coClose');
+  const amountGrid = document.getElementById('amountGrid');
+  const withdrawBtn = document.getElementById('withdrawBtn');
 
     const confirmBackdrop = document.getElementById('confirmBackdrop');
     const confirmClose = document.getElementById('confirmClose');
@@ -5241,16 +5424,119 @@ paypalEmailHidden.value = '';
   btnConfirm.disabled = !ok;
 }
 
+
+    function fmtDate(value){
+      if(!value) return '-';
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return '-';
+      return d.toLocaleString('en-GB');
+    }
+
+    function escapeClientHtml(str){
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderPayments(){
+      let items = allPayments;
+
+      if(currentPaymentsFilter !== 'all'){
+        items = items.filter(p => String(p.status || '').toLowerCase() === currentPaymentsFilter);
+      }
+
+      if(!items.length){
+        paymentsList.innerHTML = '<div class="payments-empty">No payments found.</div>';
+        return;
+      }
+
+      paymentsList.innerHTML = items.map((p) => {
+        const status = String(p.status || 'pending').toLowerCase();
+        const amount = '$' + (Number(p.amount_cents || 0) / 100).toFixed(2);
+
+        return `
+          <div class="payment-item">
+            <div class="payment-left">
+              <div class="payment-amount">${amount}</div>
+              <div class="payment-meta">
+                <div>PayPal: ${escapeClientHtml(p.paypal_email || '-')}</div>
+                <div>Created: ${escapeClientHtml(fmtDate(p.created_at))}</div>
+              </div>
+            </div>
+            <div class="payment-status ${escapeClientHtml(status)}">${escapeClientHtml(status)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function loadPayments(){
+      paymentsList.innerHTML = '<div class="payments-loading">Loading payments...</div>';
+
+      try {
+        const res = await fetch('/api/payments', {
+          method: 'GET',
+          credentials: 'same-origin'
+        });
+
+        const data = await res.json();
+
+        if(!res.ok || !data.ok){
+          paymentsList.innerHTML = '<div class="payments-error">Failed to load payments.</div>';
+          return;
+        }
+
+        allPayments = Array.isArray(data.payments) ? data.payments : [];
+        renderPayments();
+      } catch (err) {
+        console.error('loadPayments error:', err);
+        paymentsList.innerHTML = '<div class="payments-error">Failed to load payments.</div>';
+      }
+    }
+
+    function openPaymentsModal(){
+      paymentsBackdrop.classList.add('open');
+      paymentsBackdrop.setAttribute('aria-hidden', 'false');
+      loadPayments();
+    }
+
+    function closePaymentsModal(){
+      paymentsBackdrop.classList.remove('open');
+      paymentsBackdrop.setAttribute('aria-hidden', 'true');
+    }
+
+
     if(openBtn) openBtn.addEventListener('click', openModal);
     if(closeBtn) closeBtn.addEventListener('click', closeModal);
     if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
 
     if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
 
+    if(openPaymentsBtn) openPaymentsBtn.addEventListener('click', openPaymentsModal);
+    if(closePaymentsBtn) closePaymentsBtn.addEventListener('click', closePaymentsModal);
+
+    if(paymentsBackdrop){
+      paymentsBackdrop.addEventListener('click', (e) => {
+        if(e.target === paymentsBackdrop) closePaymentsModal();
+      });
+    }
+
+    paymentsTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        paymentsTabs.forEach(x => x.classList.remove('active'));
+        tab.classList.add('active');
+        currentPaymentsFilter = String(tab.getAttribute('data-filter') || 'all').toLowerCase();
+        renderPayments();
+      });
+    });
+
     window.addEventListener('keydown', (e) => {
       if(e.key === 'Escape'){
         if(confirmBackdrop.classList.contains('open')) closeConfirm();
         else if(backdrop.classList.contains('open')) closeModal();
+        else if(paymentsBackdrop.classList.contains('open')) closePaymentsModal();
       }
     });
 
@@ -5278,7 +5564,7 @@ paypalEmailHidden.value = '';
     if(chk1) chk1.addEventListener('change', validateConfirm);
     if(chk2) chk2.addEventListener('change', validateConfirm);
     if(paypalEmailInput) paypalEmailInput.addEventListener('input', validateConfirm);
-if(paypalEmailConfirmInput) paypalEmailConfirmInput.addEventListener('input', validateConfirm);
+    if(paypalEmailConfirmInput) paypalEmailConfirmInput.addEventListener('input', validateConfirm);
 
     refreshBars();
     validateAmount();
@@ -5290,6 +5576,39 @@ if(paypalEmailConfirmInput) paypalEmailConfirmInput.addEventListener('input', va
     })
   );
 }); 
+
+
+app.get('/api/payments', async (req, res) => {
+  try {
+    if (!isLoggedIn(req)) {
+      return res.status(401).json({ ok: false, error: 'Not logged in' });
+    }
+
+    const user = req.user;
+    if (!user?.id) {
+      return res.status(401).json({ ok: false, error: 'User not found' });
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('withdrawals')
+      .select('id,status,paypal_email,amount_cents,created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('GET /api/payments error:', error);
+      return res.status(500).json({ ok: false, error: 'Failed to load payments' });
+    }
+
+    return res.json({
+      ok: true,
+      payments: data || []
+    });
+  } catch (err) {
+    console.error('GET /api/payments crash:', err);
+    return res.status(500).json({ ok: false, error: 'Server error' });
+  }
+});
 
 
 app.post('/withdraw', async (req, res) => {
