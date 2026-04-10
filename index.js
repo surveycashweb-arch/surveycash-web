@@ -5457,18 +5457,17 @@ paypalEmailHidden.value = '';
         const status = String(p.status || 'pending').toLowerCase();
         const amount = '$' + (Number(p.amount_cents || 0) / 100).toFixed(2);
 
-        return `
-          <div class="payment-item">
-            <div class="payment-left">
-              <div class="payment-amount">${amount}</div>
-              <div class="payment-meta">
-                <div>PayPal: ${escapeClientHtml(p.paypal_email || '-')}</div>
-                <div>Created: ${escapeClientHtml(fmtDate(p.created_at))}</div>
-              </div>
-            </div>
-            <div class="payment-status ${escapeClientHtml(status)}">${escapeClientHtml(status)}</div>
-          </div>
-        `;
+        return ''
+          + '<div class="payment-item">'
+            + '<div class="payment-left">'
+              + '<div class="payment-amount">' + amount + '</div>'
+              + '<div class="payment-meta">'
+                + '<div>PayPal: ' + escapeClientHtml(p.paypal_email || '-') + '</div>'
+                + '<div>Created: ' + escapeClientHtml(fmtDate(p.created_at)) + '</div>'
+              + '</div>'
+            + '</div>'
+            + '<div class="payment-status ' + escapeClientHtml(status) + '">' + escapeClientHtml(status) + '</div>'
+          + '</div>';
       }).join('');
     }
 
