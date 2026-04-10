@@ -4468,7 +4468,7 @@ cursor:pointer;
             font-size:14px;
             letter-spacing:.3px;
             margin:0 0 8px;
-            margin-top:-8px;
+            margin-top:-6px;
             opacity:.9;
           }
 
