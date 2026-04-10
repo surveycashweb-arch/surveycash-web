@@ -4394,6 +4394,7 @@ if (ok) {
   text-decoration:none;
   border:1px solid rgba(234,179,8,.6);
   transition:.15s ease;
+cursor:pointer;
 }
 
 .my-payments-btn:hover{
