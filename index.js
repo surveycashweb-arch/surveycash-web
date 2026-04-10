@@ -4468,9 +4468,16 @@ cursor:pointer;
             font-size:14px;
             letter-spacing:.3px;
             margin:0 0 8px;
-            margin-top:-6px;
+            margin-top:-4px;
             opacity:.9;
           }
+
+.method-card.paypal .method-title{
+  color:#3b82f6;
+  font-size:16px;
+  position:relative;
+  top:3px;
+}
 
 .method-logo-tile{
   background:transparent;
