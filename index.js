@@ -4472,15 +4472,16 @@ cursor:pointer;
             opacity:.9;
           }
 
-          .method-logo-tile{
-            background:transparent;
-            border:0;
-            padding:0;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            margin-bottom:12px;
-          }
+.method-logo-tile{
+  background:transparent;
+  border:0;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:8px;
+  margin-bottom:12px;
+}
 
           .method-logo-tile img{
   width:230px;
