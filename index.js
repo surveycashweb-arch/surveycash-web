@@ -4482,7 +4482,11 @@ cursor:pointer;
             margin-bottom:12px;
           }
 
-          .method-logo-tile img{ width:198px; max-width:100%; height:auto; }
+          .method-logo-tile img{
+  width:230px;
+  max-width:100%;
+  height:auto;
+}
 
           .method-bar{
             margin-top:auto;
