@@ -4480,7 +4480,7 @@ cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
-  margin-top:6px;
+  margin-top:2px;
   margin-bottom:4px;
 }
 
