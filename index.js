@@ -4479,12 +4479,12 @@ cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
-  margin-top:8px;
+  margin-top:10px;
   margin-bottom:12px;
 }
 
           .method-logo-tile img{
-  width:230px;
+  width:240px;
   max-width:100%;
   height:auto;
 }
