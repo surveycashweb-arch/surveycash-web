@@ -4437,21 +4437,21 @@ cursor:pointer;
             gap:22px;
           }
 
-          .method-card{
-            width:250px;
-            height:210px;
-            cursor:pointer;
-            border-radius:20px;
-            padding:14px 16px 16px;
-            background:rgba(255,255,255,.03);
-            border:1px solid rgba(255,255,255,.08);
-            color:#fff;
-            transition:.15s ease;
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            text-align:center;
-          }
+.method-card{
+  width:250px;
+  height:210px;
+  cursor:pointer;
+  border-radius:20px;
+  padding:14px 16px 16px;
+  background:#151c2e;
+  border:1px solid rgba(255,255,255,.08);
+  color:#fff;
+  transition:.15s ease;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+}
 
           .method-card:hover{ transform:translateY(-3px); border-color:rgba(255,255,255,.18); }
 
