@@ -4479,8 +4479,8 @@ cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
-  margin-top:16px;
-  margin-bottom:12px;
+  margin-top:10px;
+  margin-bottom:10px;
 }
 
           .method-logo-tile img{
