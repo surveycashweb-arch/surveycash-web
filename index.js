@@ -4480,7 +4480,7 @@ cursor:pointer;
   align-items:center;
   justify-content:center;
   margin-top:6px;
-  margin-bottom:12px;
+  margin-bottom:4px;
 }
 
           .method-logo-tile img{
