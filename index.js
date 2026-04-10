@@ -4380,23 +4380,30 @@ if (ok) {
 
           .cash-accent{ color:#eab308; }
 
-          .my-payments-btn{
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            padding:11px 24px;
-            border-radius:8px;
-            background:#eab308;
-            color:#0b1220;
-            font-weight:700;
-            font-size:14px;
-            letter-spacing:.2px;
-            text-decoration:none;
-            border:1px solid rgba(234,179,8,.6);
-            transition:.15s ease;
-          }
-          .my-payments-btn:hover{ background:#d4a006; transform:translateY(-1px); }
-          .my-payments-btn:active{ transform:translateY(0); }
+        .my-payments-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:11px 24px;
+  border-radius:8px;
+  background:#eab308;
+  color:#0b1220;
+  font-weight:700;
+  font-size:14px;
+  letter-spacing:.2px;
+  text-decoration:none;
+  border:1px solid rgba(234,179,8,.6);
+  transition:.15s ease;
+}
+
+.my-payments-btn:hover{
+  background:#d4a006;
+  transform:translateY(-1px);
+}
+
+.my-payments-btn:active{
+  transform:translateY(0);
+}
 
           .cashout-topbar{
             display:flex;
@@ -4987,12 +4994,6 @@ if (ok) {
             border:1px solid rgba(251,191,36,.22);
           }
 
-          .payment-status.processing{
-            background:rgba(59,130,246,.12);
-            color:#60a5fa;
-            border:1px solid rgba(59,130,246,.22);
-          }
-
           .payment-status.paid{
             background:rgba(34,197,94,.12);
             color:#22c55e;
@@ -5279,7 +5280,6 @@ ${hasOpenWithdrawal ? `
       <div class="payments-tabs">
         <button type="button" class="payments-tab active" data-filter="all">All</button>
         <button type="button" class="payments-tab" data-filter="pending">Pending</button>
-        <button type="button" class="payments-tab" data-filter="processing">Processing</button>
         <button type="button" class="payments-tab" data-filter="paid">Paid</button>
         <button type="button" class="payments-tab" data-filter="failed">Failed</button>
       </div>
