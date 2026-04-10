@@ -5100,71 +5100,88 @@ ${hasOpenWithdrawal ? `
 ` : ``}
 
 
-<div class="cashout-section">
-  <div class="methods-grid">
+  <div class="cashout-section">
+    <div class="methods-grid">
 
-    <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
-            id="openPayPal"
-            type="button"
-            ${hasOpenWithdrawal ? 'disabled' : ''}>
-      <div class="method-title">PayPal</div>
-      <div class="method-logo-tile">
-        <img src="${paypalImg}" alt="PayPal" />
-      </div>
-    </button>
-
-    <div class="method-card placeholder top">
-      <div class="method-title">More payout methods</div>
-      <div class="method-logo-tile">
-        <div class="soon-wrap">
-          <div class="soon-top">Soon</div>
-          <span class="soon-pill">Coming soon</span>
+      <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
+              id="openPayPal"
+              type="button"
+              ${hasOpenWithdrawal ? 'disabled' : ''}>
+        <div class="method-title">PayPal</div>
+        <div class="method-logo-tile">
+          <img src="${paypalImg}" alt="PayPal" />
         </div>
-      </div>
-    </div>
-
-    <div class="method-card placeholder">
-      <div class="method-title">More payout methods</div>
-      <div class="method-logo-tile">
-        <div class="soon-wrap">
-          <div class="soon-top">Soon</div>
-          <span class="soon-pill">Coming soon</span>
+        <div class="method-bar">
+          <div class="method-fill" style="width:${progressPct}%"></div>
         </div>
-      </div>
-    </div>
-
-    <div class="method-card placeholder">
-      <div class="method-title">More payout methods</div>
-      <div class="method-logo-tile">
-        <div class="soon-wrap">
-          <div class="soon-top">Soon</div>
-          <span class="soon-pill">Coming soon</span>
+        <div class="method-foot">
+          <span>Minimum $</span>
+          <b>${progressRightText}</b>
         </div>
-      </div>
-    </div>
+      </button>
 
-    <div class="method-card placeholder">
-      <div class="method-title">More payout methods</div>
-      <div class="method-logo-tile">
-        <div class="soon-wrap">
-          <div class="soon-top">Soon</div>
-          <span class="soon-pill">Coming soon</span>
+      <div class="method-card placeholder top">
+        <div class="method-title">More payout methods</div>
+        <div class="method-logo-tile">
+          <div class="soon-wrap">
+            <div class="soon-top">Soon</div>
+            <span class="soon-pill">Coming soon</span>
+          </div>
         </div>
+        <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+        <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
       </div>
-    </div>
 
-    <div class="method-card placeholder">
-      <div class="method-title">More payout methods</div>
-      <div class="method-logo-tile">
-        <div class="soon-wrap">
-          <div class="soon-top">Soon</div>
-          <span class="soon-pill">Coming soon</span>
+      <div class="method-card placeholder">
+        <div class="method-title">More payout methods</div>
+        <div class="method-logo-tile">
+          <div class="soon-wrap">
+            <div class="soon-top">Soon</div>
+            <span class="soon-pill">Coming soon</span>
+          </div>
         </div>
+        <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+        <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
       </div>
-    </div>
 
+      <div class="method-card placeholder">
+        <div class="method-title">More payout methods</div>
+        <div class="method-logo-tile">
+          <div class="soon-wrap">
+            <div class="soon-top">Soon</div>
+            <span class="soon-pill">Coming soon</span>
+          </div>
+        </div>
+        <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+        <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
+      </div>
+
+      <div class="method-card placeholder">
+        <div class="method-title">More payout methods</div>
+        <div class="method-logo-tile">
+          <div class="soon-wrap">
+            <div class="soon-top">Soon</div>
+            <span class="soon-pill">Coming soon</span>
+          </div>
+        </div>
+        <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+        <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
+      </div>
+
+<div class="method-card placeholder">
+  <div class="method-title">More payout methods</div>
+  <div class="method-logo-tile">
+    <div class="soon-wrap">
+      <div class="soon-top">Soon</div>
+      <span class="soon-pill">Coming soon</span>
+    </div>
   </div>
+  <div class="method-bar"><div class="method-fill" style="width:0%"></div></div>
+  <div class="method-foot"><span>&nbsp;</span><b>&nbsp;</b></div>
 </div>
+
+    </div>
+  </div>
 
   <!-- ===== PayPal Amount Modal ===== -->
   <div class="co-backdrop" id="coBackdrop" aria-hidden="true">
