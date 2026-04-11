@@ -4481,10 +4481,11 @@ cursor:pointer;
 }
 
 .method-subtext{
-  font-size:12px;
-  color:#9ca3af;
-  margin-top:4px;
-  font-weight:600;
+  font-size:14px;
+  color:#ffffff;
+  margin-top:6px;
+  font-weight:700;
+  opacity:0.9;
 }
 
 
