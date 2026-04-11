@@ -5198,7 +5198,6 @@ ${hasOpenWithdrawal ? `
       <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
 
       <div class="co-header">
-        <div class="co-icon"><img src="${paypalImg}" alt="PayPal" /></div>
         <div><div class="co-title" id="coTitle">PayPal</div></div>
       </div>
 
@@ -5227,7 +5226,6 @@ ${hasOpenWithdrawal ? `
       <button class="co-close" id="confirmClose" type="button" aria-label="Close">✕</button>
 
       <div class="co-header" style="padding:4px 4px 6px;">
-        <div class="co-icon"><img src="${paypalImg}" alt="PayPal" /></div>
         <div>
           <div class="co-title" id="confirmTitle">PayPal</div>
         </div>
