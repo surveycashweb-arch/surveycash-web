@@ -5198,8 +5198,12 @@ ${hasOpenWithdrawal ? `
       <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
 
       <div class="co-header">
-        <div><div class="co-title" id="coTitle">PayPal</div></div>
-      </div>
+  <div>
+    <div class="co-title" id="coTitle">
+      <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+    </div>
+  </div>
+</div>
 
       <div class="co-divider"></div>
 
