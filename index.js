@@ -4483,7 +4483,7 @@ cursor:pointer;
 .method-subtext{
   font-size:14px;
   color:#ffffff;
-  margin-top:6px;
+  margin-top:4px;
   font-weight:700;
   opacity:0.9;
 }
