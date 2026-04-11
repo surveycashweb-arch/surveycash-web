@@ -5227,7 +5227,9 @@ ${hasOpenWithdrawal ? `
 
       <div class="co-header" style="padding:4px 4px 6px;">
         <div>
-          <div class="co-title" id="confirmTitle">PayPal</div>
+          <div class="co-title" id="confirmTitle">
+  <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+</div>
         </div>
       </div>
 
