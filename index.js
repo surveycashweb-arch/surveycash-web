@@ -4480,6 +4480,13 @@ cursor:pointer;
   color:#009cde;   /* PayPal lys blå */
 }
 
+.method-subtext{
+  font-size:12px;
+  color:#9ca3af;
+  margin-top:4px;
+  font-weight:600;
+}
+
 
 .method-logo-tile{
   background:transparent;
@@ -5127,6 +5134,8 @@ ${hasOpenWithdrawal ? `
       <div class="method-logo-tile">
         <img src="${paypalImg}" alt="PayPal" />
       </div>
+
+<div class="method-subtext">No fees</div>
     </button>
 
     <div class="method-card placeholder top">
