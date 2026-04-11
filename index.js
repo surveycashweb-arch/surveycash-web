@@ -4472,6 +4472,14 @@ cursor:pointer;
             opacity:.9;
           }
 
+.paypal-dark{
+  color:#003087;   /* PayPal mørk blå */
+}
+
+.paypal-light{
+  color:#009cde;   /* PayPal lys blå */
+}
+
 
 .method-logo-tile{
   background:transparent;
@@ -5113,7 +5121,9 @@ ${hasOpenWithdrawal ? `
             id="openPayPal"
             type="button"
             ${hasOpenWithdrawal ? 'disabled' : ''}>
-      <div class="method-title">PayPal</div>
+      <div class="method-title">
+  <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+</div>
       <div class="method-logo-tile">
         <img src="${paypalImg}" alt="PayPal" />
       </div>
