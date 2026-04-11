@@ -4465,7 +4465,7 @@ cursor:pointer;
 
           .method-title{
             font-weight:800;
-            font-size:16px;
+            font-size:14px;
             letter-spacing:.3px;
             margin:0 0 8px;
             margin-top:-4px;
