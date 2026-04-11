@@ -4465,7 +4465,7 @@ cursor:pointer;
 
           .method-title{
             font-weight:800;
-            font-size:14px;
+            font-size:16px;
             letter-spacing:.3px;
             margin:0 0 8px;
             margin-top:-4px;
@@ -4481,7 +4481,7 @@ cursor:pointer;
 }
 
 .method-subtext{
-  font-size:14px;
+  font-size:12px;
   color:#ffffff;
   margin-top:4px;
   font-weight:700;
