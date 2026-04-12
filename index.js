@@ -6326,9 +6326,6 @@ app.get('/support', (req, res) => {
   Coming soon
 </div>
 
-  <div>
-    <div class="contact-read-faq">AI chat launching soon</div>
-    <button class="contact-mock-btn" type="button" disabled>AI Chat (Coming soon)</button>
   </div>
 </div>
 
