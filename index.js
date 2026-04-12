@@ -6127,6 +6127,15 @@ app.get('/support', (req, res) => {
       cursor:default;
     }
 
+.ai-coming{
+  text-align:center;
+  font-size:28px;
+  font-weight:800;
+  color:#ffffff;
+  padding:40px 0;
+  letter-spacing:.5px;
+}
+
     .contact-foot{
       margin-top:14px;
       color:#8ea0b8;
@@ -6312,23 +6321,10 @@ app.get('/support', (req, res) => {
       <h2 class="contact-title">AI Chat Support</h2>
     </div>
 
-    <div class="contact-panel">
-      <div class="contact-row">
-        <span class="contact-label">AI Chat</span>
-        <div class="contact-value">Smart support chatbot</div>
-      </div>
-
-      <div class="contact-row">
-        <span class="contact-label">Status</span>
-        <div class="contact-value">Coming soon</div>
-      </div>
-
-      <div class="contact-row">
-        <span class="contact-label">Best for</span>
-        <div class="contact-value">Instant answers, account help, payouts</div>
-      </div>
-    </div>
-  </div>
+<div class="ai-coming">
+  AI Chat Support<br>
+  Coming soon
+</div>
 
   <div>
     <div class="contact-read-faq">AI chat launching soon</div>
