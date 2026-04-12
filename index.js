@@ -6304,38 +6304,37 @@ app.get('/support', (req, res) => {
       </div>
     </div>
 
-      <div class="support-card contact-card">
-        <div class="contact-top">
+<div class="support-card contact-card">
+  <div class="contact-top">
 
-          <div>
-            <div class="support-kicker">Direct Support</div>
-            <h2 class="contact-title">Contact us</h2>
-          </div>
+    <div>
+      <div class="support-kicker">AI Support</div>
+      <h2 class="contact-title">AI Chat Support</h2>
+    </div>
 
-          <div class="contact-panel">
-            <div class="contact-row">
-              <span class="contact-label">Email</span>
-              <div class="contact-value">contact@surveycash.website</div>
-            </div>
+    <div class="contact-panel">
+      <div class="contact-row">
+        <span class="contact-label">AI Chat</span>
+        <div class="contact-value">Smart support chatbot</div>
+      </div>
 
-            <div class="contact-row">
-              <span class="contact-label">Response time</span>
-              <div class="contact-value">Usually within 1–3 business days</div>
-            </div>
+      <div class="contact-row">
+        <span class="contact-label">Status</span>
+        <div class="contact-value">Coming soon</div>
+      </div>
 
-            <div class="contact-row">
-              <span class="contact-label">Best for</span>
-              <div class="contact-value">Account issues, payout help</div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-  <div class="contact-read-faq">Read FAQ before contacting us</div>
-  <button class="contact-mock-btn" type="button">Contact support</button>
-</div>
+      <div class="contact-row">
+        <span class="contact-label">Best for</span>
+        <div class="contact-value">Instant answers, account help, payouts</div>
       </div>
     </div>
+  </div>
+
+  <div>
+    <div class="contact-read-faq">AI chat launching soon</div>
+    <button class="contact-mock-btn" type="button" disabled>AI Chat (Coming soon)</button>
+  </div>
+</div>
 
     <div class="cashout-bottom-fill"></div>
 
