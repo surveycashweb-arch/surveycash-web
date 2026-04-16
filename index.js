@@ -2071,7 +2071,7 @@ document.addEventListener('click', function (e) {
       </form>
 
       <div class="top-links">
-        <a href="#">Forgot your password?</a>
+        <a href="/forgot-password">Forgot your password?</a>
         <span><span id="auth-switch-text">Don't have an account?</span><a href="#" id="auth-switch-link"> Sign up</a></span>
       </div>
 
@@ -6387,6 +6387,38 @@ app.get('/support', (req, res) => {
       bodyHtml
     )
   );
+});
+
+
+
+app.get('/forgot-password', (req, res) => {
+  res.send(`
+    <h2>Reset password</h2>
+    <form method="POST" action="/forgot-password">
+      <input name="email" type="email" placeholder="Enter your email" required>
+      <button type="submit">Send reset link</button>
+    </form>
+  `);
+});
+
+app.post('/forgot-password', async (req, res) => {
+  const email = String(req.body.email || '').toLowerCase();
+
+  try {
+    const { error } = await supabaseAdmin.auth.admin.generateLink({
+      type: 'recovery',
+      email: email
+    });
+
+    if (error) {
+      return res.send('Could not send reset email');
+    }
+
+    res.send('Check your email for password reset link.');
+  } catch (err) {
+    console.error(err);
+    res.send('Something went wrong.');
+  }
 });
 
 
