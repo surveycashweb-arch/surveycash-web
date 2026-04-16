@@ -461,11 +461,7 @@ function closeForgotPassword() {
 if (forgotOpen) {
   forgotOpen.addEventListener('click', function (e) {
     e.preventDefault();
-    closeAuth();
-
-    setTimeout(function () {
-      openForgotPassword();
-    }, 10);
+    openForgotPassword();
   });
 }
 
