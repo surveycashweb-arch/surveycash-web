@@ -446,7 +446,37 @@ function layout({ title, active, bodyHtml, loggedIn }) {
   window.openAuth = openAuth;
   window.closeAuth = closeAuth;
 
+var forgotBackdrop = document.getElementById('forgot-backdrop');
+var forgotOpen = document.getElementById('forgotPasswordOpen');
+var forgotClose = document.getElementById('forgot-close');
 
+function openForgotPassword() {
+  if (forgotBackdrop) forgotBackdrop.classList.add('open');
+}
+
+function closeForgotPassword() {
+  if (forgotBackdrop) forgotBackdrop.classList.remove('open');
+}
+
+if (forgotOpen) {
+  forgotOpen.addEventListener('click', function (e) {
+    e.preventDefault();
+    closeAuth();
+    openForgotPassword();
+  });
+}
+
+if (forgotClose) {
+  forgotClose.addEventListener('click', function () {
+    closeForgotPassword();
+  });
+}
+
+if (forgotBackdrop) {
+  forgotBackdrop.addEventListener('click', function (e) {
+    if (e.target === forgotBackdrop) closeForgotPassword();
+  });
+}
  
 // ✅ resend verify email + cooldown
 var resendBtn = null;
@@ -2071,7 +2101,7 @@ document.addEventListener('click', function (e) {
       </form>
 
       <div class="top-links">
-        <a href="/forgot-password">Forgot your password?</a>
+        <a href="#" id="forgotPasswordOpen">Forgot your password?</a>
         <span><span id="auth-switch-text">Don't have an account?</span><a href="#" id="auth-switch-link"> Sign up</a></span>
       </div>
 
@@ -2083,7 +2113,31 @@ document.addEventListener('click', function (e) {
 </div>
 
 
-  ${clientScript}
+<!-- FORGOT PASSWORD POPUP -->
+<div class="auth-backdrop" id="forgot-backdrop">
+  <div class="auth-modal" style="min-height:auto; max-width:420px;">
+    <button class="auth-close" type="button" id="forgot-close">×</button>
+
+    <div class="auth-title">Reset password</div>
+
+    <div id="forgot-error" class="auth-error" style="display:none;"></div>
+
+    <form id="forgot-form" method="POST" action="/forgot-password">
+      <div class="field">
+        <input type="email" name="email" placeholder="E-mail address" required />
+      </div>
+
+      <button class="cta-main" type="submit">Send reset email</button>
+    </form>
+
+    <div class="fineprint" style="margin-top:14px;">
+      Enter the email used for your SurveyCash account.
+    </div>
+  </div>
+</div>
+
+
+${clientScript}
 </body>
 </html>`;
 }
@@ -6402,22 +6456,42 @@ app.get('/forgot-password', (req, res) => {
 });
 
 app.post('/forgot-password', async (req, res) => {
-  const email = String(req.body.email || '').toLowerCase();
+  const email = String(req.body.email || '').trim().toLowerCase();
+
+  if (!email || !isValidEmail(email)) {
+    return res.send(`
+      <script>
+        alert('Please enter a valid email address.');
+        window.location.href = '/';
+      </script>
+    `);
+  }
 
   try {
-    const { error } = await supabaseAdmin.auth.admin.generateLink({
-      type: 'recovery',
-      email: email
+    const redirectTo = `${BASE_URL}/reset-password`;
+
+    const { error } = await supabasePublic.auth.resetPasswordForEmail(email, {
+      redirectTo,
     });
 
     if (error) {
-      return res.send('Could not send reset email');
+      console.error('resetPasswordForEmail error:', error);
     }
 
-    res.send('Check your email for password reset link.');
+    return res.send(`
+      <script>
+        alert('If an account exists with that email, a reset link has been sent.');
+        window.location.href = '/';
+      </script>
+    `);
   } catch (err) {
-    console.error(err);
-    res.send('Something went wrong.');
+    console.error('POST /forgot-password error:', err);
+    return res.send(`
+      <script>
+        alert('Something went wrong.');
+        window.location.href = '/';
+      </script>
+    `);
   }
 });
 
