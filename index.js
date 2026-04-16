@@ -462,7 +462,10 @@ if (forgotOpen) {
   forgotOpen.addEventListener('click', function (e) {
     e.preventDefault();
     closeAuth();
-    openForgotPassword();
+
+    setTimeout(function () {
+      openForgotPassword();
+    }, 10);
   });
 }
 
