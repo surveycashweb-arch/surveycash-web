@@ -1275,14 +1275,16 @@ document.addEventListener('click', function (e) {
 }
 
 
+/* ===== Landing: How it works + Trustpilot (DARK BLUE / NO SHADOW / NO OUTLINE) ===== */
 :root{
   /* ✅ mørkeblå cards (ikke grå) - kun lidt mørkere end baggrund */
   --bg-card: rgba(8, 12, 22, .55);
   --bg-card-hover: rgba(8, 12, 22, .68);
 
- 
+  /* ❌ ingen kant */
   --card-border: transparent;
 
+  /* ❌ ingen shadow */
   --card-shadow: none;
 }
 
@@ -1311,22 +1313,24 @@ document.addEventListener('click', function (e) {
   margin-top: 14px;
 }
 
-
+/* ✅ Cards: ingen outline / ingen hover outline */
 .hiw-card{
   text-align:left;
   padding: 18px 18px 16px;
   border-radius: 18px;
   min-height: 108px;
-  background:#151c2e;
+
+  background: var(--bg-card);
   border: 0 !important;
   outline: none !important;
   box-shadow: none;
+
   transition: transform .15s ease, background .15s ease;
 }
 
 .hiw-card:hover{
   transform: translateY(-2px);
-  background:#151c2e;
+  background: var(--bg-card-hover);
 }
 
 .hiw-num{
@@ -1367,18 +1371,21 @@ document.addEventListener('click', function (e) {
   align-items: center;
   justify-content: space-between;
   gap: 14px;
+
   border-radius: 18px;
   padding: 14px 16px;
-  background:#151c2e;
+
+  background: var(--bg-card);
   border: 0 !important;
   outline: none !important;
   box-shadow: none;
+
   transition: transform .15s ease, background .15s ease;
 }
 
 .tp-card:hover{
   transform: translateY(-1px);
-  background:#151c2e;
+  background: var(--bg-card-hover);
 }
 
 .tp-left{
@@ -1432,16 +1439,18 @@ document.addEventListener('click', function (e) {
   align-items:center;
   justify-content:space-between;
   gap:16px;
+
   text-decoration:none;
   border-radius:18px;
   padding:18px 20px;
-  background:#151c2e;
+
+  background: rgba(8,12,22,.55);
   transition: all .15s ease;
 }
 
 .tp-bar:hover{
   transform: translateY(-1px);
-  background:#151c2e;
+  background: rgba(8,12,22,.68);
 }
 
 /* left area */
