@@ -6621,58 +6621,81 @@ font-size:14px;
 </div>
 
 <script>
-
 const supabase = window.supabase.createClient(
-"${process.env.SUPABASE_URL}",
-"${process.env.SUPABASE_ANON_KEY}"
+  "${process.env.SUPABASE_URL}",
+  "${process.env.SUPABASE_ANON_KEY}"
 );
 
 const form = document.getElementById("resetForm");
 const msg = document.getElementById("msg");
+const submitBtn = form.querySelector("button");
+
+let recoveryReady = false;
 
 function showMessage(text, isError) {
   msg.innerText = text;
   msg.style.color = isError ? "#fecaca" : "#dcfce7";
 }
 
-async function initResetSession() {
-  try {
-    const hash = window.location.hash.substring(1);
-    const params = new URLSearchParams(hash);
-
-    const access_token = params.get("access_token");
-    const refresh_token = params.get("refresh_token");
-
-    if (!access_token || !refresh_token) {
-      showMessage("Reset link is invalid or expired.", true);
-      return false;
-    }
-
-    const { error } = await supabase.auth.setSession({
-      access_token,
-      refresh_token
-    });
-
-    if (error) {
-      showMessage(error.message || "Could not start reset session.", true);
-      return false;
-    }
-
-    return true;
-  } catch (err) {
-    console.error("initResetSession error:", err);
-    showMessage("Could not start reset session.", true);
-    return false;
-  }
+function setReady(ready) {
+  recoveryReady = ready;
+  submitBtn.disabled = !ready;
+  submitBtn.style.opacity = ready ? "1" : "0.6";
+  submitBtn.style.cursor = ready ? "pointer" : "not-allowed";
 }
 
-form.addEventListener("submit", async function(e){
+setReady(false);
+showMessage("Checking reset link...", false);
+
+// Supabase reset flow: wait until recovery session exists
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event === "PASSWORD_RECOVERY") {
+    setReady(true);
+    showMessage("Enter your new password.", false);
+  }
+});
+
+// Fallback: if session already exists when page loads
+(async () => {
+  const { data, error } = await supabase.auth.getSession();
+
+  if (error) {
+    console.error("getSession error:", error);
+    showMessage("Reset link is invalid or expired.", true);
+    return;
+  }
+
+  if (data && data.session) {
+    setReady(true);
+    showMessage("Enter your new password.", false);
+    return;
+  }
+
+  // Give Supabase a moment to process tokens from the URL
+  setTimeout(async () => {
+    const { data: data2 } = await supabase.auth.getSession();
+
+    if (data2 && data2.session) {
+      setReady(true);
+      showMessage("Enter your new password.", false);
+    } else {
+      showMessage("Reset link is invalid or expired.", true);
+    }
+  }, 800);
+})();
+
+form.addEventListener("submit", async function(e) {
   e.preventDefault();
+
+  if (!recoveryReady) {
+    showMessage("Reset link is not ready yet. Please wait a moment.", true);
+    return;
+  }
 
   const p1 = document.getElementById("p1").value;
   const p2 = document.getElementById("p2").value;
 
-  if (p1.length < 6) {
+  if (!p1 || p1.length < 6) {
     showMessage("Password must be at least 6 characters.", true);
     return;
   }
@@ -6682,21 +6705,22 @@ form.addEventListener("submit", async function(e){
     return;
   }
 
-  const ok = await initResetSession();
-  if (!ok) return;
-
   const { error } = await supabase.auth.updateUser({
     password: p1
   });
 
   if (error) {
+    console.error("updateUser error:", error);
     showMessage(error.message || "Could not update password.", true);
     return;
   }
 
-  showMessage("Password updated. You can now log in.", false);
-});
+  showMessage("Password updated successfully. You can now log in.", false);
 
+  setTimeout(() => {
+    window.location.href = "/";
+  }, 1200);
+});
 </script>
 
 
