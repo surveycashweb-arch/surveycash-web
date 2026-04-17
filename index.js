@@ -6644,44 +6644,81 @@ function setReady(ready) {
   submitBtn.style.cursor = ready ? "pointer" : "not-allowed";
 }
 
+function hasRecoveryParams() {
+  const hash = window.location.hash || '';
+  const search = window.location.search || '';
+
+  return (
+    hash.includes('type=recovery') ||
+    search.includes('type=recovery') ||
+    search.includes('code=')
+  );
+}
+
 setReady(false);
 showMessage("Checking reset link...", false);
 
-// Supabase reset flow: wait until recovery session exists
 supabase.auth.onAuthStateChange(async (event, session) => {
-  if (event === "PASSWORD_RECOVERY") {
+  console.log("auth event:", event, session);
+
+  if (
+    (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") &&
+    hasRecoveryParams() &&
+    session
+  ) {
     setReady(true);
     showMessage("Enter your new password.", false);
   }
 });
 
-// Fallback: if session already exists when page loads
 (async () => {
-  const { data, error } = await supabase.auth.getSession();
+  try {
+    if (!hasRecoveryParams()) {
+      showMessage("Reset link is invalid or expired.", true);
+      return;
+    }
 
-  if (error) {
-    console.error("getSession error:", error);
-    showMessage("Reset link is invalid or expired.", true);
-    return;
-  }
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
 
-  if (data && data.session) {
-    setReady(true);
-    showMessage("Enter your new password.", false);
-    return;
-  }
+    if (code) {
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
 
-  // Give Supabase a moment to process tokens from the URL
-  setTimeout(async () => {
-    const { data: data2 } = await supabase.auth.getSession();
+      if (error) {
+        console.error("exchangeCodeForSession error:", error);
+        showMessage("Reset link is invalid or expired.", true);
+        return;
+      }
+    }
 
-    if (data2 && data2.session) {
+    const { data, error } = await supabase.auth.getSession();
+
+    if (error) {
+      console.error("getSession error:", error);
+      showMessage("Reset link is invalid or expired.", true);
+      return;
+    }
+
+    if (data?.session && hasRecoveryParams()) {
       setReady(true);
       showMessage("Enter your new password.", false);
-    } else {
-      showMessage("Reset link is invalid or expired.", true);
+      return;
     }
-  }, 800);
+
+    setTimeout(async () => {
+      const { data: data2 } = await supabase.auth.getSession();
+
+      if (data2?.session && hasRecoveryParams()) {
+        setReady(true);
+        showMessage("Enter your new password.", false);
+      } else {
+        showMessage("Reset link is invalid or expired.", true);
+      }
+    }, 800);
+  } catch (err) {
+    console.error("reset init error:", err);
+    showMessage("Reset link is invalid or expired.", true);
+  }
 })();
 
 form.addEventListener("submit", async function(e) {
