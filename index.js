@@ -6544,81 +6544,68 @@ app.get('/reset-password', (req, res) => {
 <head>
 <meta charset="utf-8">
 <title>Reset password</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 body{
-margin:0;
-background:#111827;
-font-family:system-ui;
-display:flex;
-align-items:center;
-justify-content:center;
-height:100vh;
-color:white;
+  margin:0;
+  background:#111827;
+  font-family:system-ui;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  color:white;
 }
-
 .card{
-background:#151c2e;
-padding:30px;
-border-radius:18px;
-width:420px;
-box-shadow:0 30px 80px rgba(0,0,0,.5);
+  background:#151c2e;
+  padding:30px;
+  border-radius:18px;
+  width:420px;
+  box-shadow:0 30px 80px rgba(0,0,0,.5);
 }
-
 h1{
-margin-top:0;
-text-align:center;
+  margin-top:0;
+  text-align:center;
 }
-
 input{
-width:100%;
-height:46px;
-margin-bottom:14px;
-border-radius:10px;
-border:1px solid rgba(255,255,255,.15);
-background:#0f172a;
-color:white;
-padding:0 12px;
+  width:100%;
+  height:46px;
+  margin-bottom:14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.15);
+  background:#0f172a;
+  color:white;
+  padding:0 12px;
 }
-
 button{
-width:100%;
-height:48px;
-border-radius:10px;
-border:none;
-background:#fbbf24;
-font-weight:700;
-cursor:pointer;
+  width:100%;
+  height:48px;
+  border-radius:10px;
+  border:none;
+  background:#fbbf24;
+  font-weight:700;
+  cursor:pointer;
 }
-
 .msg{
-margin-top:14px;
-font-size:14px;
+  margin-top:14px;
+  font-size:14px;
 }
 </style>
-
 </head>
 
 <body>
+  <div class="card">
+    <h1>Reset password</h1>
 
-<div class="card">
+    <form id="resetForm">
+      <input id="p1" type="password" placeholder="New password" required>
+      <input id="p2" type="password" placeholder="Confirm password" required>
+      <button type="submit" disabled>Update password</button>
+    </form>
 
-<h1>Reset password</h1>
-
-<form id="resetForm">
-
-<input id="p1" type="password" placeholder="New password" required>
-<input id="p2" type="password" placeholder="Confirm password" required>
-
-<button type="submit">Update password</button>
-
-</form>
-
-<div id="msg" class="msg"></div>
-
-</div>
+    <div id="msg" class="msg"></div>
+  </div>
 
 <script>
 const supabase = window.supabase.createClient(
@@ -6644,88 +6631,60 @@ function setReady(ready) {
   submitBtn.style.cursor = ready ? "pointer" : "not-allowed";
 }
 
-function hasRecoveryParams() {
-  const hash = window.location.hash || '';
-  const search = window.location.search || '';
+function getHashParams() {
+  const hash = window.location.hash.startsWith('#')
+    ? window.location.hash.slice(1)
+    : window.location.hash;
 
-  return (
-    hash.includes('type=recovery') ||
-    search.includes('type=recovery') ||
-    search.includes('code=')
-  );
+  return new URLSearchParams(hash);
 }
 
-setReady(false);
-showMessage("Checking reset link...", false);
+async function initRecoverySession() {
+  try {
+    setReady(false);
+    showMessage("Checking reset link...", false);
 
-supabase.auth.onAuthStateChange(async (event, session) => {
-  console.log("auth event:", event, session);
+    const hashParams = getHashParams();
+    const access_token = hashParams.get("access_token");
+    const refresh_token = hashParams.get("refresh_token");
+    const type = hashParams.get("type");
 
-  if (
-    (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") &&
-    hasRecoveryParams() &&
-    session
-  ) {
+    console.log("reset hash params:", {
+      type,
+      hasAccessToken: !!access_token,
+      hasRefreshToken: !!refresh_token
+    });
+
+    if (type !== "recovery" || !access_token || !refresh_token) {
+      showMessage("Reset link is invalid or expired.", true);
+      return;
+    }
+
+    const { data, error } = await supabase.auth.setSession({
+      access_token,
+      refresh_token
+    });
+
+    console.log("setSession result:", { data, error });
+
+    if (error || !data?.session) {
+      showMessage("Could not open reset session. Link may be expired.", true);
+      return;
+    }
+
     setReady(true);
     showMessage("Enter your new password.", false);
-  }
-});
-
-(async () => {
-  try {
-    if (!hasRecoveryParams()) {
-      showMessage("Reset link is invalid or expired.", true);
-      return;
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-
-    if (code) {
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-      if (error) {
-        console.error("exchangeCodeForSession error:", error);
-        showMessage("Reset link is invalid or expired.", true);
-        return;
-      }
-    }
-
-    const { data, error } = await supabase.auth.getSession();
-
-    if (error) {
-      console.error("getSession error:", error);
-      showMessage("Reset link is invalid or expired.", true);
-      return;
-    }
-
-    if (data?.session && hasRecoveryParams()) {
-      setReady(true);
-      showMessage("Enter your new password.", false);
-      return;
-    }
-
-    setTimeout(async () => {
-      const { data: data2 } = await supabase.auth.getSession();
-
-      if (data2?.session && hasRecoveryParams()) {
-        setReady(true);
-        showMessage("Enter your new password.", false);
-      } else {
-        showMessage("Reset link is invalid or expired.", true);
-      }
-    }, 800);
   } catch (err) {
-    console.error("reset init error:", err);
+    console.error("initRecoverySession error:", err);
     showMessage("Reset link is invalid or expired.", true);
   }
-})();
+}
 
 form.addEventListener("submit", async function(e) {
   e.preventDefault();
 
   if (!recoveryReady) {
-    showMessage("Reset link is not ready yet. Please wait a moment.", true);
+    showMessage("Reset link is not ready yet.", true);
     return;
   }
 
@@ -6742,9 +6701,11 @@ form.addEventListener("submit", async function(e) {
     return;
   }
 
-  const { error } = await supabase.auth.updateUser({
+  const { data, error } = await supabase.auth.updateUser({
     password: p1
   });
+
+  console.log("updateUser result:", { data, error });
 
   if (error) {
     console.error("updateUser error:", error);
@@ -6754,16 +6715,18 @@ form.addEventListener("submit", async function(e) {
 
   showMessage("Password updated successfully. You can now log in.", false);
 
+  await supabase.auth.signOut();
+
   setTimeout(() => {
     window.location.href = "/";
   }, 1200);
 });
+
+initRecoverySession();
 </script>
-
-
 </body>
 </html>
-`);
+  `);
 });
 
 // ---------- Auth: finish login after email verification ----------
