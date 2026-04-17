@@ -494,12 +494,6 @@ if (forgotClose) {
   });
 }
 
-if (forgotBackdrop) {
-  forgotBackdrop.addEventListener('click', function (e) {
-    if (e.target === forgotBackdrop) closeForgotPassword();
-  });
-}
-
 if (forgotForm) {
   forgotForm.addEventListener('submit', async function (e) {
     e.preventDefault();
