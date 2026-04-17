@@ -6601,7 +6601,7 @@ button{
     <form id="resetForm">
       <input id="p1" type="password" placeholder="New password" required>
       <input id="p2" type="password" placeholder="Confirm password" required>
-      <button type="submit" disabled>Update password</button>
+      <button type="submit">Update password</button>
     </form>
 
     <div id="msg" class="msg"></div>
@@ -6640,40 +6640,62 @@ function getHashParams() {
 }
 
 async function initRecoverySession() {
+  setReady(false);
+  showMessage("Checking reset link...", false);
+
   try {
-    setReady(false);
-    showMessage("Checking reset link...", false);
-
     const hashParams = getHashParams();
-    const access_token = hashParams.get("access_token");
-    const refresh_token = hashParams.get("refresh_token");
+    const searchParams = new URLSearchParams(window.location.search);
+
+    const accessToken = hashParams.get("access_token");
+    const refreshToken = hashParams.get("refresh_token");
     const type = hashParams.get("type");
+    const code = searchParams.get("code");
 
-    console.log("reset hash params:", {
+    console.log("RESET DEBUG", {
+      href: window.location.href,
       type,
-      hasAccessToken: !!access_token,
-      hasRefreshToken: !!refresh_token
+      hasAccessToken: !!accessToken,
+      hasRefreshToken: !!refreshToken,
+      hasCode: !!code
     });
 
-    if (type !== "recovery" || !access_token || !refresh_token) {
-      showMessage("Reset link is invalid or expired.", true);
+    // Flow 1: recovery tokens i hash
+    if (type === "recovery" && accessToken && refreshToken) {
+      const { data, error } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken
+      });
+
+      console.log("setSession:", { data, error });
+
+      if (error || !data?.session) {
+        showMessage("Could not open reset session. Link may be expired.", true);
+        return;
+      }
+
+      setReady(true);
+      showMessage("Enter your new password.", false);
       return;
     }
 
-    const { data, error } = await supabase.auth.setSession({
-      access_token,
-      refresh_token
-    });
+    // Flow 2: code i querystring
+    if (code) {
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-    console.log("setSession result:", { data, error });
+      console.log("exchangeCodeForSession:", { data, error });
 
-    if (error || !data?.session) {
-      showMessage("Could not open reset session. Link may be expired.", true);
+      if (error || !data?.session) {
+        showMessage("Could not open reset session. Link may be expired.", true);
+        return;
+      }
+
+      setReady(true);
+      showMessage("Enter your new password.", false);
       return;
     }
 
-    setReady(true);
-    showMessage("Enter your new password.", false);
+    showMessage("Reset link is invalid or expired.", true);
   } catch (err) {
     console.error("initRecoverySession error:", err);
     showMessage("Reset link is invalid or expired.", true);
@@ -6684,7 +6706,7 @@ form.addEventListener("submit", async function(e) {
   e.preventDefault();
 
   if (!recoveryReady) {
-    showMessage("Reset link is not ready yet.", true);
+    showMessage("Reset link is not ready or is invalid.", true);
     return;
   }
 
@@ -6705,10 +6727,9 @@ form.addEventListener("submit", async function(e) {
     password: p1
   });
 
-  console.log("updateUser result:", { data, error });
+  console.log("updateUser:", { data, error });
 
   if (error) {
-    console.error("updateUser error:", error);
     showMessage(error.message || "Could not update password.", true);
     return;
   }
