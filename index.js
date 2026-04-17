@@ -6630,37 +6630,75 @@ const supabase = window.supabase.createClient(
 const form = document.getElementById("resetForm");
 const msg = document.getElementById("msg");
 
+function showMessage(text, isError) {
+  msg.innerText = text;
+  msg.style.color = isError ? "#fecaca" : "#dcfce7";
+}
+
+async function initResetSession() {
+  try {
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+
+    const access_token = params.get("access_token");
+    const refresh_token = params.get("refresh_token");
+
+    if (!access_token || !refresh_token) {
+      showMessage("Reset link is invalid or expired.", true);
+      return false;
+    }
+
+    const { error } = await supabase.auth.setSession({
+      access_token,
+      refresh_token
+    });
+
+    if (error) {
+      showMessage(error.message || "Could not start reset session.", true);
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.error("initResetSession error:", err);
+    showMessage("Could not start reset session.", true);
+    return false;
+  }
+}
+
 form.addEventListener("submit", async function(e){
+  e.preventDefault();
 
-e.preventDefault();
+  const p1 = document.getElementById("p1").value;
+  const p2 = document.getElementById("p2").value;
 
-const p1 = document.getElementById("p1").value;
-const p2 = document.getElementById("p2").value;
+  if (p1.length < 6) {
+    showMessage("Password must be at least 6 characters.", true);
+    return;
+  }
 
-if(p1.length < 6){
-msg.innerText = "Password must be at least 6 characters.";
-return;
-}
+  if (p1 !== p2) {
+    showMessage("Passwords do not match.", true);
+    return;
+  }
 
-if(p1 !== p2){
-msg.innerText = "Passwords do not match.";
-return;
-}
+  const ok = await initResetSession();
+  if (!ok) return;
 
-const { error } = await supabase.auth.updateUser({
-password: p1
-});
+  const { error } = await supabase.auth.updateUser({
+    password: p1
+  });
 
-if(error){
-msg.innerText = error.message;
-return;
-}
+  if (error) {
+    showMessage(error.message || "Could not update password.", true);
+    return;
+  }
 
-msg.innerText = "Password updated. You can now log in.";
-
+  showMessage("Password updated. You can now log in.", false);
 });
 
 </script>
+
 
 </body>
 </html>
