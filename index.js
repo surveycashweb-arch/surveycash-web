@@ -6602,7 +6602,7 @@ button{
     <form id="resetForm">
       <input id="p1" type="password" placeholder="New password" required>
       <input id="p2" type="password" placeholder="Confirm password" required>
-      <button id="submitBtn" type="submit" disabled>Update password</button>
+      <button id="submitBtn" type="submit">Update password</button>
     </form>
 
     <div id="msg" class="msg"></div>
@@ -6627,9 +6627,8 @@ function showMessage(text, isError) {
 
 function setReady(ready) {
   recoveryReady = ready;
-  submitBtn.disabled = !ready;
   submitBtn.style.opacity = ready ? "1" : "0.6";
-  submitBtn.style.cursor = ready ? "pointer" : "not-allowed";
+  submitBtn.style.cursor = ready ? "pointer" : "pointer";
 }
 
 function getHashParams() {
