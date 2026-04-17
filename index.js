@@ -6626,16 +6626,13 @@ function showMessage(text, isError) {
 }
 
 function setReady(ready) {
-  recoveryReady = ready;
-  submitBtn.style.opacity = ready ? "1" : "0.6";
-  submitBtn.style.cursor = ready ? "pointer" : "pointer";
+  recoveryReady = !!ready;
+  submitBtn.disabled = !recoveryReady;
+  submitBtn.style.opacity = recoveryReady ? "1" : "0.6";
 }
 
 function getHashParams() {
-  const hash = window.location.hash.startsWith('#')
-    ? window.location.hash.slice(1)
-    : window.location.hash;
-
+  const hash = (window.location.hash || "").replace(/^#/, "");
   return new URLSearchParams(hash);
 }
 
@@ -6644,34 +6641,19 @@ async function initRecoverySession() {
   showMessage("Checking reset link...", false);
 
   try {
-    const hashParams = getHashParams();
     const searchParams = new URLSearchParams(window.location.search);
+    const hashParams = getHashParams();
 
+    const code = searchParams.get("code");
     const accessToken = hashParams.get("access_token");
     const refreshToken = hashParams.get("refresh_token");
     const type = hashParams.get("type");
-    const code = searchParams.get("code");
 
-    console.log("RESET DEBUG", {
-      href: window.location.href,
-      hash: window.location.hash,
-      search: window.location.search,
-      type,
-      hasAccessToken: !!accessToken,
-      hasRefreshToken: !!refreshToken,
-      hasCode: !!code
-    });
-
-    if (type === "recovery" && accessToken && refreshToken) {
-      const { data, error } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken
-      });
-
-      console.log("setSession result:", { data, error });
+    if (code) {
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
       if (error || !data?.session) {
-        showMessage("Could not open reset session. Link may be expired.", true);
+        showMessage("Reset link is invalid or expired.", true);
         return;
       }
 
@@ -6680,13 +6662,14 @@ async function initRecoverySession() {
       return;
     }
 
-    if (code) {
-      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-
-      console.log("exchangeCodeForSession result:", { data, error });
+    if (type === "recovery" && accessToken && refreshToken) {
+      const { data, error } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken
+      });
 
       if (error || !data?.session) {
-        showMessage("Could not open reset session. Link may be expired.", true);
+        showMessage("Reset link is invalid or expired.", true);
         return;
       }
 
@@ -6702,7 +6685,7 @@ async function initRecoverySession() {
   }
 }
 
-form.addEventListener("submit", async function(e) {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   if (!recoveryReady) {
@@ -6710,8 +6693,8 @@ form.addEventListener("submit", async function(e) {
     return;
   }
 
-  const p1 = document.getElementById("p1").value.trim();
-  const p2 = document.getElementById("p2").value.trim();
+  const p1 = document.getElementById("p1").value;
+  const p2 = document.getElementById("p2").value;
 
   if (!p1 || p1.length < 6) {
     showMessage("Password must be at least 6 characters.", true);
@@ -6724,19 +6707,16 @@ form.addEventListener("submit", async function(e) {
   }
 
   submitBtn.disabled = true;
-  submitBtn.style.opacity = "0.6";
   submitBtn.textContent = "Updating...";
 
-  const { data, error } = await supabase.auth.updateUser({
+  const { error } = await supabase.auth.updateUser({
     password: p1
   });
 
-  console.log("updateUser result:", { data, error });
-
   if (error) {
-    showMessage("updateUser failed: " + (error.message || "Unknown error"), true);
+    console.error("updateUser error:", error);
+    showMessage(error.message || "Could not update password.", true);
     submitBtn.disabled = false;
-    submitBtn.style.opacity = "1";
     submitBtn.textContent = "Update password";
     return;
   }
