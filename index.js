@@ -449,8 +449,31 @@ function layout({ title, active, bodyHtml, loggedIn }) {
 var forgotBackdrop = document.getElementById('forgot-backdrop');
 var forgotOpen = document.getElementById('forgotPasswordOpen');
 var forgotClose = document.getElementById('forgot-close');
+var forgotForm = document.getElementById('forgot-form');
+var forgotError = document.getElementById('forgot-error');
+
+function setForgotMessage(text, isError) {
+  if (!forgotError) return;
+
+  forgotError.style.display = 'block';
+  forgotError.textContent = text;
+
+  if (isError) {
+    forgotError.style.background = '#7f1d1d';
+    forgotError.style.color = '#fecaca';
+    forgotError.style.border = '1px solid #b91c1c';
+  } else {
+    forgotError.style.background = 'rgba(34,197,94,.12)';
+    forgotError.style.color = '#dcfce7';
+    forgotError.style.border = '1px solid rgba(34,197,94,.35)';
+  }
+}
 
 function openForgotPassword() {
+  if (forgotError) {
+    forgotError.style.display = 'none';
+    forgotError.textContent = '';
+  }
   if (forgotBackdrop) forgotBackdrop.classList.add('open');
 }
 
@@ -474,6 +497,45 @@ if (forgotClose) {
 if (forgotBackdrop) {
   forgotBackdrop.addEventListener('click', function (e) {
     if (e.target === forgotBackdrop) closeForgotPassword();
+  });
+}
+
+if (forgotForm) {
+  forgotForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    if (forgotError) {
+      forgotError.style.display = 'none';
+      forgotError.textContent = '';
+    }
+
+    var formData = new FormData(forgotForm);
+
+    try {
+      const r = await fetch('/forgot-password', {
+        method: 'POST',
+        body: new URLSearchParams(formData),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        credentials: 'same-origin'
+      });
+
+      const data = await r.json();
+
+      if (!r.ok || !data.ok) {
+        setForgotMessage(
+          (data && data.message) || 'Something went wrong. Please try again.',
+          true
+        );
+        return;
+      }
+
+      setForgotMessage(data.message, false);
+    } catch (err) {
+      console.error('forgot password submit error:', err);
+      setForgotMessage('Network error. Please try again.', true);
+    }
   });
 }
  
@@ -6458,12 +6520,10 @@ app.post('/forgot-password', async (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
 
   if (!email || !isValidEmail(email)) {
-    return res.send(`
-      <script>
-        alert('Please enter a valid email address.');
-        window.location.href = '/';
-      </script>
-    `);
+    return res.status(400).json({
+      ok: false,
+      message: 'Please enter a valid email address.'
+    });
   }
 
   try {
@@ -6477,20 +6537,16 @@ app.post('/forgot-password', async (req, res) => {
       console.error('resetPasswordForEmail error:', error);
     }
 
-    return res.send(`
-      <script>
-        alert('If an account exists with that email, a reset link has been sent.');
-        window.location.href = '/';
-      </script>
-    `);
+    return res.json({
+      ok: true,
+      message: 'If an account exists with that email, a reset link has been sent.'
+    });
   } catch (err) {
     console.error('POST /forgot-password error:', err);
-    return res.send(`
-      <script>
-        alert('Something went wrong.');
-        window.location.href = '/';
-      </script>
-    `);
+    return res.status(500).json({
+      ok: false,
+      message: 'Something went wrong. Please try again.'
+    });
   }
 });
 
