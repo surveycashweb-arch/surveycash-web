@@ -6590,6 +6590,7 @@ button{
 .msg{
   margin-top:14px;
   font-size:14px;
+  white-space:pre-wrap;
 }
 </style>
 </head>
@@ -6601,7 +6602,7 @@ button{
     <form id="resetForm">
       <input id="p1" type="password" placeholder="New password" required>
       <input id="p2" type="password" placeholder="Confirm password" required>
-      <button type="submit">Update password</button>
+      <button id="submitBtn" type="submit" disabled>Update password</button>
     </form>
 
     <div id="msg" class="msg"></div>
@@ -6615,7 +6616,7 @@ const supabase = window.supabase.createClient(
 
 const form = document.getElementById("resetForm");
 const msg = document.getElementById("msg");
-const submitBtn = form.querySelector("button");
+const submitBtn = document.getElementById("submitBtn");
 
 let recoveryReady = false;
 
@@ -6654,20 +6655,21 @@ async function initRecoverySession() {
 
     console.log("RESET DEBUG", {
       href: window.location.href,
+      hash: window.location.hash,
+      search: window.location.search,
       type,
       hasAccessToken: !!accessToken,
       hasRefreshToken: !!refreshToken,
       hasCode: !!code
     });
 
-    // Flow 1: recovery tokens i hash
     if (type === "recovery" && accessToken && refreshToken) {
       const { data, error } = await supabase.auth.setSession({
         access_token: accessToken,
         refresh_token: refreshToken
       });
 
-      console.log("setSession:", { data, error });
+      console.log("setSession result:", { data, error });
 
       if (error || !data?.session) {
         showMessage("Could not open reset session. Link may be expired.", true);
@@ -6679,11 +6681,10 @@ async function initRecoverySession() {
       return;
     }
 
-    // Flow 2: code i querystring
     if (code) {
       const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-      console.log("exchangeCodeForSession:", { data, error });
+      console.log("exchangeCodeForSession result:", { data, error });
 
       if (error || !data?.session) {
         showMessage("Could not open reset session. Link may be expired.", true);
@@ -6710,8 +6711,8 @@ form.addEventListener("submit", async function(e) {
     return;
   }
 
-  const p1 = document.getElementById("p1").value;
-  const p2 = document.getElementById("p2").value;
+  const p1 = document.getElementById("p1").value.trim();
+  const p2 = document.getElementById("p2").value.trim();
 
   if (!p1 || p1.length < 6) {
     showMessage("Password must be at least 6 characters.", true);
@@ -6723,14 +6724,21 @@ form.addEventListener("submit", async function(e) {
     return;
   }
 
+  submitBtn.disabled = true;
+  submitBtn.style.opacity = "0.6";
+  submitBtn.textContent = "Updating...";
+
   const { data, error } = await supabase.auth.updateUser({
     password: p1
   });
 
-  console.log("updateUser:", { data, error });
+  console.log("updateUser result:", { data, error });
 
   if (error) {
-    showMessage(error.message || "Could not update password.", true);
+    showMessage("updateUser failed: " + (error.message || "Unknown error"), true);
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = "1";
+    submitBtn.textContent = "Update password";
     return;
   }
 
