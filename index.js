@@ -6498,16 +6498,8 @@ app.get('/support', (req, res) => {
   );
 });
 
-
-
 app.get('/forgot-password', (req, res) => {
-  res.send(`
-    <h2>Reset password</h2>
-    <form method="POST" action="/forgot-password">
-      <input name="email" type="email" placeholder="Enter your email" required>
-      <button type="submit">Send reset link</button>
-    </form>
-  `);
+  return res.redirect('/');
 });
 
 app.post('/forgot-password', async (req, res) => {
@@ -6544,6 +6536,136 @@ app.post('/forgot-password', async (req, res) => {
   }
 });
 
+
+app.get('/reset-password', (req, res) => {
+  res.send(`
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Reset password</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body{
+margin:0;
+background:#111827;
+font-family:system-ui;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+color:white;
+}
+
+.card{
+background:#151c2e;
+padding:30px;
+border-radius:18px;
+width:420px;
+box-shadow:0 30px 80px rgba(0,0,0,.5);
+}
+
+h1{
+margin-top:0;
+text-align:center;
+}
+
+input{
+width:100%;
+height:46px;
+margin-bottom:14px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,.15);
+background:#0f172a;
+color:white;
+padding:0 12px;
+}
+
+button{
+width:100%;
+height:48px;
+border-radius:10px;
+border:none;
+background:#fbbf24;
+font-weight:700;
+cursor:pointer;
+}
+
+.msg{
+margin-top:14px;
+font-size:14px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>Reset password</h1>
+
+<form id="resetForm">
+
+<input id="p1" type="password" placeholder="New password" required>
+<input id="p2" type="password" placeholder="Confirm password" required>
+
+<button type="submit">Update password</button>
+
+</form>
+
+<div id="msg" class="msg"></div>
+
+</div>
+
+<script>
+
+const supabase = window.supabase.createClient(
+"${process.env.SUPABASE_URL}",
+"${process.env.SUPABASE_ANON_KEY}"
+);
+
+const form = document.getElementById("resetForm");
+const msg = document.getElementById("msg");
+
+form.addEventListener("submit", async function(e){
+
+e.preventDefault();
+
+const p1 = document.getElementById("p1").value;
+const p2 = document.getElementById("p2").value;
+
+if(p1.length < 6){
+msg.innerText = "Password must be at least 6 characters.";
+return;
+}
+
+if(p1 !== p2){
+msg.innerText = "Passwords do not match.";
+return;
+}
+
+const { error } = await supabase.auth.updateUser({
+password: p1
+});
+
+if(error){
+msg.innerText = error.message;
+return;
+}
+
+msg.innerText = "Password updated. You can now log in.";
+
+});
+
+</script>
+
+</body>
+</html>
+`);
+});
 
 // ---------- Auth: finish login after email verification ----------
 app.post('/auth/finish', async (req, res) => {
