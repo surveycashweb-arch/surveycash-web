@@ -6982,15 +6982,15 @@ app.get('/reset-password', (req, res) => {
     msg.style.color = isError ? '#fca5a5' : '#86efac';
   }
 
-  function setReady(ready) {
-    recoveryReady = ready;
-    submitBtn.disabled = !ready;
-    submitBtn.style.opacity = ready ? '1' : '0.65';
-    submitBtn.style.cursor = ready ? 'pointer' : 'not-allowed';
-  }
+function setReady(ready) {
+  recoveryReady = ready;
+  submitBtn.disabled = !ready;
+  submitBtn.style.opacity = ready ? '1' : '0.65';
+  submitBtn.style.cursor = ready ? 'pointer' : 'not-allowed';
+}
 
-  setReady(false);
-  showMessage('Checking reset link...', false);
+setReady(true);
+showMessage('Testing button...', false);
 
   supabase.auth.onAuthStateChange((event) => {
     if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
@@ -7064,8 +7064,9 @@ app.get('/reset-password', (req, res) => {
     }
   })();
 
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
+form.addEventListener('submit', async function (e) {
+  e.preventDefault();
+  console.log('SUBMIT CLICKED');
 
     if (!recoveryReady) {
       showMessage('Invalid or expired reset link.', true);
