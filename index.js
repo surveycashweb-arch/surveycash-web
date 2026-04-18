@@ -6900,80 +6900,102 @@ app.get('/reset-password', (req, res) => {
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Reset password - SurveyCash</title>
       <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-      <style>
-        *{box-sizing:border-box}
-        body{
-          margin:0;
-          min-height:100vh;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          background:#111827;
-          font-family:Arial,sans-serif;
-          color:#fff;
-          padding:20px;
-        }
-        .card{
-          width:100%;
-          max-width:420px;
-          background:#151c2e;
-          border:1px solid rgba(255,255,255,0.08);
-          border-radius:22px;
-          padding:28px 24px 22px;
-          box-shadow:0 30px 80px rgba(0,0,0,0.45);
-        }
-        h1{
-          margin:0 0 10px;
-          font-size:28px;
-          font-weight:800;
-        }
-        p{
-          margin:0 0 18px;
-          color:#cbd5e1;
-          font-size:14px;
-          line-height:1.5;
-        }
-        form{
-          display:flex;
-          flex-direction:column;
-          gap:12px;
-        }
-        input{
-          width:100%;
-          height:52px;
-          border-radius:14px;
-          border:1px solid rgba(255,255,255,0.1);
-          background:#0f172a;
-          color:#fff;
-          padding:0 14px;
-          font-size:15px;
-          outline:none;
-        }
-        input:focus{
-          border-color:#fbbf24;
-          box-shadow:0 0 0 3px rgba(251,191,36,0.16);
-        }
-        button{
-          height:52px;
-          border:none;
-          border-radius:14px;
-          background:#fbbf24;
-          color:#111827;
-          font-size:15px;
-          font-weight:800;
-          cursor:pointer;
-        }
-        button:disabled{
-          opacity:0.65;
-          cursor:not-allowed;
-        }
-        #msg{
-          margin-top:14px;
-          min-height:20px;
-          font-size:14px;
-          line-height:1.4;
-        }
-      </style>
+<style>
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#111827;
+    font-family:Arial,sans-serif;
+    color:#e5e7eb;
+    padding:20px;
+  }
+
+  .card{
+    width:100%;
+    max-width:420px;
+    background:#1a1f2b;
+    border:1px solid #1f2937;
+    border-radius:24px;
+    padding:32px 28px 28px;
+    box-shadow:0 32px 90px rgba(0,0,0,.75);
+  }
+
+  h1{
+    margin:0 0 12px;
+    font-size:24px;
+    font-weight:700;
+    color:#ffffff;
+  }
+
+  p{
+    margin:0 0 18px;
+    color:#cbd5e1;
+    font-size:14px;
+    line-height:1.5;
+  }
+
+  form{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+
+  input{
+    width:100%;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid #2a3240;
+    background:#131822;
+    color:#e5e7eb;
+    font-size:14px;
+    margin-bottom:14px;
+    outline:none;
+  }
+
+  input::placeholder{
+    color:#6b7280;
+  }
+
+  input:focus{
+    border-color:#4b5563;
+    box-shadow:none;
+    outline:none;
+  }
+
+  button{
+    width:100%;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid #d97706;
+    background:#fbbf24;
+    color:#111827;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    margin-top:6px;
+  }
+
+  button:hover{
+    background:#f59e0b;
+  }
+
+  button:disabled{
+    opacity:0.65;
+    cursor:not-allowed;
+  }
+
+  #msg{
+    margin-top:14px;
+    min-height:20px;
+    font-size:14px;
+    line-height:1.4;
+  }
+</style>
     </head>
     <body>
       <div class="card">
