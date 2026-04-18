@@ -1652,13 +1652,16 @@ document.addEventListener('click', function (e) {
 
 #forgot-email{
   width:100%;
-  height:44px;
-  border-radius:12px;
-  border:1px solid #374151;
-  background:#0f172a;   /* samme mørke som signup */
-  color:#fff;
-  padding:0 14px;
+  padding:12px 14px;
+  border-radius:10px;
+
+  border:1px solid #2a3240;   /* samme som signup */
+  background:#131822;         /* samme som signup */
+
+  color:#e5e7eb;
   font-size:14px;
+  margin-bottom:14px;
+
   outline:none;
   box-sizing:border-box;
 }
