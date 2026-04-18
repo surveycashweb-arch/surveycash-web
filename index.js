@@ -1601,7 +1601,7 @@ document.addEventListener('click', function (e) {
 .forgot-backdrop{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.72);
+  background:rgba(12,16,28,.82);   /* samme backdrop som auth */
   display:flex;
   align-items:center;
   justify-content:center;
@@ -1616,30 +1616,32 @@ document.addEventListener('click', function (e) {
 .forgot-modal{
   position:relative;
   width:100%;
-  max-width:400px;
-  background:#151c2e;
-  border:1px solid rgba(255,255,255,0.08);
+  max-width:420px;
+
+  background:#1a1f2b;              /* samme som signup */
+  border:1px solid #1f2937;        /* samme border */
   border-radius:24px;
-  padding:26px 22px 22px;
-  box-shadow:0 30px 80px rgba(0,0,0,0.45);
+
+  padding:32px 28px 28px;
+
+  box-shadow:0 32px 90px rgba(0,0,0,.75);
+
   color:#fff;
 }
 
 .forgot-modal h2{
-  margin:0 0 12px;
+  margin:0 0 14px;
   font-size:24px;
-  font-weight:800;
-  line-height:1.1;
+  font-weight:700;                 /* samme som signup */
   text-align:center;
   color:#ffffff;
 }
 
 .forgot-modal p{
   margin:0 0 18px;
-  color:rgba(255,255,255,.82);
+  color:#cbd5e1;
   font-size:14px;
   line-height:1.5;
-  text-align:left;
 }
 
 #forgot-form{
@@ -1650,37 +1652,41 @@ document.addEventListener('click', function (e) {
 
 #forgot-email{
   width:100%;
-  height:42px;
+  height:44px;
   border-radius:12px;
-  border:1px solid rgba(255,255,255,0.10);
-  background:#0f172a;
+
+  border:1px solid #374151;        /* samme input border */
+  background:#111827;              /* samme input bg */
+
   color:#fff;
   padding:0 14px;
-  font-size:15px;
+  font-size:14px;
   outline:none;
   box-sizing:border-box;
 }
 
 #forgot-email::placeholder{
-  color:rgba(255,255,255,.42);
+  color:#9ca3af;
 }
 
 #forgot-email:focus{
-  border-color:rgba(255,255,255,0.14);
-  box-shadow:none;
+  border-color:#fbbf24;
 }
 
 #forgot-submit{
   width:100%;
-  height:40px;
+  height:42px;
+
   border:none;
   border-radius:12px;
+
   background:#fbbf24;
   color:#111827;
+
   font-size:14px;
-  font-weight:800;
+  font-weight:600;                 /* mindre tyk (signup style) */
+
   cursor:pointer;
-  margin-top:2px;
 }
 
 #forgot-submit:disabled{
@@ -1689,29 +1695,32 @@ document.addEventListener('click', function (e) {
 }
 
 .forgot-message{
-  margin-top:2px;
+  margin-top:6px;
   min-height:18px;
   font-size:13px;
-  line-height:1.4;
-  color:#cbd5e1;
+  color:#9ca3af;
 }
 
 .forgot-close{
   position:absolute;
-  top:12px;
-  right:12px;
-  width:34px;
-  height:34px;
-  border:1px solid rgba(255,255,255,0.08);
+  right:18px;
+  top:16px;
+
+  width:28px;
+  height:28px;
+
   border-radius:999px;
-  background:rgba(255,255,255,0.04);
-  color:#fff;
-  font-size:22px;
-  line-height:1;
-  cursor:pointer;
+  border:1px solid #4b5563;
+  background:#111827;
+
+  color:#e5e7eb;
+  font-size:18px;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
+  cursor:pointer;
 }
 
   /* ===== Account / profil layout ===== */
