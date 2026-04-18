@@ -6964,113 +6964,153 @@ app.get('/reset-password', (req, res) => {
       </div>
 
       <script>
-        const supabase = window.supabase.createClient(
-          "${process.env.SUPABASE_URL}",
-          "${process.env.SUPABASE_ANON_KEY}"
-        );
+  const supabase = window.supabase.createClient(
+    "${process.env.SUPABASE_URL}",
+    "${process.env.SUPABASE_ANON_KEY}"
+  );
 
-        const form = document.getElementById('resetForm');
-        const password = document.getElementById('password');
-        const password2 = document.getElementById('password2');
-        const msg = document.getElementById('msg');
-        const submitBtn = document.getElementById('submitBtn');
+  const form = document.getElementById('resetForm');
+  const password = document.getElementById('password');
+  const password2 = document.getElementById('password2');
+  const msg = document.getElementById('msg');
+  const submitBtn = document.getElementById('submitBtn');
 
-        function showMessage(text, isError) {
-          msg.textContent = text || '';
-          msg.style.color = isError ? '#fca5a5' : '#86efac';
+  let recoveryReady = false;
+
+  function showMessage(text, isError) {
+    msg.textContent = text || '';
+    msg.style.color = isError ? '#fca5a5' : '#86efac';
+  }
+
+  function setReady(ready) {
+    recoveryReady = ready;
+    submitBtn.disabled = !ready;
+    submitBtn.style.opacity = ready ? '1' : '0.65';
+    submitBtn.style.cursor = ready ? 'pointer' : 'not-allowed';
+  }
+
+  setReady(false);
+  showMessage('Checking reset link...', false);
+
+  supabase.auth.onAuthStateChange((event) => {
+    if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+      setReady(true);
+      showMessage('Enter your new password.', false);
+    }
+  });
+
+  (async function initRecovery() {
+    try {
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get('code');
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+        if (error) {
+          console.error('exchangeCodeForSession error:', error);
+          showMessage('Invalid or expired reset link.', true);
+          setReady(false);
+          return;
         }
 
-        function setReady(ready) {
-          submitBtn.disabled = !ready;
+        setReady(true);
+        showMessage('Enter your new password.', false);
+        return;
+      }
+
+      const hash = window.location.hash || '';
+      const params = new URLSearchParams(hash.replace(/^#/, ''));
+      const accessToken = params.get('access_token');
+      const refreshToken = params.get('refresh_token');
+      const type = params.get('type');
+
+      if (type === 'recovery' && accessToken && refreshToken) {
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        });
+
+        if (error) {
+          console.error('setSession error:', error);
+          showMessage('Invalid or expired reset link.', true);
+          setReady(false);
+          return;
         }
 
-        setReady(false);
-        showMessage('Checking reset link...', false);
+        setReady(true);
+        showMessage('Enter your new password.', false);
+        return;
+      }
 
-        supabase.auth.onAuthStateChange(async (event, session) => {
-          if (event === 'PASSWORD_RECOVERY') {
-            setReady(true);
-            showMessage('Enter your new password.', false);
-          }
-        });
+      const { data, error } = await supabase.auth.getSession();
 
-        (async function initRecovery() {
-          try {
-            const hash = window.location.hash || '';
-            const params = new URLSearchParams(hash.replace(/^#/, ''));
-            const accessToken = params.get('access_token');
-            const refreshToken = params.get('refresh_token');
-            const type = params.get('type');
+      if (error) {
+        console.error('getSession error:', error);
+      }
 
-            if (type === 'recovery' && accessToken && refreshToken) {
-              const { error } = await supabase.auth.setSession({
-                access_token: accessToken,
-                refresh_token: refreshToken
-              });
+      if (data && data.session) {
+        setReady(true);
+        showMessage('Enter your new password.', false);
+        return;
+      }
 
-              if (error) {
-                showMessage('Invalid or expired reset link.', true);
-                return;
-              }
+      showMessage('Invalid or expired reset link.', true);
+      setReady(false);
+    } catch (err) {
+      console.error('initRecovery error:', err);
+      showMessage('Invalid or expired reset link.', true);
+      setReady(false);
+    }
+  })();
 
-              setReady(true);
-              showMessage('Enter your new password.', false);
-              return;
-            }
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-            const { data } = await supabase.auth.getSession();
-            if (data.session) {
-              setReady(true);
-              showMessage('Enter your new password.', false);
-            } else {
-              showMessage('Invalid or expired reset link.', true);
-            }
-          } catch (err) {
-            showMessage('Invalid or expired reset link.', true);
-          }
-        })();
+    if (!recoveryReady) {
+      showMessage('Invalid or expired reset link.', true);
+      return;
+    }
 
-        form.addEventListener('submit', async function (e) {
-          e.preventDefault();
+    const pass1 = password.value.trim();
+    const pass2 = password2.value.trim();
 
-          const pass1 = password.value.trim();
-          const pass2 = password2.value.trim();
+    if (!pass1 || !pass2) {
+      showMessage('Enter your new password.', true);
+      return;
+    }
 
-          if (!pass1 || !pass2) {
-            showMessage('Enter your new password.', true);
-            return;
-          }
+    if (pass1.length < 6) {
+      showMessage('Password must be at least 6 characters.', true);
+      return;
+    }
 
-          if (pass1.length < 6) {
-            showMessage('Password must be at least 6 characters.', true);
-            return;
-          }
+    if (pass1 !== pass2) {
+      showMessage('Passwords do not match.', true);
+      return;
+    }
 
-          if (pass1 !== pass2) {
-            showMessage('Passwords do not match.', true);
-            return;
-          }
+    submitBtn.disabled = true;
+    showMessage('Updating password...', false);
 
-          submitBtn.disabled = true;
-          showMessage('Updating password...', false);
+    const { error } = await supabase.auth.updateUser({
+      password: pass1
+    });
 
-          const { error } = await supabase.auth.updateUser({
-            password: pass1
-          });
+    if (error) {
+      console.error('updateUser error:', error);
+      showMessage(error.message || 'Could not update password.', true);
+      submitBtn.disabled = false;
+      return;
+    }
 
-          if (error) {
-            showMessage(error.message || 'Could not update password.', true);
-            submitBtn.disabled = false;
-            return;
-          }
+    showMessage('Password updated successfully. You can now log in.', false);
 
-          showMessage('Password updated successfully. You can now log in.', false);
-
-          setTimeout(function () {
-            window.location.href = '/';
-          }, 1600);
-        });
-      </script>
+    setTimeout(function () {
+      window.location.href = '/';
+    }, 1600);
+  });
+</script>
     </body>
     </html>
   `);
