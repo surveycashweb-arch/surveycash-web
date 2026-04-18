@@ -1654,10 +1654,8 @@ document.addEventListener('click', function (e) {
   width:100%;
   height:44px;
   border-radius:12px;
-
-  border:1px solid #374151;        /* samme input border */
-  background:#111827;              /* samme input bg */
-
+  border:1px solid #374151;
+  background:#0f172a;   /* samme mørke som signup */
   color:#fff;
   padding:0 14px;
   font-size:14px;
@@ -1670,7 +1668,8 @@ document.addEventListener('click', function (e) {
 }
 
 #forgot-email:focus{
-  border-color:#fbbf24;
+  border-color:#4b5563;   
+  box-shadow:none;
 }
 
 #forgot-submit{
