@@ -6957,7 +6957,7 @@ app.get('/reset-password', (req, res) => {
         <form id="resetForm">
           <input id="password" type="password" placeholder="New password" minlength="6" required />
           <input id="password2" type="password" placeholder="Repeat new password" minlength="6" required />
-          <button type="submit" id="submitBtn" disabled>Update password</button>
+          <button type="submit" id="submitBtn">Update password</button>
         </form>
 
         <div id="msg"></div>
