@@ -6873,8 +6873,8 @@ app.get('/reset-password', (req, res) => {
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Reset password - SurveyCash</title>
-
-            <style>
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <style>
         *{box-sizing:border-box}
         body{
           margin:0;
@@ -6964,10 +6964,10 @@ app.get('/reset-password', (req, res) => {
       </div>
 
       <script>
-  const supabase = window.supabase.createClient(
-    "${process.env.SUPABASE_URL}",
-    "${process.env.SUPABASE_ANON_KEY}"
-  );
+const supabaseClient = window.supabase.createClient(
+  "${process.env.SUPABASE_URL}",
+  "${process.env.SUPABASE_ANON_KEY}"
+);
 
   const form = document.getElementById('resetForm');
   const password = document.getElementById('password');
@@ -6992,7 +6992,7 @@ function setReady(ready) {
 setReady(true);
 showMessage('Testing button...', false);
 
-  supabase.auth.onAuthStateChange((event) => {
+  supabaseClient.auth.onAuthStateChange((event) => {
     if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
       setReady(true);
       showMessage('Enter your new password.', false);
@@ -7011,7 +7011,7 @@ showMessage('Testing button...', false);
     if (code) {
       console.log('FOUND CODE:', code);
 
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      const { error } = await supabaseClient.auth.exchangeCodeForSession(code);
       console.log('exchangeCodeForSession error:', error);
 
       if (error) {
@@ -7034,7 +7034,7 @@ showMessage('Testing button...', false);
     if (type === 'recovery' && accessToken && refreshToken) {
       console.log('FOUND HASH RECOVERY TOKENS');
 
-      const { error } = await supabase.auth.setSession({
+      const { error } = await supabaseClient.auth.setSession({
         access_token: accessToken,
         refresh_token: refreshToken
       });
@@ -7052,7 +7052,7 @@ showMessage('Testing button...', false);
       return;
     }
 
-    const { data, error } = await supabase.auth.getSession();
+    const { data, error } = await supabaseClient.auth.getSession();
     console.log('getSession data:', data);
     console.log('getSession error:', error);
 
@@ -7101,7 +7101,7 @@ form.addEventListener('submit', async function (e) {
     submitBtn.disabled = true;
     showMessage('Updating password...', false);
 
-const { data, error } = await supabase.auth.updateUser({
+const { data, error } = await supabaseClient.auth.updateUser({
   password: pass1
 });
 
