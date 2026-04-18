@@ -1616,39 +1616,43 @@ document.addEventListener('click', function (e) {
 .forgot-modal{
   position:relative;
   width:100%;
-  max-width:420px;
+  max-width:400px;
   background:#151c2e;
   border:1px solid rgba(255,255,255,0.08);
-  border-radius:22px;
-  padding:28px 24px 22px;
+  border-radius:24px;
+  padding:26px 22px 22px;
   box-shadow:0 30px 80px rgba(0,0,0,0.45);
   color:#fff;
 }
 
 .forgot-modal h2{
-  margin:0 0 8px;
-  font-size:28px;
+  margin:0 0 12px;
+  font-size:24px;
   font-weight:800;
+  line-height:1.1;
+  text-align:center;
+  color:#ffffff;
 }
 
 .forgot-modal p{
   margin:0 0 18px;
-  color:#cbd5e1;
+  color:rgba(255,255,255,.82);
   font-size:14px;
   line-height:1.5;
+  text-align:left;
 }
 
 #forgot-form{
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:14px;
 }
 
 #forgot-email{
   width:100%;
-  height:52px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,0.1);
+  height:42px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.10);
   background:#0f172a;
   color:#fff;
   padding:0 14px;
@@ -1657,20 +1661,26 @@ document.addEventListener('click', function (e) {
   box-sizing:border-box;
 }
 
+#forgot-email::placeholder{
+  color:rgba(255,255,255,.42);
+}
+
 #forgot-email:focus{
-  border-color:#fbbf24;
-  box-shadow:0 0 0 3px rgba(251,191,36,0.16);
+  border-color:rgba(255,255,255,0.14);
+  box-shadow:none;
 }
 
 #forgot-submit{
-  height:52px;
+  width:100%;
+  height:40px;
   border:none;
-  border-radius:14px;
+  border-radius:12px;
   background:#fbbf24;
   color:#111827;
-  font-size:15px;
+  font-size:14px;
   font-weight:800;
   cursor:pointer;
+  margin-top:2px;
 }
 
 #forgot-submit:disabled{
@@ -1679,24 +1689,29 @@ document.addEventListener('click', function (e) {
 }
 
 .forgot-message{
-  margin-top:14px;
-  min-height:20px;
-  font-size:14px;
+  margin-top:2px;
+  min-height:18px;
+  font-size:13px;
   line-height:1.4;
+  color:#cbd5e1;
 }
 
 .forgot-close{
   position:absolute;
   top:12px;
   right:12px;
-  width:36px;
-  height:36px;
-  border:none;
+  width:34px;
+  height:34px;
+  border:1px solid rgba(255,255,255,0.08);
   border-radius:999px;
-  background:rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.04);
   color:#fff;
   font-size:22px;
+  line-height:1;
   cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
   /* ===== Account / profil layout ===== */
