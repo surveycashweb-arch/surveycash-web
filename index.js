@@ -446,7 +446,87 @@ function layout({ title, active, bodyHtml, loggedIn }) {
   window.openAuth = openAuth;
   window.closeAuth = closeAuth;
 
+var forgotBackdrop = document.getElementById('forgot-backdrop');
+var forgotOpen = document.getElementById('forgotPasswordOpen');
+var forgotClose = document.getElementById('forgot-close');
+var forgotForm = document.getElementById('forgot-form');
+var forgotEmail = document.getElementById('forgot-email');
+var forgotSubmit = document.getElementById('forgot-submit');
+var forgotMessage = document.getElementById('forgot-message');
 
+function setForgotMessage(text, isError) {
+  forgotMessage.textContent = text || '';
+  forgotMessage.style.color = isError ? '#fca5a5' : '#86efac';
+}
+
+function openForgotPassword() {
+  forgotBackdrop.hidden = false;
+  setForgotMessage('', false);
+  setTimeout(function () {
+    if (forgotEmail) forgotEmail.focus();
+  }, 20);
+}
+
+function closeForgotPassword() {
+  forgotBackdrop.hidden = true;
+  if (forgotForm) forgotForm.reset();
+  setForgotMessage('', false);
+  if (forgotSubmit) forgotSubmit.disabled = false;
+}
+
+if (forgotOpen) {
+  forgotOpen.addEventListener('click', function (e) {
+    e.preventDefault();
+    openForgotPassword();
+  });
+}
+
+if (forgotClose) {
+  forgotClose.addEventListener('click', function () {
+    closeForgotPassword();
+  });
+}
+
+if (forgotBackdrop) {
+  forgotBackdrop.addEventListener('click', function (e) {
+    if (e.target === forgotBackdrop) closeForgotPassword();
+  });
+}
+
+if (forgotForm) {
+  forgotForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    var email = (forgotEmail.value || '').trim();
+    if (!email) {
+      setForgotMessage('Enter your email.', true);
+      return;
+    }
+
+    forgotSubmit.disabled = true;
+    setForgotMessage('Sending reset link...', false);
+
+    try {
+      var res = await fetch('/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      });
+
+      var data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong.');
+      }
+
+      setForgotMessage('If the account exists, a reset link has been sent to your email.', false);
+    } catch (err) {
+      setForgotMessage(err.message || 'Could not send reset email.', true);
+    } finally {
+      forgotSubmit.disabled = false;
+    }
+  });
+}
  
 // ✅ resend verify email + cooldown
 var resendBtn = null;
@@ -1518,7 +1598,106 @@ document.addEventListener('click', function (e) {
   }
 }
 
+.forgot-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.72);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:99999;
+}
 
+.forgot-backdrop[hidden]{
+  display:none !important;
+}
+
+.forgot-modal{
+  position:relative;
+  width:100%;
+  max-width:420px;
+  background:#151c2e;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:22px;
+  padding:28px 24px 22px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.45);
+  color:#fff;
+}
+
+.forgot-modal h2{
+  margin:0 0 8px;
+  font-size:28px;
+  font-weight:800;
+}
+
+.forgot-modal p{
+  margin:0 0 18px;
+  color:#cbd5e1;
+  font-size:14px;
+  line-height:1.5;
+}
+
+#forgot-form{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+#forgot-email{
+  width:100%;
+  height:52px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:#0f172a;
+  color:#fff;
+  padding:0 14px;
+  font-size:15px;
+  outline:none;
+  box-sizing:border-box;
+}
+
+#forgot-email:focus{
+  border-color:#fbbf24;
+  box-shadow:0 0 0 3px rgba(251,191,36,0.16);
+}
+
+#forgot-submit{
+  height:52px;
+  border:none;
+  border-radius:14px;
+  background:#fbbf24;
+  color:#111827;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+#forgot-submit:disabled{
+  opacity:0.65;
+  cursor:not-allowed;
+}
+
+.forgot-message{
+  margin-top:14px;
+  min-height:20px;
+  font-size:14px;
+  line-height:1.4;
+}
+
+.forgot-close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:36px;
+  height:36px;
+  border:none;
+  border-radius:999px;
+  background:rgba(255,255,255,0.06);
+  color:#fff;
+  font-size:22px;
+  cursor:pointer;
+}
 
   /* ===== Account / profil layout ===== */
   .account-wrap {
@@ -2070,10 +2249,10 @@ document.addEventListener('click', function (e) {
         <button id="auth-submit-label" class="cta-main" type="submit">Log in</button>
       </form>
 
-      <div class="top-links">
-        <a href="#">Forgot your password?</a>
-        <span><span id="auth-switch-text">Don't have an account?</span><a href="#" id="auth-switch-link"> Sign up</a></span>
-      </div>
+<div class="top-links">
+  <a href="#" id="forgotPasswordOpen">Forgot your password?</a>
+  <span><span id="auth-switch-text">Don't have an account?</span><a href="#" id="auth-switch-link"> Sign up</a></span>
+</div>
 
 <div class="fineprint">
   By using SurveyCash you agree to our
@@ -2156,8 +2335,31 @@ function landingHtml() {
   </a>
 </div>
 
+
+
 <!-- End Trustpilot -->
   </section>
+
+<div id="forgot-backdrop" class="forgot-backdrop" hidden>
+  <div class="forgot-modal">
+    <button type="button" id="forgot-close" class="forgot-close">×</button>
+    <h2>Forgot password?</h2>
+    <p>Enter your email and we’ll send you a reset link.</p>
+
+    <form id="forgot-form">
+      <input
+        id="forgot-email"
+        type="email"
+        placeholder="Email address"
+        autocomplete="email"
+        required
+      />
+      <button type="submit" id="forgot-submit">Send reset link</button>
+    </form>
+
+    <div id="forgot-message" class="forgot-message"></div>
+  </div>
+</div>
   `;
 }
 
@@ -6619,6 +6821,259 @@ res.cookie('session', token, {
     console.error('Login fejl:', err);
     return res.redirect('/?authError=unknown&mode=login');
   }
+});
+
+
+app.post('/auth/forgot-password', async (req, res) => {
+  try {
+    const email = String(req.body.email || '').trim().toLowerCase();
+
+    if (!email) {
+      return res.status(400).json({ error: 'Enter your email.' });
+    }
+
+    const { data: profile, error: profileError } = await supabaseAdmin
+      .from('profiles')
+      .select('user_id, email')
+      .ilike('email', email)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error('Forgot password profile lookup error:', profileError);
+      return res.status(500).json({ error: 'Something went wrong. Please try again.' });
+    }
+
+    if (profile) {
+      const { error: resetError } = await supabaseAdmin.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://surveycash.website/reset-password',
+      });
+
+      if (resetError) {
+        console.error('Supabase reset email error:', resetError);
+        return res.status(500).json({ error: 'Could not send reset email right now.' });
+      }
+    }
+
+    return res.json({
+      ok: true,
+      message: 'If an account exists for that email, a reset link has been sent.',
+    });
+  } catch (err) {
+    console.error('Forgot password route error:', err);
+    return res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+});
+
+
+app.get('/reset-password', (req, res) => {
+  return res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Reset password - SurveyCash</title>
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <style>
+        *{box-sizing:border-box}
+        body{
+          margin:0;
+          min-height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:#111827;
+          font-family:Arial,sans-serif;
+          color:#fff;
+          padding:20px;
+        }
+        .card{
+          width:100%;
+          max-width:420px;
+          background:#151c2e;
+          border:1px solid rgba(255,255,255,0.08);
+          border-radius:22px;
+          padding:28px 24px 22px;
+          box-shadow:0 30px 80px rgba(0,0,0,0.45);
+        }
+        h1{
+          margin:0 0 10px;
+          font-size:28px;
+          font-weight:800;
+        }
+        p{
+          margin:0 0 18px;
+          color:#cbd5e1;
+          font-size:14px;
+          line-height:1.5;
+        }
+        form{
+          display:flex;
+          flex-direction:column;
+          gap:12px;
+        }
+        input{
+          width:100%;
+          height:52px;
+          border-radius:14px;
+          border:1px solid rgba(255,255,255,0.1);
+          background:#0f172a;
+          color:#fff;
+          padding:0 14px;
+          font-size:15px;
+          outline:none;
+        }
+        input:focus{
+          border-color:#fbbf24;
+          box-shadow:0 0 0 3px rgba(251,191,36,0.16);
+        }
+        button{
+          height:52px;
+          border:none;
+          border-radius:14px;
+          background:#fbbf24;
+          color:#111827;
+          font-size:15px;
+          font-weight:800;
+          cursor:pointer;
+        }
+        button:disabled{
+          opacity:0.65;
+          cursor:not-allowed;
+        }
+        #msg{
+          margin-top:14px;
+          min-height:20px;
+          font-size:14px;
+          line-height:1.4;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h1>Set new password</h1>
+        <p>Enter your new password below.</p>
+
+        <form id="resetForm">
+          <input id="password" type="password" placeholder="New password" minlength="6" required />
+          <input id="password2" type="password" placeholder="Repeat new password" minlength="6" required />
+          <button type="submit" id="submitBtn" disabled>Update password</button>
+        </form>
+
+        <div id="msg"></div>
+      </div>
+
+      <script>
+        const supabase = window.supabase.createClient(
+          "${process.env.SUPABASE_URL}",
+          "${process.env.SUPABASE_ANON_KEY}"
+        );
+
+        const form = document.getElementById('resetForm');
+        const password = document.getElementById('password');
+        const password2 = document.getElementById('password2');
+        const msg = document.getElementById('msg');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function showMessage(text, isError) {
+          msg.textContent = text || '';
+          msg.style.color = isError ? '#fca5a5' : '#86efac';
+        }
+
+        function setReady(ready) {
+          submitBtn.disabled = !ready;
+        }
+
+        setReady(false);
+        showMessage('Checking reset link...', false);
+
+        supabase.auth.onAuthStateChange(async (event, session) => {
+          if (event === 'PASSWORD_RECOVERY') {
+            setReady(true);
+            showMessage('Enter your new password.', false);
+          }
+        });
+
+        (async function initRecovery() {
+          try {
+            const hash = window.location.hash || '';
+            const params = new URLSearchParams(hash.replace(/^#/, ''));
+            const accessToken = params.get('access_token');
+            const refreshToken = params.get('refresh_token');
+            const type = params.get('type');
+
+            if (type === 'recovery' && accessToken && refreshToken) {
+              const { error } = await supabase.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken
+              });
+
+              if (error) {
+                showMessage('Invalid or expired reset link.', true);
+                return;
+              }
+
+              setReady(true);
+              showMessage('Enter your new password.', false);
+              return;
+            }
+
+            const { data } = await supabase.auth.getSession();
+            if (data.session) {
+              setReady(true);
+              showMessage('Enter your new password.', false);
+            } else {
+              showMessage('Invalid or expired reset link.', true);
+            }
+          } catch (err) {
+            showMessage('Invalid or expired reset link.', true);
+          }
+        })();
+
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          const pass1 = password.value.trim();
+          const pass2 = password2.value.trim();
+
+          if (!pass1 || !pass2) {
+            showMessage('Enter your new password.', true);
+            return;
+          }
+
+          if (pass1.length < 6) {
+            showMessage('Password must be at least 6 characters.', true);
+            return;
+          }
+
+          if (pass1 !== pass2) {
+            showMessage('Passwords do not match.', true);
+            return;
+          }
+
+          submitBtn.disabled = true;
+          showMessage('Updating password...', false);
+
+          const { error } = await supabase.auth.updateUser({
+            password: pass1
+          });
+
+          if (error) {
+            showMessage(error.message || 'Could not update password.', true);
+            submitBtn.disabled = false;
+            return;
+          }
+
+          showMessage('Password updated successfully. You can now log in.', false);
+
+          setTimeout(function () {
+            window.location.href = '/';
+          }, 1600);
+        });
+      </script>
+    </body>
+    </html>
+  `);
 });
 
 // ---------- Account: change username (Supabase + 7-day cooldown + unique) ----------
