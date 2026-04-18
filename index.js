@@ -7005,7 +7005,7 @@ app.get('/reset-password', (req, res) => {
         <form id="resetForm">
           <input id="password" type="password" placeholder="New password" minlength="6" required />
           <input id="password2" type="password" placeholder="Repeat new password" minlength="6" required />
-          <button type="submit" id="submitBtn">Update password</button>
+          <button type="submit" id="submitBtn" disabled>Update password</button>
         </form>
 
         <div id="msg"></div>
@@ -7023,22 +7023,64 @@ const supabaseClient = window.supabase.createClient(
   const msg = document.getElementById('msg');
   const submitBtn = document.getElementById('submitBtn');
 
-  let recoveryReady = false;
+let recoveryReady = false;
 
-  function showMessage(text, isError) {
-    msg.textContent = text || '';
-    msg.style.color = isError ? '#fca5a5' : '#86efac';
+function showMessage(text, isError) {
+  msg.textContent = text || '';
+  msg.style.color = isError ? '#fca5a5' : '#86efac';
+}
+
+function validatePasswords(showErrors) {
+  const pass1 = password.value.trim();
+  const pass2 = password2.value.trim();
+
+  if (pass1.length < 6 || pass2.length < 6) {
+    if (showErrors) showMessage('Password must be at least 6 characters.', true);
+    return false;
   }
+
+  if (pass1 !== pass2) {
+    if (showErrors) showMessage('Passwords do not match.', true);
+    return false;
+  }
+
+  showMessage('', false);
+  return true;
+}
+
+function updateSubmitState() {
+  const pass1 = password.value.trim();
+  const pass2 = password2.value.trim();
+
+  const validPasswords =
+    pass1.length >= 6 &&
+    pass2.length >= 6 &&
+    pass1 === pass2;
+
+  const canSubmit = recoveryReady && validPasswords;
+
+  submitBtn.disabled = !canSubmit;
+  submitBtn.style.opacity = canSubmit ? '1' : '0.65';
+  submitBtn.style.cursor = canSubmit ? 'pointer' : 'not-allowed';
+}
 
 function setReady(ready) {
   recoveryReady = ready;
-  submitBtn.disabled = !ready;
-  submitBtn.style.opacity = ready ? '1' : '0.65';
-  submitBtn.style.cursor = ready ? 'pointer' : 'not-allowed';
+  updateSubmitState();
 }
 
-setReady(true);
-showMessage('Testing button...', false);
+setReady(false);
+showMessage('Checking reset link...', false);
+
+password.addEventListener('input', function () {
+  validatePasswords(false);
+  updateSubmitState();
+});
+
+password2.addEventListener('input', function () {
+  validatePasswords(false);
+  updateSubmitState();
+});
 
   supabaseClient.auth.onAuthStateChange((event) => {
     if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
@@ -7131,20 +7173,10 @@ form.addEventListener('submit', async function (e) {
     const pass1 = password.value.trim();
     const pass2 = password2.value.trim();
 
-    if (!pass1 || !pass2) {
-      showMessage('Enter your new password.', true);
-      return;
-    }
-
-    if (pass1.length < 6) {
-      showMessage('Password must be at least 6 characters.', true);
-      return;
-    }
-
-    if (pass1 !== pass2) {
-      showMessage('Passwords do not match.', true);
-      return;
-    }
+if (!validatePasswords(true)) {
+  updateSubmitState();
+  return;
+}
 
     submitBtn.disabled = true;
     showMessage('Updating password...', false);
