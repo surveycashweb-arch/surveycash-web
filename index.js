@@ -6873,8 +6873,8 @@ app.get('/reset-password', (req, res) => {
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Reset password - SurveyCash</title>
-      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-      <style>
+
+            <style>
         *{box-sizing:border-box}
         body{
           margin:0;
