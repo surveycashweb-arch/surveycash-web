@@ -2736,68 +2736,10 @@ app.get('/', async (req, res) => {
       }
     }
 
-    @media (max-width: 760px){
-      .earn-grid{
-        grid-template-columns:repeat(2, 1fr);
-      }
-
-      .earn-section-title{
-        font-size:22px;
-      }
-    }
-
-    @media (max-width: 560px){
-      .earn-wrap{
-        padding:0 10px;
-      }
-
-      .earn-grid{
-        grid-template-columns:1fr 1fr;
-        gap:8px;
-      }
-    }
-
-
-@media (max-width: 760px){
-  html, body{
-    height:auto;
-    overflow-x:hidden;
-    overflow-y:auto;
-  }
-
-  main{
-    position:relative;
-    height:auto;
-    min-height:calc(100vh - 64px);
-    overflow-x:hidden;
-    overflow-y:visible;
-  }
-
-  .earn-page{
-    position:relative;
-    width:100%;
-    height:auto;
-    min-height:calc(100vh - 64px);
-    overflow-x:hidden;
-    overflow-y:visible;
-  }
-
-  .earn-area{
-    height:auto;
-    overflow:visible;
-    padding:20px 0 260px;
-  }
-
-  .earn-wrap{
-    width:100%;
-    max-width:100%;
-    margin:0;
-    padding:0 12px;
-    box-sizing:border-box;
-  }
+    @media (max-width:760px){
 
   .earn-grid{
-    grid-template-columns:repeat(2, minmax(0, 1fr));
+    grid-template-columns:repeat(2,1fr);
     gap:8px;
   }
 
@@ -2806,92 +2748,46 @@ app.get('/', async (req, res) => {
   }
 
   .earn-card{
-    min-width:0;
+    aspect-ratio:1 / 1.10;
+    padding:8px 6px;
   }
 
-  .earn-bottom-fill{
-    position:absolute;
-    left:0;
-    right:0;
-    transform:none;
-    bottom:0;
-    width:100%;
-    height:260px;
+  .earn-card-top{
+    min-height:42px;
   }
 
-  .earn-footer-content{
-    position:absolute;
-    left:0;
-    right:0;
-    transform:none;
-    bottom:0;
-    width:100%;
-    height:260px;
+  .earn-card-brand{
+    font-size:16px;
   }
 
-  .earn-footer-inner{
-    width:100%;
-    max-width:100%;
-    grid-template-columns:1fr 1fr;
-    gap:24px;
-    padding:22px 18px 0;
-    box-sizing:border-box;
-  }
-
-  .footer-brand{
-    grid-column:1 / -1;
-    min-width:0;
-  }
-
-  .footer-col{
-    min-width:0;
-  }
-
-  .footer-brand-text{
-    max-width:none;
-  }
 }
 
-@media (max-width: 560px){
+@media (max-width:600px){
+
   .earn-wrap{
     padding:0 10px;
   }
 
-  .earn-grid{
-    grid-template-columns:1fr 1fr;
-    gap:8px;
+  .earn-card{
+    aspect-ratio:1 / 1.05;
+    padding:7px 6px;
   }
 
-  .earn-footer-inner{
-    grid-template-columns:1fr;
-    gap:18px;
-    padding:20px 16px 0;
+  .earn-card-top{
+    min-height:38px;
   }
 
-  .earn-bottom-fill{
-    height:340px;
+  .earn-card-brand{
+    font-size:15px;
   }
 
-  .earn-footer-content{
-    height:340px;
+  .earn-card-top img{
+    max-width:64px;
+    max-height:18px;
   }
 
-  .earn-area{
-    padding-bottom:340px;
-  }
-
-  .footer-col-title{
-    margin:0 0 14px;
-  }
-
-  .footer-link{
-    margin-bottom:14px;
-  }
-
-  .footer-trust-img{
-    height:34px;
-  }
 }
+
   </style>
 
   <div class="earn-page">
