@@ -2757,6 +2757,95 @@ app.get('/', async (req, res) => {
       }
     }
 
+
+@media (max-width: 760px){
+  html, body{
+    overflow:auto;
+  }
+
+  main{
+    height:auto;
+    min-height:calc(100vh - 64px);
+    overflow:visible;
+  }
+
+  .earn-page{
+    height:auto;
+    min-height:calc(100vh - 64px);
+    overflow:visible;
+  }
+
+  .earn-area{
+    height:auto;
+    overflow:visible;
+    padding:20px 0 260px;
+  }
+
+  .earn-bottom-fill{
+    position:absolute;
+    left:0;
+    transform:none;
+    bottom:0;
+    width:100%;
+    height:260px;
+  }
+
+  .earn-footer-content{
+    position:absolute;
+    left:0;
+    transform:none;
+    bottom:0;
+    width:100%;
+    height:260px;
+  }
+
+  .earn-footer-inner{
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    padding:22px 18px 0;
+  }
+
+  .footer-brand{
+    grid-column:1 / -1;
+  }
+
+  .footer-brand-text{
+    max-width:none;
+  }
+}
+
+@media (max-width: 560px){
+  .earn-footer-inner{
+    grid-template-columns:1fr;
+    gap:18px;
+    padding:20px 16px 0;
+  }
+
+  .earn-bottom-fill{
+    height:340px;
+  }
+
+  .earn-footer-content{
+    height:340px;
+  }
+
+  .earn-area{
+    padding-bottom:340px;
+  }
+
+  .footer-col-title{
+    margin:0 0 14px;
+  }
+
+  .footer-link{
+    margin-bottom:14px;
+  }
+
+  .footer-trust-img{
+    height:34px;
+  }
+}
+
   </style>
 
   <div class="earn-page">
