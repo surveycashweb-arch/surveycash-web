@@ -2705,14 +2705,6 @@ app.get('/', async (req, res) => {
       opacity:1;
     }
 
-    .earn-mobile-row{
-      position:relative;
-    }
-
-    .earn-arrow{
-      display:none;
-    }
-
     @media (max-width:1200px){
       .earn-footer-inner{
         grid-template-columns:1.7fr 1fr 1fr 1fr;
@@ -2744,186 +2736,6 @@ app.get('/', async (req, res) => {
       }
     }
 
-    @media (max-width:760px){
-      html, body{
-        height:auto;
-        overflow-y:auto;
-        overflow-x:hidden;
-      }
-
-      main{
-        height:auto !important;
-        min-height:calc(100vh - 64px);
-        overflow:visible !important;
-      }
-
-      .earn-page{
-        height:auto !important;
-        min-height:calc(100vh - 64px);
-        overflow:visible !important;
-      }
-
-      .earn-area{
-        height:auto !important;
-        overflow:visible !important;
-        padding:20px 0 24px;
-      }
-
-      .earn-wrap{
-        width:100%;
-        max-width:100%;
-        padding:0 10px;
-        box-sizing:border-box;
-      }
-
-      .earn-mobile-row{
-        position:relative;
-        padding:0 42px 0 0;
-      }
-
-      .earn-grid{
-        display:flex;
-        gap:8px;
-        overflow-x:auto;
-        overflow-y:hidden;
-        scroll-behavior:smooth;
-        scroll-snap-type:x mandatory;
-        -webkit-overflow-scrolling:touch;
-        scrollbar-width:none;
-      }
-
-      .earn-grid::-webkit-scrollbar{
-        display:none;
-      }
-
-      .earn-card{
-        flex:0 0 calc((100% - 16px) / 3);
-        width:calc((100% - 16px) / 3);
-        aspect-ratio:1 / 1.18;
-        padding:8px 6px;
-        scroll-snap-align:start;
-      }
-
-      .earn-card-top{
-        min-height:42px;
-      }
-
-      .earn-card-top img{
-        max-width:72px;
-        max-height:20px;
-      }
-
-      .earn-card-brand{
-        font-size:16px;
-      }
-
-      .earn-soon{
-        min-height:24px;
-        padding:0 8px;
-        font-size:10px;
-      }
-
-      .earn-section-title{
-        font-size:22px;
-      }
-
-      .earn-arrow{
-        position:absolute;
-        top:50%;
-        transform:translateY(-50%);
-        width:34px;
-        height:34px;
-        border-radius:999px;
-        border:1px solid rgba(255,255,255,.08);
-        background:rgba(21,28,46,.96);
-        color:#ffffff;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size:18px;
-        font-weight:900;
-        cursor:pointer;
-        z-index:3;
-        box-shadow:0 10px 24px rgba(0,0,0,.32);
-      }
-
-      .earn-arrow.right{
-        right:0;
-      }
-
-      .earn-bottom-fill{
-        display:none;
-      }
-
-      .earn-footer-content{
-        position:relative;
-        left:auto;
-        transform:none;
-        bottom:auto;
-        width:100%;
-        height:auto;
-        display:block;
-        margin-top:18px;
-        padding:20px 0 28px;
-        background:#151c2e;
-        border-top:1px solid rgba(255,255,255,.04);
-      }
-
-      .earn-footer-inner{
-        width:100%;
-        max-width:100%;
-        padding:0 18px;
-        grid-template-columns:1fr 1fr;
-        gap:24px;
-        box-sizing:border-box;
-      }
-
-      .footer-brand{
-        grid-column:1 / -1;
-      }
-
-      .footer-brand-text{
-        max-width:none;
-      }
-
-      .footer-col.legal,
-      .footer-col.social{
-        display:none;
-      }
-    }
-
-    @media (max-width:560px){
-      .earn-wrap{
-        padding:0 10px;
-      }
-
-      .earn-card{
-        flex:0 0 calc((100% - 16px) / 3);
-        width:calc((100% - 16px) / 3);
-        aspect-ratio:1 / 1.12;
-        padding:7px 6px;
-      }
-
-      .earn-card-top{
-        min-height:38px;
-      }
-
-      .earn-card-top img{
-        max-width:64px;
-        max-height:18px;
-      }
-
-      .earn-card-brand{
-        font-size:15px;
-      }
-
-      .earn-footer-inner{
-        grid-template-columns:1fr;
-        gap:18px;
-        padding:0 16px;
-      }
-    }
-
   </style>
 
   <div class="earn-page">
@@ -2935,24 +2747,21 @@ app.get('/', async (req, res) => {
             <h2 class="earn-section-title">Offers</h2>
           </div>
 
-          <div class="earn-mobile-row">
-            <div class="earn-grid" id="offers-row">
+          <div class="earn-grid">
 
-              <a href="/games/wannads" class="earn-card clickable">
-                <div class="partner-glow glow-orange"></div>
-                <div class="earn-card-top">
-                  <div class="earn-card-brand">Wannads</div>
-                </div>
-              </a>
+            <a href="/games/wannads" class="earn-card clickable">
+              <div class="partner-glow glow-orange"></div>
+              <div class="earn-card-top">
+                <div class="earn-card-brand">Wannads</div>
+              </div>
+            </a>
 
-              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
-            </div>
-            <button type="button" class="earn-arrow right" onclick="scrollEarnRow('offers-row', 1)">›</button>
           </div>
         </section>
 
@@ -2961,22 +2770,19 @@ app.get('/', async (req, res) => {
             <h2 class="earn-section-title">Surveys</h2>
           </div>
 
-          <div class="earn-mobile-row">
-            <div class="earn-grid" id="surveys-row">
+          <div class="earn-grid">
 
-              <a href="/surveys/cpx" class="earn-card clickable cpx-card">
-                <div class="cpx-bg"></div>
-                <div class="earn-card-top">
-                  <img src="/partners/cpx.png" alt="CPX Research" />
-                </div>
-              </a>
+            <a href="/surveys/cpx" class="earn-card clickable cpx-card">
+              <div class="cpx-bg"></div>
+              <div class="earn-card-top">
+                <img src="/partners/cpx.png" alt="CPX Research" />
+              </div>
+            </a>
 
-              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
-            </div>
-            <button type="button" class="earn-arrow right" onclick="scrollEarnRow('surveys-row', 1)">›</button>
           </div>
         </section>
 
@@ -3031,15 +2837,6 @@ app.get('/', async (req, res) => {
       </div>
     </div>
   </div>
-
-  <script>
-    function scrollEarnRow(id, direction) {
-      var row = document.getElementById(id);
-      if (!row) return;
-      var amount = Math.round(row.clientWidth * 0.88) * direction;
-      row.scrollBy({ left: amount, behavior: 'smooth' });
-    }
-  </script>
   `;
 
   return res.send(
