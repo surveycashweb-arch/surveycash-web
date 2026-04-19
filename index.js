@@ -2760,19 +2760,26 @@ app.get('/', async (req, res) => {
 
 @media (max-width: 760px){
   html, body{
-    overflow:auto;
+    height:auto;
+    overflow-x:hidden;
+    overflow-y:auto;
   }
 
   main{
+    position:relative;
     height:auto;
     min-height:calc(100vh - 64px);
-    overflow:visible;
+    overflow-x:hidden;
+    overflow-y:visible;
   }
 
   .earn-page{
+    position:relative;
+    width:100%;
     height:auto;
     min-height:calc(100vh - 64px);
-    overflow:visible;
+    overflow-x:hidden;
+    overflow-y:visible;
   }
 
   .earn-area{
@@ -2781,9 +2788,31 @@ app.get('/', async (req, res) => {
     padding:20px 0 260px;
   }
 
+  .earn-wrap{
+    width:100%;
+    max-width:100%;
+    margin:0;
+    padding:0 12px;
+    box-sizing:border-box;
+  }
+
+  .earn-grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:8px;
+  }
+
+  .earn-section-title{
+    font-size:22px;
+  }
+
+  .earn-card{
+    min-width:0;
+  }
+
   .earn-bottom-fill{
     position:absolute;
     left:0;
+    right:0;
     transform:none;
     bottom:0;
     width:100%;
@@ -2793,6 +2822,7 @@ app.get('/', async (req, res) => {
   .earn-footer-content{
     position:absolute;
     left:0;
+    right:0;
     transform:none;
     bottom:0;
     width:100%;
@@ -2800,13 +2830,21 @@ app.get('/', async (req, res) => {
   }
 
   .earn-footer-inner{
+    width:100%;
+    max-width:100%;
     grid-template-columns:1fr 1fr;
     gap:24px;
     padding:22px 18px 0;
+    box-sizing:border-box;
   }
 
   .footer-brand{
     grid-column:1 / -1;
+    min-width:0;
+  }
+
+  .footer-col{
+    min-width:0;
   }
 
   .footer-brand-text{
@@ -2815,6 +2853,15 @@ app.get('/', async (req, res) => {
 }
 
 @media (max-width: 560px){
+  .earn-wrap{
+    padding:0 10px;
+  }
+
+  .earn-grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
   .earn-footer-inner{
     grid-template-columns:1fr;
     gap:18px;
@@ -2845,7 +2892,6 @@ app.get('/', async (req, res) => {
     height:34px;
   }
 }
-
   </style>
 
   <div class="earn-page">
