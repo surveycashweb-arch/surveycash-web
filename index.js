@@ -1305,10 +1305,34 @@ document.addEventListener('click', function (e) {
 
 
 @media (max-width:760px){
-  nav{display:none;}
-  .profile-name{display:none;}
-  header{padding:8px 10px;gap:8px;}
-  .logo{font-size:18px;}
+
+  header{
+    padding:8px 10px;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+
+  nav{
+    width:100%;
+    justify-content:center;
+    order:3;
+    gap:10px;
+    margin-top:4px;
+  }
+
+  .nav-item{
+    font-size:13px;
+    padding:6px 10px;
+  }
+
+  .profile-name{
+    display:none;
+  }
+
+  .logo{
+    font-size:18px;
+  }
+
 }
 
 
