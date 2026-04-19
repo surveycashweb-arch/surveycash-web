@@ -2407,29 +2407,37 @@ app.get('/', async (req, res) => {
   const bodyHtml = `
   <style>
 
-html, body{
-  background:#111827;
-}
+    html, body{
+      height:100%;
+      overflow:hidden;
+      background:#111827;
+    }
 
-main{
-  position:relative;
-  max-width:none !important;
-  margin:0 !important;
-  padding:0 !important;
-  background:#111827;
-}
+    main{
+      position:relative;
+      height:calc(100vh - 64px);
+      max-width:none !important;
+      margin:0 !important;
+      padding:0 !important;
+      overflow:hidden;
+      background:#111827;
+    }
 
-.earn-page{
-  position:relative;
-  width:100%;
-  box-sizing:border-box;
-  background:#111827;
-}
+    .earn-page{
+      position:relative;
+      width:100%;
+      height:calc(100vh - 64px);
+      box-sizing:border-box;
+      background:#111827;
+      overflow:hidden;
+    }
 
-.earn-area{
-  background:#111827;
-  padding:24px 0 40px;
-}
+    .earn-area{
+      background:#111827;
+      padding:24px 0 20px;
+      height:calc(100vh - 64px);
+      overflow:hidden;
+    }
 
     .earn-wrap{
       width:1080px;
@@ -2580,7 +2588,7 @@ main{
     }
 
     .earn-bottom-fill{
-       position:relative;
+      position:fixed;
       left:50%;
       transform:translateX(-50%);
       bottom:0;
@@ -2593,7 +2601,7 @@ main{
     }
 
     .earn-footer-content{
-        position:relative;
+      position:fixed;
       left:50%;
       transform:translateX(-50%);
       bottom:0;
@@ -2728,57 +2736,26 @@ main{
       }
     }
 
-    @media (max-width:760px){
+    @media (max-width: 760px){
+      .earn-grid{
+        grid-template-columns:repeat(2, 1fr);
+      }
 
-  .earn-grid{
-    grid-template-columns:repeat(2,1fr);
-    gap:8px;
-  }
+      .earn-section-title{
+        font-size:22px;
+      }
+    }
 
-  .earn-section-title{
-    font-size:22px;
-  }
+    @media (max-width: 560px){
+      .earn-wrap{
+        padding:0 10px;
+      }
 
-  .earn-card{
-    aspect-ratio:1 / 1.10;
-    padding:8px 6px;
-  }
-
-  .earn-card-top{
-    min-height:42px;
-  }
-
-  .earn-card-brand{
-    font-size:16px;
-  }
-
-}
-
-@media (max-width:600px){
-
-  .earn-wrap{
-    padding:0 10px;
-  }
-
-  .earn-card{
-    aspect-ratio:1 / 1.05;
-    padding:7px 6px;
-  }
-
-  .earn-card-top{
-    min-height:38px;
-  }
-
-  .earn-card-brand{
-    font-size:15px;
-  }
-
-  .earn-card-top img{
-    max-width:64px;
-    max-height:18px;
-  }
-
-}
+      .earn-grid{
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+      }
+    }
 
   </style>
 
