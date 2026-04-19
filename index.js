@@ -2778,7 +2778,7 @@ app.get('/', async (req, res) => {
 
       .earn-mobile-row{
         position:relative;
-        padding:0 42px;
+        padding:0 42px 0 0;
       }
 
       .earn-grid{
@@ -2797,9 +2797,9 @@ app.get('/', async (req, res) => {
       }
 
       .earn-card{
-        flex:0 0 calc(100% - 6px);
-        width:calc(100% - 6px);
-        aspect-ratio:1 / 0.78;
+        flex:0 0 calc((100% - 16px) / 3);
+        width:calc((100% - 16px) / 3);
+        aspect-ratio:1 / 1.18;
         padding:8px 6px;
         scroll-snap-align:start;
       }
@@ -2845,10 +2845,6 @@ app.get('/', async (req, res) => {
         cursor:pointer;
         z-index:3;
         box-shadow:0 10px 24px rgba(0,0,0,.32);
-      }
-
-      .earn-arrow.left{
-        left:0;
       }
 
       .earn-arrow.right{
@@ -2902,9 +2898,9 @@ app.get('/', async (req, res) => {
       }
 
       .earn-card{
-        flex:0 0 calc(100% - 2px);
-        width:calc(100% - 2px);
-        aspect-ratio:1 / 0.82;
+        flex:0 0 calc((100% - 16px) / 3);
+        width:calc((100% - 16px) / 3);
+        aspect-ratio:1 / 1.12;
         padding:7px 6px;
       }
 
@@ -2940,7 +2936,6 @@ app.get('/', async (req, res) => {
           </div>
 
           <div class="earn-mobile-row">
-            <button type="button" class="earn-arrow left" onclick="scrollEarnRow('offers-row', -1)">‹</button>
             <div class="earn-grid" id="offers-row">
 
               <a href="/games/wannads" class="earn-card clickable">
@@ -2967,7 +2962,6 @@ app.get('/', async (req, res) => {
           </div>
 
           <div class="earn-mobile-row">
-            <button type="button" class="earn-arrow left" onclick="scrollEarnRow('surveys-row', -1)">‹</button>
             <div class="earn-grid" id="surveys-row">
 
               <a href="/surveys/cpx" class="earn-card clickable cpx-card">
