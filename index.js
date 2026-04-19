@@ -1303,6 +1303,15 @@ document.addEventListener('click', function (e) {
     background:#111827;
   }
 
+
+@media (max-width:760px){
+  nav{display:none;}
+  .profile-name{display:none;}
+  header{padding:8px 10px;gap:8px;}
+  .logo{font-size:18px;}
+}
+
+
   main { max-width: 1100px; margin: 0 auto; padding: 40px 20px 60px; }
 
   .btn-ghost{
