@@ -1308,15 +1308,32 @@ document.addEventListener('click', function (e) {
 
   header{
     padding:8px 10px;
-    gap:6px;
+    gap:8px;
     flex-wrap:wrap;
+    align-items:center;
+  }
+
+  .logo{
+    font-size:18px;
+    margin-right:0;
+    order:1;
+  }
+
+  .auth{
+    margin-left:auto;
+    order:2;
+    display:flex;
+    align-items:center;
+    gap:8px;
   }
 
   nav{
-    width:100%;
+    display:flex !important;
     justify-content:center;
-    order:3;
     gap:10px;
+    width:100%;
+    flex:0 0 100%;
+    order:3;
     margin-top:4px;
   }
 
@@ -1329,10 +1346,43 @@ document.addEventListener('click', function (e) {
     display:none;
   }
 
-  .logo{
-    font-size:18px;
+  .balance-pill{
+    padding:6px 10px;
+    height:34px;
   }
 
+  .balance-symbol{
+    font-size:17px;
+  }
+
+  .balance-amount{
+    font-size:13px;
+  }
+
+  .notif-bell{
+    width:34px;
+    height:34px;
+    transform:none;
+  }
+
+  .notif-bell svg{
+    width:24px;
+    height:24px;
+  }
+
+  .profile-chip{
+    padding:4px 8px;
+    gap:6px;
+  }
+
+  .profile-avatar{
+    width:28px;
+    height:28px;
+  }
+
+  .profile-avatar span{
+    font-size:15px;
+  }
 }
 
 
