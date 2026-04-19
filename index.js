@@ -2736,136 +2736,141 @@ app.get('/', async (req, res) => {
       }
     }
 
-    @media (max-width: 560px){
+    @media (max-width:760px){
+      html, body{
+        height:auto;
+        overflow-y:auto;
+        overflow-x:hidden;
+      }
+
+      main{
+        height:auto !important;
+        min-height:calc(100vh - 64px);
+        overflow:visible !important;
+      }
+
+      .earn-page{
+        height:auto !important;
+        min-height:calc(100vh - 64px);
+        overflow:visible !important;
+      }
+
+      .earn-area{
+        height:auto !important;
+        overflow:visible !important;
+        padding:20px 0 24px;
+      }
+
+      .earn-wrap{
+        width:100%;
+        max-width:100%;
+        padding:0 10px;
+        box-sizing:border-box;
+      }
+
+      .earn-grid{
+        grid-template-columns:repeat(2, 1fr);
+        gap:8px;
+      }
+
+      .earn-card{
+        aspect-ratio:1 / 1.08;
+        padding:8px 6px;
+      }
+
+      .earn-card-top{
+        min-height:42px;
+      }
+
+      .earn-card-top img{
+        max-width:72px;
+        max-height:20px;
+      }
+
+      .earn-card-brand{
+        font-size:16px;
+      }
+
+      .earn-soon{
+        min-height:24px;
+        padding:0 8px;
+        font-size:10px;
+      }
+
+      .earn-section-title{
+        font-size:22px;
+      }
+
+      .earn-bottom-fill{
+        display:none;
+      }
+
+      .earn-footer-content{
+        position:relative;
+        left:auto;
+        transform:none;
+        bottom:auto;
+        width:100%;
+        height:auto;
+        display:block;
+        margin-top:18px;
+        padding:20px 0 28px;
+        background:#151c2e;
+        border-top:1px solid rgba(255,255,255,.04);
+      }
+
+      .earn-footer-inner{
+        width:100%;
+        max-width:100%;
+        padding:0 18px;
+        grid-template-columns:1fr 1fr;
+        gap:24px;
+        box-sizing:border-box;
+      }
+
+      .footer-brand{
+        grid-column:1 / -1;
+      }
+
+      .footer-brand-text{
+        max-width:none;
+      }
+
+      .footer-col.legal,
+      .footer-col.social{
+        display:none;
+      }
+    }
+
+    @media (max-width:560px){
       .earn-wrap{
         padding:0 10px;
       }
 
-      .earn-grid{
-        grid-template-columns:1fr 1fr;
-        gap:8px;
+      .earn-card{
+        aspect-ratio:1 / 1.02;
+        padding:7px 6px;
+      }
+
+      .earn-card-top{
+        min-height:38px;
+      }
+
+      .earn-card-top img{
+        max-width:64px;
+        max-height:18px;
+      }
+
+      .earn-card-brand{
+        font-size:15px;
+      }
+
+      .earn-footer-inner{
+        grid-template-columns:1fr;
+        gap:18px;
+        padding:0 16px;
       }
     }
-
-  .earn-page{
-    height:auto !important;
-    min-height:calc(100vh - 64px);
-    overflow:visible !important;
-  }
-
-  .earn-area{
-    height:auto !important;
-    overflow:visible !important;
-    padding:20px 0 24px;
-  }
-
-  .earn-wrap{
-    width:100%;
-    max-width:100%;
-    padding:0 10px;
-    box-sizing:border-box;
-  }
-
-  .earn-grid{
-    grid-template-columns:repeat(2, 1fr);
-    gap:8px;
-  }
-
-  .earn-card{
-    aspect-ratio:1 / 1.08;
-    padding:8px 6px;
-  }
-
-  .earn-card-top{
-    min-height:42px;
-  }
-
-  .earn-card-top img{
-    max-width:72px;
-    max-height:20px;
-  }
-
-  .earn-card-brand{
-    font-size:16px;
-  }
-
-  .earn-soon{
-    min-height:24px;
-    padding:0 8px;
-    font-size:10px;
-  }
-
-  .earn-section-title{
-    font-size:22px;
-  }
-
-  .earn-bottom-fill{
-    display:none;
-  }
-
-  .earn-footer-content{
-    position:relative;
-    left:auto;
-    transform:none;
-    bottom:auto;
-    width:100%;
-    height:auto;
-    display:block;
-    margin-top:18px;
-    padding:20px 0 28px;
-    background:#151c2e;
-    border-top:1px solid rgba(255,255,255,.04);
-  }
-
-  .earn-footer-inner{
-    width:100%;
-    max-width:100%;
-    padding:0 18px;
-    grid-template-columns:1fr 1fr;
-    gap:24px;
-    box-sizing:border-box;
-  }
-
-  .footer-brand{
-    grid-column:1 / -1;
-  }
-
-  .footer-brand-text{
-    max-width:none;
-  }
-
-  .footer-col.legal,
-  .footer-col.social{
-    display:none;
-  }
-}
-
-@media (max-width: 560px){
-  .earn-card{
-    aspect-ratio:1 / 1.02;
-    padding:7px 6px;
-  }
-
-  .earn-card-top{
-    min-height:38px;
-  }
-
-  .earn-card-top img{
-    max-width:64px;
-    max-height:18px;
-  }
-
-  .earn-card-brand{
-    font-size:15px;
-  }
-
-  .earn-footer-inner{
-    grid-template-columns:1fr;
-    gap:18px;
-    padding:0 16px;
-  }
-}
-
 
   </style>
 
@@ -2980,7 +2985,6 @@ app.get('/', async (req, res) => {
     ),
   );
 });
-
 
 app.get('/ping', (req, res) => {
   res.send('ok');
