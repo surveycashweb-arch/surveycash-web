@@ -2705,6 +2705,14 @@ app.get('/', async (req, res) => {
       opacity:1;
     }
 
+    .earn-mobile-row{
+      position:relative;
+    }
+
+    .earn-arrow{
+      display:none;
+    }
+
     @media (max-width:1200px){
       .earn-footer-inner{
         grid-template-columns:1.7fr 1fr 1fr 1fr;
@@ -2768,14 +2776,32 @@ app.get('/', async (req, res) => {
         box-sizing:border-box;
       }
 
+      .earn-mobile-row{
+        position:relative;
+        padding:0 42px;
+      }
+
       .earn-grid{
-        grid-template-columns:repeat(2, 1fr);
+        display:flex;
         gap:8px;
+        overflow-x:auto;
+        overflow-y:hidden;
+        scroll-behavior:smooth;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+        scrollbar-width:none;
+      }
+
+      .earn-grid::-webkit-scrollbar{
+        display:none;
       }
 
       .earn-card{
-        aspect-ratio:1 / 1.08;
+        flex:0 0 calc(100% - 6px);
+        width:calc(100% - 6px);
+        aspect-ratio:1 / 0.78;
         padding:8px 6px;
+        scroll-snap-align:start;
       }
 
       .earn-card-top{
@@ -2799,6 +2825,34 @@ app.get('/', async (req, res) => {
 
       .earn-section-title{
         font-size:22px;
+      }
+
+      .earn-arrow{
+        position:absolute;
+        top:50%;
+        transform:translateY(-50%);
+        width:34px;
+        height:34px;
+        border-radius:999px;
+        border:1px solid rgba(255,255,255,.08);
+        background:rgba(21,28,46,.96);
+        color:#ffffff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:18px;
+        font-weight:900;
+        cursor:pointer;
+        z-index:3;
+        box-shadow:0 10px 24px rgba(0,0,0,.32);
+      }
+
+      .earn-arrow.left{
+        left:0;
+      }
+
+      .earn-arrow.right{
+        right:0;
       }
 
       .earn-bottom-fill{
@@ -2848,7 +2902,9 @@ app.get('/', async (req, res) => {
       }
 
       .earn-card{
-        aspect-ratio:1 / 1.02;
+        flex:0 0 calc(100% - 2px);
+        width:calc(100% - 2px);
+        aspect-ratio:1 / 0.82;
         padding:7px 6px;
       }
 
@@ -2883,21 +2939,25 @@ app.get('/', async (req, res) => {
             <h2 class="earn-section-title">Offers</h2>
           </div>
 
-          <div class="earn-grid">
+          <div class="earn-mobile-row">
+            <button type="button" class="earn-arrow left" onclick="scrollEarnRow('offers-row', -1)">‹</button>
+            <div class="earn-grid" id="offers-row">
 
-            <a href="/games/wannads" class="earn-card clickable">
-              <div class="partner-glow glow-orange"></div>
-              <div class="earn-card-top">
-                <div class="earn-card-brand">Wannads</div>
-              </div>
-            </a>
+              <a href="/games/wannads" class="earn-card clickable">
+                <div class="partner-glow glow-orange"></div>
+                <div class="earn-card-top">
+                  <div class="earn-card-brand">Wannads</div>
+                </div>
+              </a>
 
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
+            </div>
+            <button type="button" class="earn-arrow right" onclick="scrollEarnRow('offers-row', 1)">›</button>
           </div>
         </section>
 
@@ -2906,20 +2966,23 @@ app.get('/', async (req, res) => {
             <h2 class="earn-section-title">Surveys</h2>
           </div>
 
-          <div class="earn-grid">
+          <div class="earn-mobile-row">
+            <button type="button" class="earn-arrow left" onclick="scrollEarnRow('surveys-row', -1)">‹</button>
+            <div class="earn-grid" id="surveys-row">
 
-            <a href="/surveys/cpx" class="earn-card clickable cpx-card">
-              <div class="cpx-bg"></div>
+              <a href="/surveys/cpx" class="earn-card clickable cpx-card">
+                <div class="cpx-bg"></div>
+                <div class="earn-card-top">
+                  <img src="/partners/cpx.png" alt="CPX Research" />
+                </div>
+              </a>
 
-              <div class="earn-card-top">
-                <img src="/partners/cpx.png" alt="CPX Research" />
-              </div>
-            </a>
+              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+              <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-
+            </div>
+            <button type="button" class="earn-arrow right" onclick="scrollEarnRow('surveys-row', 1)">›</button>
           </div>
         </section>
 
@@ -2974,6 +3037,15 @@ app.get('/', async (req, res) => {
       </div>
     </div>
   </div>
+
+  <script>
+    function scrollEarnRow(id, direction) {
+      var row = document.getElementById(id);
+      if (!row) return;
+      var amount = Math.round(row.clientWidth * 0.88) * direction;
+      row.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+  </script>
   `;
 
   return res.send(
