@@ -2407,37 +2407,29 @@ app.get('/', async (req, res) => {
   const bodyHtml = `
   <style>
 
-    html, body{
-      height:100%;
-      overflow:hidden;
-      background:#111827;
-    }
+html, body{
+  background:#111827;
+}
 
-    main{
-      position:relative;
-      height:calc(100vh - 64px);
-      max-width:none !important;
-      margin:0 !important;
-      padding:0 !important;
-      overflow:hidden;
-      background:#111827;
-    }
+main{
+  position:relative;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  background:#111827;
+}
 
-    .earn-page{
-      position:relative;
-      width:100%;
-      height:calc(100vh - 64px);
-      box-sizing:border-box;
-      background:#111827;
-      overflow:hidden;
-    }
+.earn-page{
+  position:relative;
+  width:100%;
+  box-sizing:border-box;
+  background:#111827;
+}
 
-    .earn-area{
-      background:#111827;
-      padding:24px 0 20px;
-      height:calc(100vh - 64px);
-      overflow:hidden;
-    }
+.earn-area{
+  background:#111827;
+  padding:24px 0 40px;
+}
 
     .earn-wrap{
       width:1080px;
@@ -2588,7 +2580,7 @@ app.get('/', async (req, res) => {
     }
 
     .earn-bottom-fill{
-      position:fixed;
+       position:relative;
       left:50%;
       transform:translateX(-50%);
       bottom:0;
@@ -2601,7 +2593,7 @@ app.get('/', async (req, res) => {
     }
 
     .earn-footer-content{
-      position:fixed;
+        position:relative;
       left:50%;
       transform:translateX(-50%);
       bottom:0;
