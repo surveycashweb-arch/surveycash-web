@@ -2882,14 +2882,14 @@ app.get('/', async (req, res) => {
         width:100%;
         max-width:100%;
         padding:0 14px;
-        grid-template-columns:1.2fr 1fr;
+        grid-template-columns:1fr 1fr 1fr;
         gap:18px;
         box-sizing:border-box;
         align-items:start;
       }
 
       .footer-brand{
-        grid-column:1 / -1;
+        display:none;
       }
 
       .footer-logo{
@@ -2926,9 +2926,13 @@ app.get('/', async (req, res) => {
         margin-bottom:10px;
       }
 
+      .footer-col:first-of-type{
+        display:none;
+      }
+
       .footer-col.legal,
       .footer-col.social{
-        display:none;
+        display:block;
       }
     }
 
@@ -2961,9 +2965,13 @@ app.get('/', async (req, res) => {
       }
 
       .earn-footer-inner{
-        grid-template-columns:1fr 1fr;
+        grid-template-columns:1fr 1fr 1fr;
         gap:14px;
         padding:0 12px;
+      }
+
+      .footer-brand{
+        display:none;
       }
 
       .footer-logo{
@@ -2990,6 +2998,15 @@ app.get('/', async (req, res) => {
 
       .footer-trust-img{
         height:22px;
+      }
+
+      .footer-col:first-of-type{
+        display:none;
+      }
+
+      .footer-col.legal,
+      .footer-col.social{
+        display:block;
       }
     }
 
@@ -3104,7 +3121,7 @@ app.get('/', async (req, res) => {
       bodyHtml,
     ),
   );
-});
+}); 
 
 app.get('/ping', (req, res) => {
   res.send('ok');
