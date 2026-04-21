@@ -2492,6 +2492,7 @@ app.get('/', async (req, res) => {
 
     html, body{
       min-height:100%;
+      margin:0;
       overflow-x:hidden;
       background:#111827;
     }
@@ -2508,7 +2509,6 @@ app.get('/', async (req, res) => {
     .earn-page{
       position:relative;
       width:100%;
-      min-height:calc(100vh - 64px);
       box-sizing:border-box;
       background:#111827;
     }
@@ -2816,8 +2816,16 @@ app.get('/', async (req, res) => {
     }
 
     @media (max-width:760px){
+      html, body, main, .earn-page, .earn-area{
+        background:#111827;
+      }
+
+      main{
+        min-height:auto;
+      }
+
       .earn-area{
-        padding:20px 0 24px;
+        padding:20px 0 0;
       }
 
       .earn-wrap{
@@ -2873,7 +2881,7 @@ app.get('/', async (req, res) => {
         height:auto;
         display:block;
         margin-top:18px;
-        padding:16px 0 20px;
+        padding:16px 0 0;
         background:#151c2e;
         border-top:1px solid rgba(255,255,255,.04);
       }
@@ -2881,7 +2889,7 @@ app.get('/', async (req, res) => {
       .earn-footer-inner{
         width:100%;
         max-width:100%;
-        padding:0 14px;
+        padding:0 14px 0;
         grid-template-columns:1fr 1fr 1fr;
         gap:18px;
         box-sizing:border-box;
@@ -2926,9 +2934,9 @@ app.get('/', async (req, res) => {
         margin-bottom:10px;
       }
 
-.footer-col:nth-of-type(2){
-  display:none;
-}
+      .footer-col:nth-of-type(2){
+        display:none;
+      }
 
       .footer-col.legal,
       .footer-col.social{
@@ -2967,7 +2975,7 @@ app.get('/', async (req, res) => {
       .earn-footer-inner{
         grid-template-columns:1fr 1fr 1fr;
         gap:14px;
-        padding:0 12px;
+        padding:0 12px 0;
       }
 
       .footer-brand{
@@ -3000,9 +3008,9 @@ app.get('/', async (req, res) => {
         height:22px;
       }
 
-.footer-col:nth-of-type(2){
-  display:none;
-}
+      .footer-col:nth-of-type(2){
+        display:none;
+      }
 
       .footer-col.legal,
       .footer-col.social{
