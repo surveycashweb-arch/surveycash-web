@@ -2491,41 +2491,37 @@ app.get('/', async (req, res) => {
   <style>
 
     html, body{
-      height:100%;
-      overflow:hidden;
+      min-height:100%;
+      overflow-x:hidden;
       background:#111827;
     }
 
     main{
       position:relative;
-      height:calc(100vh - 64px);
+      min-height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
-      overflow:hidden;
       background:#111827;
     }
 
     .earn-page{
       position:relative;
       width:100%;
-      height:calc(100vh - 64px);
+      min-height:calc(100vh - 64px);
       box-sizing:border-box;
       background:#111827;
-      overflow:hidden;
     }
 
     .earn-area{
       background:#111827;
-      padding:24px 0 20px;
-      height:calc(100vh - 64px);
-      overflow:hidden;
+      padding:24px 0 220px;
     }
 
     .earn-wrap{
       width:1080px;
       max-width:1080px;
-      margin:0;
+      margin:0 auto;
       padding:0 14px;
     }
 
@@ -2816,6 +2812,184 @@ app.get('/', async (req, res) => {
 
       .footer-col.legal{
         display:none;
+      }
+    }
+
+    @media (max-width:760px){
+      .earn-area{
+        padding:20px 0 24px;
+      }
+
+      .earn-wrap{
+        width:100%;
+        max-width:100%;
+        padding:0 10px;
+        box-sizing:border-box;
+      }
+
+      .earn-grid{
+        grid-template-columns:repeat(4, 1fr);
+        gap:8px;
+      }
+
+      .earn-card{
+        aspect-ratio:1 / 1.18;
+        padding:8px 6px;
+      }
+
+      .earn-card-top{
+        min-height:42px;
+      }
+
+      .earn-card-top img{
+        max-width:72px;
+        max-height:20px;
+      }
+
+      .earn-card-brand{
+        font-size:16px;
+      }
+
+      .earn-soon{
+        min-height:24px;
+        padding:0 8px;
+        font-size:10px;
+      }
+
+      .earn-section-title{
+        font-size:22px;
+      }
+
+      .earn-bottom-fill{
+        display:none;
+      }
+
+      .earn-footer-content{
+        position:relative;
+        left:auto;
+        transform:none;
+        bottom:auto;
+        width:100%;
+        height:auto;
+        display:block;
+        margin-top:18px;
+        padding:16px 0 20px;
+        background:#151c2e;
+        border-top:1px solid rgba(255,255,255,.04);
+      }
+
+      .earn-footer-inner{
+        width:100%;
+        max-width:100%;
+        padding:0 14px;
+        grid-template-columns:1.2fr 1fr;
+        gap:18px;
+        box-sizing:border-box;
+        align-items:start;
+      }
+
+      .footer-brand{
+        grid-column:1 / -1;
+      }
+
+      .footer-logo{
+        font-size:18px;
+        margin-bottom:10px;
+      }
+
+      .footer-brand-text{
+        max-width:none;
+        font-size:12px;
+        line-height:1.45;
+        margin-bottom:10px;
+      }
+
+      .footer-trust-link{
+        gap:8px;
+      }
+
+      .footer-trust-link span{
+        font-size:12px;
+      }
+
+      .footer-trust-img{
+        height:24px;
+      }
+
+      .footer-col-title{
+        font-size:14px;
+        margin:0 0 10px;
+      }
+
+      .footer-link{
+        font-size:13px;
+        margin-bottom:10px;
+      }
+
+      .footer-col.legal,
+      .footer-col.social{
+        display:none;
+      }
+    }
+
+    @media (max-width:560px){
+      .earn-wrap{
+        padding:0 10px;
+      }
+
+      .earn-grid{
+        grid-template-columns:repeat(4, 1fr);
+        gap:8px;
+      }
+
+      .earn-card{
+        aspect-ratio:1 / 1.12;
+        padding:7px 6px;
+      }
+
+      .earn-card-top{
+        min-height:38px;
+      }
+
+      .earn-card-top img{
+        max-width:64px;
+        max-height:18px;
+      }
+
+      .earn-card-brand{
+        font-size:15px;
+      }
+
+      .earn-footer-inner{
+        grid-template-columns:1fr 1fr;
+        gap:14px;
+        padding:0 12px;
+      }
+
+      .footer-logo{
+        font-size:17px;
+      }
+
+      .footer-brand-text{
+        font-size:11px;
+        line-height:1.4;
+      }
+
+      .footer-col-title{
+        font-size:13px;
+      }
+
+      .footer-link{
+        font-size:12px;
+        margin-bottom:8px;
+      }
+
+      .footer-trust-link span{
+        font-size:11px;
+      }
+
+      .footer-trust-img{
+        height:22px;
       }
     }
 
