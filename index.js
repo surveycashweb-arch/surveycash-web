@@ -2882,7 +2882,7 @@ app.get('/', async (req, res) => {
         width:100%;
         max-width:100%;
         padding:0 14px;
-        grid-template-columns:1.2fr 1fr;
+        grid-template-columns:1fr 1fr 1fr;
         gap:18px;
         box-sizing:border-box;
         align-items:start;
@@ -2926,9 +2926,13 @@ app.get('/', async (req, res) => {
         margin-bottom:10px;
       }
 
+      .footer-col:first-of-type{
+        display:none;
+      }
+
       .footer-col.legal,
       .footer-col.social{
-        display:none;
+        display:block;
       }
     }
 
@@ -2961,7 +2965,7 @@ app.get('/', async (req, res) => {
       }
 
       .earn-footer-inner{
-        grid-template-columns:1fr 1fr;
+        grid-template-columns:1fr 1fr 1fr;
         gap:14px;
         padding:0 12px;
       }
@@ -3104,7 +3108,7 @@ app.get('/', async (req, res) => {
       bodyHtml,
     ),
   );
-});
+}); 
 
 app.get('/ping', (req, res) => {
   res.send('ok');
