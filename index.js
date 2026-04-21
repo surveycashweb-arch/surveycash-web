@@ -2889,7 +2889,7 @@ app.get('/', async (req, res) => {
       }
 
       .footer-brand{
-        display:none;
+        grid-column:1 / -1;
       }
 
       .footer-logo{
@@ -2971,7 +2971,7 @@ app.get('/', async (req, res) => {
       }
 
       .footer-brand{
-        display:none;
+        grid-column:1 / -1;
       }
 
       .footer-logo{
@@ -3121,7 +3121,7 @@ app.get('/', async (req, res) => {
       bodyHtml,
     ),
   );
-}); 
+});
 
 app.get('/ping', (req, res) => {
   res.send('ok');
