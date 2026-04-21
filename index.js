@@ -2499,7 +2499,6 @@ app.get('/', async (req, res) => {
 
     main{
       position:relative;
-      min-height:calc(100vh - 64px);
       max-width:none !important;
       margin:0 !important;
       padding:0 !important;
@@ -2782,6 +2781,17 @@ app.get('/', async (req, res) => {
 
     .footer-link:hover{
       opacity:1;
+    }
+
+    @media (min-width:761px){
+      html, body{
+        overflow:hidden;
+      }
+
+      main{
+        height:calc(100vh - 64px);
+        overflow:hidden;
+      }
     }
 
     @media (max-width:1200px){
