@@ -2881,7 +2881,7 @@ app.get('/', async (req, res) => {
         height:auto;
         display:block;
         margin-top:18px;
-        padding:16px 0 0;
+        padding:16px 0 12px;
         background:#151c2e;
         border-top:1px solid rgba(255,255,255,.04);
       }
@@ -2889,7 +2889,7 @@ app.get('/', async (req, res) => {
       .earn-footer-inner{
         width:100%;
         max-width:100%;
-        padding:0 14px 0;
+        padding:0 14px 8px;
         grid-template-columns:1fr 1fr 1fr;
         gap:18px;
         box-sizing:border-box;
@@ -2975,7 +2975,7 @@ app.get('/', async (req, res) => {
       .earn-footer-inner{
         grid-template-columns:1fr 1fr 1fr;
         gap:14px;
-        padding:0 12px 0;
+        padding:0 12px 8px;
       }
 
       .footer-brand{
