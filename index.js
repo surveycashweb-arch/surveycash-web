@@ -2926,9 +2926,9 @@ app.get('/', async (req, res) => {
         margin-bottom:10px;
       }
 
-      .footer-col:first-of-type{
-        display:none;
-      }
+.footer-col:nth-of-type(2){
+  display:none;
+}
 
       .footer-col.legal,
       .footer-col.social{
@@ -3000,9 +3000,9 @@ app.get('/', async (req, res) => {
         height:22px;
       }
 
-      .footer-col:first-of-type{
-        display:none;
-      }
+.footer-col:nth-of-type(2){
+  display:none;
+}
 
       .footer-col.legal,
       .footer-col.social{
