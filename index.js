@@ -2888,9 +2888,9 @@ app.get('/', async (req, res) => {
         align-items:start;
       }
 
-      .footer-brand{
-        grid-column:1 / -1;
-      }
+.footer-brand{
+  display:none;
+}
 
       .footer-logo{
         font-size:18px;
