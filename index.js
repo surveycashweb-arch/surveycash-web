@@ -2888,9 +2888,9 @@ app.get('/', async (req, res) => {
         align-items:start;
       }
 
-.footer-brand{
-  display:none;
-}
+      .footer-brand{
+        display:none;
+      }
 
       .footer-logo{
         font-size:18px;
@@ -2970,6 +2970,10 @@ app.get('/', async (req, res) => {
         padding:0 12px;
       }
 
+      .footer-brand{
+        display:none;
+      }
+
       .footer-logo{
         font-size:17px;
       }
@@ -2994,6 +2998,10 @@ app.get('/', async (req, res) => {
 
       .footer-trust-img{
         height:22px;
+      }
+
+      .footer-col:first-of-type{
+        display:none;
       }
     }
 
@@ -3108,7 +3116,7 @@ app.get('/', async (req, res) => {
       bodyHtml,
     ),
   );
-}); 
+});
 
 app.get('/ping', (req, res) => {
   res.send('ok');
