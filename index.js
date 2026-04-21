@@ -2517,12 +2517,13 @@ app.get('/', async (req, res) => {
       padding:24px 0 220px;
     }
 
-    .earn-wrap{
-      width:1080px;
-      max-width:1080px;
-      margin:0 auto;
-      padding:0 14px;
-    }
+.earn-wrap{
+  width:1080px;
+  max-width:1080px;
+  margin-left:24px;
+  margin-right:0;
+  padding:0 14px;
+}
 
     .earn-section{
       margin-bottom:26px;
