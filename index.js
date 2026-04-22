@@ -5208,25 +5208,24 @@ app.get('/cashout', async (req, res) => {
               padding:0 12px 220px 12px !important;
             }
 
-            .cashout-bottom-fill{
-              position:absolute;
-              left:0;
-              right:0;
-              bottom:0;
-              transform:none;
-              width:100%;
-              height:190px;
-            }
+.cashout-bottom-fill{
+  display:none;
+}
 
-            .cashout-footer-content{
-              position:absolute;
-              left:0;
-              right:0;
-              bottom:0;
-              transform:none;
-              width:100%;
-              height:190px;
-            }
+.cashout-footer-content{
+  position:relative;
+  left:auto;
+  right:auto;
+  bottom:auto;
+  transform:none;
+  width:100%;
+  height:auto;
+  display:block;
+  margin-top:18px;
+  padding:16px 0 12px;
+  background:#151c2e;
+  border-top:1px solid rgba(255,255,255,.04);
+}
 
             .cashout-head h1{
               font-size:40px;
@@ -5302,10 +5301,40 @@ app.get('/cashout', async (req, res) => {
               padding:6px 12px;
             }
 
-            .cashout-footer-inner{
-              padding:18px 22px 0;
-              gap:20px;
-            }
+.cashout-footer-inner{
+  width:100%;
+  max-width:100%;
+  padding:0 14px 8px;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:18px;
+  box-sizing:border-box;
+  align-items:start;
+}
+
+.footer-brand{
+  grid-column:1 / -1;
+}
+
+.footer-trust-link{
+  gap:8px;
+}
+
+.footer-trust-link span{
+  font-size:12px;
+}
+
+.footer-trust-img{
+  height:24px;
+}
+
+.footer-col:nth-of-type(2){
+  display:none;
+}
+
+.footer-col.legal,
+.footer-col.social{
+  display:block;
+}
 
             .footer-logo{
               font-size:18px;
@@ -5399,18 +5428,42 @@ app.get('/cashout', async (req, res) => {
               padding:5px 10px;
             }
 
-            .cashout-bottom-fill{
-              height:170px;
-            }
+.cashout-bottom-fill{
+  display:none;
+}
 
-            .cashout-footer-content{
-              height:170px;
-            }
+.cashout-footer-content{
+  height:auto;
+  margin-top:18px;
+  padding:16px 0 12px;
+}
 
-            .cashout-footer-inner{
-              padding:16px 14px 0;
-              gap:14px;
-            }
+.cashout-footer-inner{
+  grid-template-columns:1fr 1fr 1fr;
+  gap:14px;
+  padding:0 12px 8px;
+}
+
+.footer-brand{
+  grid-column:1 / -1;
+}
+
+.footer-trust-link span{
+  font-size:11px;
+}
+
+.footer-trust-img{
+  height:22px;
+}
+
+.footer-col:nth-of-type(2){
+  display:none;
+}
+
+.footer-col.legal,
+.footer-col.social{
+  display:block;
+}
 
             .footer-logo{
               font-size:16px;
