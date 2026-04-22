@@ -5187,13 +5187,13 @@ app.get('/cashout', async (req, res) => {
               overflow:visible !important;
             }
 
-            .cashout-page{
-              height:auto !important;
-              min-height:calc(100vh - 64px);
-              overflow:visible !important;
-              margin:14px 0 0 0 !important;
-              padding:0 12px 0 12px !important;
-            }
+.cashout-page{
+  height:auto !important;
+  min-height:auto;
+  overflow:visible !important;
+  margin:14px 0 0 0 !important;
+  padding:0 !important;
+}
 
             .cashout-bottom-fill{
               display:none;
@@ -5208,8 +5208,8 @@ app.get('/cashout', async (req, res) => {
   width:100%;
   height:auto;
   display:block;
-  margin-top:0;
-  padding:16px 0 8px;
+  margin-top:18px;
+  padding:16px 0 12px;
   background:#151c2e;
   border-top:1px solid rgba(255,255,255,.04);
 }
@@ -5217,8 +5217,7 @@ app.get('/cashout', async (req, res) => {
 .cashout-footer-inner{
   width:100%;
   max-width:100%;
-  padding:0 0 8px;
-  display:grid;
+  padding:0 14px 8px;
   grid-template-columns:1fr 1fr 1fr;
   gap:18px;
   box-sizing:border-box;
@@ -5271,6 +5270,15 @@ app.get('/cashout', async (req, res) => {
             .footer-col.social{
               display:block;
             }
+
+
+.cashout-head,
+.cashout-section,
+.notice{
+  padding-left:12px;
+  padding-right:12px;
+}
+
 
             .cashout-head h1{
               font-size:40px;
@@ -5348,10 +5356,18 @@ app.get('/cashout', async (req, res) => {
           }
 
           @media (max-width:480px){
-            .cashout-page{
-              margin:10px 0 0 0 !important;
-              padding:0 10px 0 10px !important;
-            }
+.cashout-page{
+  margin:10px 0 0 0 !important;
+  padding:0 !important;
+}
+
+
+.cashout-head,
+.cashout-section,
+.notice{
+  padding-left:10px;
+  padding-right:10px;
+}
 
             .cashout-head h1{
               font-size:34px;
