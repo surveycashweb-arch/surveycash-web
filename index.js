@@ -5200,13 +5200,13 @@ app.get('/cashout', async (req, res) => {
               overflow:visible !important;
             }
 
-            .cashout-page{
-              height:auto !important;
-              min-height:calc(100vh - 64px);
-              overflow:visible !important;
-              margin:14px 0 0 0 !important;
-              padding:0 12px 220px 12px !important;
-            }
+.cashout-page{
+  height:auto !important;
+  min-height:calc(100vh - 64px);
+  overflow:visible !important;
+  margin:14px 0 0 0 !important;
+  padding:0 12px 20px 12px !important;
+}
 
 .cashout-bottom-fill{
   display:none;
@@ -5364,10 +5364,10 @@ app.get('/cashout', async (req, res) => {
           }
 
           @media (max-width:480px){
-            .cashout-page{
-              margin:10px 0 0 0 !important;
-              padding:0 10px 190px 10px !important;
-            }
+.cashout-page{
+  margin:10px 0 0 0 !important;
+  padding:0 10px 20px 10px !important;
+}
 
             .cashout-head h1{
               font-size:34px;
