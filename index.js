@@ -5271,12 +5271,12 @@ app.get('/cashout', async (req, res) => {
               width:100%;
             }
 
-            .method-card{
-              width:100%;
-              height:180px;
-              padding:12px 12px 14px;
-              border-radius:16px;
-            }
+.method-card{
+  width:100%;
+  height:160px;
+  padding:10px 12px 10px;
+  border-radius:16px;
+}
 
             .method-title{
               font-size:13px;
@@ -5371,12 +5371,12 @@ app.get('/cashout', async (req, res) => {
               gap:10px;
             }
 
-            .method-card{
-              width:100%;
-              height:150px;
-              padding:10px 10px 12px;
-              border-radius:14px;
-            }
+.method-card{
+  width:100%;
+  height:135px;
+  padding:8px 10px 8px;
+  border-radius:14px;
+}
 
             .method-title{
               font-size:12px;
