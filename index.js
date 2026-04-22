@@ -4668,7 +4668,6 @@ app.get('/cashout', async (req, res) => {
   const ok = req.query.ok === '1';
   const err = String(req.query.err || '');
 
-  // 1) Get profile (balance + pending)
   let profile;
   try {
     profile = await getProfileByUserId(user.id);
@@ -4680,7 +4679,6 @@ app.get('/cashout', async (req, res) => {
   const balanceCents = Number(profile.balance_cents || 0);
   const pendingCents = Number(profile.pending_cents || 0);
 
-  // 2) Check if there is an active cashout (pending/processing)
   let hasOpenWithdrawal = false;
   let openWithdrawalEmail = '';
 
@@ -4701,7 +4699,6 @@ app.get('/cashout', async (req, res) => {
     console.error('open withdrawal check (GET /cashout) failed:', e);
   }
 
-  // 4) Messages
   let msg = '';
   if (ok) {
     msg = `<div class="notice success">Cash out request received. We will process it manually.</div>`;
@@ -4714,16 +4711,6 @@ app.get('/cashout', async (req, res) => {
   }
 
   const paypalImg = '/img/paypal.png';
-
-  const minCashoutCents = CASHOUT_ALLOWED_CENTS[0] || 500;
-
-  const progressPct = Math.max(
-    0,
-    Math.min(100, (balanceCents / minCashoutCents) * 100)
-  );
-
-  const progressRightText =
-    '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents / 100).toFixed(0);
 
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
@@ -5195,7 +5182,7 @@ app.get('/cashout', async (req, res) => {
 
             main{
               height:auto !important;
-              min-height:calc(100vh - 64px);
+              min-height:auto;
               max-height:none !important;
               overflow:visible !important;
             }
@@ -5205,27 +5192,84 @@ app.get('/cashout', async (req, res) => {
               min-height:calc(100vh - 64px);
               overflow:visible !important;
               margin:14px 0 0 0 !important;
-              padding:0 12px 220px 12px !important;
+              padding:0 12px 0 12px !important;
             }
 
             .cashout-bottom-fill{
-              position:absolute;
-              left:0;
-              right:0;
-              bottom:0;
-              transform:none;
-              width:100%;
-              height:190px;
+              display:none;
             }
 
             .cashout-footer-content{
-              position:absolute;
-              left:0;
-              right:0;
-              bottom:0;
+              position:relative;
+              left:auto;
+              right:auto;
+              bottom:auto;
               transform:none;
               width:100%;
-              height:190px;
+              height:auto;
+              display:block;
+              margin-top:18px;
+              padding:16px 0 12px;
+              background:#151c2e;
+              border-top:1px solid rgba(255,255,255,.04);
+            }
+
+            .cashout-footer-inner{
+              width:100%;
+              max-width:100%;
+              padding:0 14px 8px;
+              display:grid;
+              grid-template-columns:1fr 1fr 1fr;
+              gap:18px;
+              box-sizing:border-box;
+              align-items:start;
+            }
+
+            .footer-brand{
+              grid-column:1 / -1;
+            }
+
+            .footer-logo{
+              font-size:18px;
+              margin-bottom:10px;
+            }
+
+            .footer-brand-text{
+              max-width:none;
+              font-size:12px;
+              line-height:1.45;
+              margin-bottom:10px;
+            }
+
+            .footer-trust-link{
+              gap:8px;
+            }
+
+            .footer-trust-link span{
+              font-size:12px;
+            }
+
+            .footer-trust-img{
+              height:24px;
+            }
+
+            .footer-col-title{
+              font-size:14px;
+              margin:0 0 10px;
+            }
+
+            .footer-link{
+              font-size:13px;
+              margin-bottom:10px;
+            }
+
+            .footer-col:nth-of-type(2){
+              display:none;
+            }
+
+            .footer-col.legal,
+            .footer-col.social{
+              display:block;
             }
 
             .cashout-head h1{
@@ -5271,12 +5315,12 @@ app.get('/cashout', async (req, res) => {
               width:100%;
             }
 
-.method-card{
-  width:100%;
-  height:160px;
-  padding:10px 12px 10px;
-  border-radius:16px;
-}
+            .method-card{
+              width:100%;
+              height:160px;
+              padding:10px 12px 10px;
+              border-radius:16px;
+            }
 
             .method-title{
               font-size:13px;
@@ -5301,43 +5345,12 @@ app.get('/cashout', async (req, res) => {
               font-size:11px;
               padding:6px 12px;
             }
-
-            .cashout-footer-inner{
-              padding:18px 22px 0;
-              gap:20px;
-            }
-
-            .footer-logo{
-              font-size:18px;
-              margin-bottom:12px;
-            }
-
-            .footer-brand-text{
-              font-size:12px;
-              line-height:1.45;
-              margin-bottom:10px;
-              max-width:260px;
-            }
-
-            .footer-col-title{
-              font-size:14px;
-              margin-bottom:12px;
-            }
-
-            .footer-link{
-              font-size:13px;
-              margin-bottom:12px;
-            }
-
-            .footer-trust-img{
-              height:28px;
-            }
           }
 
           @media (max-width:480px){
             .cashout-page{
               margin:10px 0 0 0 !important;
-              padding:0 10px 190px 10px !important;
+              padding:0 10px 0 10px !important;
             }
 
             .cashout-head h1{
@@ -5371,12 +5384,12 @@ app.get('/cashout', async (req, res) => {
               gap:10px;
             }
 
-.method-card{
-  width:100%;
-  height:135px;
-  padding:8px 10px 8px;
-  border-radius:14px;
-}
+            .method-card{
+              width:100%;
+              height:135px;
+              padding:8px 10px 8px;
+              border-radius:14px;
+            }
 
             .method-title{
               font-size:12px;
@@ -5399,40 +5412,56 @@ app.get('/cashout', async (req, res) => {
               padding:5px 10px;
             }
 
-            .cashout-bottom-fill{
-              height:170px;
-            }
-
             .cashout-footer-content{
-              height:170px;
+              height:auto;
+              margin-top:18px;
+              padding:16px 0 12px;
             }
 
             .cashout-footer-inner{
-              padding:16px 14px 0;
+              grid-template-columns:1fr 1fr 1fr;
               gap:14px;
+              padding:0 12px 8px;
+            }
+
+            .footer-brand{
+              grid-column:1 / -1;
             }
 
             .footer-logo{
-              font-size:16px;
+              font-size:17px;
             }
 
             .footer-brand-text{
               font-size:11px;
-              max-width:200px;
+              line-height:1.4;
+              max-width:none;
             }
 
             .footer-col-title{
-              font-size:12px;
-              margin-bottom:10px;
+              font-size:13px;
             }
 
             .footer-link{
+              font-size:12px;
+              margin-bottom:8px;
+            }
+
+            .footer-trust-link span{
               font-size:11px;
-              margin-bottom:10px;
             }
 
             .footer-trust-img{
               height:22px;
+            }
+
+            .footer-col:nth-of-type(2){
+              display:none;
+            }
+
+            .footer-col.legal,
+            .footer-col.social{
+              display:block;
             }
           }
 
@@ -5480,20 +5509,6 @@ app.get('/cashout', async (req, res) => {
             gap:10px;
             align-items:center;
             padding:4px 4px 8px;
-          }
-
-          .co-icon{
-            width:32px;
-            height:32px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-          }
-
-          .co-icon img{
-            width:32px;
-            height:auto;
-            display:block;
           }
 
           .co-title{
@@ -5906,54 +5921,6 @@ app.get('/cashout', async (req, res) => {
 
 <div class="cashout-page">
 
-  <div class="cashout-bottom-fill"></div>
-
-  <div class="cashout-footer-content">
-    <div class="cashout-footer-inner">
-
-      <div class="footer-brand">
-        <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
-
-        <div class="footer-brand-text">
-  SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
-</div>
-
-<div class="footer-trust">
-  <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
-    <span>Rate us on Trustpilot</span>
-    <img src="/img/trustpilot-mission.png" class="footer-trust-img">
-  </a>
-</div>
-      </div>
-
-      <div class="footer-col">
-        <div class="footer-col-title">SurveyCash</div>
-        <a href="/" class="footer-link">Earn</a>
-        <a href="/cashout" class="footer-link">Cash Out</a>
-        <a href="/support" class="footer-link">Support</a>
-      </div>
-
-      <div class="footer-col">
-        <div class="footer-col-title">Help</div>
-        <a href="/support" class="footer-link">FAQ</a>
-        <a href="/support" class="footer-link">Contact</a>
-      </div>
-
-      <div class="footer-col legal">
-        <div class="footer-col-title">Info</div>
-        <a href="/terms" class="footer-link">Terms</a>
-        <a href="/privacy" class="footer-link">Privacy</a>
-      </div>
-
-      <div class="footer-col social">
-        <div class="footer-col-title">Social</div>
-        <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
-        <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
-      </div>
-
-    </div>
-  </div>
-
   <div class="cashout-head">
     <h1><span class="cash-accent">Cash</span>Out</h1>
 
@@ -6043,6 +6010,54 @@ app.get('/cashout', async (req, res) => {
             <span class="soon-pill">Coming soon</span>
           </div>
         </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="cashout-bottom-fill"></div>
+
+  <div class="cashout-footer-content">
+    <div class="cashout-footer-inner">
+
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
+
+        <div class="footer-brand-text">
+  SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
+</div>
+
+<div class="footer-trust">
+  <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
+    <span>Rate us on Trustpilot</span>
+    <img src="/img/trustpilot-mission.png" class="footer-trust-img">
+  </a>
+</div>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">SurveyCash</div>
+        <a href="/" class="footer-link">Earn</a>
+        <a href="/cashout" class="footer-link">Cash Out</a>
+        <a href="/support" class="footer-link">Support</a>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">Help</div>
+        <a href="/support" class="footer-link">FAQ</a>
+        <a href="/support" class="footer-link">Contact</a>
+      </div>
+
+      <div class="footer-col legal">
+        <div class="footer-col-title">Info</div>
+        <a href="/terms" class="footer-link">Terms</a>
+        <a href="/privacy" class="footer-link">Privacy</a>
+      </div>
+
+      <div class="footer-col social">
+        <div class="footer-col-title">Social</div>
+        <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+        <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
       </div>
 
     </div>
