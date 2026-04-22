@@ -4668,7 +4668,6 @@ app.get('/cashout', async (req, res) => {
   const ok = req.query.ok === '1';
   const err = String(req.query.err || '');
 
-  // 1) Get profile (balance + pending)
   let profile;
   try {
     profile = await getProfileByUserId(user.id);
@@ -4680,10 +4679,8 @@ app.get('/cashout', async (req, res) => {
   const balanceCents = Number(profile.balance_cents || 0);
   const pendingCents = Number(profile.pending_cents || 0);
 
-  // 2) Check if there is an active cashout (pending/processing)
   let hasOpenWithdrawal = false;
-let openWithdrawalEmail = '';
-
+  let openWithdrawalEmail = '';
 
   try {
     const { data, error } = await supabaseAdmin
@@ -4695,36 +4692,25 @@ let openWithdrawalEmail = '';
       .limit(1);
 
     if (!error && Array.isArray(data) && data.length > 0) {
-  hasOpenWithdrawal = true;
-  openWithdrawalEmail = data[0].paypal_email || '';
-}
+      hasOpenWithdrawal = true;
+      openWithdrawalEmail = data[0].paypal_email || '';
+    }
   } catch (e) {
     console.error('open withdrawal check (GET /cashout) failed:', e);
   }
 
-  // 4) Messages
   let msg = '';
-if (ok) {
-  msg = `<div class="notice success">Cash out request received. We will process it manually.</div>`;
-} else if (err === 'open') {
-  msg = `<div class="notice error">You already have a cashout in progress.</div>`;
-} else if (err) {
-  msg = `<div class="notice error">Cash out failed.</div>`;
-} else if (hasOpenWithdrawal) {
-  msg = `<div class="notice success">Cash out status: <b>PROCESSING</b>…</div>`;
-}
+  if (ok) {
+    msg = `<div class="notice success">Cash out request received. We will process it manually.</div>`;
+  } else if (err === 'open') {
+    msg = `<div class="notice error">You already have a cashout in progress.</div>`;
+  } else if (err) {
+    msg = `<div class="notice error">Cash out failed.</div>`;
+  } else if (hasOpenWithdrawal) {
+    msg = `<div class="notice success">Cash out status: <b>PROCESSING</b>…</div>`;
+  }
 
   const paypalImg = '/img/paypal.png';
-
-  const minCashoutCents = CASHOUT_ALLOWED_CENTS[0] || 500;
-
-  const progressPct = Math.max(
-    0,
-    Math.min(100, (balanceCents / minCashoutCents) * 100)
-  );
-
-  const progressRightText =
-    '$' + formatUsdFromCents(balanceCents) + ' / $' + (minCashoutCents / 100).toFixed(0);
 
   const amountCardsHtml = CASHOUT_ALLOWED_CENTS.map((cents) => {
     const usd = (cents / 100).toFixed(2);
@@ -4759,8 +4745,10 @@ if (ok) {
       bodyHtml: `
         <style>
           html, body{
-            height:100%;
-            overflow:hidden !important;
+            min-height:100%;
+            margin:0;
+            overflow-x:hidden;
+            background:#0b1220;
           }
 
           body{
@@ -4778,49 +4766,55 @@ if (ok) {
 
           main{
             position:relative;
-            height:calc(100vh - 64px);
             min-height:calc(100vh - 64px);
-            max-height:calc(100vh - 64px);
             padding-top:0 !important;
-            overflow:hidden !important;
+            background:#0b1220;
+            overflow:visible !important;
           }
 
           .cashout-page{
             position:relative;
             width:100%;
-            height:100%;
             max-width:none;
-            margin:20px 0 0 0 !important;
-            padding:0 0 0 40px !important;
+            margin:0 !important;
+            padding:24px 0 260px !important;
             box-sizing:border-box;
-            overflow:hidden;
+            overflow:visible;
           }
 
+          .cashout-inner{
+            width:100%;
+            max-width:1180px;
+            margin:0 auto;
+            padding:0 18px;
+            box-sizing:border-box;
+            position:relative;
+            z-index:2;
+          }
 
-.payout-pending-box{
-  position:absolute;
-  right:120px;
-  top:160px;
-  width:360px;
-  padding:28px;
-  border-radius:16px;
-  background:rgba(34,197,94,.08);
-  border:1px solid rgba(34,197,94,.45);
-  color:#e5e7eb;   /* add denne */
-}
+          .payout-pending-box{
+            width:100%;
+            max-width:420px;
+            margin:18px 0 0 auto;
+            padding:20px;
+            border-radius:16px;
+            background:rgba(34,197,94,.08);
+            border:1px solid rgba(34,197,94,.45);
+            color:#e5e7eb;
+            box-sizing:border-box;
+          }
 
-.payout-title{
-  font-size:18px;
-  font-weight:800;
-  margin-bottom:10px;
-}
+          .payout-title{
+            font-size:18px;
+            font-weight:800;
+            margin-bottom:10px;
+          }
 
-.payout-text{
-  font-size:14px;
-  color:#cbd5e1;
-  line-height:1.5;
-}
-
+          .payout-text{
+            font-size:14px;
+            color:#cbd5e1;
+            line-height:1.5;
+          }
 
           .cashout-bottom-fill{
             position:fixed;
@@ -4875,7 +4869,7 @@ if (ok) {
           }
 
           .cashout-head h1{
-            font-size:52px;
+            font-size:clamp(42px, 8vw, 72px);
             font-weight:900;
             margin:0;
             line-height:1;
@@ -4885,78 +4879,80 @@ if (ok) {
 
           .cash-accent{ color:#eab308; }
 
-        .my-payments-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:11px 24px;
-  border-radius:8px;
-  background:#eab308;
-  color:#0b1220;
-  font-weight:700;
-  font-size:14px;
-  letter-spacing:.2px;
-  text-decoration:none;
-  border:1px solid rgba(234,179,8,.6);
-  transition:.15s ease;
-cursor:pointer;
-}
+          .my-payments-btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            padding:11px 24px;
+            border-radius:10px;
+            background:#eab308;
+            color:#0b1220;
+            font-weight:700;
+            font-size:14px;
+            letter-spacing:.2px;
+            text-decoration:none;
+            border:1px solid rgba(234,179,8,.6);
+            transition:.15s ease;
+            cursor:pointer;
+          }
 
-.my-payments-btn:hover{
-  background:#d4a006;
-  transform:translateY(-1px);
-}
+          .my-payments-btn:hover{
+            background:#d4a006;
+            transform:translateY(-1px);
+          }
 
-.my-payments-btn:active{
-  transform:translateY(0);
-}
+          .my-payments-btn:active{
+            transform:translateY(0);
+          }
 
           .cashout-topbar{
             display:flex;
             align-items:center;
             justify-content:flex-start;
-            gap:18px;
-            width:auto;
+            flex-wrap:wrap;
+            gap:16px;
+            width:100%;
             margin-top:0;
           }
 
           .cashout-balances{
             display:flex;
             align-items:center;
-            gap:24px;
+            flex-wrap:wrap;
+            gap:18px;
             color:#ffffff;
             font-weight:600;
             font-size:14px;
-            opacity:.9;
+            opacity:.92;
           }
 
           .cashout-section{
-            margin-top:4px;
+            margin-top:16px;
           }
 
           .methods-grid{
-            margin-top:10px;
+            margin-top:18px;
             display:grid;
-            grid-template-columns:repeat(3, 250px);
-            justify-content:flex-start;
+            grid-template-columns:repeat(3, minmax(0, 1fr));
             gap:22px;
           }
 
-.method-card{
-  width:250px;
-  height:210px;
-  cursor:pointer;
-  border-radius:20px;
-  padding:14px 16px 16px;
-  background:#151c2e;
-  border:1px solid rgba(255,255,255,.08);
-  color:#fff;
-  transition:.15s ease;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
-}
+          .method-card{
+            width:100%;
+            min-height:210px;
+            cursor:pointer;
+            border-radius:20px;
+            padding:14px 16px 16px;
+            background:#151c2e;
+            border:1px solid rgba(255,255,255,.08);
+            color:#fff;
+            transition:.15s ease;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            text-align:center;
+            box-sizing:border-box;
+          }
 
           .method-card:hover{ transform:translateY(-3px); border-color:rgba(255,255,255,.18); }
 
@@ -4977,39 +4973,34 @@ cursor:pointer;
             opacity:.9;
           }
 
-.paypal-dark{
-  color:#003087;   /* PayPal mørk blå */
-}
+          .paypal-dark{ color:#003087; }
+          .paypal-light{ color:#009cde; }
 
-.paypal-light{
-  color:#009cde;   /* PayPal lys blå */
-}
+          .method-subtext{
+            font-size:12px;
+            color:#ffffff;
+            margin-top:4px;
+            font-weight:700;
+            opacity:0.9;
+          }
 
-.method-subtext{
-  font-size:12px;
-  color:#ffffff;
-  margin-top:4px;
-  font-weight:700;
-  opacity:0.9;
-}
-
-
-.method-logo-tile{
-  background:transparent;
-  border:0;
-  padding:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-top:2px;
-  margin-bottom:4px;
-}
+          .method-logo-tile{
+            background:transparent;
+            border:0;
+            padding:0;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin-top:2px;
+            margin-bottom:4px;
+            width:100%;
+          }
 
           .method-logo-tile img{
-  width:240px;
-  max-width:100%;
-  height:auto;
-}
+            width:220px;
+            max-width:100%;
+            height:auto;
+          }
 
           .method-bar{
             margin-top:auto;
@@ -5038,7 +5029,12 @@ cursor:pointer;
             color:rgba(255,255,255,.55);
             width:100%;
           }
-          .method-foot b{ font-size:11px; font-weight:600; color:rgba(255,255,255,.75); }
+
+          .method-foot b{
+            font-size:11px;
+            font-weight:600;
+            color:rgba(255,255,255,.75);
+          }
 
           .soon-wrap{ width:100%; text-align:center; }
           .soon-top{ font-weight:900; margin-bottom:10px; font-size:16px; }
@@ -5066,13 +5062,8 @@ cursor:pointer;
             margin-bottom:18px;
           }
 
-          .footer-logo .white{
-            color:#ffffff;
-          }
-
-          .footer-logo .accent{
-            color:#fbbf24;
-          }
+          .footer-logo .white{ color:#ffffff; }
+          .footer-logo .accent{ color:#fbbf24; }
 
           .footer-brand-text{
             max-width:380px;
@@ -5082,34 +5073,34 @@ cursor:pointer;
             margin-bottom:18px;
           }
 
-.footer-trust{
-  display:flex;
-  align-items:center;
-}
+          .footer-trust{
+            display:flex;
+            align-items:center;
+          }
 
-.footer-trust-link{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  color:#ffffff;
-  text-decoration:none;
-  font-size:12px;
-  font-weight:700;
-}
+          .footer-trust-link{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            color:#ffffff;
+            text-decoration:none;
+            font-size:12px;
+            font-weight:700;
+          }
 
-.footer-trust-img{
-  height:42px;   /* 14px → 42px (3x større) */
-  width:auto;
-  display:block;
-}
+          .footer-trust-img{
+            height:42px;
+            width:auto;
+            display:block;
+          }
 
-.footer-trust-link:hover{
-  text-decoration:underline;
-}
+          .footer-trust-link:hover{
+            text-decoration:underline;
+          }
 
-.footer-trust-link span{
-  font-size:14px;
-}
+          .footer-trust-link span{
+            font-size:14px;
+          }
 
           .footer-col-title{
             color:#fbbf24;
@@ -5154,22 +5145,228 @@ cursor:pointer;
             }
           }
 
-          @media (max-width:1000px){
-            .methods-grid{ grid-template-columns:repeat(2, 250px); }
+          @media (max-width:1024px){
+            .methods-grid{
+              grid-template-columns:repeat(2, minmax(0, 1fr));
+            }
           }
 
-          @media (max-width:640px){
-            .methods-grid{ grid-template-columns:1fr; }
-            .method-card{ width:100%; max-width:320px; }
+          @media (max-width:768px){
+            .cashout-page{
+              padding:18px 0 320px !important;
+            }
+
+            .cashout-inner{
+              padding:0 14px;
+            }
+
+            .cashout-head{
+              gap:10px;
+              margin-bottom:16px;
+            }
+
+            .cashout-head h1{
+              font-size:clamp(38px, 12vw, 58px);
+              line-height:.95;
+            }
+
+            .cashout-topbar{
+              flex-direction:column;
+              align-items:stretch;
+              gap:12px;
+            }
+
+            .my-payments-btn{
+              width:100%;
+              min-height:48px;
+              font-size:16px;
+              border-radius:12px;
+              padding:12px 16px;
+            }
+
+            .cashout-balances{
+              display:grid;
+              grid-template-columns:1fr 1fr;
+              gap:10px;
+              width:100%;
+              font-size:15px;
+            }
+
+            .cashout-balances span{
+              display:block;
+              padding:12px 14px;
+              border-radius:12px;
+              background:rgba(255,255,255,.04);
+              border:1px solid rgba(255,255,255,.06);
+            }
+
+            .payout-pending-box{
+              max-width:none;
+              margin:14px 0 0;
+              padding:16px;
+              border-radius:14px;
+            }
+
+            .payout-title{
+              font-size:16px;
+              margin-bottom:6px;
+            }
+
+            .payout-text{
+              font-size:13px;
+              line-height:1.45;
+            }
+
+            .cashout-section{
+              margin-top:16px;
+            }
+
+            .methods-grid{
+              grid-template-columns:1fr;
+              gap:14px;
+              margin-top:14px;
+            }
+
+            .method-card{
+              min-height:180px;
+              border-radius:16px;
+              padding:14px;
+            }
+
+            .method-title{
+              font-size:14px;
+              margin-bottom:6px;
+            }
+
+            .method-logo-tile{
+              margin-top:4px;
+              margin-bottom:8px;
+            }
+
+            .method-logo-tile img{
+              width:190px;
+            }
+
+            .method-subtext{
+              font-size:13px;
+              margin-top:8px;
+            }
+
+            .soon-top{
+              font-size:18px;
+              margin-bottom:8px;
+            }
+
+            .soon-pill{
+              font-size:12px;
+              padding:7px 14px;
+            }
+
+            .cashout-bottom-fill,
+            .cashout-footer-content{
+              height:300px;
+            }
+
+            .cashout-footer-inner{
+              grid-template-columns:1fr 1fr;
+              gap:18px;
+              padding:20px 16px 0;
+            }
+
+            .footer-brand{
+              grid-column:1 / -1;
+            }
+
+            .footer-logo{
+              font-size:20px;
+              margin-bottom:12px;
+            }
+
+            .footer-brand-text{
+              max-width:none;
+              font-size:13px;
+              line-height:1.5;
+              margin-bottom:12px;
+            }
+
+            .footer-col-title{
+              font-size:15px;
+              margin-bottom:12px;
+            }
+
+            .footer-link{
+              font-size:14px;
+              margin-bottom:12px;
+            }
+
+            .footer-trust-img{
+              height:30px;
+            }
+          }
+
+          @media (max-width:480px){
+            .cashout-page{
+              padding:16px 0 340px !important;
+            }
+
+            .cashout-inner{
+              padding:0 12px;
+            }
+
+            .cashout-head h1{
+              font-size:clamp(34px, 13vw, 48px);
+            }
+
+            .my-payments-btn{
+              min-height:46px;
+              font-size:15px;
+            }
+
+            .cashout-balances{
+              grid-template-columns:1fr;
+            }
+
+            .cashout-balances span{
+              font-size:14px;
+              padding:11px 12px;
+            }
+
+            .method-card{
+              min-height:168px;
+              padding:12px;
+            }
+
+            .method-logo-tile img{
+              width:160px;
+            }
+
+            .cashout-bottom-fill,
+            .cashout-footer-content{
+              height:340px;
+            }
+
+            .cashout-footer-inner{
+              grid-template-columns:1fr;
+              gap:14px;
+            }
+
+            .footer-col.social,
+            .footer-col.legal{
+              display:none;
+            }
           }
 
           /* ===== Backdrops ===== */
           .co-backdrop{
-            position:fixed; inset:0;
+            position:fixed;
+            inset:0;
             background:rgba(0,0,0,.55);
-            display:none; align-items:center; justify-content:center;
+            display:none;
+            align-items:center;
+            justify-content:center;
             padding:16px;
           }
+
           .co-backdrop.open{ display:flex; }
 
           #coBackdrop{ z-index:9999; }
@@ -5186,29 +5383,51 @@ cursor:pointer;
           }
 
           .co-close{
-            position:absolute; top:10px; right:10px;
-            width:36px; height:36px;
+            position:absolute;
+            top:10px;
+            right:10px;
+            width:36px;
+            height:36px;
             border-radius:999px;
             background:rgba(255,255,255,.06);
             border:1px solid rgba(255,255,255,.10);
-            color:#fff; cursor:pointer;
+            color:#fff;
+            cursor:pointer;
           }
 
-          .co-header{ display:flex; gap:10px; align-items:center; padding:4px 4px 8px; }
-          .co-icon{ width:32px; height:32px; display:flex; align-items:center; justify-content:center; }
-          .co-icon img{ width:32px; height:auto; display:block; }
-          .co-title{ font-weight:900; font-size:17px; }
+          .co-header{
+            display:flex;
+            gap:10px;
+            align-items:center;
+            padding:4px 4px 8px;
+          }
 
-          .co-divider{ height:1px; background:rgba(255,255,255,.08); margin:8px 0; }
-          .co-block-title{ font-weight:800; margin:2px 0 8px; }
+          .co-title{
+            font-weight:900;
+            font-size:17px;
+          }
+
+          .co-divider{
+            height:1px;
+            background:rgba(255,255,255,.08);
+            margin:8px 0;
+          }
+
+          .co-block-title{
+            font-weight:800;
+            margin:2px 0 8px;
+          }
 
           .amount-grid{
             display:grid;
             grid-template-columns:repeat(3, minmax(0, 1fr));
             gap:10px;
           }
-          @media (max-width: 760px){
-            .amount-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+          @media (max-width:760px){
+            .amount-grid{
+              grid-template-columns:repeat(2, minmax(0, 1fr));
+            }
           }
 
           .amount-card{
@@ -5223,8 +5442,17 @@ cursor:pointer;
             transition:.15s ease;
             min-height:124px;
           }
-          .amount-card:hover{ border-color:#22c55e; box-shadow:0 0 0 1px #22c55e; }
-          .amount-card.active{ border-color:#22c55e; box-shadow:0 0 0 2px #22c55e; }
+
+          .amount-card:hover{
+            border-color:#22c55e;
+            box-shadow:0 0 0 1px #22c55e;
+          }
+
+          .amount-card.active{
+            border-color:#22c55e;
+            box-shadow:0 0 0 2px #22c55e;
+          }
+
           .amount-card.active::after{
             content:"✓";
             position:absolute;
@@ -5241,9 +5469,18 @@ cursor:pointer;
             align-items:center;
             justify-content:center;
           }
-          .amount-card.disabled{ opacity:.45; cursor:not-allowed; transform:none !important; }
 
-          .amount-card .amt{ font-weight:900; font-size:15px; }
+          .amount-card.disabled{
+            opacity:.45;
+            cursor:not-allowed;
+            transform:none !important;
+          }
+
+          .amount-card .amt{
+            font-weight:900;
+            font-size:15px;
+          }
+
           .amount-card .brand{
             margin-top:6px;
             display:flex;
@@ -5251,10 +5488,35 @@ cursor:pointer;
             justify-content:center;
             min-height:64px;
           }
-          .amount-card .brand img{ width:190px; max-width:100%; height:auto; display:block; opacity:.98; }
-          .bar{ margin-top:8px; height:6px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; }
-          .fill{ height:100%; border-radius:999px; background:#22c55e; width:0%; }
-          .need{ margin-top:6px; color:#b8c4d6; font-size:12px; }
+
+          .amount-card .brand img{
+            width:190px;
+            max-width:100%;
+            height:auto;
+            display:block;
+            opacity:.98;
+          }
+
+          .bar{
+            margin-top:8px;
+            height:6px;
+            border-radius:999px;
+            background:rgba(255,255,255,.08);
+            overflow:hidden;
+          }
+
+          .fill{
+            height:100%;
+            border-radius:999px;
+            background:#22c55e;
+            width:0%;
+          }
+
+          .need{
+            margin-top:6px;
+            color:#b8c4d6;
+            font-size:12px;
+          }
 
           .co-actions{
             display:flex;
@@ -5284,13 +5546,13 @@ cursor:pointer;
             transform:translateY(-2px);
             box-shadow:none;
           }
+
           .withdraw-btn:disabled{
             opacity:.45;
             cursor:not-allowed;
             background:rgba(251,191,36,.18);
             color:#fbbf24;
           }
-          @media (max-width:520px){ .withdraw-btn{ width:100%; } }
 
           .co-confirm{
             width:min(640px, 100%);
@@ -5319,6 +5581,7 @@ cursor:pointer;
             color:#fff;
             padding:0 12px;
             outline:none;
+            box-sizing:border-box;
           }
 
           .co-help{
@@ -5370,6 +5633,7 @@ cursor:pointer;
             color:#cbd5e1;
             font-size:14px;
           }
+
           .co-checks input{ transform:translateY(1px); }
 
           .co-confirm-actions{
@@ -5544,6 +5808,53 @@ cursor:pointer;
             color:#cbd5e1;
           }
 
+          @media (max-width:768px){
+            .payments-modal,
+            .co-modal,
+            .co-confirm{
+              width:100%;
+              border-radius:16px;
+              padding:14px;
+            }
+
+            .amount-card{
+              min-height:112px;
+              padding:10px;
+              border-radius:14px;
+            }
+
+            .amount-card .brand img{
+              width:130px;
+            }
+
+            .withdraw-btn,
+            .btn-confirm{
+              width:100%;
+            }
+          }
+
+          @media (max-width:480px){
+            .payments-title{
+              font-size:20px;
+            }
+
+            .payments-subtitle{
+              font-size:13px;
+            }
+
+            .payment-item{
+              flex-direction:column;
+              align-items:flex-start;
+            }
+
+            .payment-status{
+              min-width:auto;
+            }
+
+            .amount-grid{
+              grid-template-columns:1fr;
+            }
+          }
         </style>
 
         <script>
@@ -5562,15 +5873,15 @@ cursor:pointer;
         <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
 
         <div class="footer-brand-text">
-  SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
-</div>
+          SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
+        </div>
 
-<div class="footer-trust">
-  <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
-    <span>Rate us on Trustpilot</span>
-    <img src="/img/trustpilot-mission.png" class="footer-trust-img">
-  </a>
-</div>
+        <div class="footer-trust">
+          <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
+            <span>Rate us on Trustpilot</span>
+            <img src="/img/trustpilot-mission.png" class="footer-trust-img">
+          </a>
+        </div>
       </div>
 
       <div class="footer-col">
@@ -5581,10 +5892,10 @@ cursor:pointer;
       </div>
 
       <div class="footer-col">
-  <div class="footer-col-title">Help</div>
-  <a href="/support" class="footer-link">FAQ</a>
-  <a href="/support" class="footer-link">Contact</a>
-</div>
+        <div class="footer-col-title">Help</div>
+        <a href="/support" class="footer-link">FAQ</a>
+        <a href="/support" class="footer-link">Contact</a>
+      </div>
 
       <div class="footer-col legal">
         <div class="footer-col-title">Info</div>
@@ -5601,101 +5912,102 @@ cursor:pointer;
     </div>
   </div>
 
-  <div class="cashout-head">
-    <h1><span class="cash-accent">Cash</span>Out</h1>
+  <div class="cashout-inner">
 
-    <div class="cashout-topbar">
+    <div class="cashout-head">
+      <h1><span class="cash-accent">Cash</span>Out</h1>
 
-      <button type="button" id="openPaymentsBtn" class="my-payments-btn">My payments</button>
+      <div class="cashout-topbar">
+        <button type="button" id="openPaymentsBtn" class="my-payments-btn">My payments</button>
 
-      <div class="cashout-balances">
-        <span>Available: $${formatUsdFromCents(balanceCents)}</span>
-        <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
+        <div class="cashout-balances">
+          <span>Available: $${formatUsdFromCents(balanceCents)}</span>
+          <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
+        </div>
       </div>
-
     </div>
+
+    ${hasOpenWithdrawal ? `
+    <div class="payout-pending-box">
+      <div class="payout-title">Payout pending</div>
+      <div class="payout-text">
+        Rewards will be sent to <b>${escapeHtml(openWithdrawalEmail)}</b>
+      </div>
+    </div>
+    ` : ``}
+
+    <div class="cashout-section">
+      <div class="methods-grid">
+
+        <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
+                id="openPayPal"
+                type="button"
+                ${hasOpenWithdrawal ? 'disabled' : ''}>
+          <div class="method-title">
+            <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+          </div>
+
+          <div class="method-logo-tile">
+            <img src="${paypalImg}" alt="PayPal" />
+          </div>
+
+          <div class="method-subtext">No fees</div>
+        </button>
+
+        <div class="method-card placeholder top">
+          <div class="method-title">More payout methods</div>
+          <div class="method-logo-tile">
+            <div class="soon-wrap">
+              <div class="soon-top">Soon</div>
+              <span class="soon-pill">Coming soon</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card placeholder">
+          <div class="method-title">More payout methods</div>
+          <div class="method-logo-tile">
+            <div class="soon-wrap">
+              <div class="soon-top">Soon</div>
+              <span class="soon-pill">Coming soon</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card placeholder">
+          <div class="method-title">More payout methods</div>
+          <div class="method-logo-tile">
+            <div class="soon-wrap">
+              <div class="soon-top">Soon</div>
+              <span class="soon-pill">Coming soon</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card placeholder">
+          <div class="method-title">More payout methods</div>
+          <div class="method-logo-tile">
+            <div class="soon-wrap">
+              <div class="soon-top">Soon</div>
+              <span class="soon-pill">Coming soon</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="method-card placeholder">
+          <div class="method-title">More payout methods</div>
+          <div class="method-logo-tile">
+            <div class="soon-wrap">
+              <div class="soon-top">Soon</div>
+              <span class="soon-pill">Coming soon</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
-
-
-${hasOpenWithdrawal ? `
-<div class="payout-pending-box">
-  <div class="payout-title">Payout pending</div>
-  <div class="payout-text">
-    Rewards will be sent to <b>${escapeHtml(openWithdrawalEmail)}</b>
-  </div>
-</div>
-` : ``}
-
-
-<div class="cashout-section">
-  <div class="methods-grid">
-
-    <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
-            id="openPayPal"
-            type="button"
-            ${hasOpenWithdrawal ? 'disabled' : ''}>
-      <div class="method-title">
-  <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
-</div>
-      <div class="method-logo-tile">
-        <img src="${paypalImg}" alt="PayPal" />
-      </div>
-
-<div class="method-subtext">No fees</div>
-    </button>
-
-    <div class="method-card placeholder top">
-      <div class="method-title">More payout methods</div>
-      <div class="method-logo-tile">
-        <div class="soon-wrap">
-          <div class="soon-top">Soon</div>
-          <span class="soon-pill">Coming soon</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="method-card placeholder">
-      <div class="method-title">More payout methods</div>
-      <div class="method-logo-tile">
-        <div class="soon-wrap">
-          <div class="soon-top">Soon</div>
-          <span class="soon-pill">Coming soon</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="method-card placeholder">
-      <div class="method-title">More payout methods</div>
-      <div class="method-logo-tile">
-        <div class="soon-wrap">
-          <div class="soon-top">Soon</div>
-          <span class="soon-pill">Coming soon</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="method-card placeholder">
-      <div class="method-title">More payout methods</div>
-      <div class="method-logo-tile">
-        <div class="soon-wrap">
-          <div class="soon-top">Soon</div>
-          <span class="soon-pill">Coming soon</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="method-card placeholder">
-      <div class="method-title">More payout methods</div>
-      <div class="method-logo-tile">
-        <div class="soon-wrap">
-          <div class="soon-top">Soon</div>
-          <span class="soon-pill">Coming soon</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
 
   <!-- ===== PayPal Amount Modal ===== -->
   <div class="co-backdrop" id="coBackdrop" aria-hidden="true">
@@ -5703,12 +6015,12 @@ ${hasOpenWithdrawal ? `
       <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
 
       <div class="co-header">
-  <div>
-    <div class="co-title" id="coTitle">
-      <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
-    </div>
-  </div>
-</div>
+        <div>
+          <div class="co-title" id="coTitle">
+            <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+          </div>
+        </div>
+      </div>
 
       <div class="co-divider"></div>
 
@@ -5737,8 +6049,8 @@ ${hasOpenWithdrawal ? `
       <div class="co-header" style="padding:4px 4px 6px;">
         <div>
           <div class="co-title" id="confirmTitle">
-  <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
-</div>
+            <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+          </div>
         </div>
       </div>
 
@@ -5746,26 +6058,26 @@ ${hasOpenWithdrawal ? `
 
       <div class="co-field-label">PayPal account*</div>
 
-<input class="co-input" id="paypalEmailInput" type="email"
-       value="" placeholder="Enter PayPal email" autocomplete="email" />
+      <input class="co-input" id="paypalEmailInput" type="email"
+             value="" placeholder="Enter PayPal email" autocomplete="email" />
 
-<div class="co-field-label" style="margin-top:10px;">Confirm PayPal account*</div>
+      <div class="co-field-label" style="margin-top:10px;">Confirm PayPal account*</div>
 
-<input class="co-input" id="paypalEmailConfirmInput" type="email"
-       value="" placeholder="Confirm PayPal email" autocomplete="email" />
+      <input class="co-input" id="paypalEmailConfirmInput" type="email"
+             value="" placeholder="Confirm PayPal email" autocomplete="email" />
 
-<div class="co-help">
-  Your reward will be sent to this address. Make sure this email is linked to your PayPal account.
-  <br><br>
-  Payments are processed within <b>0-72 hours</b>.
-</div>
+      <div class="co-help">
+        Your reward will be sent to this address. Make sure this email is linked to your PayPal account.
+        <br><br>
+        Payments are processed within <b>0-72 hours</b>.
+      </div>
 
       <div class="co-rows">
-  <div class="co-row">
-    <strong>Amount</strong>
-    <strong id="confirmAmount">$0.00</strong>
-  </div>
-</div>
+        <div class="co-row">
+          <strong>Amount</strong>
+          <strong id="confirmAmount">$0.00</strong>
+        </div>
+      </div>
 
       <div class="co-receive">
         <span>You receive</span>
@@ -5788,7 +6100,6 @@ ${hasOpenWithdrawal ? `
     </div>
   </div>
 
-
   <div class="payments-backdrop" id="paymentsBackdrop" aria-hidden="true">
     <div class="payments-modal" role="dialog" aria-modal="true" aria-labelledby="paymentsTitle">
       <button class="payments-close" id="closePaymentsBtn" type="button" aria-label="Close">✕</button>
@@ -5809,38 +6120,35 @@ ${hasOpenWithdrawal ? `
     </div>
   </div>
 
-
   <script>
-(function(){
-  const availableUsd = Number(window.AVAILABLE_USD || 0);
-  const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
+  (function(){
+    const availableUsd = Number(window.AVAILABLE_USD || 0);
+    const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
 
-  const openBtn = document.getElementById('openPayPal');
-  const openPaymentsBtn = document.getElementById('openPaymentsBtn');
-  const paymentsBackdrop = document.getElementById('paymentsBackdrop');
-  const closePaymentsBtn = document.getElementById('closePaymentsBtn');
-  const paymentsList = document.getElementById('paymentsList');
-  const paymentsTabs = Array.from(document.querySelectorAll('.payments-tab'));
+    const openBtn = document.getElementById('openPayPal');
+    const openPaymentsBtn = document.getElementById('openPaymentsBtn');
+    const paymentsBackdrop = document.getElementById('paymentsBackdrop');
+    const closePaymentsBtn = document.getElementById('closePaymentsBtn');
+    const paymentsList = document.getElementById('paymentsList');
+    const paymentsTabs = Array.from(document.querySelectorAll('.payments-tab'));
 
-  let allPayments = [];
-  let currentPaymentsFilter = 'all';
+    let allPayments = [];
+    let currentPaymentsFilter = 'all';
 
-  const backdrop = document.getElementById('coBackdrop');
-  const closeBtn = document.getElementById('coClose');
-  const amountGrid = document.getElementById('amountGrid');
-  const withdrawBtn = document.getElementById('withdrawBtn');
+    const backdrop = document.getElementById('coBackdrop');
+    const closeBtn = document.getElementById('coClose');
+    const amountGrid = document.getElementById('amountGrid');
+    const withdrawBtn = document.getElementById('withdrawBtn');
 
     const confirmBackdrop = document.getElementById('confirmBackdrop');
     const confirmClose = document.getElementById('confirmClose');
     const btnConfirm = document.getElementById('btnConfirm');
 
     const paypalEmailInput = document.getElementById('paypalEmailInput');
-const paypalEmailConfirmInput = document.getElementById('paypalEmailConfirmInput');
+    const paypalEmailConfirmInput = document.getElementById('paypalEmailConfirmInput');
     const paypalEmailHidden = document.getElementById('paypalEmailHidden');
     const amountHidden = document.getElementById('amountCents');
 
-    const feePayoutEl = document.getElementById('feePayout');
-    const feePaypalEl = document.getElementById('feePaypal');
     const confirmAmountEl = document.getElementById('confirmAmount');
     const confirmReceiveEl = document.getElementById('confirmReceive');
     const chk1 = document.getElementById('chk1');
@@ -5857,6 +6165,7 @@ const paypalEmailConfirmInput = document.getElementById('paypalEmailConfirmInput
       selectedCents = 0;
       withdrawBtn.disabled = true;
       withdrawBtn.textContent = 'Choose an amount';
+
       Array.from(amountGrid.querySelectorAll('.amount-card.active'))
         .forEach(x => x.classList.remove('active'));
 
@@ -5869,17 +6178,16 @@ const paypalEmailConfirmInput = document.getElementById('paypalEmailConfirmInput
       backdrop.setAttribute('aria-hidden','true');
     }
 
-function openConfirm(){
-  const amountUsd = selectedCents / 100;
+    function openConfirm(){
+      const amountUsd = selectedCents / 100;
 
-  confirmAmountEl.textContent = fmt(amountUsd);
-  confirmReceiveEl.textContent = fmt(amountUsd);
+      confirmAmountEl.textContent = fmt(amountUsd);
+      confirmReceiveEl.textContent = fmt(amountUsd);
 
       amountHidden.value = String(selectedCents);
-
       paypalEmailInput.value = '';
-paypalEmailConfirmInput.value = '';
-paypalEmailHidden.value = '';
+      paypalEmailConfirmInput.value = '';
+      paypalEmailHidden.value = '';
 
       chk1.checked = false;
       chk2.checked = false;
@@ -5932,17 +6240,16 @@ paypalEmailHidden.value = '';
     }
 
     function validateConfirm(){
-  const e1 = (paypalEmailInput.value || '').trim();
-  const e2 = (paypalEmailConfirmInput.value || '').trim();
+      const e1 = (paypalEmailInput.value || '').trim();
+      const e2 = (paypalEmailConfirmInput.value || '').trim();
 
-  paypalEmailHidden.value = e1;
+      paypalEmailHidden.value = e1;
 
-  const emailsMatch = e1 !== '' && e1 === e2;
-  const ok = chk1.checked && chk2.checked && emailValid(e1) && emailValid(e2) && emailsMatch;
+      const emailsMatch = e1 !== '' && e1 === e2;
+      const ok = chk1.checked && chk2.checked && emailValid(e1) && emailValid(e2) && emailsMatch;
 
-  btnConfirm.disabled = !ok;
-}
-
+      btnConfirm.disabled = !ok;
+    }
 
     function fmtDate(value){
       if(!value) return '-';
@@ -6025,7 +6332,6 @@ paypalEmailHidden.value = '';
       paymentsBackdrop.setAttribute('aria-hidden', 'true');
     }
 
-
     if(openBtn) openBtn.addEventListener('click', openModal);
     if(closeBtn) closeBtn.addEventListener('click', closeModal);
     if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
@@ -6089,11 +6395,10 @@ paypalEmailHidden.value = '';
     validateConfirm();
   })();
   </script>
-
         `,
     })
   );
-}); 
+});
 
 
 app.get('/api/payments', async (req, res) => {
