@@ -5199,31 +5199,31 @@ app.get('/cashout', async (req, res) => {
               display:none;
             }
 
-            .cashout-footer-content{
-              position:relative;
-              left:auto;
-              right:auto;
-              bottom:auto;
-              transform:none;
-              width:100%;
-              height:auto;
-              display:block;
-              margin-top:18px;
-              padding:16px 0 12px;
-              background:#151c2e;
-              border-top:1px solid rgba(255,255,255,.04);
-            }
+.cashout-footer-content{
+  position:relative;
+  left:auto;
+  right:auto;
+  bottom:auto;
+  transform:none;
+  width:100%;
+  height:auto;
+  display:block;
+  margin-top:0;
+  padding:16px 0 8px;
+  background:#151c2e;
+  border-top:1px solid rgba(255,255,255,.04);
+}
 
-            .cashout-footer-inner{
-              width:100%;
-              max-width:100%;
-              padding:0 14px 8px;
-              display:grid;
-              grid-template-columns:1fr 1fr 1fr;
-              gap:18px;
-              box-sizing:border-box;
-              align-items:start;
-            }
+.cashout-footer-inner{
+  width:100%;
+  max-width:100%;
+  padding:0 0 8px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:18px;
+  box-sizing:border-box;
+  align-items:start;
+}
 
             .footer-brand{
               grid-column:1 / -1;
@@ -5412,17 +5412,17 @@ app.get('/cashout', async (req, res) => {
               padding:5px 10px;
             }
 
-            .cashout-footer-content{
-              height:auto;
-              margin-top:18px;
-              padding:16px 0 12px;
-            }
+.cashout-footer-content{
+  height:auto;
+  margin-top:0;
+  padding:16px 0 8px;
+}
 
-            .cashout-footer-inner{
-              grid-template-columns:1fr 1fr 1fr;
-              gap:14px;
-              padding:0 12px 8px;
-            }
+.cashout-footer-inner{
+  grid-template-columns:1fr 1fr 1fr;
+  gap:14px;
+  padding:0 0 8px;
+}
 
             .footer-brand{
               grid-column:1 / -1;
