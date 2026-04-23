@@ -4668,7 +4668,6 @@ app.get('/cashout', async (req, res) => {
   const ok = req.query.ok === '1';
   const err = String(req.query.err || '');
 
-  // 1) Get profile (balance + pending)
   let profile;
   try {
     profile = await getProfileByUserId(user.id);
@@ -4680,7 +4679,6 @@ app.get('/cashout', async (req, res) => {
   const balanceCents = Number(profile.balance_cents || 0);
   const pendingCents = Number(profile.pending_cents || 0);
 
-  // 2) Check if there is an active cashout (pending/processing)
   let hasOpenWithdrawal = false;
   let openWithdrawalEmail = '';
 
@@ -4701,7 +4699,6 @@ app.get('/cashout', async (req, res) => {
     console.error('open withdrawal check (GET /cashout) failed:', e);
   }
 
-  // 4) Messages
   let msg = '';
   if (ok) {
     msg = `<div class="notice success">Cash out request received. We will process it manually.</div>`;
@@ -4750,8 +4747,8 @@ app.get('/cashout', async (req, res) => {
           html, body{
             min-height:100%;
             margin:0;
-            background:#111827;
             overflow-x:hidden;
+            background:#111827;
           }
 
           body{
@@ -4769,46 +4766,30 @@ app.get('/cashout', async (req, res) => {
 
           main{
             position:relative;
-            min-height:calc(100vh - 64px);
-            padding-top:0 !important;
-            overflow-x:hidden;
+            max-width:none !important;
+            margin:0 !important;
+            padding:0 !important;
             background:#111827;
           }
 
           .cashout-page{
             position:relative;
             width:100%;
-            min-height:calc(100vh - 64px);
-            max-width:none;
-            margin:20px 0 0 0 !important;
-            padding:0 0 260px 40px !important;
             box-sizing:border-box;
-            overflow:visible;
             background:#111827;
           }
 
-          .payout-pending-box{
-            position:absolute;
-            right:120px;
-            top:160px;
-            width:360px;
-            padding:28px;
-            border-radius:16px;
-            background:rgba(34,197,94,.08);
-            border:1px solid rgba(34,197,94,.45);
-            color:#e5e7eb;
+          .cashout-area{
+            background:#111827;
+            padding:24px 0 220px;
           }
 
-          .payout-title{
-            font-size:18px;
-            font-weight:800;
-            margin-bottom:10px;
-          }
-
-          .payout-text{
-            font-size:14px;
-            color:#cbd5e1;
-            line-height:1.5;
+          .cashout-wrap{
+            width:1080px;
+            max-width:1080px;
+            margin:0 auto;
+            padding:0 14px;
+            box-sizing:border-box;
           }
 
           .cashout-head,
@@ -4834,7 +4815,9 @@ app.get('/cashout', async (req, res) => {
             color:#ffffff;
           }
 
-          .cash-accent{ color:#eab308; }
+          .cash-accent{
+            color:#eab308;
+          }
 
           .my-payments-btn{
             display:inline-flex;
@@ -4881,6 +4864,30 @@ app.get('/cashout', async (req, res) => {
             font-size:14px;
             opacity:.9;
             flex-wrap:wrap;
+          }
+
+          .payout-pending-box{
+            position:absolute;
+            right:0;
+            top:8px;
+            width:360px;
+            padding:28px;
+            border-radius:16px;
+            background:rgba(34,197,94,.08);
+            border:1px solid rgba(34,197,94,.45);
+            color:#e5e7eb;
+          }
+
+          .payout-title{
+            font-size:18px;
+            font-weight:800;
+            margin-bottom:10px;
+          }
+
+          .payout-text{
+            font-size:14px;
+            color:#cbd5e1;
+            line-height:1.5;
           }
 
           .cashout-section{
@@ -4971,40 +4978,6 @@ app.get('/cashout', async (req, res) => {
             width:240px;
             max-width:100%;
             height:auto;
-          }
-
-          .method-bar{
-            margin-top:auto;
-            height:10px;
-            border-radius:999px;
-            background:rgba(255,255,255,.10);
-            overflow:hidden;
-            width:100%;
-          }
-
-          .method-fill{
-            height:100%;
-            border-radius:999px;
-            background:#22c55e;
-            width:0%;
-            transition:width .4s ease;
-          }
-
-          .method-foot{
-            margin-top:6px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            font-size:11px;
-            letter-spacing:.2px;
-            color:rgba(255,255,255,.55);
-            width:100%;
-          }
-
-          .method-foot b{
-            font-size:11px;
-            font-weight:600;
-            color:rgba(255,255,255,.75);
           }
 
           .soon-wrap{
@@ -5146,17 +5119,19 @@ app.get('/cashout', async (req, res) => {
             opacity:1;
           }
 
+          @media (min-width:1101px){
+            .cashout-wrap{
+              margin-left:24px;
+              margin-right:0;
+            }
+          }
+
           @media (min-width:761px){
             html, body{
               overflow:hidden;
             }
 
             main{
-              height:calc(100vh - 64px);
-              overflow:hidden;
-            }
-
-            .cashout-page{
               height:calc(100vh - 64px);
               overflow:hidden;
             }
@@ -5174,6 +5149,15 @@ app.get('/cashout', async (req, res) => {
           }
 
           @media (max-width:1100px){
+            .cashout-wrap{
+              width:100%;
+              max-width:100%;
+            }
+
+            .methods-grid{
+              grid-template-columns:repeat(2, 250px);
+            }
+
             .cashout-footer-inner{
               grid-template-columns:1.5fr 1fr 1fr;
               gap:28px;
@@ -5183,38 +5167,46 @@ app.get('/cashout', async (req, res) => {
               display:none;
             }
 
-            .methods-grid{
-              grid-template-columns:repeat(2, 250px);
-            }
-
             .payout-pending-box{
-              right:40px;
+              right:14px;
             }
           }
 
           @media (max-width:760px){
-            html, body, main, .cashout-page{
+            html, body, main, .cashout-page, .cashout-area{
               background:#111827;
             }
 
             html, body{
+              min-height:0;
               height:auto;
               overflow-x:hidden !important;
               overflow-y:auto !important;
             }
 
             main{
-              min-height:auto;
+              min-height:auto !important;
               height:auto !important;
               max-height:none !important;
               overflow:visible !important;
             }
 
+            .cashout-area{
+              padding:20px 0 0;
+            }
+
+            .cashout-wrap{
+              width:100%;
+              max-width:100%;
+              padding:0 10px;
+              box-sizing:border-box;
+            }
+
             .cashout-page{
+              min-height:auto !important;
               height:auto !important;
-              min-height:calc(100vh - 64px);
               overflow:visible !important;
-              margin:14px 0 0 0 !important;
+              margin:0 !important;
               padding:0 !important;
             }
 
@@ -5370,6 +5362,10 @@ app.get('/cashout', async (req, res) => {
           }
 
           @media (max-width:560px){
+            .cashout-wrap{
+              padding:0 10px;
+            }
+
             .cashout-footer-inner{
               grid-template-columns:1fr 1fr 1fr;
               gap:14px;
@@ -5517,20 +5513,6 @@ app.get('/cashout', async (req, res) => {
             gap:10px;
             align-items:center;
             padding:4px 4px 8px;
-          }
-
-          .co-icon{
-            width:32px;
-            height:32px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-          }
-
-          .co-icon img{
-            width:32px;
-            height:auto;
-            display:block;
           }
 
           .co-title{
@@ -5942,96 +5924,149 @@ app.get('/cashout', async (req, res) => {
         </script>
 
         <div class="cashout-page">
+          <div class="cashout-area">
+            <div class="cashout-wrap">
 
-          <div class="cashout-head">
-            <h1><span class="cash-accent">Cash</span>Out</h1>
+              <div class="cashout-head">
+                <h1><span class="cash-accent">Cash</span>Out</h1>
 
-            <div class="cashout-topbar">
-              <button type="button" id="openPaymentsBtn" class="my-payments-btn">My payments</button>
+                <div class="cashout-topbar">
+                  <button type="button" id="openPaymentsBtn" class="my-payments-btn">My payments</button>
 
-              <div class="cashout-balances">
-                <span>Available: $${formatUsdFromCents(balanceCents)}</span>
-                <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
+                  <div class="cashout-balances">
+                    <span>Available: $${formatUsdFromCents(balanceCents)}</span>
+                    <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
+                  </div>
+                </div>
               </div>
+
+              ${msg}
+
+              ${hasOpenWithdrawal ? `
+              <div class="payout-pending-box">
+                <div class="payout-title">Payout pending</div>
+                <div class="payout-text">
+                  Rewards will be sent to <b>${escapeHtml(openWithdrawalEmail)}</b>
+                </div>
+              </div>
+              ` : ``}
+
+              <div class="cashout-section">
+                <div class="methods-grid">
+
+                  <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
+                          id="openPayPal"
+                          type="button"
+                          ${hasOpenWithdrawal ? 'disabled' : ''}>
+                    <div class="method-title">
+                      <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+                    </div>
+                    <div class="method-logo-tile">
+                      <img src="${paypalImg}" alt="PayPal" />
+                    </div>
+
+                    <div class="method-subtext">No fees</div>
+                  </button>
+
+                  <div class="method-card placeholder top">
+                    <div class="method-title">More payout methods</div>
+                    <div class="method-logo-tile">
+                      <div class="soon-wrap">
+                        <div class="soon-top">Soon</div>
+                        <span class="soon-pill">Coming soon</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="method-card placeholder">
+                    <div class="method-title">More payout methods</div>
+                    <div class="method-logo-tile">
+                      <div class="soon-wrap">
+                        <div class="soon-top">Soon</div>
+                        <span class="soon-pill">Coming soon</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="method-card placeholder">
+                    <div class="method-title">More payout methods</div>
+                    <div class="method-logo-tile">
+                      <div class="soon-wrap">
+                        <div class="soon-top">Soon</div>
+                        <span class="soon-pill">Coming soon</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="method-card placeholder">
+                    <div class="method-title">More payout methods</div>
+                    <div class="method-logo-tile">
+                      <div class="soon-wrap">
+                        <div class="soon-top">Soon</div>
+                        <span class="soon-pill">Coming soon</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="method-card placeholder">
+                    <div class="method-title">More payout methods</div>
+                    <div class="method-logo-tile">
+                      <div class="soon-wrap">
+                        <div class="soon-top">Soon</div>
+                        <span class="soon-pill">Coming soon</span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
           </div>
 
-          ${msg}
+          <div class="cashout-bottom-fill"></div>
 
-          ${hasOpenWithdrawal ? `
-          <div class="payout-pending-box">
-            <div class="payout-title">Payout pending</div>
-            <div class="payout-text">
-              Rewards will be sent to <b>${escapeHtml(openWithdrawalEmail)}</b>
-            </div>
-          </div>
-          ` : ``}
+          <div class="cashout-footer-content">
+            <div class="cashout-footer-inner">
 
-          <div class="cashout-section">
-            <div class="methods-grid">
+              <div class="footer-brand">
+                <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
 
-              <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
-                      id="openPayPal"
-                      type="button"
-                      ${hasOpenWithdrawal ? 'disabled' : ''}>
-                <div class="method-title">
-                  <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
-                </div>
-                <div class="method-logo-tile">
-                  <img src="${paypalImg}" alt="PayPal" />
+                <div class="footer-brand-text">
+                  SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
                 </div>
 
-                <div class="method-subtext">No fees</div>
-              </button>
-
-              <div class="method-card placeholder top">
-                <div class="method-title">More payout methods</div>
-                <div class="method-logo-tile">
-                  <div class="soon-wrap">
-                    <div class="soon-top">Soon</div>
-                    <span class="soon-pill">Coming soon</span>
-                  </div>
+                <div class="footer-trust">
+                  <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
+                    <span>Rate us on Trustpilot</span>
+                    <img src="/img/trustpilot-mission.png" class="footer-trust-img">
+                  </a>
                 </div>
               </div>
 
-              <div class="method-card placeholder">
-                <div class="method-title">More payout methods</div>
-                <div class="method-logo-tile">
-                  <div class="soon-wrap">
-                    <div class="soon-top">Soon</div>
-                    <span class="soon-pill">Coming soon</span>
-                  </div>
-                </div>
+              <div class="footer-col">
+                <div class="footer-col-title">SurveyCash</div>
+                <a href="/" class="footer-link">Earn</a>
+                <a href="/cashout" class="footer-link">Cash Out</a>
+                <a href="/support" class="footer-link">Support</a>
               </div>
 
-              <div class="method-card placeholder">
-                <div class="method-title">More payout methods</div>
-                <div class="method-logo-tile">
-                  <div class="soon-wrap">
-                    <div class="soon-top">Soon</div>
-                    <span class="soon-pill">Coming soon</span>
-                  </div>
-                </div>
+              <div class="footer-col">
+                <div class="footer-col-title">Help</div>
+                <a href="/support" class="footer-link">FAQ</a>
+                <a href="/support" class="footer-link">Contact</a>
               </div>
 
-              <div class="method-card placeholder">
-                <div class="method-title">More payout methods</div>
-                <div class="method-logo-tile">
-                  <div class="soon-wrap">
-                    <div class="soon-top">Soon</div>
-                    <span class="soon-pill">Coming soon</span>
-                  </div>
-                </div>
+              <div class="footer-col legal">
+                <div class="footer-col-title">Info</div>
+                <a href="/terms" class="footer-link">Terms</a>
+                <a href="/privacy" class="footer-link">Privacy</a>
               </div>
 
-              <div class="method-card placeholder">
-                <div class="method-title">More payout methods</div>
-                <div class="method-logo-tile">
-                  <div class="soon-wrap">
-                    <div class="soon-top">Soon</div>
-                    <span class="soon-pill">Coming soon</span>
-                  </div>
-                </div>
+              <div class="footer-col social">
+                <div class="footer-col-title">Social</div>
+                <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+                <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
               </div>
 
             </div>
@@ -6145,54 +6180,6 @@ app.get('/cashout', async (req, res) => {
               <div class="payments-list" id="paymentsList">
                 <div class="payments-loading">Loading payments...</div>
               </div>
-            </div>
-          </div>
-
-          <div class="cashout-bottom-fill"></div>
-
-          <div class="cashout-footer-content">
-            <div class="cashout-footer-inner">
-
-              <div class="footer-brand">
-                <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
-
-                <div class="footer-brand-text">
-                  SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
-                </div>
-
-                <div class="footer-trust">
-                  <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
-                    <span>Rate us on Trustpilot</span>
-                    <img src="/img/trustpilot-mission.png" class="footer-trust-img">
-                  </a>
-                </div>
-              </div>
-
-              <div class="footer-col">
-                <div class="footer-col-title">SurveyCash</div>
-                <a href="/" class="footer-link">Earn</a>
-                <a href="/cashout" class="footer-link">Cash Out</a>
-                <a href="/support" class="footer-link">Support</a>
-              </div>
-
-              <div class="footer-col">
-                <div class="footer-col-title">Help</div>
-                <a href="/support" class="footer-link">FAQ</a>
-                <a href="/support" class="footer-link">Contact</a>
-              </div>
-
-              <div class="footer-col legal">
-                <div class="footer-col-title">Info</div>
-                <a href="/terms" class="footer-link">Terms</a>
-                <a href="/privacy" class="footer-link">Privacy</a>
-              </div>
-
-              <div class="footer-col social">
-                <div class="footer-col-title">Social</div>
-                <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
-                <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
-              </div>
-
             </div>
           </div>
 
@@ -6471,7 +6458,6 @@ app.get('/cashout', async (req, res) => {
             validateConfirm();
           })();
           </script>
-        </div>
       `,
     })
   );
