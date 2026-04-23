@@ -4658,7 +4658,6 @@ app.get('/postback/wannads', async (req, res) => {
   }
 });
 
-
 app.get('/cashout', async (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
@@ -4668,7 +4667,6 @@ app.get('/cashout', async (req, res) => {
   const ok = req.query.ok === '1';
   const err = String(req.query.err || '');
 
-  // 1) Get profile (balance + pending)
   let profile;
   try {
     profile = await getProfileByUserId(user.id);
@@ -4680,7 +4678,6 @@ app.get('/cashout', async (req, res) => {
   const balanceCents = Number(profile.balance_cents || 0);
   const pendingCents = Number(profile.pending_cents || 0);
 
-  // 2) Check if there is an active cashout (pending/processing)
   let hasOpenWithdrawal = false;
   let openWithdrawalEmail = '';
 
@@ -4701,7 +4698,6 @@ app.get('/cashout', async (req, res) => {
     console.error('open withdrawal check (GET /cashout) failed:', e);
   }
 
-  // 4) Messages
   let msg = '';
   if (ok) {
     msg = `<div class="notice success">Cash out request received. We will process it manually.</div>`;
@@ -4957,15 +4953,25 @@ app.get('/cashout', async (req, res) => {
             text-align:center;
           }
 
-          .method-card:hover{ transform:translateY(-3px); border-color:rgba(255,255,255,.18); }
+          .method-card:hover{
+            transform:translateY(-3px);
+            border-color:rgba(255,255,255,.18);
+          }
 
           .method-card.paypal:hover{
             border-color:rgba(34,197,94,.85);
             box-shadow:0 14px 50px rgba(34,197,94,.16);
           }
 
-          .method-card.placeholder{ opacity:.6; cursor:not-allowed; }
-          .method-card.placeholder:hover{ transform:none; box-shadow:none; }
+          .method-card.placeholder{
+            opacity:.6;
+            cursor:not-allowed;
+          }
+
+          .method-card.placeholder:hover{
+            transform:none;
+            box-shadow:none;
+          }
 
           .method-title{
             font-weight:800;
@@ -5043,8 +5049,17 @@ app.get('/cashout', async (req, res) => {
             color:rgba(255,255,255,.75);
           }
 
-          .soon-wrap{ width:100%; text-align:center; }
-          .soon-top{ font-weight:900; margin-bottom:10px; font-size:16px; }
+          .soon-wrap{
+            width:100%;
+            text-align:center;
+          }
+
+          .soon-top{
+            font-weight:900;
+            margin-bottom:10px;
+            font-size:16px;
+          }
+
           .soon-pill{
             display:inline-block;
             font-size:13px;
@@ -5135,7 +5150,7 @@ app.get('/cashout', async (req, res) => {
             opacity:1;
           }
 
-          @media (min-width: 769px){
+          @media (min-width:769px){
             html, body{
               height:100%;
               overflow:hidden;
@@ -5167,321 +5182,280 @@ app.get('/cashout', async (req, res) => {
             }
           }
 
-@media (max-width:1100px){
-  .cashout-footer-inner{
-    grid-template-columns:1.5fr 1fr 1fr;
-    gap:28px;
-  }
+          @media (max-width:1100px){
+            .cashout-footer-inner{
+              grid-template-columns:1.5fr 1fr 1fr;
+              gap:28px;
+            }
 
-  .footer-col.legal{
-    display:none;
-  }
+            .footer-col.legal{
+              display:none;
+            }
 
-  .methods-grid{
-    grid-template-columns:repeat(2, minmax(0, 250px));
-  }
+            .methods-grid{
+              grid-template-columns:repeat(2, 250px);
+            }
 
-  .payout-pending-box{
-    right:40px;
-  }
-}
+            .payout-pending-box{
+              right:40px;
+            }
+          }
 
-@media (max-width:760px){
-  html, body, main, .cashout-page, .cashout-area{
-    background:#111827;
-  }
+          @media (max-width:768px){
+            html, body{
+              height:auto;
+              overflow-x:hidden !important;
+              overflow-y:auto !important;
+            }
 
-  html, body{
-    height:auto;
-    overflow-x:hidden !important;
-    overflow-y:auto !important;
-  }
+            main{
+              height:auto !important;
+              min-height:calc(100vh - 64px);
+              max-height:none !important;
+              overflow:visible !important;
+            }
 
-  main{
-    min-height:auto;
-    height:auto !important;
-    max-height:none !important;
-    overflow:visible !important;
-  }
+            .cashout-page{
+              height:auto !important;
+              min-height:calc(100vh - 64px);
+              overflow:visible !important;
+              margin:14px 0 0 0 !important;
+              padding:0 0 220px 0 !important;
+            }
 
-  .cashout-page{
-    height:auto !important;
-    min-height:calc(100vh - 64px);
-    overflow:visible !important;
-    margin:14px 0 0 0 !important;
-    padding:0 !important;
-  }
+            .cashout-bottom-fill{
+              position:absolute;
+              left:0;
+              right:0;
+              bottom:0;
+              transform:none;
+              width:100%;
+              height:190px;
+            }
 
-  .cashout-area{
-    padding:20px 0 0;
-  }
+            .cashout-footer-content{
+              position:absolute;
+              left:0;
+              right:0;
+              bottom:0;
+              transform:none;
+              width:100%;
+              height:190px;
+            }
 
-  .cashout-wrap{
-    width:100%;
-    max-width:100%;
-    padding:0 10px;
-    box-sizing:border-box;
-  }
+            .cashout-head h1{
+              font-size:40px;
+            }
 
-  .cashout-bottom-fill{
-    display:none;
-  }
+            .cashout-topbar{
+              gap:12px;
+            }
 
-  .cashout-footer-content{
-    position:relative;
-    left:auto;
-    right:auto;
-    bottom:auto;
-    transform:none;
-    width:100%;
-    height:auto;
-    display:block;
-    margin-top:18px;
-    padding:16px 0 12px;
-    background:#151c2e;
-    border-top:1px solid rgba(255,255,255,.04);
-  }
+            .my-payments-btn{
+              padding:9px 18px;
+              font-size:13px;
+              border-radius:8px;
+            }
 
-  .cashout-footer-inner{
-    width:100%;
-    max-width:100%;
-    padding:0 14px 8px;
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:18px;
-    box-sizing:border-box;
-    align-items:start;
-  }
+            .cashout-balances{
+              gap:14px;
+              font-size:13px;
+            }
 
-  .footer-brand{
-    grid-column:1 / -1;
-  }
+            .payout-pending-box{
+              position:relative;
+              right:auto;
+              top:auto;
+              width:100%;
+              max-width:none;
+              margin:10px 0 16px;
+              padding:18px;
+            }
 
-  .footer-logo{
-    font-size:18px;
-    margin-bottom:10px;
-  }
+            .payout-title{
+              font-size:16px;
+            }
 
-  .footer-brand-text{
-    max-width:none;
-    font-size:12px;
-    line-height:1.45;
-    margin-bottom:10px;
-  }
+            .payout-text{
+              font-size:13px;
+            }
 
-  .footer-trust-link{
-    gap:8px;
-  }
+            .methods-grid{
+              grid-template-columns:repeat(2, minmax(0, 1fr));
+              gap:14px;
+              width:100%;
+            }
 
-  .footer-trust-link span{
-    font-size:12px;
-  }
+            .method-card{
+              width:100%;
+              height:160px;
+              padding:10px 12px 10px;
+              border-radius:16px;
+            }
 
-  .footer-trust-img{
-    height:24px;
-  }
+            .method-title{
+              font-size:13px;
+              margin-bottom:6px;
+            }
 
-  .footer-col-title{
-    font-size:14px;
-    margin:0 0 10px;
-  }
+            .method-logo-tile img{
+              width:170px;
+              max-width:100%;
+            }
 
-  .footer-link{
-    font-size:13px;
-    margin-bottom:10px;
-  }
+            .method-subtext{
+              font-size:11px;
+            }
 
-  .footer-col:nth-of-type(2){
-    display:none;
-  }
+            .soon-top{
+              font-size:15px;
+              margin-bottom:8px;
+            }
 
-  .footer-col.legal,
-  .footer-col.social{
-    display:block;
-  }
+            .soon-pill{
+              font-size:11px;
+              padding:6px 12px;
+            }
 
-  .cashout-head h1{
-    font-size:40px;
-  }
+            .cashout-footer-inner{
+              padding:18px 22px 0;
+              gap:20px;
+              grid-template-columns:1fr 1fr 1fr;
+            }
 
-  .cashout-topbar{
-    gap:12px;
-  }
+            .footer-logo{
+              font-size:18px;
+              margin-bottom:12px;
+            }
 
-  .my-payments-btn{
-    padding:9px 18px;
-    font-size:13px;
-    border-radius:8px;
-  }
+            .footer-brand{
+              grid-column:1 / -1;
+            }
 
-  .cashout-balances{
-    gap:14px;
-    font-size:13px;
-  }
+            .footer-brand-text{
+              font-size:12px;
+              line-height:1.45;
+              margin-bottom:10px;
+              max-width:none;
+            }
 
-  .payout-pending-box{
-    position:relative;
-    right:auto;
-    top:auto;
-    width:100%;
-    max-width:none;
-    margin:10px 0 16px;
-    padding:18px;
-  }
+            .footer-col-title{
+              font-size:14px;
+              margin-bottom:12px;
+            }
 
-  .payout-title{
-    font-size:16px;
-  }
+            .footer-link{
+              font-size:13px;
+              margin-bottom:12px;
+            }
 
-  .payout-text{
-    font-size:13px;
-  }
+            .footer-trust-img{
+              height:28px;
+            }
+          }
 
-  .methods-grid{
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-    gap:14px;
-    width:100%;
-  }
+          @media (max-width:480px){
+            .cashout-page{
+              margin:10px 0 0 0 !important;
+              padding:0 0 190px 0 !important;
+            }
 
-  .method-card{
-    width:100%;
-    height:160px;
-    padding:10px 12px 10px;
-    border-radius:16px;
-  }
+            .cashout-head h1{
+              font-size:34px;
+            }
 
-  .method-title{
-    font-size:13px;
-    margin-bottom:6px;
-  }
+            .my-payments-btn{
+              padding:8px 14px;
+              font-size:12px;
+            }
 
-  .method-logo-tile img{
-    width:170px;
-    max-width:100%;
-  }
+            .cashout-balances{
+              gap:10px;
+              font-size:12px;
+            }
 
-  .method-subtext{
-    font-size:11px;
-  }
+            .payout-pending-box{
+              padding:14px;
+            }
 
-  .soon-top{
-    font-size:15px;
-    margin-bottom:8px;
-  }
+            .payout-title{
+              font-size:14px;
+            }
 
-  .soon-pill{
-    font-size:11px;
-    padding:6px 12px;
-  }
-}
+            .payout-text{
+              font-size:12px;
+            }
 
-@media (max-width:560px){
-  .cashout-wrap{
-    padding:0 10px;
-  }
+            .methods-grid{
+              grid-template-columns:repeat(2, minmax(0, 1fr));
+              gap:10px;
+            }
 
-  .cashout-footer-inner{
-    grid-template-columns:1fr 1fr 1fr;
-    gap:14px;
-    padding:0 12px 8px;
-  }
+            .method-card{
+              width:100%;
+              height:135px;
+              padding:8px 10px 8px;
+              border-radius:14px;
+            }
 
-  .footer-brand{
-    grid-column:1 / -1;
-  }
+            .method-title{
+              font-size:12px;
+            }
 
-  .footer-logo{
-    font-size:17px;
-  }
+            .method-logo-tile img{
+              width:125px;
+            }
 
-  .footer-brand-text{
-    font-size:11px;
-    line-height:1.4;
-  }
+            .method-subtext{
+              font-size:10px;
+            }
 
-  .footer-col-title{
-    font-size:13px;
-  }
+            .soon-top{
+              font-size:13px;
+            }
 
-  .footer-link{
-    font-size:12px;
-    margin-bottom:8px;
-  }
+            .soon-pill{
+              font-size:10px;
+              padding:5px 10px;
+            }
 
-  .footer-trust-link span{
-    font-size:11px;
-  }
+            .cashout-bottom-fill{
+              height:170px;
+            }
 
-  .footer-trust-img{
-    height:22px;
-  }
+            .cashout-footer-content{
+              height:170px;
+            }
 
-  .footer-col:nth-of-type(2){
-    display:none;
-  }
+            .cashout-footer-inner{
+              padding:16px 14px 0;
+              gap:14px;
+            }
 
-  .footer-col.legal,
-  .footer-col.social{
-    display:block;
-  }
+            .footer-logo{
+              font-size:16px;
+            }
 
-  .cashout-head h1{
-    font-size:34px;
-  }
+            .footer-brand-text{
+              font-size:11px;
+              max-width:none;
+            }
 
-  .my-payments-btn{
-    padding:8px 14px;
-    font-size:12px;
-  }
+            .footer-col-title{
+              font-size:12px;
+              margin-bottom:10px;
+            }
 
-  .cashout-balances{
-    gap:10px;
-    font-size:12px;
-  }
+            .footer-link{
+              font-size:11px;
+              margin-bottom:10px;
+            }
 
-  .payout-pending-box{
-    padding:14px;
-  }
+            .footer-trust-img{
+              height:22px;
+            }
+          }
 
-  .payout-title{
-    font-size:14px;
-  }
-
-  .payout-text{
-    font-size:12px;
-  }
-
-  .methods-grid{
-    gap:10px;
-  }
-
-  .method-card{
-    height:135px;
-    padding:8px 10px 8px;
-    border-radius:14px;
-  }
-
-  .method-title{
-    font-size:12px;
-  }
-
-  .method-logo-tile img{
-    width:125px;
-  }
-
-  .method-subtext{
-    font-size:10px;
-  }
-
-  .soon-top{
-    font-size:13px;
-  }
-
-  .soon-pill{
-    font-size:10px;
-    padding:5px 10px;
-  }
-}
           /* ===== Backdrops ===== */
           .co-backdrop{
             position:fixed;
@@ -5564,7 +5538,7 @@ app.get('/cashout', async (req, res) => {
             gap:10px;
           }
 
-          @media (max-width: 760px){
+          @media (max-width:760px){
             .amount-grid{
               grid-template-columns:repeat(2,minmax(0,1fr));
             }
@@ -5950,541 +5924,538 @@ app.get('/cashout', async (req, res) => {
           window.HAS_OPEN_WITHDRAWAL = ${hasOpenWithdrawal ? 'true' : 'false'};
         </script>
 
-<div class="cashout-page">
+        <div class="cashout-page">
 
-  <div class="cashout-bottom-fill"></div>
+          <div class="cashout-bottom-fill"></div>
 
-  <div class="cashout-footer-content">
-    <div class="cashout-footer-inner">
+          <div class="cashout-footer-content">
+            <div class="cashout-footer-inner">
 
-      <div class="footer-brand">
-        <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
+              <div class="footer-brand">
+                <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
 
-        <div class="footer-brand-text">
-  SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
-</div>
+                <div class="footer-brand-text">
+                  SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
+                </div>
 
-<div class="footer-trust">
-  <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
-    <span>Rate us on Trustpilot</span>
-    <img src="/img/trustpilot-mission.png" class="footer-trust-img">
-  </a>
-</div>
-      </div>
+                <div class="footer-trust">
+                  <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
+                    <span>Rate us on Trustpilot</span>
+                    <img src="/img/trustpilot-mission.png" class="footer-trust-img">
+                  </a>
+                </div>
+              </div>
 
-      <div class="footer-col">
-        <div class="footer-col-title">SurveyCash</div>
-        <a href="/" class="footer-link">Earn</a>
-        <a href="/cashout" class="footer-link">Cash Out</a>
-        <a href="/support" class="footer-link">Support</a>
-      </div>
+              <div class="footer-col">
+                <div class="footer-col-title">SurveyCash</div>
+                <a href="/" class="footer-link">Earn</a>
+                <a href="/cashout" class="footer-link">Cash Out</a>
+                <a href="/support" class="footer-link">Support</a>
+              </div>
 
-      <div class="footer-col">
-        <div class="footer-col-title">Help</div>
-        <a href="/support" class="footer-link">FAQ</a>
-        <a href="/support" class="footer-link">Contact</a>
-      </div>
+              <div class="footer-col">
+                <div class="footer-col-title">Help</div>
+                <a href="/support" class="footer-link">FAQ</a>
+                <a href="/support" class="footer-link">Contact</a>
+              </div>
 
-      <div class="footer-col legal">
-        <div class="footer-col-title">Info</div>
-        <a href="/terms" class="footer-link">Terms</a>
-        <a href="/privacy" class="footer-link">Privacy</a>
-      </div>
+              <div class="footer-col legal">
+                <div class="footer-col-title">Info</div>
+                <a href="/terms" class="footer-link">Terms</a>
+                <a href="/privacy" class="footer-link">Privacy</a>
+              </div>
 
-      <div class="footer-col social">
-        <div class="footer-col-title">Social</div>
-        <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
-        <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
-      </div>
+              <div class="footer-col social">
+                <div class="footer-col-title">Social</div>
+                <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+                <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
+              </div>
 
-    </div>
-  </div>
-
-  <div class="cashout-head">
-    <h1><span class="cash-accent">Cash</span>Out</h1>
-
-    <div class="cashout-topbar">
-      <button type="button" id="openPaymentsBtn" class="my-payments-btn">My payments</button>
-
-      <div class="cashout-balances">
-        <span>Available: $${formatUsdFromCents(balanceCents)}</span>
-        <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
-      </div>
-    </div>
-  </div>
-
-  ${msg}
-
-  ${hasOpenWithdrawal ? `
-  <div class="payout-pending-box">
-    <div class="payout-title">Payout pending</div>
-    <div class="payout-text">
-      Rewards will be sent to <b>${escapeHtml(openWithdrawalEmail)}</b>
-    </div>
-  </div>
-  ` : ``}
-
-  <div class="cashout-section">
-    <div class="methods-grid">
-
-      <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
-              id="openPayPal"
-              type="button"
-              ${hasOpenWithdrawal ? 'disabled' : ''}>
-        <div class="method-title">
-          <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
-        </div>
-        <div class="method-logo-tile">
-          <img src="${paypalImg}" alt="PayPal" />
-        </div>
-
-        <div class="method-subtext">No fees</div>
-      </button>
-
-      <div class="method-card placeholder top">
-        <div class="method-title">More payout methods</div>
-        <div class="method-logo-tile">
-          <div class="soon-wrap">
-            <div class="soon-top">Soon</div>
-            <span class="soon-pill">Coming soon</span>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div class="method-card placeholder">
-        <div class="method-title">More payout methods</div>
-        <div class="method-logo-tile">
-          <div class="soon-wrap">
-            <div class="soon-top">Soon</div>
-            <span class="soon-pill">Coming soon</span>
+          <div class="cashout-head">
+            <h1><span class="cash-accent">Cash</span>Out</h1>
+
+            <div class="cashout-topbar">
+              <button type="button" id="openPaymentsBtn" class="my-payments-btn">My payments</button>
+
+              <div class="cashout-balances">
+                <span>Available: $${formatUsdFromCents(balanceCents)}</span>
+                <span>Pending: $${formatUsdFromCents(pendingCents)}</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div class="method-card placeholder">
-        <div class="method-title">More payout methods</div>
-        <div class="method-logo-tile">
-          <div class="soon-wrap">
-            <div class="soon-top">Soon</div>
-            <span class="soon-pill">Coming soon</span>
+          ${msg}
+
+          ${hasOpenWithdrawal ? `
+          <div class="payout-pending-box">
+            <div class="payout-title">Payout pending</div>
+            <div class="payout-text">
+              Rewards will be sent to <b>${escapeHtml(openWithdrawalEmail)}</b>
+            </div>
           </div>
-        </div>
-      </div>
+          ` : ``}
 
-      <div class="method-card placeholder">
-        <div class="method-title">More payout methods</div>
-        <div class="method-logo-tile">
-          <div class="soon-wrap">
-            <div class="soon-top">Soon</div>
-            <span class="soon-pill">Coming soon</span>
+          <div class="cashout-section">
+            <div class="methods-grid">
+
+              <button class="method-card paypal top ${hasOpenWithdrawal ? 'disabled' : ''}"
+                      id="openPayPal"
+                      type="button"
+                      ${hasOpenWithdrawal ? 'disabled' : ''}>
+                <div class="method-title">
+                  <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+                </div>
+                <div class="method-logo-tile">
+                  <img src="${paypalImg}" alt="PayPal" />
+                </div>
+
+                <div class="method-subtext">No fees</div>
+              </button>
+
+              <div class="method-card placeholder top">
+                <div class="method-title">More payout methods</div>
+                <div class="method-logo-tile">
+                  <div class="soon-wrap">
+                    <div class="soon-top">Soon</div>
+                    <span class="soon-pill">Coming soon</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="method-card placeholder">
+                <div class="method-title">More payout methods</div>
+                <div class="method-logo-tile">
+                  <div class="soon-wrap">
+                    <div class="soon-top">Soon</div>
+                    <span class="soon-pill">Coming soon</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="method-card placeholder">
+                <div class="method-title">More payout methods</div>
+                <div class="method-logo-tile">
+                  <div class="soon-wrap">
+                    <div class="soon-top">Soon</div>
+                    <span class="soon-pill">Coming soon</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="method-card placeholder">
+                <div class="method-title">More payout methods</div>
+                <div class="method-logo-tile">
+                  <div class="soon-wrap">
+                    <div class="soon-top">Soon</div>
+                    <span class="soon-pill">Coming soon</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="method-card placeholder">
+                <div class="method-title">More payout methods</div>
+                <div class="method-logo-tile">
+                  <div class="soon-wrap">
+                    <div class="soon-top">Soon</div>
+                    <span class="soon-pill">Coming soon</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div class="method-card placeholder">
-        <div class="method-title">More payout methods</div>
-        <div class="method-logo-tile">
-          <div class="soon-wrap">
-            <div class="soon-top">Soon</div>
-            <span class="soon-pill">Coming soon</span>
+          <div class="co-backdrop" id="coBackdrop" aria-hidden="true">
+            <div class="co-modal" role="dialog" aria-modal="true" aria-labelledby="coTitle">
+              <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
+
+              <div class="co-header">
+                <div>
+                  <div class="co-title" id="coTitle">
+                    <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="co-divider"></div>
+
+              <div class="co-block">
+                <div class="co-block-title">Choose amount</div>
+                <div class="amount-grid" id="amountGrid">
+                  ${amountCardsHtml}
+                </div>
+              </div>
+
+              <div class="co-divider"></div>
+
+              <div class="co-actions">
+                <button class="withdraw-btn" id="withdrawBtn" type="button" disabled>
+                  Choose an amount
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-    </div>
-  </div>
+          <div class="co-backdrop" id="confirmBackdrop" aria-hidden="true">
+            <div class="co-confirm" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+              <button class="co-close" id="confirmClose" type="button" aria-label="Close">✕</button>
 
-  <!-- ===== PayPal Amount Modal ===== -->
-  <div class="co-backdrop" id="coBackdrop" aria-hidden="true">
-    <div class="co-modal" role="dialog" aria-modal="true" aria-labelledby="coTitle">
-      <button class="co-close" id="coClose" type="button" aria-label="Close">✕</button>
+              <div class="co-header" style="padding:4px 4px 6px;">
+                <div>
+                  <div class="co-title" id="confirmTitle">
+                    <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+                  </div>
+                </div>
+              </div>
 
-      <div class="co-header">
-        <div>
-          <div class="co-title" id="coTitle">
-            <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+              <div class="co-divider"></div>
+
+              <div class="co-field-label">PayPal account*</div>
+
+              <input class="co-input" id="paypalEmailInput" type="email"
+                     value="" placeholder="Enter PayPal email" autocomplete="email" />
+
+              <div class="co-field-label" style="margin-top:10px;">Confirm PayPal account*</div>
+
+              <input class="co-input" id="paypalEmailConfirmInput" type="email"
+                     value="" placeholder="Confirm PayPal email" autocomplete="email" />
+
+              <div class="co-help">
+                Your reward will be sent to this address. Make sure this email is linked to your PayPal account.
+                <br><br>
+                Payments are processed within <b>0-72 hours</b>.
+              </div>
+
+              <div class="co-rows">
+                <div class="co-row">
+                  <strong>Amount</strong>
+                  <strong id="confirmAmount">$0.00</strong>
+                </div>
+              </div>
+
+              <div class="co-receive">
+                <span>You receive</span>
+                <span id="confirmReceive">$0.00</span>
+              </div>
+
+              <div class="co-checks">
+                <label><input type="checkbox" id="chk1"> I confirm this PayPal account can receive payments</label>
+                <label><input type="checkbox" id="chk2"> I understand this order is non-refundable</label>
+              </div>
+
+              <form id="cashout-form" method="POST" action="/withdraw">
+                <input type="hidden" name="amountCents" id="amountCents" value="" />
+                <input type="hidden" name="paypalEmail" id="paypalEmailHidden" value="" />
+
+                <div class="co-confirm-actions">
+                  <button type="submit" class="btn-confirm" id="btnConfirm" disabled>Cash out</button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div class="co-divider"></div>
+          <div class="payments-backdrop" id="paymentsBackdrop" aria-hidden="true">
+            <div class="payments-modal" role="dialog" aria-modal="true" aria-labelledby="paymentsTitle">
+              <button class="payments-close" id="closePaymentsBtn" type="button" aria-label="Close">✕</button>
 
-      <div class="co-block">
-        <div class="co-block-title">Choose amount</div>
-        <div class="amount-grid" id="amountGrid">
-          ${amountCardsHtml}
-        </div>
-      </div>
+              <div class="payments-title" id="paymentsTitle">My payments</div>
+              <div class="payments-subtitle">View your payout history</div>
 
-      <div class="co-divider"></div>
+              <div class="payments-tabs">
+                <button type="button" class="payments-tab active" data-filter="all">All</button>
+                <button type="button" class="payments-tab" data-filter="pending">Pending</button>
+                <button type="button" class="payments-tab" data-filter="paid">Paid</button>
+                <button type="button" class="payments-tab" data-filter="failed">Failed</button>
+              </div>
 
-      <div class="co-actions">
-        <button class="withdraw-btn" id="withdrawBtn" type="button" disabled>
-          Choose an amount
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== Confirm Modal ===== -->
-  <div class="co-backdrop" id="confirmBackdrop" aria-hidden="true">
-    <div class="co-confirm" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
-      <button class="co-close" id="confirmClose" type="button" aria-label="Close">✕</button>
-
-      <div class="co-header" style="padding:4px 4px 6px;">
-        <div>
-          <div class="co-title" id="confirmTitle">
-            <span class="paypal-dark">Pay</span><span class="paypal-light">Pal</span>
+              <div class="payments-list" id="paymentsList">
+                <div class="payments-loading">Loading payments...</div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div class="co-divider"></div>
-
-      <div class="co-field-label">PayPal account*</div>
-
-      <input class="co-input" id="paypalEmailInput" type="email"
-             value="" placeholder="Enter PayPal email" autocomplete="email" />
-
-      <div class="co-field-label" style="margin-top:10px;">Confirm PayPal account*</div>
-
-      <input class="co-input" id="paypalEmailConfirmInput" type="email"
-             value="" placeholder="Confirm PayPal email" autocomplete="email" />
-
-      <div class="co-help">
-        Your reward will be sent to this address. Make sure this email is linked to your PayPal account.
-        <br><br>
-        Payments are processed within <b>0-72 hours</b>.
-      </div>
-
-      <div class="co-rows">
-        <div class="co-row">
-          <strong>Amount</strong>
-          <strong id="confirmAmount">$0.00</strong>
-        </div>
-      </div>
-
-      <div class="co-receive">
-        <span>You receive</span>
-        <span id="confirmReceive">$0.00</span>
-      </div>
-
-      <div class="co-checks">
-        <label><input type="checkbox" id="chk1"> I confirm this PayPal account can receive payments</label>
-        <label><input type="checkbox" id="chk2"> I understand this order is non-refundable</label>
-      </div>
-
-      <form id="cashout-form" method="POST" action="/withdraw">
-        <input type="hidden" name="amountCents" id="amountCents" value="" />
-        <input type="hidden" name="paypalEmail" id="paypalEmailHidden" value="" />
-
-        <div class="co-confirm-actions">
-          <button type="submit" class="btn-confirm" id="btnConfirm" disabled>Cash out</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="payments-backdrop" id="paymentsBackdrop" aria-hidden="true">
-    <div class="payments-modal" role="dialog" aria-modal="true" aria-labelledby="paymentsTitle">
-      <button class="payments-close" id="closePaymentsBtn" type="button" aria-label="Close">✕</button>
-
-      <div class="payments-title" id="paymentsTitle">My payments</div>
-      <div class="payments-subtitle">View your payout history</div>
-
-      <div class="payments-tabs">
-        <button type="button" class="payments-tab active" data-filter="all">All</button>
-        <button type="button" class="payments-tab" data-filter="pending">Pending</button>
-        <button type="button" class="payments-tab" data-filter="paid">Paid</button>
-        <button type="button" class="payments-tab" data-filter="failed">Failed</button>
-      </div>
-
-      <div class="payments-list" id="paymentsList">
-        <div class="payments-loading">Loading payments...</div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-  (function(){
-    const availableUsd = Number(window.AVAILABLE_USD || 0);
-    const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
-
-    const openBtn = document.getElementById('openPayPal');
-    const openPaymentsBtn = document.getElementById('openPaymentsBtn');
-    const paymentsBackdrop = document.getElementById('paymentsBackdrop');
-    const closePaymentsBtn = document.getElementById('closePaymentsBtn');
-    const paymentsList = document.getElementById('paymentsList');
-    const paymentsTabs = Array.from(document.querySelectorAll('.payments-tab'));
-
-    let allPayments = [];
-    let currentPaymentsFilter = 'all';
-
-    const backdrop = document.getElementById('coBackdrop');
-    const closeBtn = document.getElementById('coClose');
-    const amountGrid = document.getElementById('amountGrid');
-    const withdrawBtn = document.getElementById('withdrawBtn');
-
-    const confirmBackdrop = document.getElementById('confirmBackdrop');
-    const confirmClose = document.getElementById('confirmClose');
-    const btnConfirm = document.getElementById('btnConfirm');
-
-    const paypalEmailInput = document.getElementById('paypalEmailInput');
-    const paypalEmailConfirmInput = document.getElementById('paypalEmailConfirmInput');
-    const paypalEmailHidden = document.getElementById('paypalEmailHidden');
-    const amountHidden = document.getElementById('amountCents');
-
-    const confirmAmountEl = document.getElementById('confirmAmount');
-    const confirmReceiveEl = document.getElementById('confirmReceive');
-    const chk1 = document.getElementById('chk1');
-    const chk2 = document.getElementById('chk2');
-
-    let selectedCents = 0;
-    const fmt = (n) => '$' + Number(n).toFixed(2);
-
-    function openModal(){
-      if(hasOpen) return;
-      backdrop.classList.add('open');
-      backdrop.setAttribute('aria-hidden','false');
-
-      selectedCents = 0;
-      withdrawBtn.disabled = true;
-      withdrawBtn.textContent = 'Choose an amount';
-      Array.from(amountGrid.querySelectorAll('.amount-card.active'))
-        .forEach(x => x.classList.remove('active'));
-
-      refreshBars();
-      validateAmount();
-    }
-
-    function closeModal(){
-      backdrop.classList.remove('open');
-      backdrop.setAttribute('aria-hidden','true');
-    }
-
-    function openConfirm(){
-      const amountUsd = selectedCents / 100;
-
-      confirmAmountEl.textContent = fmt(amountUsd);
-      confirmReceiveEl.textContent = fmt(amountUsd);
-
-      amountHidden.value = String(selectedCents);
-
-      paypalEmailInput.value = '';
-      paypalEmailConfirmInput.value = '';
-      paypalEmailHidden.value = '';
-
-      chk1.checked = false;
-      chk2.checked = false;
-      btnConfirm.disabled = true;
-
-      confirmBackdrop.classList.add('open');
-      confirmBackdrop.setAttribute('aria-hidden','false');
-
-      paypalEmailInput.focus();
-    }
-
-    function closeConfirm(){
-      confirmBackdrop.classList.remove('open');
-      confirmBackdrop.setAttribute('aria-hidden','true');
-    }
-
-    function refreshBars(){
-      const cards = Array.from(amountGrid.querySelectorAll('.amount-card'));
-      cards.forEach(card => {
-        const cents = Number(card.getAttribute('data-cents') || 0);
-        const usd = cents / 100;
-        const pct = Math.max(0, Math.min(100, (availableUsd / usd) * 100));
-        const fill = card.querySelector('.fill');
-        if(fill) fill.style.width = pct + '%';
-      });
-    }
-
-    function validateAmount(){
-      if(selectedCents <= 0){
-        withdrawBtn.disabled = true;
-        withdrawBtn.textContent = 'Choose an amount';
-        return;
-      }
-
-      const selectedUsd = selectedCents / 100;
-
-      if(availableUsd < selectedUsd){
-        withdrawBtn.disabled = true;
-        withdrawBtn.textContent = 'Insufficient balance';
-        return;
-      }
-
-      withdrawBtn.disabled = false;
-      withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
-    }
-
-    function emailValid(v){
-      v = (v || '').trim();
-      return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v);
-    }
-
-    function validateConfirm(){
-      const e1 = (paypalEmailInput.value || '').trim();
-      const e2 = (paypalEmailConfirmInput.value || '').trim();
-
-      paypalEmailHidden.value = e1;
-
-      const emailsMatch = e1 !== '' && e1 === e2;
-      const ok = chk1.checked && chk2.checked && emailValid(e1) && emailValid(e2) && emailsMatch;
-
-      btnConfirm.disabled = !ok;
-    }
-
-    function fmtDate(value){
-      if(!value) return '-';
-      const d = new Date(value);
-      if (Number.isNaN(d.getTime())) return '-';
-      return d.toLocaleString('en-GB');
-    }
-
-    function escapeClientHtml(str){
-      return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    function renderPayments(){
-      let items = allPayments;
-
-      if(currentPaymentsFilter !== 'all'){
-        items = items.filter(p => String(p.status || '').toLowerCase() === currentPaymentsFilter);
-      }
-
-      if(!items.length){
-        paymentsList.innerHTML = '<div class="payments-empty">No payments found.</div>';
-        return;
-      }
-
-      paymentsList.innerHTML = items.map((p) => {
-        const status = String(p.status || 'pending').toLowerCase();
-        const amount = '$' + (Number(p.amount_cents || 0) / 100).toFixed(2);
-
-        return ''
-          + '<div class="payment-item">'
-            + '<div class="payment-left">'
-              + '<div class="payment-amount">' + amount + '</div>'
-              + '<div class="payment-meta">'
-                + '<div>PayPal: ' + escapeClientHtml(p.paypal_email || '-') + '</div>'
-                + '<div>Created: ' + escapeClientHtml(fmtDate(p.created_at)) + '</div>'
-              + '</div>'
-            + '</div>'
-            + '<div class="payment-status ' + escapeClientHtml(status) + '">' + escapeClientHtml(status) + '</div>'
-          + '</div>';
-      }).join('');
-    }
-
-    async function loadPayments(){
-      paymentsList.innerHTML = '<div class="payments-loading">Loading payments...</div>';
-
-      try {
-        const res = await fetch('/api/payments', {
-          method: 'GET',
-          credentials: 'same-origin'
-        });
-
-        const data = await res.json();
-
-        if(!res.ok || !data.ok){
-          paymentsList.innerHTML = '<div class="payments-error">Failed to load payments.</div>';
-          return;
-        }
-
-        allPayments = Array.isArray(data.payments) ? data.payments : [];
-        renderPayments();
-      } catch (err) {
-        console.error('loadPayments error:', err);
-        paymentsList.innerHTML = '<div class="payments-error">Failed to load payments.</div>';
-      }
-    }
-
-    function openPaymentsModal(){
-      paymentsBackdrop.classList.add('open');
-      paymentsBackdrop.setAttribute('aria-hidden', 'false');
-      loadPayments();
-    }
-
-    function closePaymentsModal(){
-      paymentsBackdrop.classList.remove('open');
-      paymentsBackdrop.setAttribute('aria-hidden', 'true');
-    }
-
-    if(openBtn) openBtn.addEventListener('click', openModal);
-    if(closeBtn) closeBtn.addEventListener('click', closeModal);
-    if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
-
-    if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
-
-    if(openPaymentsBtn) openPaymentsBtn.addEventListener('click', openPaymentsModal);
-    if(closePaymentsBtn) closePaymentsBtn.addEventListener('click', closePaymentsModal);
-
-    if(paymentsBackdrop){
-      paymentsBackdrop.addEventListener('click', (e) => {
-        if(e.target === paymentsBackdrop) closePaymentsModal();
-      });
-    }
-
-    paymentsTabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        paymentsTabs.forEach(x => x.classList.remove('active'));
-        tab.classList.add('active');
-        currentPaymentsFilter = String(tab.getAttribute('data-filter') || 'all').toLowerCase();
-        renderPayments();
-      });
-    });
-
-    window.addEventListener('keydown', (e) => {
-      if(e.key === 'Escape'){
-        if(confirmBackdrop.classList.contains('open')) closeConfirm();
-        else if(backdrop.classList.contains('open')) closeModal();
-        else if(paymentsBackdrop.classList.contains('open')) closePaymentsModal();
-      }
-    });
-
-    if(amountGrid){
-      amountGrid.addEventListener('click', (e) => {
-        const card = e.target.closest('.amount-card');
-        if(!card || card.disabled) return;
-
-        Array.from(amountGrid.querySelectorAll('.amount-card.active'))
-          .forEach(x => x.classList.remove('active'));
-
-        card.classList.add('active');
-        selectedCents = Number(card.getAttribute('data-cents') || 0);
-        validateAmount();
-      });
-    }
-
-    if(withdrawBtn){
-      withdrawBtn.addEventListener('click', () => {
-        if(withdrawBtn.disabled) return;
-        openConfirm();
-      });
-    }
-
-    if(chk1) chk1.addEventListener('change', validateConfirm);
-    if(chk2) chk2.addEventListener('change', validateConfirm);
-    if(paypalEmailInput) paypalEmailInput.addEventListener('input', validateConfirm);
-    if(paypalEmailConfirmInput) paypalEmailConfirmInput.addEventListener('input', validateConfirm);
-
-    refreshBars();
-    validateAmount();
-    validateConfirm();
-  })();
-  </script>
+
+          <script>
+          (function(){
+            const availableUsd = Number(window.AVAILABLE_USD || 0);
+            const hasOpen = !!window.HAS_OPEN_WITHDRAWAL;
+
+            const openBtn = document.getElementById('openPayPal');
+            const openPaymentsBtn = document.getElementById('openPaymentsBtn');
+            const paymentsBackdrop = document.getElementById('paymentsBackdrop');
+            const closePaymentsBtn = document.getElementById('closePaymentsBtn');
+            const paymentsList = document.getElementById('paymentsList');
+            const paymentsTabs = Array.from(document.querySelectorAll('.payments-tab'));
+
+            let allPayments = [];
+            let currentPaymentsFilter = 'all';
+
+            const backdrop = document.getElementById('coBackdrop');
+            const closeBtn = document.getElementById('coClose');
+            const amountGrid = document.getElementById('amountGrid');
+            const withdrawBtn = document.getElementById('withdrawBtn');
+
+            const confirmBackdrop = document.getElementById('confirmBackdrop');
+            const confirmClose = document.getElementById('confirmClose');
+            const btnConfirm = document.getElementById('btnConfirm');
+
+            const paypalEmailInput = document.getElementById('paypalEmailInput');
+            const paypalEmailConfirmInput = document.getElementById('paypalEmailConfirmInput');
+            const paypalEmailHidden = document.getElementById('paypalEmailHidden');
+            const amountHidden = document.getElementById('amountCents');
+
+            const confirmAmountEl = document.getElementById('confirmAmount');
+            const confirmReceiveEl = document.getElementById('confirmReceive');
+            const chk1 = document.getElementById('chk1');
+            const chk2 = document.getElementById('chk2');
+
+            let selectedCents = 0;
+            const fmt = (n) => '$' + Number(n).toFixed(2);
+
+            function openModal(){
+              if(hasOpen) return;
+              backdrop.classList.add('open');
+              backdrop.setAttribute('aria-hidden','false');
+
+              selectedCents = 0;
+              withdrawBtn.disabled = true;
+              withdrawBtn.textContent = 'Choose an amount';
+              Array.from(amountGrid.querySelectorAll('.amount-card.active'))
+                .forEach(x => x.classList.remove('active'));
+
+              refreshBars();
+              validateAmount();
+            }
+
+            function closeModal(){
+              backdrop.classList.remove('open');
+              backdrop.setAttribute('aria-hidden','true');
+            }
+
+            function openConfirm(){
+              const amountUsd = selectedCents / 100;
+
+              confirmAmountEl.textContent = fmt(amountUsd);
+              confirmReceiveEl.textContent = fmt(amountUsd);
+
+              amountHidden.value = String(selectedCents);
+
+              paypalEmailInput.value = '';
+              paypalEmailConfirmInput.value = '';
+              paypalEmailHidden.value = '';
+
+              chk1.checked = false;
+              chk2.checked = false;
+              btnConfirm.disabled = true;
+
+              confirmBackdrop.classList.add('open');
+              confirmBackdrop.setAttribute('aria-hidden','false');
+
+              paypalEmailInput.focus();
+            }
+
+            function closeConfirm(){
+              confirmBackdrop.classList.remove('open');
+              confirmBackdrop.setAttribute('aria-hidden','true');
+            }
+
+            function refreshBars(){
+              const cards = Array.from(amountGrid.querySelectorAll('.amount-card'));
+              cards.forEach(card => {
+                const cents = Number(card.getAttribute('data-cents') || 0);
+                const usd = cents / 100;
+                const pct = Math.max(0, Math.min(100, (availableUsd / usd) * 100));
+                const fill = card.querySelector('.fill');
+                if(fill) fill.style.width = pct + '%';
+              });
+            }
+
+            function validateAmount(){
+              if(selectedCents <= 0){
+                withdrawBtn.disabled = true;
+                withdrawBtn.textContent = 'Choose an amount';
+                return;
+              }
+
+              const selectedUsd = selectedCents / 100;
+
+              if(availableUsd < selectedUsd){
+                withdrawBtn.disabled = true;
+                withdrawBtn.textContent = 'Insufficient balance';
+                return;
+              }
+
+              withdrawBtn.disabled = false;
+              withdrawBtn.textContent = 'Cash out $' + selectedUsd.toFixed(2);
+            }
+
+            function emailValid(v){
+              v = (v || '').trim();
+              return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v);
+            }
+
+            function validateConfirm(){
+              const e1 = (paypalEmailInput.value || '').trim();
+              const e2 = (paypalEmailConfirmInput.value || '').trim();
+
+              paypalEmailHidden.value = e1;
+
+              const emailsMatch = e1 !== '' && e1 === e2;
+              const ok = chk1.checked && chk2.checked && emailValid(e1) && emailValid(e2) && emailsMatch;
+
+              btnConfirm.disabled = !ok;
+            }
+
+            function fmtDate(value){
+              if(!value) return '-';
+              const d = new Date(value);
+              if (Number.isNaN(d.getTime())) return '-';
+              return d.toLocaleString('en-GB');
+            }
+
+            function escapeClientHtml(str){
+              return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+            }
+
+            function renderPayments(){
+              let items = allPayments;
+
+              if(currentPaymentsFilter !== 'all'){
+                items = items.filter(p => String(p.status || '').toLowerCase() === currentPaymentsFilter);
+              }
+
+              if(!items.length){
+                paymentsList.innerHTML = '<div class="payments-empty">No payments found.</div>';
+                return;
+              }
+
+              paymentsList.innerHTML = items.map((p) => {
+                const status = String(p.status || 'pending').toLowerCase();
+                const amount = '$' + (Number(p.amount_cents || 0) / 100).toFixed(2);
+
+                return ''
+                  + '<div class="payment-item">'
+                    + '<div class="payment-left">'
+                      + '<div class="payment-amount">' + amount + '</div>'
+                      + '<div class="payment-meta">'
+                        + '<div>PayPal: ' + escapeClientHtml(p.paypal_email || '-') + '</div>'
+                        + '<div>Created: ' + escapeClientHtml(fmtDate(p.created_at)) + '</div>'
+                      + '</div>'
+                    + '</div>'
+                    + '<div class="payment-status ' + escapeClientHtml(status) + '">' + escapeClientHtml(status) + '</div>'
+                  + '</div>';
+              }).join('');
+            }
+
+            async function loadPayments(){
+              paymentsList.innerHTML = '<div class="payments-loading">Loading payments...</div>';
+
+              try {
+                const res = await fetch('/api/payments', {
+                  method: 'GET',
+                  credentials: 'same-origin'
+                });
+
+                const data = await res.json();
+
+                if(!res.ok || !data.ok){
+                  paymentsList.innerHTML = '<div class="payments-error">Failed to load payments.</div>';
+                  return;
+                }
+
+                allPayments = Array.isArray(data.payments) ? data.payments : [];
+                renderPayments();
+              } catch (err) {
+                console.error('loadPayments error:', err);
+                paymentsList.innerHTML = '<div class="payments-error">Failed to load payments.</div>';
+              }
+            }
+
+            function openPaymentsModal(){
+              paymentsBackdrop.classList.add('open');
+              paymentsBackdrop.setAttribute('aria-hidden', 'false');
+              loadPayments();
+            }
+
+            function closePaymentsModal(){
+              paymentsBackdrop.classList.remove('open');
+              paymentsBackdrop.setAttribute('aria-hidden', 'true');
+            }
+
+            if(openBtn) openBtn.addEventListener('click', openModal);
+            if(closeBtn) closeBtn.addEventListener('click', closeModal);
+            if(backdrop) backdrop.addEventListener('click', (e) => { if(e.target === backdrop) closeModal(); });
+
+            if(confirmClose) confirmClose.addEventListener('click', closeConfirm);
+
+            if(openPaymentsBtn) openPaymentsBtn.addEventListener('click', openPaymentsModal);
+            if(closePaymentsBtn) closePaymentsBtn.addEventListener('click', closePaymentsModal);
+
+            if(paymentsBackdrop){
+              paymentsBackdrop.addEventListener('click', (e) => {
+                if(e.target === paymentsBackdrop) closePaymentsModal();
+              });
+            }
+
+            paymentsTabs.forEach((tab) => {
+              tab.addEventListener('click', () => {
+                paymentsTabs.forEach(x => x.classList.remove('active'));
+                tab.classList.add('active');
+                currentPaymentsFilter = String(tab.getAttribute('data-filter') || 'all').toLowerCase();
+                renderPayments();
+              });
+            });
+
+            window.addEventListener('keydown', (e) => {
+              if(e.key === 'Escape'){
+                if(confirmBackdrop.classList.contains('open')) closeConfirm();
+                else if(backdrop.classList.contains('open')) closeModal();
+                else if(paymentsBackdrop.classList.contains('open')) closePaymentsModal();
+              }
+            });
+
+            if(amountGrid){
+              amountGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.amount-card');
+                if(!card || card.disabled) return;
+
+                Array.from(amountGrid.querySelectorAll('.amount-card.active'))
+                  .forEach(x => x.classList.remove('active'));
+
+                card.classList.add('active');
+                selectedCents = Number(card.getAttribute('data-cents') || 0);
+                validateAmount();
+              });
+            }
+
+            if(withdrawBtn){
+              withdrawBtn.addEventListener('click', () => {
+                if(withdrawBtn.disabled) return;
+                openConfirm();
+              });
+            }
+
+            if(chk1) chk1.addEventListener('change', validateConfirm);
+            if(chk2) chk2.addEventListener('change', validateConfirm);
+            if(paypalEmailInput) paypalEmailInput.addEventListener('input', validateConfirm);
+            if(paypalEmailConfirmInput) paypalEmailConfirmInput.addEventListener('input', validateConfirm);
+
+            refreshBars();
+            validateAmount();
+            validateConfirm();
+          })();
+          </script>
       `,
     })
   );
 });
-
 
 app.get('/api/payments', async (req, res) => {
   try {
