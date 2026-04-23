@@ -5167,275 +5167,321 @@ app.get('/cashout', async (req, res) => {
             }
           }
 
-          @media (max-width:1100px){
-            .cashout-footer-inner{
-              grid-template-columns:1.5fr 1fr 1fr;
-              gap:28px;
-            }
+@media (max-width:1100px){
+  .cashout-footer-inner{
+    grid-template-columns:1.5fr 1fr 1fr;
+    gap:28px;
+  }
 
-            .footer-col.legal{
-              display:none;
-            }
+  .footer-col.legal{
+    display:none;
+  }
 
-            .methods-grid{
-              grid-template-columns:repeat(2, 250px);
-            }
+  .methods-grid{
+    grid-template-columns:repeat(2, minmax(0, 250px));
+  }
 
-            .payout-pending-box{
-              right:40px;
-            }
-          }
-
-          @media (max-width:768px){
-            html, body{
-              height:auto;
-              overflow-x:hidden !important;
-              overflow-y:auto !important;
-            }
-
-            main{
-              height:auto !important;
-              min-height:calc(100vh - 64px);
-              max-height:none !important;
-              overflow:visible !important;
-            }
-
-            .cashout-page{
-              height:auto !important;
-              min-height:calc(100vh - 64px);
-              overflow:visible !important;
-              margin:14px 0 0 0 !important;
-              padding:0 12px 220px 12px !important;
-            }
-
-            .cashout-bottom-fill{
-              position:absolute;
-              left:0;
-              right:0;
-              bottom:0;
-              transform:none;
-              width:100%;
-              height:190px;
-            }
-
-            .cashout-footer-content{
-              position:absolute;
-              left:0;
-              right:0;
-              bottom:0;
-              transform:none;
-              width:100%;
-              height:190px;
-            }
-
-            .cashout-head h1{
-              font-size:40px;
-            }
-
-            .cashout-topbar{
-              gap:12px;
-            }
-
-            .my-payments-btn{
-              padding:9px 18px;
-              font-size:13px;
-              border-radius:8px;
-            }
-
-            .cashout-balances{
-              gap:14px;
-              font-size:13px;
-            }
-
-            .payout-pending-box{
-              position:relative;
-              right:auto;
-              top:auto;
-              width:100%;
-              max-width:none;
-              margin:10px 0 16px;
-              padding:18px;
-            }
-
-            .payout-title{
-              font-size:16px;
-            }
-
-            .payout-text{
-              font-size:13px;
-            }
-
-            .methods-grid{
-              grid-template-columns:repeat(2, minmax(0, 1fr));
-              gap:14px;
-              width:100%;
-            }
-
-.method-card{
-  width:100%;
-  height:160px;
-  padding:10px 12px 10px;
-  border-radius:16px;
+  .payout-pending-box{
+    right:40px;
+  }
 }
 
-            .method-title{
-              font-size:13px;
-              margin-bottom:6px;
-            }
+@media (max-width:760px){
+  html, body, main, .cashout-page, .cashout-area{
+    background:#111827;
+  }
 
-            .method-logo-tile img{
-              width:170px;
-              max-width:100%;
-            }
+  html, body{
+    height:auto;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+  }
 
-            .method-subtext{
-              font-size:11px;
-            }
+  main{
+    min-height:auto;
+    height:auto !important;
+    max-height:none !important;
+    overflow:visible !important;
+  }
 
-            .soon-top{
-              font-size:15px;
-              margin-bottom:8px;
-            }
+  .cashout-page{
+    height:auto !important;
+    min-height:calc(100vh - 64px);
+    overflow:visible !important;
+    margin:14px 0 0 0 !important;
+    padding:0 !important;
+  }
 
-            .soon-pill{
-              font-size:11px;
-              padding:6px 12px;
-            }
+  .cashout-area{
+    padding:20px 0 0;
+  }
 
-            .cashout-footer-inner{
-              padding:18px 22px 0;
-              gap:20px;
-            }
+  .cashout-wrap{
+    width:100%;
+    max-width:100%;
+    padding:0 10px;
+    box-sizing:border-box;
+  }
 
-            .footer-logo{
-              font-size:18px;
-              margin-bottom:12px;
-            }
+  .cashout-bottom-fill{
+    display:none;
+  }
 
-            .footer-brand-text{
-              font-size:12px;
-              line-height:1.45;
-              margin-bottom:10px;
-              max-width:260px;
-            }
+  .cashout-footer-content{
+    position:relative;
+    left:auto;
+    right:auto;
+    bottom:auto;
+    transform:none;
+    width:100%;
+    height:auto;
+    display:block;
+    margin-top:18px;
+    padding:16px 0 12px;
+    background:#151c2e;
+    border-top:1px solid rgba(255,255,255,.04);
+  }
 
-            .footer-col-title{
-              font-size:14px;
-              margin-bottom:12px;
-            }
+  .cashout-footer-inner{
+    width:100%;
+    max-width:100%;
+    padding:0 14px 8px;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:18px;
+    box-sizing:border-box;
+    align-items:start;
+  }
 
-            .footer-link{
-              font-size:13px;
-              margin-bottom:12px;
-            }
+  .footer-brand{
+    grid-column:1 / -1;
+  }
 
-            .footer-trust-img{
-              height:28px;
-            }
-          }
+  .footer-logo{
+    font-size:18px;
+    margin-bottom:10px;
+  }
 
-          @media (max-width:480px){
-            .cashout-page{
-              margin:10px 0 0 0 !important;
-              padding:0 10px 190px 10px !important;
-            }
+  .footer-brand-text{
+    max-width:none;
+    font-size:12px;
+    line-height:1.45;
+    margin-bottom:10px;
+  }
 
-            .cashout-head h1{
-              font-size:34px;
-            }
+  .footer-trust-link{
+    gap:8px;
+  }
 
-            .my-payments-btn{
-              padding:8px 14px;
-              font-size:12px;
-            }
+  .footer-trust-link span{
+    font-size:12px;
+  }
 
-            .cashout-balances{
-              gap:10px;
-              font-size:12px;
-            }
+  .footer-trust-img{
+    height:24px;
+  }
 
-            .payout-pending-box{
-              padding:14px;
-            }
+  .footer-col-title{
+    font-size:14px;
+    margin:0 0 10px;
+  }
 
-            .payout-title{
-              font-size:14px;
-            }
+  .footer-link{
+    font-size:13px;
+    margin-bottom:10px;
+  }
 
-            .payout-text{
-              font-size:12px;
-            }
+  .footer-col:nth-of-type(2){
+    display:none;
+  }
 
-            .methods-grid{
-              grid-template-columns:repeat(2, minmax(0, 1fr));
-              gap:10px;
-            }
+  .footer-col.legal,
+  .footer-col.social{
+    display:block;
+  }
 
-.method-card{
-  width:100%;
-  height:135px;
-  padding:8px 10px 8px;
-  border-radius:14px;
+  .cashout-head h1{
+    font-size:40px;
+  }
+
+  .cashout-topbar{
+    gap:12px;
+  }
+
+  .my-payments-btn{
+    padding:9px 18px;
+    font-size:13px;
+    border-radius:8px;
+  }
+
+  .cashout-balances{
+    gap:14px;
+    font-size:13px;
+  }
+
+  .payout-pending-box{
+    position:relative;
+    right:auto;
+    top:auto;
+    width:100%;
+    max-width:none;
+    margin:10px 0 16px;
+    padding:18px;
+  }
+
+  .payout-title{
+    font-size:16px;
+  }
+
+  .payout-text{
+    font-size:13px;
+  }
+
+  .methods-grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:14px;
+    width:100%;
+  }
+
+  .method-card{
+    width:100%;
+    height:160px;
+    padding:10px 12px 10px;
+    border-radius:16px;
+  }
+
+  .method-title{
+    font-size:13px;
+    margin-bottom:6px;
+  }
+
+  .method-logo-tile img{
+    width:170px;
+    max-width:100%;
+  }
+
+  .method-subtext{
+    font-size:11px;
+  }
+
+  .soon-top{
+    font-size:15px;
+    margin-bottom:8px;
+  }
+
+  .soon-pill{
+    font-size:11px;
+    padding:6px 12px;
+  }
 }
 
-            .method-title{
-              font-size:12px;
-            }
+@media (max-width:560px){
+  .cashout-wrap{
+    padding:0 10px;
+  }
 
-            .method-logo-tile img{
-              width:125px;
-            }
+  .cashout-footer-inner{
+    grid-template-columns:1fr 1fr 1fr;
+    gap:14px;
+    padding:0 12px 8px;
+  }
 
-            .method-subtext{
-              font-size:10px;
-            }
+  .footer-brand{
+    grid-column:1 / -1;
+  }
 
-            .soon-top{
-              font-size:13px;
-            }
+  .footer-logo{
+    font-size:17px;
+  }
 
-            .soon-pill{
-              font-size:10px;
-              padding:5px 10px;
-            }
+  .footer-brand-text{
+    font-size:11px;
+    line-height:1.4;
+  }
 
-            .cashout-bottom-fill{
-              height:170px;
-            }
+  .footer-col-title{
+    font-size:13px;
+  }
 
-            .cashout-footer-content{
-              height:170px;
-            }
+  .footer-link{
+    font-size:12px;
+    margin-bottom:8px;
+  }
 
-            .cashout-footer-inner{
-              padding:16px 14px 0;
-              gap:14px;
-            }
+  .footer-trust-link span{
+    font-size:11px;
+  }
 
-            .footer-logo{
-              font-size:16px;
-            }
+  .footer-trust-img{
+    height:22px;
+  }
 
-            .footer-brand-text{
-              font-size:11px;
-              max-width:200px;
-            }
+  .footer-col:nth-of-type(2){
+    display:none;
+  }
 
-            .footer-col-title{
-              font-size:12px;
-              margin-bottom:10px;
-            }
+  .footer-col.legal,
+  .footer-col.social{
+    display:block;
+  }
 
-            .footer-link{
-              font-size:11px;
-              margin-bottom:10px;
-            }
+  .cashout-head h1{
+    font-size:34px;
+  }
 
-            .footer-trust-img{
-              height:22px;
-            }
-          }
+  .my-payments-btn{
+    padding:8px 14px;
+    font-size:12px;
+  }
 
+  .cashout-balances{
+    gap:10px;
+    font-size:12px;
+  }
+
+  .payout-pending-box{
+    padding:14px;
+  }
+
+  .payout-title{
+    font-size:14px;
+  }
+
+  .payout-text{
+    font-size:12px;
+  }
+
+  .methods-grid{
+    gap:10px;
+  }
+
+  .method-card{
+    height:135px;
+    padding:8px 10px 8px;
+    border-radius:14px;
+  }
+
+  .method-title{
+    font-size:12px;
+  }
+
+  .method-logo-tile img{
+    width:125px;
+  }
+
+  .method-subtext{
+    font-size:10px;
+  }
+
+  .soon-top{
+    font-size:13px;
+  }
+
+  .soon-pill{
+    font-size:10px;
+    padding:5px 10px;
+  }
+}
           /* ===== Backdrops ===== */
           .co-backdrop{
             position:fixed;
