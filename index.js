@@ -6917,11 +6917,11 @@ app.get('/support', (req, res) => {
 
   const bodyHtml = `
   <style>
-html, body{
-  min-height:100%;
-  overflow-x:hidden;
-  background:#111827;
-}
+    html, body{
+      height:100%;
+      overflow:hidden;
+      background:#111827;
+    }
 
     body{
       margin:0;
@@ -6943,16 +6943,16 @@ html, body{
       background:#111827;
     }
 
-    .support-page{
-      position:relative;
-      width:100%;
-      min-height:calc(100vh - 64px);
-      max-width:none;
-      margin:0 !important;
-      padding:24px 22px 260px;
-      box-sizing:border-box;
-      overflow:visible;
-    }
+.support-page{
+  position:relative;
+  width:100%;
+  min-height:calc(100vh - 64px);
+  max-width:none;
+  margin:0 !important;
+  padding:24px 22px 0;
+  box-sizing:border-box;
+  overflow:visible;
+}
 
 .support-shell{
   position:relative;
