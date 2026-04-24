@@ -7035,8 +7035,10 @@ app.get('/support', (req, res) => {
   border-radius:12px;
   border:1px solid rgba(255,255,255,.06);
   background:#111827;
-  padding:8px 10px;
-  min-height:auto;
+  padding:12px 14px;
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
 }
 
     .faq-item:hover{
@@ -7046,11 +7048,8 @@ app.get('/support', (req, res) => {
     }
 
 .faq-q{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin:0 0 8px;
-  font-size:16px;
+  margin:0 0 4px;
+  font-size:15px;
   font-weight:900;
   color:#ffffff;
   line-height:1.3;
@@ -7058,16 +7057,14 @@ app.get('/support', (req, res) => {
 
 .faq-a{
   color:#9fb0c6;
-  font-size:14px;
-  line-height:1.6;
-  font-weight:500;
-  margin-left:34px;
+  font-size:13px;
+  line-height:1.5;
 }
 
 .faq-icon{
-  flex:0 0 28px;
-  width:28px;
-  height:28px;
+  flex:0 0 24px;
+  width:24px;
+  height:24px;
       border-radius:999px;
       display:inline-flex;
       align-items:center;
