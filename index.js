@@ -7048,17 +7048,17 @@ app.get('/support', (req, res) => {
     }
 
 .faq-q{
-  margin:0 0 4px;
-  font-size:15px;
+  margin:0 0 6px;
+  font-size:16px;
   font-weight:900;
-  color:#ffffff;
-  line-height:1.3;
+  color:#fbbf24;
+  line-height:1.35;
 }
 
 .faq-a{
   color:#9fb0c6;
-  font-size:13px;
-  line-height:1.5;
+  font-size:15px;
+  line-height:1.6;
 }
 
 .faq-icon{
