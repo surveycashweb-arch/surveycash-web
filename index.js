@@ -5329,12 +5329,13 @@ app.get('/cashout', async (req, res) => {
               width:100%;
             }
 
-            .method-card{
-              width:100%;
-              height:160px;
-              padding:10px 12px 10px;
-              border-radius:16px;
-            }
+.method-card{
+  width:92%;
+  height:160px;
+  padding:10px 12px 10px;
+  border-radius:16px;
+  margin:0 auto;
+}
 
             .method-title{
               font-size:13px;
@@ -5441,11 +5442,13 @@ app.get('/cashout', async (req, res) => {
               gap:10px;
             }
 
-            .method-card{
-              height:135px;
-              padding:8px 10px 8px;
-              border-radius:14px;
-            }
+.method-card{
+  width:92%;
+  height:135px;
+  padding:8px 10px 8px;
+  border-radius:14px;
+  margin:0 auto;
+}
 
             .method-title{
               font-size:12px;
