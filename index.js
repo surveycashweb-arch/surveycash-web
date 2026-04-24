@@ -6943,16 +6943,16 @@ app.get('/support', (req, res) => {
       background:#111827;
     }
 
-    .support-page{
-      position:relative;
-      width:100%;
-      min-height:calc(100vh - 64px);
-      max-width:none;
-      margin:0 !important;
-      padding:24px 22px 260px;
-      box-sizing:border-box;
-      overflow:visible;
-    }
+.support-page{
+  position:relative;
+  width:100%;
+  min-height:calc(100vh - 64px);
+  max-width:none;
+  margin:0 !important;
+  padding:24px 22px 0;
+  box-sizing:border-box;
+  overflow:visible;
+}
 
 .support-shell{
   position:relative;
@@ -7258,7 +7258,7 @@ app.get('/support', (req, res) => {
       .support-page{
         height:auto;
         min-height:0;
-        padding:20px 0 0;
+        padding:20px 14px 0;
         overflow:visible;
         display:block;
       }
@@ -7267,8 +7267,6 @@ app.get('/support', (req, res) => {
         grid-template-columns:1fr;
         height:auto;
         gap:16px;
-        padding:0 14px;
-        box-sizing:border-box;
       }
 
       .faq-card,
@@ -7307,13 +7305,12 @@ app.get('/support', (req, res) => {
 
 .cashout-footer-content{
   position:relative;
-  left:auto;
-  transform:none;
+  left:50%;
+  transform:translateX(-50%);
   bottom:auto;
-  width:100%;
+  width:100vw;
   height:auto;
-  display:block;
-  margin-top:18px;
+  margin:18px 0 0;
   padding:16px 0 12px;
   background:#151c2e;
   border-top:1px solid rgba(255,255,255,.04);
