@@ -7051,7 +7051,7 @@ app.get('/support', (req, res) => {
   margin:0 0 6px;
   font-size:16px;
   font-weight:900;
-  color:#fbbf24;
+  color:#ffffff;
   line-height:1.35;
 }
 
@@ -7342,7 +7342,7 @@ app.get('/support', (req, res) => {
   <span class="faq-icon">?</span>
   <div>
     <div class="faq-q">How long do payments take?</div>
-    <div class="faq-a">Payments are usually processed manually within 0-72 hours.</div>
+    <div class="faq-a">Payments are usually processed within 0-72 hours.</div>
   </div>
 </div>
 
