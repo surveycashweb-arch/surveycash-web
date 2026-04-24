@@ -7255,13 +7255,13 @@ app.get('/support', (req, res) => {
         overflow:visible;
       }
 
-      .support-page{
-        height:auto;
-        min-height:0;
-        padding:20px 14px 0;
-        overflow:visible;
-        display:block;
-      }
+.support-page{
+  min-height:calc(100vh - 64px);
+  padding:20px 14px 0;
+  overflow:visible;
+  display:flex;
+  flex-direction:column;
+}
 
       .support-shell{
         grid-template-columns:1fr;
@@ -7310,7 +7310,7 @@ app.get('/support', (req, res) => {
   bottom:auto;
   width:100vw;
   height:auto;
-  margin:18px 0 0;
+  margin-top:auto;
   padding:16px 0 12px;
   background:#151c2e;
   border-top:1px solid rgba(255,255,255,.04);
