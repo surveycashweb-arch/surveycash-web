@@ -5807,6 +5807,56 @@ app.get('/cashout', async (req, res) => {
             color:#fbbf24;
           }
 
+
+@media (max-width:520px){
+.co-confirm{
+  width:92%;
+  max-width:92%;
+    max-height:calc(100vh - 90px);
+    padding:12px 10px 10px;
+    border-radius:16px;
+    overflow:auto;
+  }
+
+  .co-field-label{
+    font-size:14px;
+  }
+
+  .co-input{
+    height:40px;
+    font-size:14px;
+  }
+
+  .co-help{
+    font-size:12px;
+    line-height:1.45;
+    max-height:none;
+    overflow:hidden;
+    white-space:normal;
+    word-break:normal;
+    overflow-wrap:break-word;
+  }
+
+  .co-row{
+    font-size:13px;
+  }
+
+  .co-receive{
+    font-size:15px;
+  }
+
+  .co-checks{
+    font-size:12px;
+    line-height:1.35;
+  }
+
+  .btn-confirm{
+    height:46px;
+    font-size:13px;
+  }
+}
+
+
           .payments-backdrop{
             position:fixed;
             inset:0;
