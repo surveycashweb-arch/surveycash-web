@@ -6943,16 +6943,16 @@ app.get('/support', (req, res) => {
       background:#111827;
     }
 
-.support-page{
-  position:relative;
-  width:100%;
-  min-height:calc(100vh - 64px);
-  max-width:none;
-  margin:0 !important;
-  padding:24px 22px 0;
-  box-sizing:border-box;
-  overflow:visible;
-}
+    .support-page{
+      position:relative;
+      width:100%;
+      min-height:calc(100vh - 64px);
+      max-width:none;
+      margin:0 !important;
+      padding:24px 22px 260px;
+      box-sizing:border-box;
+      overflow:visible;
+    }
 
 .support-shell{
   position:relative;
@@ -7305,12 +7305,13 @@ app.get('/support', (req, res) => {
 
 .cashout-footer-content{
   position:relative;
-  left:50%;
-  transform:translateX(-50%);
+  left:auto;
+  transform:none;
   bottom:auto;
-  width:100vw;
+  width:100%;
   height:auto;
-  margin:18px 0 0;
+  display:block;
+  margin-top:18px;
   padding:16px 0 12px;
   background:#151c2e;
   border-top:1px solid rgba(255,255,255,.04);
