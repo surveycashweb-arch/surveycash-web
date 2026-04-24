@@ -7261,7 +7261,7 @@ app.get('/support', (req, res) => {
       .support-page{
         height:auto;
         min-height:0;
-        padding:20px 14px 0;
+        padding:20px 14px 260px;
         overflow:visible;
         display:block;
       }
@@ -7308,39 +7308,23 @@ app.get('/support', (req, res) => {
 
       .cashout-footer-content{
         position:relative;
-        left:50%;
-        transform:translateX(-50%);
+        left:auto;
         bottom:auto;
-        width:100vw;
+        transform:none;
+        width:calc(100% + 28px);
         height:auto;
-        display:block;
-        margin-top:18px;
-        padding:16px 0 12px;
-        background:#151c2e;
-        border-top:1px solid rgba(255,255,255,.04);
+        margin:22px -14px 0;
       }
 
       .cashout-footer-inner{
-        width:100%;
-        max-width:100%;
-        padding:0 10px 8px;
-        grid-template-columns:1fr 1fr 1fr;
-        gap:14px;
-        box-sizing:border-box;
-        align-items:start;
+        grid-template-columns:1fr 1fr;
+        height:auto;
+        padding:26px 22px 32px;
+        gap:24px 22px;
       }
 
       .footer-brand{
         grid-column:1 / -1;
-      }
-
-      .footer-col:nth-of-type(2){
-        display:none;
-      }
-
-      .footer-col.legal,
-      .footer-col.social{
-        display:block;
       }
     }
   </style>
@@ -7478,6 +7462,7 @@ app.get('/support', (req, res) => {
     )
   );
 });
+
 
 // ---------- Auth: finish login after email verification ----------
 app.post('/auth/finish', async (req, res) => {
