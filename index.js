@@ -7056,7 +7056,7 @@ app.get('/support', (req, res) => {
 }
 
 .faq-a{
-  color:#9fb0c6;
+  color:#ffffff;
   font-size:15px;
   line-height:1.6;
 }
