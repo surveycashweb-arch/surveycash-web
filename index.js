@@ -7064,10 +7064,10 @@ app.get('/support', (req, res) => {
   margin-left:34px;
 }
 
-    .faq-icon{
-      flex:0 0 24px;
-      width:24px;
-      height:24px;
+.faq-icon{
+  flex:0 0 28px;
+  width:28px;
+  height:28px;
       border-radius:999px;
       display:inline-flex;
       align-items:center;
