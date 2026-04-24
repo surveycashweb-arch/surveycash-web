@@ -6529,12 +6529,13 @@ app.get('/cashout', async (req, res) => {
               });
             }
 
-            if(withdrawBtn){
-              withdrawBtn.addEventListener('click', () => {
-                if(withdrawBtn.disabled) return;
-                openConfirm();
-              });
-            }
+if(withdrawBtn){
+  withdrawBtn.addEventListener('click', () => {
+    if(withdrawBtn.disabled) return;
+    closeModal();
+    openConfirm();
+  });
+}
 
             if(chk1) chk1.addEventListener('change', validateConfirm);
             if(chk2) chk2.addEventListener('change', validateConfirm);
