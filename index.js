@@ -6954,16 +6954,17 @@ app.get('/support', (req, res) => {
       overflow:visible;
     }
 
-    .support-shell{
-      position:relative;
-      z-index:2;
-      display:grid;
-      grid-template-columns:1.25fr .7fr;
-      gap:18px;
-      align-items:stretch;
-      max-width:1400px;
-      width:100%;
-    }
+.support-shell{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:1.25fr .7fr;
+  gap:18px;
+  align-items:stretch;
+  max-width:1400px;
+  width:100%;
+  margin:0 auto;
+}
 
     .support-card{
       position:relative;
@@ -7302,29 +7303,28 @@ app.get('/support', (req, res) => {
         display:none;
       }
 
-      .cashout-footer-content{
-        position:relative;
-        left:auto;
-        transform:none;
-        bottom:auto;
-        width:calc(100% + 28px);
-        height:auto;
-        display:block;
-        margin:18px -14px 0;
-        padding:16px 0 12px;
-        background:#151c2e;
-        border-top:1px solid rgba(255,255,255,.04);
-      }
+.cashout-footer-content{
+  position:relative;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:auto;
+  width:100vw;
+  height:auto;
+  margin:18px 0 0;
+  padding:16px 0 12px;
+  background:#151c2e;
+  border-top:1px solid rgba(255,255,255,.04);
+}
 
-      .cashout-footer-inner{
-        width:100%;
-        max-width:100%;
-        padding:0 14px 8px;
-        grid-template-columns:1fr 1fr 1fr;
-        gap:18px;
-        box-sizing:border-box;
-        align-items:start;
-      }
+.cashout-footer-inner{
+  width:100%;
+  max-width:100%;
+  padding:0 14px 8px;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:18px;
+  box-sizing:border-box;
+  align-items:start;
+}
 
       .footer-brand{
         grid-column:1 / -1;
@@ -7508,7 +7508,6 @@ app.get('/support', (req, res) => {
     )
   );
 });
-
 
 // ---------- Auth: finish login after email verification ----------
 app.post('/auth/finish', async (req, res) => {
