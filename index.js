@@ -7258,7 +7258,7 @@ app.get('/support', (req, res) => {
       .support-page{
         height:auto;
         min-height:0;
-        padding:20px 14px 0;
+        padding:20px 0 0;
         overflow:visible;
         display:block;
       }
@@ -7267,6 +7267,8 @@ app.get('/support', (req, res) => {
         grid-template-columns:1fr;
         height:auto;
         gap:16px;
+        padding:0 14px;
+        box-sizing:border-box;
       }
 
       .faq-card,
