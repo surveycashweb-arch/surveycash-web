@@ -7051,7 +7051,7 @@ app.get('/support', (req, res) => {
   margin:0 0 6px;
   font-size:16px;
   font-weight:900;
-  color:#ffffff;
+  color:#fbbf24;
   line-height:1.35;
 }
 
