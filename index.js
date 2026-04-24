@@ -7319,6 +7319,33 @@ app.get('/support', (req, res) => {
         display:none;
       }
     }
+
+/* MOBILE FIX */
+@media (max-width:768px){
+
+  .support-shell{
+    grid-template-columns:1fr;
+  }
+
+  .support-page{
+    height:auto;
+    padding:20px 14px 260px;
+  }
+
+  .support-title{
+    font-size:32px;
+  }
+
+  .contact-title{
+    font-size:30px;
+  }
+
+  .faq-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
   </style>
 
   <div class="support-page">
