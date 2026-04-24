@@ -7308,10 +7308,10 @@ app.get('/support', (req, res) => {
 
       .cashout-footer-content{
         position:relative;
-        left:auto;
-        transform:none;
+        left:50%;
+        transform:translateX(-50%);
         bottom:auto;
-        width:100%;
+        width:100vw;
         height:auto;
         display:block;
         margin-top:18px;
@@ -7323,9 +7323,9 @@ app.get('/support', (req, res) => {
       .cashout-footer-inner{
         width:100%;
         max-width:100%;
-        padding:0 14px 8px;
+        padding:0 10px 8px;
         grid-template-columns:1fr 1fr 1fr;
-        gap:18px;
+        gap:14px;
         box-sizing:border-box;
         align-items:start;
       }
