@@ -6952,22 +6952,19 @@ app.get('/support', (req, res) => {
       padding:24px 22px 260px;
       box-sizing:border-box;
       overflow:visible;
-
-      display:flex;
-      align-items:center;
-      justify-content:center;
     }
 
-    .support-shell{
-      position:relative;
-      z-index:2;
-      display:grid;
-      grid-template-columns:1.25fr .7fr;
-      gap:18px;
-      align-items:stretch;
-      max-width:1400px;
-      width:100%;
-    }
+.support-shell{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:1.25fr .7fr;
+  gap:18px;
+  align-items:stretch;
+  max-width:1400px;
+  width:100%;
+  margin:0 auto;
+}
 
     .support-card{
       position:relative;
