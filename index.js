@@ -7319,7 +7319,7 @@ app.get('/support', (req, res) => {
 .cashout-footer-inner{
   width:100%;
   max-width:100%;
-  padding:0 14px 8px;
+  padding:0 14px 0;
   grid-template-columns:1fr 1fr 1fr;
   gap:18px;
   box-sizing:border-box;
