@@ -6918,9 +6918,8 @@ app.get('/support', (req, res) => {
   const bodyHtml = `
   <style>
     html, body{
-      min-height:100%;
-      overflow-x:hidden;
-      overflow-y:auto;
+      height:100%;
+      overflow:hidden;
       background:#111827;
     }
 
@@ -7245,10 +7244,24 @@ app.get('/support', (req, res) => {
     }
 
     @media (max-width:768px){
+
+      html, body{
+        min-height:100%;
+        overflow-x:hidden;
+        overflow-y:auto;
+      }
+
+      main{
+        min-height:calc(100vh - 64px);
+        height:auto;
+        max-height:none;
+        overflow:visible;
+      }
+
       .support-page{
         height:auto;
         min-height:0;
-        padding:20px 14px 0;
+        padding:20px 14px 260px;
         overflow:visible;
         display:block;
       }
