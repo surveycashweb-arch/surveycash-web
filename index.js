@@ -7373,10 +7373,6 @@ app.get('/support', (req, res) => {
   </div>
 </div>
 
-<div class="faq-item"><span class="faq-icon">?</span></div>
-<div class="faq-item"><span class="faq-icon">?</span></div>
-
-
       </div>
     </div>
 
