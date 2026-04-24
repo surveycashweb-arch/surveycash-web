@@ -7325,14 +7325,57 @@ app.get('/support', (req, res) => {
        
       <div class="faq-grid">
 
-        <div class="faq-item"><span class="faq-icon">?</span></div>
-        <div class="faq-item"><span class="faq-icon">?</span></div>
-        <div class="faq-item"><span class="faq-icon">?</span></div>
-        <div class="faq-item"><span class="faq-icon">?</span></div>
-        <div class="faq-item"><span class="faq-icon">?</span></div>
-        <div class="faq-item"><span class="faq-icon">?</span></div>
-        <div class="faq-item"><span class="faq-icon">?</span></div>
-        <div class="faq-item"><span class="faq-icon">?</span></div>
+<div class="faq-item">
+  <span class="faq-icon">?</span>
+  <div>
+    <div class="faq-q">How do I earn money?</div>
+    <div class="faq-a">You can earn by completing surveys, testing apps, playing games and finishing offers from our partners.</div>
+  </div>
+</div>
+
+<div class="faq-item">
+  <span class="faq-icon">?</span>
+  <div>
+    <div class="faq-q">How long do payments take?</div>
+    <div class="faq-a">Payments are usually processed manually within 0-72 hours.</div>
+  </div>
+</div>
+
+<div class="faq-item">
+  <span class="faq-icon">?</span>
+  <div>
+    <div class="faq-q">Why did I not receive a reward for completing my task?</div>
+    <div class="faq-a">Rewards may fail if the task was not completed correctly or was already completed before.</div>
+  </div>
+</div>
+
+<div class="faq-item">
+  <span class="faq-icon">?</span>
+  <div>
+    <div class="faq-q">Why was my cashout failed?</div>
+    <div class="faq-a">A cashout can fail if the PayPal email is incorrect or cannot receive payments.</div>
+  </div>
+</div>
+
+<div class="faq-item">
+  <span class="faq-icon">?</span>
+  <div>
+    <div class="faq-q">What do I do if I completed a task correctly but didn’t get paid?</div>
+    <div class="faq-a">Please contact the offerwall support where you completed the task so they can review the completion.</div>
+  </div>
+</div>
+
+<div class="faq-item">
+  <span class="faq-icon">?</span>
+  <div>
+    <div class="faq-q">Why do I get disqualified from surveys?</div>
+    <div class="faq-a">Survey providers look for specific demographics. If you do not match the requirements for a survey, you may be screened out.</div>
+  </div>
+</div>
+
+<div class="faq-item"><span class="faq-icon">?</span></div>
+<div class="faq-item"><span class="faq-icon">?</span></div>
+
 
       </div>
     </div>
