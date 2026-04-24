@@ -5330,7 +5330,7 @@ app.get('/cashout', async (req, res) => {
             }
 
 .method-card{
-  width:92%;
+  width:86%;
   height:160px;
   padding:10px 12px 10px;
   border-radius:16px;
@@ -5443,7 +5443,7 @@ app.get('/cashout', async (req, res) => {
             }
 
 .method-card{
-  width:92%;
+  width:86%;
   height:135px;
   padding:8px 10px 8px;
   border-radius:14px;
