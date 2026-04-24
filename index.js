@@ -5667,6 +5667,41 @@ app.get('/cashout', async (req, res) => {
             .withdraw-btn{ width:100%; }
           }
 
+@media (max-width:520px){
+  .co-backdrop{
+    padding:10px;
+    align-items:flex-start;
+    padding-top:72px;
+    overflow-y:auto;
+  }
+
+  .co-modal{
+    width:92%;
+    max-width:92%;
+    padding:12px 10px 10px;
+    border-radius:16px;
+  }
+
+  .amount-grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:8px;
+  }
+
+  .amount-card{
+    padding:8px;
+    border-radius:14px;
+    min-height:116px;
+  }
+
+  .amount-card .brand{
+    min-height:56px;
+  }
+
+  .amount-card .brand img{
+    width:135px;
+  }
+}
+
           .co-confirm{
             width:min(640px, 100%);
             background:#0b1220;
