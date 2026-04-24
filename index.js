@@ -6918,8 +6918,9 @@ app.get('/support', (req, res) => {
   const bodyHtml = `
   <style>
     html, body{
-      height:100%;
-      overflow:hidden !important;
+      min-height:100%;
+      overflow-x:hidden;
+      overflow-y:auto;
       background:#111827;
     }
 
@@ -6938,23 +6939,20 @@ app.get('/support', (req, res) => {
 
     main{
       position:relative;
-      height:calc(100vh - 64px);
       min-height:calc(100vh - 64px);
-      max-height:calc(100vh - 64px);
       padding-top:0 !important;
-      overflow:hidden !important;
       background:#111827;
     }
 
     .support-page{
       position:relative;
       width:100%;
-      height:calc(100vh - 64px - 220px);
+      min-height:calc(100vh - 64px);
       max-width:none;
       margin:0 !important;
-      padding:0 22px;
+      padding:24px 22px 260px;
       box-sizing:border-box;
-      overflow:hidden;
+      overflow:visible;
 
       display:flex;
       align-items:center;
@@ -6970,7 +6968,6 @@ app.get('/support', (req, res) => {
       align-items:stretch;
       max-width:1400px;
       width:100%;
-      height:calc(100% - 80px);
     }
 
     .support-card{
@@ -6993,13 +6990,13 @@ app.get('/support', (req, res) => {
       background:#151c2e;
     }
 
-.contact-card{
-  padding:20px 20px 18px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  background:#151c2e;
-}
+    .contact-card{
+      padding:20px 20px 18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      background:#151c2e;
+    }
 
     .support-kicker{
       display:inline-flex;
@@ -7022,24 +7019,23 @@ app.get('/support', (req, res) => {
       letter-spacing:-.02em;
     }
 
+    .faq-grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:10px;
+      flex:1;
+    }
 
-.faq-grid{
-  margin-top:16px;
-  display:grid;
-  grid-template-columns:repeat(2, 1fr);
-  gap:10px;
-  flex:1;
-}
-
-.faq-item{
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.06);
-  background:#111827;
-  padding:12px 14px;
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-}
+    .faq-item{
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.06);
+      background:#111827;
+      padding:12px 14px;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+    }
 
     .faq-item:hover{
       transform:translateY(-2px);
@@ -7047,24 +7043,24 @@ app.get('/support', (req, res) => {
       background:#1b2438;
     }
 
-.faq-q{
-  margin:0 0 6px;
-  font-size:16px;
-  font-weight:900;
-  color:#fbbf24;
-  line-height:1.35;
-}
+    .faq-q{
+      margin:0 0 6px;
+      font-size:16px;
+      font-weight:900;
+      color:#fbbf24;
+      line-height:1.35;
+    }
 
-.faq-a{
-  color:#ffffff;
-  font-size:15px;
-  line-height:1.6;
-}
+    .faq-a{
+      color:#ffffff;
+      font-size:15px;
+      line-height:1.6;
+    }
 
-.faq-icon{
-  flex:0 0 24px;
-  width:24px;
-  height:24px;
+    .faq-icon{
+      flex:0 0 24px;
+      width:24px;
+      height:24px;
       border-radius:999px;
       display:inline-flex;
       align-items:center;
@@ -7091,85 +7087,13 @@ app.get('/support', (req, res) => {
       letter-spacing:-.02em;
     }
 
-    .contact-sub{
-      margin:0;
-      color:#9fb0c6;
-      font-size:15px;
-      line-height:1.65;
-    }
-
-    .contact-panel{
-      margin-top:18px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-
-.contact-row{
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.07);
-  background:#111827;
-  padding:16px 18px;
-  min-height:64px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-.contact-label{
-  display:block;
-  color:#fbbf24;
-  font-size:14px;
-  font-weight:900;
-  text-transform:uppercase;
-  letter-spacing:.10em;
-  margin-bottom:6px;
-}
-
-.contact-value{
-  color:#ffffff;
-  font-size:17px;
-  font-weight:700;
-  line-height:1.55;
-}
-
-.contact-read-faq{
-  text-align:center;
-  color:#9fb0c6;
-  font-size:15px;
-  font-weight:600;
-  margin-bottom:14px;
-}
-
-    .contact-mock-btn{
-      margin-top:6px;
-      width:100%;
-      height:50px;
-      border:none;
-      border-radius:16px;
-      background:#fbbf24;
-      color:#0b1220;
-      font-size:15px;
-      font-weight:900;
-      letter-spacing:.02em;
-      box-shadow:0 12px 30px rgba(251,191,36,.14);
-      cursor:default;
-    }
-
-.ai-coming{
-  text-align:center;
-  font-size:28px;
-  font-weight:800;
-  color:#ffffff;
-  padding:40px 0;
-  letter-spacing:.5px;
-}
-
-    .contact-foot{
-      margin-top:14px;
-      color:#8ea0b8;
-      font-size:13px;
-      line-height:1.6;
+    .ai-coming{
+      text-align:center;
+      font-size:28px;
+      font-weight:800;
+      color:#ffffff;
+      padding:40px 0;
+      letter-spacing:.5px;
     }
 
     .cashout-bottom-fill{
@@ -7319,129 +7243,198 @@ app.get('/support', (req, res) => {
         display:none;
       }
     }
+
+    @media (max-width:768px){
+      .support-page{
+        height:auto;
+        min-height:0;
+        padding:20px 14px 0;
+        overflow:visible;
+        display:block;
+      }
+
+      .support-shell{
+        grid-template-columns:1fr;
+        height:auto;
+        gap:16px;
+      }
+
+      .faq-card,
+      .contact-card{
+        padding:20px 16px;
+      }
+
+      .support-title{
+        font-size:32px;
+      }
+
+      .contact-title{
+        font-size:30px;
+      }
+
+      .faq-grid{
+        grid-template-columns:1fr;
+      }
+
+      .faq-q{
+        font-size:17px;
+      }
+
+      .faq-a{
+        font-size:15.5px;
+      }
+
+      .ai-coming{
+        font-size:25px;
+        padding:30px 0 18px;
+      }
+
+      .cashout-bottom-fill{
+        display:none;
+      }
+
+      .cashout-footer-content{
+        position:relative;
+        left:auto;
+        bottom:auto;
+        transform:none;
+        width:calc(100% + 28px);
+        height:auto;
+        margin:22px -14px 0;
+      }
+
+      .cashout-footer-inner{
+        grid-template-columns:1fr 1fr;
+        height:auto;
+        padding:26px 22px 32px;
+        gap:24px 22px;
+      }
+
+      .footer-brand{
+        grid-column:1 / -1;
+      }
+    }
   </style>
 
   <div class="support-page">
+    <div class="support-shell">
+      <div class="support-card faq-card">
+        <div class="support-kicker">Help Center</div>
+        <h1 class="support-title">Frequently asked questions</h1>
 
-  <div class="support-shell">
-    <div class="support-card faq-card">
-      <div class="support-kicker">Help Center</div>
-      <h1 class="support-title">Frequently asked questions</h1>
-       
-      <div class="faq-grid">
+        <div class="faq-grid">
 
-<div class="faq-item">
-  <span class="faq-icon">?</span>
-  <div>
-    <div class="faq-q">How do I earn money?</div>
-    <div class="faq-a">You can earn by completing surveys, testing apps, playing games and finishing offers from our partners.</div>
-  </div>
-</div>
+          <div class="faq-item">
+            <span class="faq-icon">?</span>
+            <div>
+              <div class="faq-q">How do I earn money?</div>
+              <div class="faq-a">You can earn by completing surveys, testing apps, playing games and finishing offers from our partners.</div>
+            </div>
+          </div>
 
-<div class="faq-item">
-  <span class="faq-icon">?</span>
-  <div>
-    <div class="faq-q">How long do payments take?</div>
-    <div class="faq-a">Payments are usually processed within 0-72 hours.</div>
-  </div>
-</div>
+          <div class="faq-item">
+            <span class="faq-icon">?</span>
+            <div>
+              <div class="faq-q">How long do payments take?</div>
+              <div class="faq-a">Payments are usually processed within 0-72 hours.</div>
+            </div>
+          </div>
 
-<div class="faq-item">
-  <span class="faq-icon">?</span>
-  <div>
-    <div class="faq-q">Why did I not receive a reward for completing my task?</div>
-    <div class="faq-a">Rewards may fail if the task was not completed correctly or was already completed before.</div>
-  </div>
-</div>
+          <div class="faq-item">
+            <span class="faq-icon">?</span>
+            <div>
+              <div class="faq-q">Why did I not receive a reward for completing my task?</div>
+              <div class="faq-a">Rewards may fail if the task was not completed correctly or was already completed before.</div>
+            </div>
+          </div>
 
-<div class="faq-item">
-  <span class="faq-icon">?</span>
-  <div>
-    <div class="faq-q">Why was my cashout failed?</div>
-    <div class="faq-a">A cashout can fail if the PayPal email is incorrect or cannot receive payments.</div>
-  </div>
-</div>
+          <div class="faq-item">
+            <span class="faq-icon">?</span>
+            <div>
+              <div class="faq-q">Why was my cashout failed?</div>
+              <div class="faq-a">A cashout can fail if the PayPal email is incorrect or cannot receive payments.</div>
+            </div>
+          </div>
 
-<div class="faq-item">
-  <span class="faq-icon">?</span>
-  <div>
-    <div class="faq-q">What do I do if I completed a task correctly but didn’t get paid?</div>
-    <div class="faq-a">Please contact the offerwall support where you completed the task so they can review the completion.</div>
-  </div>
-</div>
+          <div class="faq-item">
+            <span class="faq-icon">?</span>
+            <div>
+              <div class="faq-q">What do I do if I completed a task correctly but didn’t get paid?</div>
+              <div class="faq-a">Please contact the offerwall support where you completed the task so they can review the completion.</div>
+            </div>
+          </div>
 
-<div class="faq-item">
-  <span class="faq-icon">?</span>
-  <div>
-    <div class="faq-q">Why do I get disqualified from surveys?</div>
-    <div class="faq-a">Survey providers look for specific demographics. If you do not match the requirements for a survey, you may be screened out.</div>
-  </div>
-</div>
+          <div class="faq-item">
+            <span class="faq-icon">?</span>
+            <div>
+              <div class="faq-q">Why do I get disqualified from surveys?</div>
+              <div class="faq-a">Survey providers look for specific demographics. If you do not match the requirements for a survey, you may be screened out.</div>
+            </div>
+          </div>
 
+        </div>
       </div>
-    </div>
 
-<div class="support-card contact-card">
-  <div class="contact-top">
-
-    <div>
-      <div class="support-kicker">AI Support</div>
-      <h2 class="contact-title">AI Chat Support</h2>
-    </div>
-
-<div class="ai-coming">
-  AI Chat Support<br>
-  Coming soon
-</div>
-
-  </div>
-</div>
-
-    <div class="cashout-bottom-fill"></div>
-
-    <div class="cashout-footer-content">
-      <div class="cashout-footer-inner">
-
-        <div class="footer-brand">
-          <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
-
-          <div class="footer-brand-text">
-            SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
+      <div class="support-card contact-card">
+        <div class="contact-top">
+          <div>
+            <div class="support-kicker">AI Support</div>
+            <h2 class="contact-title">AI Chat Support</h2>
           </div>
 
-          <div class="footer-trust">
-            <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
-              <span>Rate us on Trustpilot</span>
-              <img src="/img/trustpilot-mission.png" class="footer-trust-img">
-            </a>
+          <div class="ai-coming">
+            AI Chat Support<br>
+            Coming soon
           </div>
         </div>
+      </div>
 
-        <div class="footer-col">
-          <div class="footer-col-title">SurveyCash</div>
-          <a href="/" class="footer-link">Earn</a>
-          <a href="/cashout" class="footer-link">Cash Out</a>
-          <a href="/support" class="footer-link">Support</a>
+      <div class="cashout-bottom-fill"></div>
+
+      <div class="cashout-footer-content">
+        <div class="cashout-footer-inner">
+
+          <div class="footer-brand">
+            <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
+
+            <div class="footer-brand-text">
+              SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
+            </div>
+
+            <div class="footer-trust">
+              <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
+                <span>Rate us on Trustpilot</span>
+                <img src="/img/trustpilot-mission.png" class="footer-trust-img">
+              </a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <div class="footer-col-title">SurveyCash</div>
+            <a href="/" class="footer-link">Earn</a>
+            <a href="/cashout" class="footer-link">Cash Out</a>
+            <a href="/support" class="footer-link">Support</a>
+          </div>
+
+          <div class="footer-col">
+            <div class="footer-col-title">Help</div>
+            <a href="/support" class="footer-link">FAQ</a>
+            <a href="/support" class="footer-link">Contact</a>
+          </div>
+
+          <div class="footer-col legal">
+            <div class="footer-col-title">Info</div>
+            <a href="/terms" class="footer-link">Terms</a>
+            <a href="/privacy" class="footer-link">Privacy</a>
+          </div>
+
+          <div class="footer-col social">
+            <div class="footer-col-title">Social</div>
+            <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+            <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
+          </div>
+
         </div>
-
-        <div class="footer-col">
-          <div class="footer-col-title">Help</div>
-          <a href="/support" class="footer-link">FAQ</a>
-          <a href="/support" class="footer-link">Contact</a>
-        </div>
-
-        <div class="footer-col legal">
-          <div class="footer-col-title">Info</div>
-          <a href="/terms" class="footer-link">Terms</a>
-          <a href="/privacy" class="footer-link">Privacy</a>
-        </div>
-
-        <div class="footer-col social">
-          <div class="footer-col-title">Social</div>
-          <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
-          <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
-        </div>
-
       </div>
     </div>
   </div>
