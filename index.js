@@ -7047,13 +7047,21 @@ app.get('/support', (req, res) => {
 
 .faq-q{
   display:flex;
-  align-items:flex-start;
-  gap:8px;
-  margin:0 0 4px;
-  font-size:14px;
-  font-weight:800;
+  align-items:center;
+  gap:10px;
+  margin:0 0 8px;
+  font-size:16px;
+  font-weight:900;
   color:#ffffff;
   line-height:1.3;
+}
+
+.faq-a{
+  color:#9fb0c6;
+  font-size:14px;
+  line-height:1.6;
+  font-weight:500;
+  margin-left:34px;
 }
 
     .faq-icon{
