@@ -7261,7 +7261,7 @@ app.get('/support', (req, res) => {
       .support-page{
         height:auto;
         min-height:0;
-        padding:20px 14px 260px;
+        padding:20px 14px 0;
         overflow:visible;
         display:block;
       }
@@ -7309,22 +7309,72 @@ app.get('/support', (req, res) => {
       .cashout-footer-content{
         position:relative;
         left:auto;
-        bottom:auto;
         transform:none;
+        bottom:auto;
         width:calc(100% + 28px);
         height:auto;
-        margin:22px -14px 0;
+        display:block;
+        margin:18px -14px 0;
+        padding:16px 0 12px;
+        background:#151c2e;
+        border-top:1px solid rgba(255,255,255,.04);
       }
 
       .cashout-footer-inner{
-        grid-template-columns:1fr 1fr;
-        height:auto;
-        padding:26px 22px 32px;
-        gap:24px 22px;
+        width:100%;
+        max-width:100%;
+        padding:0 14px 8px;
+        grid-template-columns:1fr 1fr 1fr;
+        gap:18px;
+        box-sizing:border-box;
+        align-items:start;
       }
 
       .footer-brand{
         grid-column:1 / -1;
+      }
+
+      .footer-logo{
+        font-size:18px;
+        margin-bottom:10px;
+      }
+
+      .footer-brand-text{
+        max-width:none;
+        font-size:12px;
+        line-height:1.45;
+        margin-bottom:10px;
+      }
+
+      .footer-trust-link{
+        gap:8px;
+      }
+
+      .footer-trust-link span{
+        font-size:12px;
+      }
+
+      .footer-trust-img{
+        height:24px;
+      }
+
+      .footer-col-title{
+        font-size:14px;
+        margin:0 0 10px;
+      }
+
+      .footer-link{
+        font-size:13px;
+        margin-bottom:10px;
+      }
+
+      .footer-col:nth-of-type(2){
+        display:none;
+      }
+
+      .footer-col.legal,
+      .footer-col.social{
+        display:block;
       }
     }
   </style>
@@ -7401,53 +7451,53 @@ app.get('/support', (req, res) => {
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="cashout-bottom-fill"></div>
+    <div class="cashout-bottom-fill"></div>
 
-      <div class="cashout-footer-content">
-        <div class="cashout-footer-inner">
+    <div class="cashout-footer-content">
+      <div class="cashout-footer-inner">
 
-          <div class="footer-brand">
-            <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
+        <div class="footer-brand">
+          <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
 
-            <div class="footer-brand-text">
-              SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
-            </div>
-
-            <div class="footer-trust">
-              <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
-                <span>Rate us on Trustpilot</span>
-                <img src="/img/trustpilot-mission.png" class="footer-trust-img">
-              </a>
-            </div>
+          <div class="footer-brand-text">
+            SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
           </div>
 
-          <div class="footer-col">
-            <div class="footer-col-title">SurveyCash</div>
-            <a href="/" class="footer-link">Earn</a>
-            <a href="/cashout" class="footer-link">Cash Out</a>
-            <a href="/support" class="footer-link">Support</a>
+          <div class="footer-trust">
+            <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
+              <span>Rate us on Trustpilot</span>
+              <img src="/img/trustpilot-mission.png" class="footer-trust-img">
+            </a>
           </div>
-
-          <div class="footer-col">
-            <div class="footer-col-title">Help</div>
-            <a href="/support" class="footer-link">FAQ</a>
-            <a href="/support" class="footer-link">Contact</a>
-          </div>
-
-          <div class="footer-col legal">
-            <div class="footer-col-title">Info</div>
-            <a href="/terms" class="footer-link">Terms</a>
-            <a href="/privacy" class="footer-link">Privacy</a>
-          </div>
-
-          <div class="footer-col social">
-            <div class="footer-col-title">Social</div>
-            <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
-            <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
-          </div>
-
         </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">SurveyCash</div>
+          <a href="/" class="footer-link">Earn</a>
+          <a href="/cashout" class="footer-link">Cash Out</a>
+          <a href="/support" class="footer-link">Support</a>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Help</div>
+          <a href="/support" class="footer-link">FAQ</a>
+          <a href="/support" class="footer-link">Contact</a>
+        </div>
+
+        <div class="footer-col legal">
+          <div class="footer-col-title">Info</div>
+          <a href="/terms" class="footer-link">Terms</a>
+          <a href="/privacy" class="footer-link">Privacy</a>
+        </div>
+
+        <div class="footer-col social">
+          <div class="footer-col-title">Social</div>
+          <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+          <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
+        </div>
+
       </div>
     </div>
   </div>
