@@ -7311,7 +7311,7 @@ app.get('/support', (req, res) => {
   width:100vw;
   height:auto;
   margin:18px 0 0;
-  padding:16px 0 12px;
+  padding:16px 0 0;
   background:#151c2e;
   border-top:1px solid rgba(255,255,255,.04);
 }
