@@ -6004,6 +6004,68 @@ app.get('/cashout', async (req, res) => {
             border:1px solid rgba(255,255,255,.08);
             color:#cbd5e1;
           }
+
+
+/* ===== Mobile fix for My Payments ===== */
+@media (max-width:520px){
+
+  .payments-backdrop{
+    padding:10px;
+    align-items:flex-start;
+    padding-top:72px;
+    overflow-y:auto;
+  }
+
+  .payments-modal{
+    width:92%;
+    max-width:92%;
+    max-height:calc(100vh - 90px);
+    padding:12px 10px 10px;
+    border-radius:16px;
+    overflow:auto;
+  }
+
+  .payments-title{
+    font-size:22px;
+    padding-right:40px;
+  }
+
+  .payments-subtitle{
+    font-size:13px;
+  }
+
+  .payments-tabs{
+    gap:8px;
+  }
+
+  .payments-tab{
+    padding:8px 12px;
+    font-size:13px;
+  }
+
+  .payment-item{
+    display:block;
+    padding:12px;
+  }
+
+  .payment-amount{
+    font-size:20px;
+  }
+
+  .payment-meta{
+    font-size:12px;
+    word-break:break-word;
+  }
+
+  .payment-status{
+    display:inline-block;
+    margin-top:10px;
+    padding:7px 12px;
+    font-size:11px;
+  }
+
+}
+
         </style>
 
         <script>
