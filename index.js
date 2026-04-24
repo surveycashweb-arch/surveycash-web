@@ -6917,11 +6917,11 @@ app.get('/support', (req, res) => {
 
   const bodyHtml = `
   <style>
-    html, body{
-      height:100%;
-      overflow:hidden;
-      background:#111827;
-    }
+html, body{
+  min-height:100%;
+  overflow-x:hidden;
+  background:#111827;
+}
 
     body{
       margin:0;
