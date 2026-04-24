@@ -5822,10 +5822,10 @@ app.get('/cashout', async (req, res) => {
     font-size:14px;
   }
 
-  .co-input{
-    height:40px;
-    font-size:14px;
-  }
+.co-input{
+  height:40px;
+  font-size:16px;
+}
 
   .co-help{
     font-size:12px;
