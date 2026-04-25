@@ -1370,6 +1370,36 @@ document.addEventListener('click', function (e) {
     height:24px;
   }
 
+  .notif-panel{
+    position:fixed !important;
+    top:150px !important;
+    left:10px !important;
+    right:10px !important;
+    width:auto !important;
+    max-width:none !important;
+    max-height:360px !important;
+    border-radius:18px !important;
+    z-index:99999 !important;
+  }
+
+  .notif-panel-head{
+    padding:12px 12px 10px;
+  }
+
+  .notif-panel-title{
+    font-size:18px;
+  }
+
+  .notif-mark-read{
+    font-size:13px;
+    white-space:nowrap;
+  }
+
+  .notif-list{
+    max-height:280px;
+    padding:10px;
+  }
+
   .profile-chip{
     padding:4px 8px;
     gap:6px;
