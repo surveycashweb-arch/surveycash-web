@@ -3049,13 +3049,7 @@ app.get('/', async (req, res) => {
 
           <div class="earn-grid">
 
-            <a href="/games/wannads" class="earn-card clickable">
-              <div class="partner-glow glow-orange"></div>
-              <div class="earn-card-top">
-                <div class="earn-card-brand">Wannads</div>
-              </div>
-            </a>
-
+            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
             <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
             <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
             <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
