@@ -4153,65 +4153,6 @@ app.get('/surveys/cpx', (req, res) => {
 </html>`);
 });
 
-
-
-app.get('/games', (req, res) => {
-  if (!isLoggedIn(req)) return res.redirect('/');
-
-  res.send(
-    page(
-      req,
-      'Games — SurveyCash',
-      '/games',
-      `
-      <div class="wrap">
-        <h1>Games</h1>
-
-        <div class="card">
-          <h2 style="margin:0 0 8px;">Wannads Offerwall</h2>
-          <div class="muted">Play & complete offers to earn coins.</div>
-          <div style="margin-top:14px;">
-            <a class="btn" href="/games/wannads">Open Offerwall</a>
-          </div>
-        </div>
-      </div>
-
-      <style>
-        .wrap{
-          max-width:980px;
-          margin:40px auto;
-          padding:0 16px;
-        }
-
-        .card{
-          background:rgba(255,255,255,.04);
-          border:1px solid rgba(255,255,255,.08);
-          border-radius:18px;
-          padding:18px;
-        }
-
-        .btn{
-          display:inline-block;
-          padding:12px 18px;
-          border-radius:14px;
-          background:#fbbf24;
-          color:#111827;
-          font-weight:800;
-          text-decoration:none;
-        }
-
-        .muted{
-          color:#94a3b8;
-          margin-top:6px;
-        }
-      </style>
-      `
-    )
-  );
-});
-
-
-
 // --- CPX anti-duplicate log (trans_id + type) ---
 async function findProfileByUserIdOrEmailSupabase(userIdOrEmail) {
   const key = String(userIdOrEmail || '').trim().toLowerCase();
