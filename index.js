@@ -6918,13 +6918,10 @@ app.get('/support', (req, res) => {
   const bodyHtml = `
   <style>
     html, body{
-      height:100%;
-      overflow:hidden;
-      background:#111827;
-    }
-
-    body{
+      min-height:100%;
       margin:0;
+      overflow-x:hidden;
+      background:#111827;
     }
 
     main,
@@ -6938,24 +6935,22 @@ app.get('/support', (req, res) => {
 
     main{
       position:relative;
-      min-height:calc(100vh - 64px);
-      padding-top:0 !important;
+      max-width:none !important;
+      margin:0 !important;
+      padding:0 !important;
       background:#111827;
     }
 
     .support-page{
       position:relative;
       width:100%;
-      min-height:calc(100vh - 64px);
-      max-width:none;
-      margin:0 !important;
-      padding:24px 22px 260px;
       box-sizing:border-box;
-      overflow:visible;
+      background:#111827;
+    }
 
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    .support-area{
+      background:#111827;
+      padding:24px 22px 220px;
     }
 
     .support-shell{
@@ -6967,6 +6962,7 @@ app.get('/support', (req, res) => {
       align-items:stretch;
       max-width:1400px;
       width:100%;
+      margin:0 auto;
     }
 
     .support-card{
@@ -7095,7 +7091,7 @@ app.get('/support', (req, res) => {
       letter-spacing:.5px;
     }
 
-    .cashout-bottom-fill{
+    .support-bottom-fill{
       position:fixed;
       left:50%;
       transform:translateX(-50%);
@@ -7108,7 +7104,7 @@ app.get('/support', (req, res) => {
       pointer-events:none;
     }
 
-    .cashout-footer-content{
+    .support-footer-content{
       position:fixed;
       left:50%;
       transform:translateX(-50%);
@@ -7122,7 +7118,7 @@ app.get('/support', (req, res) => {
       pointer-events:none;
     }
 
-    .cashout-footer-inner{
+    .support-footer-inner{
       width:100%;
       max-width:1280px;
       padding:26px 36px 0;
@@ -7213,8 +7209,19 @@ app.get('/support', (req, res) => {
       opacity:1;
     }
 
+    @media (min-width:761px){
+      html, body{
+        overflow:hidden;
+      }
+
+      main{
+        height:calc(100vh - 64px);
+        overflow:hidden;
+      }
+    }
+
     @media (max-width:1200px){
-      .cashout-footer-inner{
+      .support-footer-inner{
         grid-template-columns:1.7fr 1fr 1fr 1fr;
         gap:28px;
       }
@@ -7233,7 +7240,7 @@ app.get('/support', (req, res) => {
         grid-template-columns:1fr;
       }
 
-      .cashout-footer-inner{
+      .support-footer-inner{
         grid-template-columns:1.5fr 1fr 1fr;
         gap:28px;
       }
@@ -7243,27 +7250,35 @@ app.get('/support', (req, res) => {
       }
     }
 
-    @media (max-width:768px){
+    @media (max-width:760px){
+      html, body, main, .support-page, .support-area{
+        background:#111827;
+      }
 
       html, body{
-        min-height:100%;
-        overflow-x:hidden;
-        overflow-y:auto;
+        min-height:0;
+        height:auto;
+        overflow-x:hidden !important;
+        overflow-y:auto !important;
       }
 
       main{
-        min-height:calc(100vh - 64px);
-        height:auto;
-        max-height:none;
-        overflow:visible;
+        min-height:auto !important;
+        height:auto !important;
+        max-height:none !important;
+        overflow:visible !important;
       }
 
       .support-page{
-        height:auto;
-        min-height:0;
-        padding:20px 14px 260px;
-        overflow:visible;
-        display:block;
+        min-height:auto !important;
+        height:auto !important;
+        overflow:visible !important;
+        margin:0 !important;
+        padding:0 !important;
+      }
+
+      .support-area{
+        padding:20px 14px 0;
       }
 
       .support-shell{
@@ -7302,152 +7317,258 @@ app.get('/support', (req, res) => {
         padding:30px 0 18px;
       }
 
-      .cashout-bottom-fill{
+      .support-bottom-fill{
         display:none;
       }
 
-      .cashout-footer-content{
+      .support-footer-content{
         position:relative;
         left:auto;
-        bottom:auto;
         transform:none;
-        width:calc(100% + 28px);
+        bottom:auto;
+        width:100%;
         height:auto;
-        margin:22px -14px 0;
+        display:block;
+        margin-top:18px;
+        padding:16px 0 12px;
+        background:#151c2e;
+        border-top:1px solid rgba(255,255,255,.04);
       }
 
-      .cashout-footer-inner{
-        grid-template-columns:1fr 1fr;
-        height:auto;
-        padding:26px 22px 32px;
-        gap:24px 22px;
+      .support-footer-inner{
+        width:100%;
+        max-width:100%;
+        padding:0 14px 8px;
+        display:grid;
+        grid-template-columns:1fr 1fr 1fr;
+        gap:18px;
+        box-sizing:border-box;
+        align-items:start;
       }
 
       .footer-brand{
         grid-column:1 / -1;
       }
+
+      .footer-logo{
+        font-size:18px;
+        margin-bottom:10px;
+      }
+
+      .footer-brand-text{
+        max-width:none;
+        font-size:12px;
+        line-height:1.45;
+        margin-bottom:10px;
+      }
+
+      .footer-trust-link{
+        gap:8px;
+      }
+
+      .footer-trust-link span{
+        font-size:12px;
+      }
+
+      .footer-trust-img{
+        height:24px;
+      }
+
+      .footer-col-title{
+        font-size:14px;
+        margin:0 0 10px;
+      }
+
+      .footer-link{
+        font-size:13px;
+        margin-bottom:10px;
+      }
+
+      .footer-col:nth-of-type(2){
+        display:none;
+      }
+
+      .footer-col.legal,
+      .footer-col.social{
+        display:block;
+      }
+    }
+
+    @media (max-width:560px){
+      .support-area{
+        padding:20px 14px 0;
+      }
+
+      .support-footer-inner{
+        grid-template-columns:1fr 1fr 1fr;
+        gap:14px;
+        padding:0 12px 8px;
+      }
+
+      .footer-brand{
+        grid-column:1 / -1;
+      }
+
+      .footer-logo{
+        font-size:17px;
+      }
+
+      .footer-brand-text{
+        font-size:11px;
+        line-height:1.4;
+      }
+
+      .footer-col-title{
+        font-size:13px;
+      }
+
+      .footer-link{
+        font-size:12px;
+        margin-bottom:8px;
+      }
+
+      .footer-trust-link span{
+        font-size:11px;
+      }
+
+      .footer-trust-img{
+        height:22px;
+      }
+
+      .footer-col:nth-of-type(2){
+        display:none;
+      }
+
+      .footer-col.legal,
+      .footer-col.social{
+        display:block;
+      }
     }
   </style>
 
   <div class="support-page">
-    <div class="support-shell">
-      <div class="support-card faq-card">
-        <div class="support-kicker">Help Center</div>
-        <h1 class="support-title">Frequently asked questions</h1>
+    <div class="support-area">
+      <div class="support-shell">
 
-        <div class="faq-grid">
+        <div class="support-card faq-card">
+          <div class="support-kicker">Help Center</div>
+          <h1 class="support-title">Frequently asked questions</h1>
 
-          <div class="faq-item">
-            <span class="faq-icon">?</span>
-            <div>
-              <div class="faq-q">How do I earn money?</div>
-              <div class="faq-a">You can earn by completing surveys, testing apps, playing games and finishing offers from our partners.</div>
+          <div class="faq-grid">
+
+            <div class="faq-item">
+              <span class="faq-icon">?</span>
+              <div>
+                <div class="faq-q">How do I earn money?</div>
+                <div class="faq-a">You can earn by completing surveys, testing apps, playing games and finishing offers from our partners.</div>
+              </div>
             </div>
-          </div>
 
-          <div class="faq-item">
-            <span class="faq-icon">?</span>
-            <div>
-              <div class="faq-q">How long do payments take?</div>
-              <div class="faq-a">Payments are usually processed within 0-72 hours.</div>
+            <div class="faq-item">
+              <span class="faq-icon">?</span>
+              <div>
+                <div class="faq-q">How long do payments take?</div>
+                <div class="faq-a">Payments are usually processed within 0-72 hours.</div>
+              </div>
             </div>
-          </div>
 
-          <div class="faq-item">
-            <span class="faq-icon">?</span>
-            <div>
-              <div class="faq-q">Why did I not receive a reward for completing my task?</div>
-              <div class="faq-a">Rewards may fail if the task was not completed correctly or was already completed before.</div>
+            <div class="faq-item">
+              <span class="faq-icon">?</span>
+              <div>
+                <div class="faq-q">Why did I not receive a reward for completing my task?</div>
+                <div class="faq-a">Rewards may fail if the task was not completed correctly or was already completed before.</div>
+              </div>
             </div>
-          </div>
 
-          <div class="faq-item">
-            <span class="faq-icon">?</span>
-            <div>
-              <div class="faq-q">Why was my cashout failed?</div>
-              <div class="faq-a">A cashout can fail if the PayPal email is incorrect or cannot receive payments.</div>
+            <div class="faq-item">
+              <span class="faq-icon">?</span>
+              <div>
+                <div class="faq-q">Why was my cashout failed?</div>
+                <div class="faq-a">A cashout can fail if the PayPal email is incorrect or cannot receive payments.</div>
+              </div>
             </div>
-          </div>
 
-          <div class="faq-item">
-            <span class="faq-icon">?</span>
-            <div>
-              <div class="faq-q">What do I do if I completed a task correctly but didn’t get paid?</div>
-              <div class="faq-a">Please contact the offerwall support where you completed the task so they can review the completion.</div>
+            <div class="faq-item">
+              <span class="faq-icon">?</span>
+              <div>
+                <div class="faq-q">What do I do if I completed a task correctly but didn’t get paid?</div>
+                <div class="faq-a">Please contact the offerwall support where you completed the task so they can review the completion.</div>
+              </div>
             </div>
-          </div>
 
-          <div class="faq-item">
-            <span class="faq-icon">?</span>
-            <div>
-              <div class="faq-q">Why do I get disqualified from surveys?</div>
-              <div class="faq-a">Survey providers look for specific demographics. If you do not match the requirements for a survey, you may be screened out.</div>
+            <div class="faq-item">
+              <span class="faq-icon">?</span>
+              <div>
+                <div class="faq-q">Why do I get disqualified from surveys?</div>
+                <div class="faq-a">Survey providers look for specific demographics. If you do not match the requirements for a survey, you may be screened out.</div>
+              </div>
             </div>
-          </div>
 
+          </div>
         </div>
+
+        <div class="support-card contact-card">
+          <div class="contact-top">
+            <div>
+              <div class="support-kicker">AI Support</div>
+              <h2 class="contact-title">AI Chat Support</h2>
+            </div>
+
+            <div class="ai-coming">
+              AI Chat Support<br>
+              Coming soon
+            </div>
+          </div>
+        </div>
+
       </div>
+    </div>
 
-      <div class="support-card contact-card">
-        <div class="contact-top">
-          <div>
-            <div class="support-kicker">AI Support</div>
-            <h2 class="contact-title">AI Chat Support</h2>
+    <div class="support-bottom-fill"></div>
+
+    <div class="support-footer-content">
+      <div class="support-footer-inner">
+
+        <div class="footer-brand">
+          <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
+
+          <div class="footer-brand-text">
+            SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
           </div>
 
-          <div class="ai-coming">
-            AI Chat Support<br>
-            Coming soon
+          <div class="footer-trust">
+            <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
+              <span>Rate us on Trustpilot</span>
+              <img src="/img/trustpilot-mission.png" class="footer-trust-img">
+            </a>
           </div>
         </div>
-      </div>
 
-      <div class="cashout-bottom-fill"></div>
-
-      <div class="cashout-footer-content">
-        <div class="cashout-footer-inner">
-
-          <div class="footer-brand">
-            <div class="footer-logo"><span class="white">Survey</span><span class="accent">Cash</span></div>
-
-            <div class="footer-brand-text">
-              SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.
-            </div>
-
-            <div class="footer-trust">
-              <a href="https://www.trustpilot.com/review/surveycash.website" target="_blank" class="footer-trust-link">
-                <span>Rate us on Trustpilot</span>
-                <img src="/img/trustpilot-mission.png" class="footer-trust-img">
-              </a>
-            </div>
-          </div>
-
-          <div class="footer-col">
-            <div class="footer-col-title">SurveyCash</div>
-            <a href="/" class="footer-link">Earn</a>
-            <a href="/cashout" class="footer-link">Cash Out</a>
-            <a href="/support" class="footer-link">Support</a>
-          </div>
-
-          <div class="footer-col">
-            <div class="footer-col-title">Help</div>
-            <a href="/support" class="footer-link">FAQ</a>
-            <a href="/support" class="footer-link">Contact</a>
-          </div>
-
-          <div class="footer-col legal">
-            <div class="footer-col-title">Info</div>
-            <a href="/terms" class="footer-link">Terms</a>
-            <a href="/privacy" class="footer-link">Privacy</a>
-          </div>
-
-          <div class="footer-col social">
-            <div class="footer-col-title">Social</div>
-            <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
-            <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
-          </div>
-
+        <div class="footer-col">
+          <div class="footer-col-title">SurveyCash</div>
+          <a href="/" class="footer-link">Earn</a>
+          <a href="/cashout" class="footer-link">Cash Out</a>
+          <a href="/support" class="footer-link">Support</a>
         </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Help</div>
+          <a href="/support" class="footer-link">FAQ</a>
+          <a href="/support" class="footer-link">Contact</a>
+        </div>
+
+        <div class="footer-col legal">
+          <div class="footer-col-title">Info</div>
+          <a href="/terms" class="footer-link">Terms</a>
+          <a href="/privacy" class="footer-link">Privacy</a>
+        </div>
+
+        <div class="footer-col social">
+          <div class="footer-col-title">Social</div>
+          <a href="https://www.tiktok.com/@surveycashh?lang=da" target="_blank" rel="noopener noreferrer" class="footer-link">TikTok</a>
+          <a href="https://x.com/SurveyCashh" target="_blank" rel="noopener noreferrer" class="footer-link">X</a>
+        </div>
+
       </div>
     </div>
   </div>
@@ -7462,7 +7583,6 @@ app.get('/support', (req, res) => {
     )
   );
 });
-
 
 // ---------- Auth: finish login after email verification ----------
 app.post('/auth/finish', async (req, res) => {
