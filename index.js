@@ -566,8 +566,11 @@ function openVerify() {
   resendHint = document.getElementById('verify-resend-hint');
   resendSecsEl = document.getElementById('verify-resend-secs');
 
-  // ✅ start cooldown med det samme (anti spam)
-  startResendCooldown(60);
+// ✅ start cooldown med det samme (anti spam)
+startResendCooldown(60);
+
+// ✅ tjek automatisk om email er verified
+startVerifyPolling();
 }
 
 function closeVerify() {
@@ -577,6 +580,32 @@ function closeVerify() {
 
 window.openVerify = openVerify;
 window.closeVerify = closeVerify;
+
+
+var verifyPollTimer = null;
+
+function startVerifyPolling() {
+  if (verifyPollTimer) {
+    clearInterval(verifyPollTimer);
+    verifyPollTimer = null;
+  }
+
+  verifyPollTimer = setInterval(async function () {
+    try {
+      var r = await fetch('/auth/check-verified', {
+        credentials: 'same-origin'
+      });
+
+      var j = await r.json();
+
+      if (j && j.verified) {
+        clearInterval(verifyPollTimer);
+        verifyPollTimer = null;
+        window.location.reload();
+      }
+    } catch (e) {}
+  }, 5000);
+}
 
 function startResendCooldown(seconds) {
   resendCooldown = seconds || 60;
@@ -7485,7 +7514,31 @@ app.post('/auth/resend-verify', authLimiter, async (req, res) => {
   }
 });
 
+// ---------- Auth: check if pending user verified email ----------
+app.get('/auth/check-verified', async (req, res) => {
+  try {
+    const pendingUserId = String(req.cookies.pending_user_id || '').trim();
 
+    if (!pendingUserId) {
+      return res.json({ ok: true, verified: false });
+    }
+
+    const { data, error } =
+      await supabaseAdmin.auth.admin.getUserById(pendingUserId);
+
+    if (error || !data?.user) {
+      return res.json({ ok: true, verified: false });
+    }
+
+    return res.json({
+      ok: true,
+      verified: !!data.user.email_confirmed_at,
+    });
+  } catch (e) {
+    console.error('check verified error:', e);
+    return res.status(500).json({ ok: false, verified: false });
+  }
+});
 
 // --- Auth handlers (modal) — Signup with email verification ---
 app.post('/signup', authLimiter, async (req, res) => {
@@ -7556,6 +7609,14 @@ app.post('/signup', authLimiter, async (req, res) => {
 
 // ✅ gem email midlertidigt så resend-knappen ved hvilken email den skal sende til
 res.cookie('pending_email', email, {
+  httpOnly: true,
+  secure: IS_PROD,
+  sameSite: 'Lax',
+  maxAge: 1000 * 60 * 30, // 30 min
+  path: '/',
+});
+
+res.cookie('pending_user_id', createdUserId, {
   httpOnly: true,
   secure: IS_PROD,
   sameSite: 'Lax',
