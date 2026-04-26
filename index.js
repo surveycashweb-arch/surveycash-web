@@ -268,6 +268,7 @@ app.use(cookieParser());
 async function loadUserFromCookie(req, res, next) {
   try {
     const token = req.cookies.session;
+
     if (!token) {
       req.user = null;
       return next();
@@ -280,12 +281,29 @@ async function loadUserFromCookie(req, res, next) {
       .maybeSingle();
 
     if (sErr || !session) {
+      res.clearCookie('session');
       req.user = null;
       return next();
     }
 
     if (new Date(session.expires_at) < new Date()) {
       await supabaseAdmin.from('sessions').delete().eq('token', token);
+      res.clearCookie('session');
+      req.user = null;
+      return next();
+    }
+
+    // ✅ Email skal være verificeret i Supabase Auth
+    const { data: authUserData, error: authUserErr } =
+      await supabaseAdmin.auth.admin.getUserById(session.user_id);
+
+    if (
+      authUserErr ||
+      !authUserData?.user ||
+      !authUserData.user.email_confirmed_at
+    ) {
+      await supabaseAdmin.from('sessions').delete().eq('token', token);
+      res.clearCookie('session');
       req.user = null;
       return next();
     }
@@ -297,6 +315,7 @@ async function loadUserFromCookie(req, res, next) {
       .maybeSingle();
 
     if (pErr || !profile) {
+      res.clearCookie('session');
       req.user = null;
       return next();
     }
@@ -317,6 +336,7 @@ async function loadUserFromCookie(req, res, next) {
     return next();
   } catch (e) {
     console.error('loadUserFromCookie error:', e);
+    res.clearCookie('session');
     req.user = null;
     return next();
   }
@@ -7402,10 +7422,14 @@ app.post('/auth/finish', async (req, res) => {
       return res.status(401).json({ ok: false });
     }
 
-    const userId = data.user.id;
+if (!data.user.email_confirmed_at) {
+  return res.status(403).json({ ok: false, error: 'email_not_verified' });
+}
 
-    // Lav din egen cookie-session
-    const { token, expiresAt } = await createSession(userId);
+const userId = data.user.id;
+
+// Lav din egen cookie-session
+const { token, expiresAt } = await createSession(userId);
 
     res.cookie('session', token, {
       httpOnly: true,
@@ -7564,7 +7588,6 @@ app.post('/login', loginLimiter, async (req, res) => {
       return res.redirect('/?authError=invalid&mode=login');
     }
 
-    // 1️⃣ TJEK: findes account i vores DB? (profiles)
     const { data: profile, error: pErr } = await supabaseAdmin
       .from('profiles')
       .select('user_id')
@@ -7577,51 +7600,52 @@ app.post('/login', loginLimiter, async (req, res) => {
     }
 
     if (!profile) {
-      // ❌ Account findes ikke
       return res.redirect('/?authError=nouser&mode=login');
     }
 
-    const { error: signErr } = await supabasePublic.auth.signInWithPassword({
-  email,
-  password,
-});
+    const { data: authData, error: signErr } =
+      await supabasePublic.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-if (signErr) {
-  const msg = String(signErr.message || '').toLowerCase();
+    if (signErr) {
+      const msg = String(signErr.message || '').toLowerCase();
 
-  if (
-    msg.includes('not confirmed') ||
-    msg.includes('email not confirmed') ||
-    msg.includes('confirm') ||
-    msg.includes('verified')
-  ) {
-return res.redirect('/?authError=checkemail&mode=login');
+      if (
+        msg.includes('not confirmed') ||
+        msg.includes('email not confirmed') ||
+        msg.includes('confirm') ||
+        msg.includes('verified')
+      ) {
+        return res.redirect('/?authError=checkemail&mode=login');
       }
 
-  return res.redirect('/?authError=badpass&mode=login');
-}
+      return res.redirect('/?authError=badpass&mode=login');
+    }
 
+    // ✅ STOP hvis email ikke er verificeret
+    if (!authData?.user?.email_confirmed_at) {
+      return res.redirect('/?authError=notconfirmed&mode=login');
+    }
 
-    // ✅ Login OK (samme cookie-flow som før)
-const { token, expiresAt } = await createSession(profile.user_id);
+    // ✅ Login OK
+    const { token, expiresAt } = await createSession(profile.user_id);
 
-res.cookie('session', token, {
-  httpOnly: true,
-  secure: IS_PROD,
-  sameSite: 'Lax',
-  expires: expiresAt,
-  path: '/',
-});
+    res.cookie('session', token, {
+      httpOnly: true,
+      secure: IS_PROD,
+      sameSite: 'Lax',
+      expires: expiresAt,
+      path: '/',
+    });
 
-
-
-        return res.redirect('/');
+    return res.redirect('/');
   } catch (err) {
     console.error('Login fejl:', err);
     return res.redirect('/?authError=unknown&mode=login');
   }
 });
-
 
 app.post('/auth/forgot-password', async (req, res) => {
   try {
