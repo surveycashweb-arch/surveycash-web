@@ -973,6 +973,8 @@ document.addEventListener('click', function (e) {
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>${title}</title>
+<meta name="description" content="Get paid for testing games, apps and answering surveys. Earn rewards quickly by completing tasks and surveys on SurveyCash.">
+<meta name="robots" content="index, follow">
 
 <!-- TrustBox script -->
 <script
