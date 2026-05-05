@@ -4357,6 +4357,65 @@ app.get('/surveys/ayet', (req, res) => {
 });
 
 
+app.get('/ayet/postback', async (req, res) => {
+  try {
+    const secret = String(req.query.secret || '');
+    if (secret !== process.env.AYET_POSTBACK_SECRET) {
+      return res.status(200).send('ok');
+    }
+
+    const userId = String(req.query.external_identifier || '').trim();
+    const transactionId = String(req.query.transaction_id || '').trim();
+    const payoutUsd = Number(req.query.payout_usd || 0);
+
+    if (!userId || !transactionId) {
+      return res.status(200).send('ok');
+    }
+
+    const cents = Math.round(payoutUsd * 100);
+
+    const profile = await findProfileByUserIdOrEmailSupabase(userId);
+    if (!profile) {
+      return res.status(200).send('ok');
+    }
+
+    // 🔁 undgå duplicates
+    const transId = 'ayet:' + transactionId;
+
+    const { error: insertError } = await supabaseAdmin
+      .from('cpx_transactions')
+      .insert({
+        user_id: profile.user_id,
+        trans_id: transId,
+        type: 'ayet',
+        cents,
+        status: 1,
+      });
+
+    if (insertError && insertError.code !== '23505') {
+      console.error(insertError);
+      return res.status(200).send('ok');
+    }
+
+    // 💰 giv reward
+    if (!insertError) {
+      await supabaseAdmin
+        .from('profiles')
+        .update({
+          balance_cents: (profile.balance_cents || 0) + cents,
+          total_earned_cents: (profile.total_earned_cents || 0) + cents,
+          completed_surveys: (profile.completed_surveys || 0) + 1,
+        })
+        .eq('user_id', profile.user_id);
+    }
+
+    return res.status(200).send('ok');
+  } catch (e) {
+    console.error(e);
+    return res.status(200).send('ok');
+  }
+});
+
 // --- CPX anti-duplicate log (trans_id + type) ---
 async function findProfileByUserIdOrEmailSupabase(userIdOrEmail) {
   const key = String(userIdOrEmail || '').trim().toLowerCase();
