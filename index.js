@@ -4379,7 +4379,8 @@ app.get('/ayet/postback', async (req, res) => {
     }
 
     const transId = `ayet:${transactionId}`;
-    const cents = Math.round(Math.max(0, payoutUsd) * 100);
+    const totalCents = Math.round(Math.max(0, payoutUsd) * 100);
+const cents = Math.floor(totalCents * 0.70);
 
     const currentBalance = Number(profile.balance_cents || 0);
     const currentTotal = Number(profile.total_earned_cents || 0);
@@ -4407,15 +4408,26 @@ app.get('/ayet/postback', async (req, res) => {
 
       // kun hvis ikke duplicate
       if (!insertError && cents > 0) {
-        await supabaseAdmin
-          .from('profiles')
-          .update({
-            balance_cents: currentBalance + cents,
-            total_earned_cents: currentTotal + cents,
-            completed_surveys: currentSurveys + 1,
-          })
-          .eq('user_id', profile.user_id);
-      }
+  const { error: upErr } = await supabaseAdmin
+    .from('profiles')
+    .update({
+      balance_cents: currentBalance + cents,
+      total_earned_cents: currentTotal + cents,
+      completed_surveys: currentSurveys + 1,
+    })
+    .eq('user_id', profile.user_id);
+
+  if (upErr) {
+    console.error('ayeT credit update error:', upErr);
+  } else {
+    await createNotification(
+      profile.user_id,
+      'reward',
+      'Survey reward',
+      `You earned $${(cents / 100).toFixed(2)} from Polltastic Surveys.`
+    );
+  }
+}
 
       return res.status(200).send('ok');
     }
