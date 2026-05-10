@@ -4274,7 +4274,7 @@ app.get('/surveys/ayet', (req, res) => {
 </head>
 <body>
   <div class="top">
-    <a class="back" href="/earn">← Back</a>
+    <a class="back" href="/">← Back</a>
     <div class="title">Polltastic Surveys</div>
   </div>
 
