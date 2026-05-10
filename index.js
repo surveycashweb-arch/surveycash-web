@@ -2716,10 +2716,11 @@ app.get('/', async (req, res) => {
   background:
     linear-gradient(
       to top,
-      rgba(34,197,94,.26) 0%,
-      rgba(34,197,94,.16) 35%,
-      rgba(34,197,94,.08) 65%,
-      rgba(34,197,94,.03) 100%
+      rgba(34,197,94,.34) 0%,
+      rgba(34,197,94,.18) 28%,
+      rgba(34,197,94,.07) 52%,
+      rgba(34,197,94,.02) 72%,
+      transparent 100%
     );
   pointer-events:none;
 }
@@ -2734,10 +2735,11 @@ app.get('/', async (req, res) => {
   background:
     linear-gradient(
       to top,
-      rgba(236,72,153,.26) 0%,
-      rgba(236,72,153,.16) 35%,
-      rgba(236,72,153,.08) 65%,
-      rgba(236,72,153,.03) 100%
+      rgba(236,72,153,.30) 0%,
+      rgba(236,72,153,.16) 28%,
+      rgba(236,72,153,.06) 52%,
+      rgba(236,72,153,.02) 72%,
+      transparent 100%
     );
   pointer-events:none;
 }
