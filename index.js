@@ -2710,19 +2710,19 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-    .cpx-bg{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(
-          to top,
-          rgba(34,197,94,.25) 0%,
-          rgba(34,197,94,.10) 30%,
-          rgba(34,197,94,.04) 55%,
-          transparent 75%
-        );
-      pointer-events:none;
-    }
+.cpx-bg{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(34,197,94,.30) 0%,
+      rgba(34,197,94,.14) 42%,
+      rgba(34,197,94,.05) 68%,
+      transparent 88%
+    );
+  pointer-events:none;
+}
 
 .polltastic-card{
   overflow:hidden;
@@ -2734,10 +2734,10 @@ app.get('/', async (req, res) => {
   background:
     linear-gradient(
       to top,
-      rgba(236,72,153,.24) 0%,
-      rgba(236,72,153,.10) 30%,
-      rgba(236,72,153,.04) 55%,
-      transparent 75%
+      rgba(236,72,153,.30) 0%,
+      rgba(236,72,153,.14) 42%,
+      rgba(236,72,153,.05) 68%,
+      transparent 88%
     );
   pointer-events:none;
 }
