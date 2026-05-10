@@ -4028,100 +4028,8 @@ location.href = '/';
 
 
 app.get('/surveys', (req, res) => {
-  if (!isLoggedIn(req)) return res.redirect('/');
-
-  res.send(
-    page(
-      req,
-      'Surveys — SurveyCash',
-      '/surveys',
-      `
-      <h1>Surveys</h1>
-      <p>Choose a survey partner to start earning.</p>
-
-      <!-- 5 kolonner -->
-      <div style="
-        margin-top:16px;
-        display:grid;
-        grid-template-columns:repeat(5, minmax(0, 1fr));
-        gap:14px;
-      ">
-
-        <!-- CPX Research -->
-        <a href="/surveys/cpx"
-           style="
-             border:1px solid rgba(255,255,255,.08);
-             border-radius:16px;
-             padding:18px;
-             min-height:100px;
-
-             display:flex;
-             align-items:center;
-             justify-content:center;
-             text-decoration:none;
-             overflow:hidden;
-
-             background-color: rgba(15,23,42,.55);
-             background-image: linear-gradient(
-               to top,
-               rgba(34,197,94,.28) 0%,
-               rgba(34,197,94,.14) 18%,
-               rgba(15,23,42,0) 55%
-             );
-             background-repeat:no-repeat;
-             background-size:100% 100%;
-             background-position:0 0;
-
-             box-shadow:
-               inset 0 1px 0 rgba(15,23,42,.90),
-               inset 0 -1px 0 rgba(34,197,94,.18);
-           ">
-          <img
-            src="/partners/cpx.png"
-            alt="CPX Research"
-            style="height:32px;width:auto;display:block;"
-          />
-        </a>
-
-        <!-- Placeholder -->
-        <div style="border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;background:rgba(15,23,42,.35);opacity:.75;">
-          <div style="font-weight:700;font-size:15px;">More partners</div>
-          <div style="opacity:.85;margin-top:6px;font-size:13px;">Coming soon…</div>
-          <div style="margin-top:10px;">
-            <span class="btn-ghost" style="pointer-events:none;opacity:.6;">Soon</span>
-          </div>
-        </div>
-
-        <div style="border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;background:rgba(15,23,42,.35);opacity:.75;">
-          <div style="font-weight:700;font-size:15px;">More partners</div>
-          <div style="opacity:.85;margin-top:6px;font-size:13px;">Coming soon…</div>
-          <div style="margin-top:10px;">
-            <span class="btn-ghost" style="pointer-events:none;opacity:.6;">Soon</span>
-          </div>
-        </div>
-
-        <div style="border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;background:rgba(15,23,42,.35);opacity:.75;">
-          <div style="font-weight:700;font-size:15px;">More partners</div>
-          <div style="opacity:.85;margin-top:6px;font-size:13px;">Coming soon…</div>
-          <div style="margin-top:10px;">
-            <span class="btn-ghost" style="pointer-events:none;opacity:.6;">Soon</span>
-          </div>
-        </div>
-
-        <div style="border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px;background:rgba(15,23,42,.35);opacity:.75;">
-          <div style="font-weight:700;font-size:15px;">More partners</div>
-          <div style="opacity:.85;margin-top:6px;font-size:13px;">Coming soon…</div>
-          <div style="margin-top:10px;">
-            <span class="btn-ghost" style="pointer-events:none;opacity:.6;">Soon</span>
-          </div>
-        </div>
-
-      </div>
-      `
-    )
-  );
+  res.redirect('/earn');
 });
-
 
 
 app.get('/surveys/cpx', (req, res) => {
@@ -4366,7 +4274,7 @@ app.get('/surveys/ayet', (req, res) => {
 </head>
 <body>
   <div class="top">
-    <a class="back" href="/surveys">← Back</a>
+    <a class="back" href="/earn">← Back</a>
     <div class="title">Polltastic Surveys</div>
   </div>
 
