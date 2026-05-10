@@ -2724,6 +2724,24 @@ app.get('/', async (req, res) => {
       pointer-events:none;
     }
 
+.polltastic-card{
+  overflow:hidden;
+}
+
+.polltastic-bg{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(236,72,153,.24) 0%,
+      rgba(236,72,153,.10) 30%,
+      rgba(236,72,153,.04) 55%,
+      transparent 75%
+    );
+  pointer-events:none;
+}
+
     .cpx-card img{
       max-width:120px;
       max-height:36px;
@@ -3154,7 +3172,13 @@ app.get('/', async (req, res) => {
               </div>
             </a>
 
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+            <a href="/surveys/ayet" class="earn-card clickable polltastic-card">
+  <div class="polltastic-bg"></div>
+  <div class="earn-card-top">
+    <div class="earn-card-brand">Polltastic</div>
+  </div>
+</a>
+
             <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
             <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
