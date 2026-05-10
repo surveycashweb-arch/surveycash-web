@@ -2719,7 +2719,7 @@ app.get('/', async (req, res) => {
       rgba(34,197,94,.30) 0%,
       rgba(34,197,94,.14) 42%,
       rgba(34,197,94,.05) 68%,
-      transparent 88%
+      transparent 80%
     );
   pointer-events:none;
 }
@@ -2737,7 +2737,7 @@ app.get('/', async (req, res) => {
       rgba(236,72,153,.30) 0%,
       rgba(236,72,153,.14) 42%,
       rgba(236,72,153,.05) 68%,
-      transparent 88%
+      transparent 80%
     );
   pointer-events:none;
 }
