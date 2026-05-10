@@ -3175,7 +3175,7 @@ app.get('/', async (req, res) => {
             <a href="/surveys/ayet" class="earn-card clickable polltastic-card">
   <div class="polltastic-bg"></div>
   <div class="earn-card-top">
-    <div class="earn-card-brand">Polltastic</div>
+    <img src="/partners/polltastic.png" alt="Polltastic" />
   </div>
 </a>
 
