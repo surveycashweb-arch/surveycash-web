@@ -2711,8 +2711,8 @@ app.get('/', async (req, res) => {
     }
 
 .cpx-card img{
-  max-width:102px;
-  max-height:28px;
+  max-width:128px;
+  max-height:38px;
 }
 
 .cpx-bg{
