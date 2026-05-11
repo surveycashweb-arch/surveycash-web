@@ -2710,12 +2710,6 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
-.cpx-card img{
-  width:116px;
-  max-height:30px;
-  height:auto;
-}
-
 .cpx-bg{
   position:absolute;
   inset:0;
@@ -2749,6 +2743,12 @@ app.get('/', async (req, res) => {
     );
   pointer-events:none;
 }
+
+    .cpx-card img{
+      max-width:120px;
+      max-height:36px;
+      margin-bottom:12px;
+    }
 
     .partner-glow{
       position:absolute;
