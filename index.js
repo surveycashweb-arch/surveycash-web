@@ -2711,14 +2711,14 @@ app.get('/', async (req, res) => {
     }
 
 .cpx-card img{
-  max-width:128px;
-  max-height:38px;
+  width:128px;
+  height:38px;
 }
 
-@media (max-width: 768px){
+@media (max-width:768px){
   .cpx-card img{
-    max-width:118px;
-    max-height:34px;
+    width:98px;
+    height:29px;
   }
 }
 
