@@ -2715,13 +2715,6 @@ app.get('/', async (req, res) => {
   height:38px;
 }
 
-@media (max-width:768px){
-  .cpx-card img{
-    width:98px;
-    height:29px;
-  }
-}
-
 .cpx-bg{
   position:absolute;
   inset:0;
