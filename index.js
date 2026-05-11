@@ -2744,12 +2744,6 @@ app.get('/', async (req, res) => {
   pointer-events:none;
 }
 
-    .cpx-card img{
-      max-width:120px;
-      max-height:36px;
-      margin-bottom:12px;
-    }
-
     .partner-glow{
       position:absolute;
       inset:auto 0 0 0;
