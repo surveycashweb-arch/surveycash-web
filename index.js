@@ -2710,6 +2710,11 @@ app.get('/', async (req, res) => {
       overflow:hidden;
     }
 
+.cpx-card img{
+  max-width:120px;
+  max-height:34px;
+}
+
 .cpx-bg{
   position:absolute;
   inset:0;
