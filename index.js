@@ -2301,10 +2301,104 @@ document.addEventListener('click', function (e) {
     font-weight: 800;
     cursor: pointer;
   }
-  .card button:disabled{
-    opacity: .55;
-    cursor: not-allowed;
+
+.card button:disabled{
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+/* ===== Landing page responsive fix ===== */
+
+@media (max-width: 1100px) {
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
   }
+
+  .hero-wrap{
+    margin-top: 30px;
+    padding: 0 18px;
+  }
+
+  .hero-title{
+    font-size: clamp(34px, 6vw, 56px);
+    line-height: 1.12;
+  }
+
+  .hero-sub{
+    font-size:15px;
+    max-width:620px;
+    margin:18px auto 0;
+  }
+
+  .hiw-grid{
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+
+  .hiw-card{
+    min-height:auto;
+  }
+
+  .tp-wrap{
+    width:100%;
+  }
+}
+
+@media (max-width: 640px){
+
+  main{
+    padding:24px 0 50px;
+  }
+
+  .hero-title{
+    font-size:34px;
+    line-height:1.15;
+  }
+
+  .hero-sub{
+    font-size:14px;
+    line-height:1.6;
+    padding:0 10px;
+  }
+
+  .hero-cta{
+    flex-direction:column;
+    width:100%;
+    max-width:240px;
+    margin:20px auto 0;
+  }
+
+  .hero-cta .btn{
+    width:100%;
+  }
+
+  .hiw-wrap{
+    margin-top:56px;
+    padding:0 18px;
+  }
+
+  .hiw-title{
+    font-size:30px;
+  }
+
+  .tp-wrap{
+    padding:0 18px 30px;
+  }
+
+  .tp-bar{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:16px;
+    padding:20px;
+  }
+
+  .tp-pill{
+    width:100%;
+    text-align:center;
+  }
+}
+
 </style>
 </head>
 <body>
