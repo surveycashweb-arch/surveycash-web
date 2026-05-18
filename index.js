@@ -2399,6 +2399,51 @@ document.addEventListener('click', function (e) {
   }
 }
 
+/* ===== Mobile auth modal fix ===== */
+
+@media (max-width: 640px){
+
+  .auth-backdrop{
+    align-items:flex-start;
+    overflow-y:auto;
+    padding:20px 0;
+  }
+
+  .auth-modal{
+    width:calc(100% - 24px);
+    max-width:none;
+    margin:20px auto;
+    min-height:auto;
+    padding:26px 18px 22px;
+    border-radius:22px;
+  }
+
+  .auth-title{
+    font-size:28px;
+  }
+
+  .field input{
+    font-size:16px;
+    height:58px;
+  }
+
+  .cta-main{
+    height:56px;
+    font-size:16px;
+  }
+
+  .top-links{
+    flex-direction:column;
+    gap:10px;
+    align-items:center;
+    text-align:center;
+  }
+
+  .fineprint{
+    line-height:1.5;
+  }
+}
+
 </style>
 </head>
 <body>
