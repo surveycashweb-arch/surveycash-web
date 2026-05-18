@@ -1823,7 +1823,7 @@ document.addEventListener('click', function (e) {
   background:#131822;         /* samme som signup */
 
   color:#e5e7eb;
-  font-size:14px;
+  font-size:16px;
   margin-bottom:14px;
 
   outline:none;
@@ -2182,7 +2182,7 @@ document.addEventListener('click', function (e) {
     border:1px solid #2a3240;
     background:#131822;
     color:#e5e7eb;
-    font-size:14px;
+    font-size:16px;
     margin-bottom:14px;
 
     /* input må gerne kunne markeres/kopieres */
