@@ -2404,15 +2404,16 @@ document.addEventListener('click', function (e) {
 @media (max-width: 640px){
 
   .auth-backdrop{
-    align-items:flex-start;
-    overflow-y:auto;
-    padding:20px 0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px;
   }
 
   .auth-modal{
     width:calc(100% - 24px);
-    max-width:none;
-    margin:20px auto;
+    max-width:420px;
+    margin:0;
     min-height:auto;
     padding:26px 18px 22px;
     border-radius:22px;
