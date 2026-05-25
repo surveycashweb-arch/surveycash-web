@@ -2445,6 +2445,27 @@ document.addEventListener('click', function (e) {
   }
 }
 
+/* ===== Fix auth close button click on mobile ===== */
+
+.auth-modal{
+  isolation:isolate;
+}
+
+.auth-close{
+  z-index:10;
+  pointer-events:auto;
+}
+
+@media (max-width:640px){
+  .auth-close{
+    right:14px;
+    top:14px;
+    width:34px;
+    height:34px;
+    z-index:20;
+  }
+}
+
 </style>
 </head>
 <body>
