@@ -2509,6 +2509,49 @@ document.addEventListener('click', function (e) {
   }
 }
 
+/* ===== Verify email responsive fix ===== */
+
+@media (max-width:640px){
+
+  .verify-backdrop{
+    align-items:center;
+    justify-content:center;
+    padding:12px;
+    overflow-y:auto;
+  }
+
+  .verify-modal{
+    width:calc(100% - 24px);
+    max-width:420px;
+    min-height:auto;
+    padding:34px 18px 26px;
+    border-radius:22px;
+  }
+
+  .verify-modal h2{
+    font-size:26px;
+  }
+
+  .verify-modal p{
+    font-size:14px;
+    line-height:1.6;
+  }
+
+  .verify-btn{
+    width:100%;
+    min-width:0;
+    height:52px;
+    font-size:15px;
+  }
+
+  .verify-close{
+    right:14px;
+    top:14px;
+    width:34px;
+    height:34px;
+  }
+}
+
 </style>
 </head>
 <body>
