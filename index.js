@@ -679,7 +679,13 @@ window.resendVerifyEmail = async function () {
   //   if (e.target === backdrop) closeAuth();
   // });
 
-  document.getElementById('auth-close')?.addEventListener('click', closeAuth);
+ var authClose = document.getElementById('auth-close');
+
+if (authClose) {
+  authClose.addEventListener('click', function () {
+    closeAuth();
+  });
+}
 
   switchLink?.addEventListener('click', function (e) {
     e.preventDefault();
@@ -2404,10 +2410,17 @@ document.addEventListener('click', function (e) {
 @media (max-width: 640px){
 
   .auth-backdrop{
-    display:flex;
     align-items:center;
     justify-content:center;
     padding:12px;
+  }
+
+  .auth-backdrop:not(.open){
+    display:none !important;
+  }
+
+  .auth-backdrop.open{
+    display:flex !important;
   }
 
   .auth-modal{
