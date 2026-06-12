@@ -2564,7 +2564,7 @@ document.addEventListener('click', function (e) {
   ${tab('/cashout', 'Cash Out')}
   ${tab('/support', 'Support')}
 </nav>
-        ` : `<div style="flex:1"></div>`}
+        ` : ``}
 
     <div class="auth">
       ${user
