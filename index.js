@@ -2552,18 +2552,6 @@ document.addEventListener('click', function (e) {
   }
 }
 
-/* ===== Prevent iPhone zoom on inputs ===== */
-
-@media (max-width:640px){
-
-  input,
-  textarea,
-  select{
-    font-size:16px !important;
-  }
-
-}
-
 </style>
 </head>
 <body>
@@ -8238,7 +8226,7 @@ app.get('/reset-password', (req, res) => {
     border:1px solid #2a3240;
     background:#131822;
     color:#e5e7eb;
-    font-size:14px;
+    font-size:16px;
     margin-bottom:14px;
     outline:none;
   }
