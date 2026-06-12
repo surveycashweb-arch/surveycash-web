@@ -2552,6 +2552,18 @@ document.addEventListener('click', function (e) {
   }
 }
 
+/* ===== Prevent iPhone zoom on inputs ===== */
+
+@media (max-width:640px){
+
+  input,
+  textarea,
+  select{
+    font-size:16px !important;
+  }
+
+}
+
 </style>
 </head>
 <body>
