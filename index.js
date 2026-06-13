@@ -3955,42 +3955,8 @@ if (pwForm) {
             <div class="settings-value">${escapeHtml(displayName)}</div>
             <div class="settings-note" id="acct-username-note">${escapeHtml(nameNoteText)}</div>
           </div>
-          <div class="settings-right">
-            <button
-              class="settings-btn"
-              type="button"
-              id="acct-username-btn"
-              ${canChangeUsername ? '' : 'disabled'}
-              onclick="toggleAccountSection('name')"
-            >
-              Change name
-            </button>
-          </div>
         </div>
 
-        <form
-          id="form-change-username"
-          class="settings-form"
-          action="/account/change-username"
-          method="POST"
-        >
-          <div class="settings-form-group">
-            <label class="settings-form-label" for="acct-username-input">New username</label>
-            <input
-              id="acct-username-input"
-              name="newUsername"
-              type="text"
-              minlength="2"
-              maxlength="24"
-              placeholder="New username"
-              class="field-input"
-              value="${escapeHtml(displayName)}"
-            />
-          </div>
-          <div class="settings-form-actions">
-            <button class="settings-btn" type="submit">Save name</button>
-          </div>
-        </form>
       </div>
 
       <!-- Password card -->
