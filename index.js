@@ -5063,17 +5063,22 @@ app.get('/cashout', async (req, res) => {
             background:#111827;
           }
 
-          .cashout-page{
-            position:relative;
-            width:100%;
-            box-sizing:border-box;
-            background:#111827;
-          }
+.cashout-page{
+  position:relative;
+  width:100%;
+  box-sizing:border-box;
+  background:#111827;
 
-          .cashout-area{
-            background:#111827;
-            padding:24px 0 0;
-          }
+  min-height:calc(100vh - 64px);
+  display:flex;
+  flex-direction:column;
+}
+
+.cashout-area{
+  background:#111827;
+  padding:24px 0 0;
+  flex:1;
+}
 
           .cashout-wrap{
             width:1080px;
@@ -7221,17 +7226,22 @@ app.get('/support', (req, res) => {
       background:#111827;
     }
 
-    .support-page{
-      position:relative;
-      width:100%;
-      box-sizing:border-box;
-      background:#111827;
-    }
+.support-page{
+  position:relative;
+  width:100%;
+  box-sizing:border-box;
+  background:#111827;
 
-    .support-area{
-      background:#111827;
-      padding:24px 0 0;
-    }
+  min-height:calc(100vh - 64px);
+  display:flex;
+  flex-direction:column;
+}
+
+.support-area{
+  background:#111827;
+  padding:24px 0 0;
+  flex:1;
+}
 
     .support-shell{
       position:relative;
