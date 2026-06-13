@@ -999,12 +999,12 @@ document.addEventListener('click', function (e) {
     user-select: none;       /* ALT tekst kan ikke markeres som standard */
   }
 
-  body {
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #111827; /* mørk grå */
-    color: #e5e7eb;
-  }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #151c2e;
+  color: #e5e7eb;
+}
 
   /* Header */
   header {
