@@ -2892,12 +2892,16 @@ app.get('/', async (req, res) => {
       background:#111827;
     }
 
-    .earn-page{
-      position:relative;
-      width:100%;
-      box-sizing:border-box;
-      background:#111827;
-    }
+.earn-page{
+  position:relative;
+  width:100%;
+  box-sizing:border-box;
+  background:#111827;
+
+  min-height:calc(100vh - 64px);
+  display:flex;
+  flex-direction:column;
+}
 
 .earn-area{
   background:#111827;
