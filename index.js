@@ -2895,10 +2895,10 @@ app.get('/', async (req, res) => {
       background:#111827;
     }
 
-    .earn-area{
-      background:#111827;
-      padding:24px 0 220px;
-    }
+.earn-area{
+  background:#111827;
+  padding:24px 0 0;
+}
 
     .earn-wrap{
       width:1080px;
