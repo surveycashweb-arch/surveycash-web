@@ -3187,7 +3187,7 @@ app.get('/', async (req, res) => {
   }
 
   main{
-    min-height:calc(100vh - 64px);
+    min-height:auto;
     height:auto;
     overflow:visible;
   }
@@ -5402,7 +5402,7 @@ app.get('/cashout', async (req, res) => {
   }
 
   main{
-    min-height:calc(100vh - 64px);
+    min-height:auto;
     height:auto;
     overflow:visible;
   }
@@ -7474,7 +7474,7 @@ app.get('/support', (req, res) => {
   }
 
   main{
-    min-height:calc(100vh - 64px);
+    min-height:auto;
     height:auto;
     overflow:visible;
   }
