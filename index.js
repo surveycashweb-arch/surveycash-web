@@ -5063,7 +5063,7 @@ app.get('/cashout', async (req, res) => {
 
           .cashout-area{
             background:#111827;
-            padding:24px 0 220px;
+            padding:24px 0 0;
           }
 
           .cashout-wrap{
@@ -7221,7 +7221,7 @@ app.get('/support', (req, res) => {
 
     .support-area{
       background:#111827;
-      padding:24px 22px 220px;
+      padding:24px 0 0;
     }
 
     .support-shell{
