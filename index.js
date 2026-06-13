@@ -1002,7 +1002,7 @@ document.addEventListener('click', function (e) {
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #151c2e;
+  background: #111827;
   color: #e5e7eb;
 }
 
@@ -2597,6 +2597,10 @@ body{
   min-height:100%;
   overflow-x:hidden;
   overflow-y:auto;
+}
+
+html{
+  background:#151c2e;
 }
 
 body{
