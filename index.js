@@ -3193,16 +3193,18 @@ app.get('/', async (req, res) => {
   }
 }
 
-    @media (min-width:761px){
-      html, body{
-        overflow:hidden;
-      }
+@media (min-width:761px){
+  html, body{
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
 
-      main{
-        height:calc(100vh - 64px);
-        overflow:hidden;
-      }
-    }
+  main{
+    min-height:calc(100vh - 64px);
+    height:auto;
+    overflow:visible;
+  }
+}
 
     @media (max-width:1200px){
       .earn-footer-inner{
@@ -5419,16 +5421,18 @@ app.get('/cashout', async (req, res) => {
             }
           }
 
-          @media (min-width:761px){
-            html, body{
-              overflow:hidden;
-            }
+@media (min-width:761px){
+  html, body{
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
 
-            main{
-              height:calc(100vh - 64px);
-              overflow:hidden;
-            }
-          }
+  main{
+    min-height:calc(100vh - 64px);
+    height:auto;
+    overflow:visible;
+  }
+}
 
           @media (max-width:1200px){
             .cashout-footer-inner{
@@ -7502,16 +7506,18 @@ app.get('/support', (req, res) => {
       opacity:1;
     }
 
-    @media (min-width:761px){
-      html, body{
-        overflow:hidden;
-      }
+@media (min-width:761px){
+  html, body{
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
 
-      main{
-        height:calc(100vh - 64px);
-        overflow:hidden;
-      }
-    }
+  main{
+    min-height:calc(100vh - 64px);
+    height:auto;
+    overflow:visible;
+  }
+}
 
     @media (max-width:1200px){
       .support-footer-inner{
