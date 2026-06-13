@@ -1991,11 +1991,49 @@ document.addEventListener('click', function (e) {
   letter-spacing: 0.01em;
 }
 
-  @media (max-width: 900px) {
-    .account-wrap {
-      grid-template-columns: minmax(0, 1fr);
-    }
+@media (max-width: 900px) {
+  .account-wrap {
+    grid-template-columns: minmax(0, 1fr);
   }
+
+  .account-main-card{
+    flex-direction:column;
+    text-align:center;
+    padding:24px 18px;
+  }
+
+  .account-main-info{
+    align-items:center;
+  }
+}
+
+@media (max-width: 640px){
+
+  .account-main-card{
+    gap:14px;
+  }
+
+  .account-avatar-big{
+    width:90px;
+    height:90px;
+  }
+
+  .account-avatar-big span{
+    font-size:46px;
+  }
+
+  .account-main-name{
+    font-size:22px;
+  }
+
+  .account-stat-card{
+    padding:16px;
+  }
+
+  .account-stat-value{
+    font-size:20px;
+  }
+}
 
   /* Auth modal */
   .auth-backdrop{
