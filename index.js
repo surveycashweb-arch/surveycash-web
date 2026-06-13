@@ -3068,31 +3068,18 @@ app.get('/', async (req, res) => {
     }
 
     .earn-bottom-fill{
-      position:fixed;
-      left:50%;
-      transform:translateX(-50%);
-      bottom:0;
-      width:100vw;
-      height:220px;
-      background:#151c2e;
-      border-top:1px solid rgba(255,255,255,.04);
-      z-index:0;
-      pointer-events:none;
-    }
+  display:none;
+}
 
-    .earn-footer-content{
-      position:fixed;
-      left:50%;
-      transform:translateX(-50%);
-      bottom:0;
-      width:100vw;
-      height:220px;
-      z-index:1;
-      display:flex;
-      justify-content:center;
-      box-sizing:border-box;
-      pointer-events:none;
-    }
+.earn-footer-content{
+  position:relative;
+  width:100%;
+  height:auto;
+  display:block;
+  margin-top:30px;
+  background:#151c2e;
+  border-top:1px solid rgba(255,255,255,.04);
+}
 
     .earn-footer-inner{
       width:100%;
