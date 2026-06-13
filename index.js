@@ -2590,6 +2590,23 @@ document.addEventListener('click', function (e) {
   }
 }
 
+/* ===== Allow scrolling on all normal pages ===== */
+
+html,
+body{
+  min-height:100%;
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+
+body{
+  min-height:100vh;
+}
+
+main{
+  overflow:visible;
+}
+
 </style>
 </head>
 <body>
