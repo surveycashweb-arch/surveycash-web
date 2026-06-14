@@ -7529,6 +7529,32 @@ app.get('/support', (req, res) => {
       }
     }
 
+@media (max-width:900px){
+
+  .support-shell{
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+
+  .faq-grid{
+    grid-template-columns:1fr;
+  }
+
+  .faq-card,
+  .contact-card{
+    padding:20px 16px;
+  }
+
+  .support-title{
+    font-size:32px;
+  }
+
+  .contact-title{
+    font-size:30px;
+  }
+
+}
+
     @media (max-width:760px){
       html, body, main, .support-page, .support-area{
         background:#111827;
