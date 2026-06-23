@@ -4843,8 +4843,7 @@ app.get('/cpx/postback', async (req, res) => {
       return res.status(200).send('ok');
     }
 
-    const USER_REWARD_FACTOR = 0.70;
-const cents = Math.round(Math.max(0, amount) * 100 * USER_REWARD_FACTOR);
+const cents = Math.round(Math.max(0, amount) * 100);
 
     const currentBalance = Number(profile.balance_cents || 0);
     const currentTotal = Number(profile.total_earned_cents || 0);
