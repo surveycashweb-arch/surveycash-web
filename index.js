@@ -641,13 +641,6 @@ function startResendCooldown(seconds) {
   resendTimer = setInterval(tick, 1000);
 }
 
-function getCookie(name) {
-  return document.cookie
-    .split('; ')
-    .find(row => row.startsWith(name + '='))
-    ?.split('=')[1] || '';
-}
-
 window.resendVerifyEmail = async function () {
   if (!resendBtn || resendBtn.disabled) return;
 
@@ -655,26 +648,21 @@ window.resendVerifyEmail = async function () {
   resendBtn.textContent = 'Sending...';
 
   try {
-    const email = (
-      emailInput?.value ||
-      document.querySelector('input[name="email"]')?.value ||
-      decodeURIComponent(getCookie('pending_email')) ||
-      ''
-    ).trim();
+    const email = (emailInput?.value || document.querySelector('input[name="email"]')?.value || '').trim();
 
-    if (!email) {
-      resendBtn.disabled = false;
-      resendBtn.textContent = 'Resend email';
-      alert('Please enter your email first.');
-      return;
-    }
+if (!email) {
+  resendBtn.disabled = false;
+  resendBtn.textContent = 'Resend email';
+  alert('Please enter your email first.');
+  return;
+}
 
-    const r = await fetch('/auth/resend-verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'same-origin',
-      body: JSON.stringify({ email }),
-    });
+const r = await fetch('/auth/resend-verify', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'same-origin',
+  body: JSON.stringify({ email }),
+});
 
     const j = await r.json().catch(() => null);
 
@@ -685,6 +673,7 @@ window.resendVerifyEmail = async function () {
       return;
     }
 
+    // ✅ start cooldown 60 sek
     startResendCooldown(60);
   } catch (e) {
     resendBtn.disabled = false;
@@ -8060,15 +8049,10 @@ app.post('/signup', authLimiter, async (req, res) => {
     createdUserId = signData.user.id;
 
     // 3️⃣ Update profile username (trigger laver typisk row når auth user oprettes)
-const { error: upErr } = await supabaseAdmin
-  .from('profiles')
-  .upsert({
-    user_id: createdUserId,
-    email,
-    username,
-  }, {
-    onConflict: 'user_id',
-  });
+    const { error: upErr } = await supabaseAdmin
+      .from('profiles')
+      .update({ username })
+      .eq('user_id', createdUserId);
 
     if (upErr) {
       if (upErr.code === '23505') {
@@ -8140,38 +8124,22 @@ app.post('/login', loginLimiter, async (req, res) => {
     if (signErr) {
       const msg = String(signErr.message || '').toLowerCase();
 
-if (
-  msg.includes('not confirmed') ||
-  msg.includes('email not confirmed') ||
-  msg.includes('confirm') ||
-  msg.includes('verified')
-) {
-  res.cookie('pending_email', email, {
-    httpOnly: false,
-    secure: IS_PROD,
-    sameSite: 'Lax',
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    path: '/',
-  });
-
-  return res.redirect('/?authError=checkemail&mode=login');
-}
+      if (
+        msg.includes('not confirmed') ||
+        msg.includes('email not confirmed') ||
+        msg.includes('confirm') ||
+        msg.includes('verified')
+      ) {
+        return res.redirect('/?authError=checkemail&mode=login');
+      }
 
       return res.redirect('/?authError=badpass&mode=login');
     }
 
     // ✅ STOP hvis email ikke er verificeret
-if (!authData?.user?.email_confirmed_at) {
-  res.cookie('pending_email', email, {
-    httpOnly: false,
-    secure: IS_PROD,
-    sameSite: 'Lax',
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    path: '/',
-  });
-
-  return res.redirect('/?authError=checkemail&mode=login');
-}
+    if (!authData?.user?.email_confirmed_at) {
+      return res.redirect('/?authError=notconfirmed&mode=login');
+    }
 
     // ✅ Login OK
     const { token, expiresAt } = await createSession(profile.user_id);
