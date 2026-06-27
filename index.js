@@ -648,12 +648,21 @@ window.resendVerifyEmail = async function () {
   resendBtn.textContent = 'Sending...';
 
   try {
-    const r = await fetch('/auth/resend-verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'same-origin',
-      body: JSON.stringify({}),
-    });
+    const email = (emailInput?.value || document.querySelector('input[name="email"]')?.value || '').trim();
+
+if (!email) {
+  resendBtn.disabled = false;
+  resendBtn.textContent = 'Resend email';
+  alert('Please enter your email first.');
+  return;
+}
+
+const r = await fetch('/auth/resend-verify', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'same-origin',
+  body: JSON.stringify({ email }),
+});
 
     const j = await r.json().catch(() => null);
 
@@ -7938,7 +7947,7 @@ const { token, expiresAt } = await createSession(userId);
 // ---------- Auth: resend verification email ----------
 app.post('/auth/resend-verify', authLimiter, async (req, res) => {
   try {
-    const pendingEmail = String(req.cookies.pending_email || '').trim().toLowerCase();
+    const pendingEmail = String(req.body.email || '').trim().toLowerCase();
 
     if (!pendingEmail) {
       return res.status(400).json({ ok: false, error: 'missing_email' });
@@ -8057,14 +8066,6 @@ app.post('/signup', authLimiter, async (req, res) => {
 
     // 4️⃣ IKKE log ind – bed brugeren tjekke mail
 
-// ✅ gem email midlertidigt så resend-knappen ved hvilken email den skal sende til
-res.cookie('pending_email', email, {
-  httpOnly: true,
-  secure: IS_PROD,
-  sameSite: 'Lax',
-  maxAge: 1000 * 60 * 30, // 30 min
-  path: '/',
-});
 
 res.cookie('pending_user_id', createdUserId, {
   httpOnly: true,
