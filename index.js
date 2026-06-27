@@ -8060,10 +8060,15 @@ app.post('/signup', authLimiter, async (req, res) => {
     createdUserId = signData.user.id;
 
     // 3️⃣ Update profile username (trigger laver typisk row når auth user oprettes)
-    const { error: upErr } = await supabaseAdmin
-      .from('profiles')
-      .update({ username })
-      .eq('user_id', createdUserId);
+const { error: upErr } = await supabaseAdmin
+  .from('profiles')
+  .upsert({
+    user_id: createdUserId,
+    email,
+    username,
+  }, {
+    onConflict: 'user_id',
+  });
 
     if (upErr) {
       if (upErr.code === '23505') {
