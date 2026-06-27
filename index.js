@@ -8124,22 +8124,38 @@ app.post('/login', loginLimiter, async (req, res) => {
     if (signErr) {
       const msg = String(signErr.message || '').toLowerCase();
 
-      if (
-        msg.includes('not confirmed') ||
-        msg.includes('email not confirmed') ||
-        msg.includes('confirm') ||
-        msg.includes('verified')
-      ) {
-        return res.redirect('/?authError=checkemail&mode=login');
-      }
+if (
+  msg.includes('not confirmed') ||
+  msg.includes('email not confirmed') ||
+  msg.includes('confirm') ||
+  msg.includes('verified')
+) {
+  res.cookie('pending_email', email, {
+    httpOnly: false,
+    secure: IS_PROD,
+    sameSite: 'Lax',
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    path: '/',
+  });
+
+  return res.redirect('/?authError=checkemail&mode=login');
+}
 
       return res.redirect('/?authError=badpass&mode=login');
     }
 
     // ✅ STOP hvis email ikke er verificeret
-    if (!authData?.user?.email_confirmed_at) {
-      return res.redirect('/?authError=notconfirmed&mode=login');
-    }
+if (!authData?.user?.email_confirmed_at) {
+  res.cookie('pending_email', email, {
+    httpOnly: false,
+    secure: IS_PROD,
+    sameSite: 'Lax',
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    path: '/',
+  });
+
+  return res.redirect('/?authError=checkemail&mode=login');
+}
 
     // ✅ Login OK
     const { token, expiresAt } = await createSession(profile.user_id);
