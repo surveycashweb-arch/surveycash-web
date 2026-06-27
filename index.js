@@ -641,6 +641,13 @@ function startResendCooldown(seconds) {
   resendTimer = setInterval(tick, 1000);
 }
 
+function getCookie(name) {
+  return document.cookie
+    .split('; ')
+    .find(row => row.startsWith(name + '='))
+    ?.split('=')[1] || '';
+}
+
 window.resendVerifyEmail = async function () {
   if (!resendBtn || resendBtn.disabled) return;
 
@@ -648,21 +655,26 @@ window.resendVerifyEmail = async function () {
   resendBtn.textContent = 'Sending...';
 
   try {
-    const email = (emailInput?.value || document.querySelector('input[name="email"]')?.value || '').trim();
+    const email = (
+      emailInput?.value ||
+      document.querySelector('input[name="email"]')?.value ||
+      decodeURIComponent(getCookie('pending_email')) ||
+      ''
+    ).trim();
 
-if (!email) {
-  resendBtn.disabled = false;
-  resendBtn.textContent = 'Resend email';
-  alert('Please enter your email first.');
-  return;
-}
+    if (!email) {
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Resend email';
+      alert('Please enter your email first.');
+      return;
+    }
 
-const r = await fetch('/auth/resend-verify', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  credentials: 'same-origin',
-  body: JSON.stringify({ email }),
-});
+    const r = await fetch('/auth/resend-verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ email }),
+    });
 
     const j = await r.json().catch(() => null);
 
@@ -673,7 +685,6 @@ const r = await fetch('/auth/resend-verify', {
       return;
     }
 
-    // ✅ start cooldown 60 sek
     startResendCooldown(60);
   } catch (e) {
     resendBtn.disabled = false;
