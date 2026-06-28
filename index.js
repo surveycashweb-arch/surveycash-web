@@ -648,20 +648,11 @@ window.resendVerifyEmail = async function () {
   resendBtn.textContent = 'Sending...';
 
   try {
-    const email = (emailInput?.value || document.querySelector('input[name="email"]')?.value || '').trim();
-
-if (!email) {
-  resendBtn.disabled = false;
-  resendBtn.textContent = 'Resend email';
-  alert('Please enter your email first.');
-  return;
-}
-
-const r = await fetch('/auth/resend-verify', {
+    const r = await fetch('/auth/resend-verify', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   credentials: 'same-origin',
-  body: JSON.stringify({ email }),
+  body: JSON.stringify({}),
 });
 
     const j = await r.json().catch(() => null);
@@ -7947,7 +7938,7 @@ const { token, expiresAt } = await createSession(userId);
 // ---------- Auth: resend verification email ----------
 app.post('/auth/resend-verify', authLimiter, async (req, res) => {
   try {
-    const pendingEmail = String(req.body.email || '').trim().toLowerCase();
+    const pendingEmail = String(req.cookies.pending_email || '').trim().toLowerCase();
 
     if (!pendingEmail) {
       return res.status(400).json({ ok: false, error: 'missing_email' });
