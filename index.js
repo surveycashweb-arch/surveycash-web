@@ -8067,11 +8067,19 @@ app.post('/signup', authLimiter, async (req, res) => {
     // 4️⃣ IKKE log ind – bed brugeren tjekke mail
 
 
+res.cookie('pending_email', email, {
+  httpOnly: true,
+  secure: IS_PROD,
+  sameSite: 'Lax',
+  maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dage
+  path: '/',
+});
+
 res.cookie('pending_user_id', createdUserId, {
   httpOnly: true,
   secure: IS_PROD,
   sameSite: 'Lax',
-  maxAge: 1000 * 60 * 30, // 30 min
+  maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dage
   path: '/',
 });
 
