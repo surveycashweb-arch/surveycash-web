@@ -3623,6 +3623,7 @@ app.get('/earn2', async (req, res) => {
       .content{
         background:#111827;
         padding:40px 44px 70px;
+        overflow:hidden;
       }
 
       .hero{
@@ -3673,6 +3674,7 @@ app.get('/earn2', async (req, res) => {
           radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 45%),
           rgba(18,24,40,.92);
         border:1px solid rgba(255,255,255,.07);
+        background-clip:padding-box;
         display:flex;
         align-items:center;
         justify-content:center;
@@ -3680,15 +3682,12 @@ app.get('/earn2', async (req, res) => {
         overflow:hidden;
         color:#cbd5e1;
         font-weight:800;
-        transition:transform .15s ease, border-color .15s ease, background .15s ease;
+        transition:transform .15s ease, border-color .15s ease;
       }
 
       .partner-card:hover{
         transform:translateY(-2px);
         border-color:rgba(255,255,255,.13);
-        background:
-          radial-gradient(circle at top left, rgba(255,255,255,.06), transparent 45%),
-          rgba(24,32,52,.98);
       }
 
       .partner-card span{
@@ -3717,7 +3716,19 @@ app.get('/earn2', async (req, res) => {
           rgba(18,24,40,.92);
       }
 
+      .cpx-card:hover{
+        background:
+          linear-gradient(to top, rgba(34,197,94,.34), rgba(34,197,94,.08) 48%, transparent 100%),
+          rgba(18,24,40,.92);
+      }
+
       .polltastic-card{
+        background:
+          linear-gradient(to top, rgba(236,72,153,.32), rgba(236,72,153,.08) 48%, transparent 100%),
+          rgba(18,24,40,.92);
+      }
+
+      .polltastic-card:hover{
         background:
           linear-gradient(to top, rgba(236,72,153,.32), rgba(236,72,153,.08) 48%, transparent 100%),
           rgba(18,24,40,.92);
@@ -3733,7 +3744,7 @@ app.get('/earn2', async (req, res) => {
       <aside class="sidebar">
         <div class="sidebar-inner">
 
-          <a href="/" class="side-link">
+          <a href="/" class="side-link active">
             <svg class="side-icon" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="7"/>
               <path d="M12 8v8"/>
