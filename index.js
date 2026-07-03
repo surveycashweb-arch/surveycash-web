@@ -3549,6 +3549,67 @@ app.get('/', async (req, res) => {
   );
 });
 
+
+
+
+app.get('/earn2', async (req, res) => {
+  if (!isLoggedIn(req)) return res.redirect('/');
+
+  const bodyHtml = `
+    <style>
+      html, body {
+        background:#111827;
+      }
+
+      main {
+        max-width:none !important;
+        margin:0 !important;
+        padding:0 !important;
+        background:#111827;
+      }
+
+      .earn2-page {
+        min-height:calc(100vh - 64px);
+        background:#111827;
+        color:#fff;
+        padding:40px;
+      }
+
+      .earn2-title {
+        font-size:42px;
+        font-weight:900;
+        margin:0 0 12px;
+      }
+
+      .earn2-title span {
+        color:#fbbf24;
+      }
+
+      .earn2-text {
+        color:#9ca3af;
+        font-size:18px;
+      }
+    </style>
+
+    <div class="earn2-page">
+      <h1 class="earn2-title">Explore offers and earn <span>rewards</span></h1>
+      <p class="earn2-text">This is the new Earn page we are building.</p>
+    </div>
+  `;
+
+  return res.send(
+    page(
+      req,
+      'Earn 2 — SurveyCash',
+      '/earn2',
+      bodyHtml
+    )
+  );
+});
+
+
+
+
 app.get('/ping', (req, res) => {
   res.send('ok');
 });
