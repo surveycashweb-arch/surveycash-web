@@ -3557,11 +3557,11 @@ app.get('/earn2', async (req, res) => {
 
   const bodyHtml = `
     <style>
-      html, body {
+      html, body{
         background:#111827;
       }
 
-      main {
+      main{
         max-width:none !important;
         margin:0 !important;
         padding:0 !important;
@@ -3570,7 +3570,7 @@ app.get('/earn2', async (req, res) => {
 
       .earn2-layout{
         display:grid;
-        grid-template-columns:280px 1fr;
+        grid-template-columns:220px 1fr;
         min-height:calc(100vh - 64px);
       }
 
@@ -3580,26 +3580,26 @@ app.get('/earn2', async (req, res) => {
       }
 
       .sidebar-inner{
-        padding:34px 24px;
+        padding:26px 16px;
       }
 
       .sidebar-title{
-        font-size:28px;
+        font-size:20px;
         font-weight:900;
         color:#fff;
-        margin-bottom:28px;
+        margin-bottom:20px;
       }
 
       .side-link{
         display:flex;
         align-items:center;
-        gap:14px;
-        height:52px;
-        padding:0 18px;
-        margin-bottom:8px;
+        height:46px;
+        padding:0 14px;
+        margin-bottom:6px;
         border-radius:12px;
         color:#fff;
         text-decoration:none;
+        font-size:15px;
         font-weight:700;
         transition:.2s;
       }
@@ -3629,27 +3629,27 @@ app.get('/earn2', async (req, res) => {
           </div>
 
           <a href="#" class="side-link active">
-            💰 Earn
+            Earn
           </a>
 
           <a href="#" class="side-link">
-            🎮 My Games
+            My Games
           </a>
 
           <a href="#" class="side-link">
-            💳 Cash Out
+            Cash Out
           </a>
 
           <a href="#" class="side-link">
-            💬 Support
+            Support
           </a>
 
           <a href="#" class="side-link">
-            🏆 Leaderboard
+            Leaderboard
           </a>
 
           <a href="#" class="side-link">
-            👤 Profile
+            Profile
           </a>
 
         </div>
@@ -3672,7 +3672,6 @@ app.get('/earn2', async (req, res) => {
     )
   );
 });
-
 
 
 app.get('/ping', (req, res) => {
