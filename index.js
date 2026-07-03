@@ -3625,6 +3625,10 @@ app.get('/earn2', async (req, res) => {
         padding:40px 44px 70px;
       }
 
+      .hero{
+        margin-bottom:54px;
+      }
+
       .hero h1{
         margin:0;
         color:#fff;
@@ -3644,7 +3648,7 @@ app.get('/earn2', async (req, res) => {
       }
 
       .partners-section{
-        margin-top:54px;
+        margin-top:42px;
       }
 
       .partners-section h2{
@@ -3657,24 +3661,39 @@ app.get('/earn2', async (req, res) => {
 
       .partner-cards{
         display:grid;
-        grid-template-columns:repeat(6, 168px);
+        grid-template-columns:repeat(6, 170px);
         gap:12px;
       }
 
       .partner-card{
-        height:236px;
+        position:relative;
+        height:180px;
         border-radius:12px;
-        background:#151c2e;
-        border:1px solid rgba(255,255,255,.08);
+        background:
+          radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 45%),
+          rgba(18,24,40,.92);
+        border:1px solid rgba(255,255,255,.07);
         display:flex;
         align-items:center;
         justify-content:center;
         text-decoration:none;
+        overflow:hidden;
         color:#cbd5e1;
         font-weight:800;
+        transition:transform .15s ease, border-color .15s ease, background .15s ease;
+      }
+
+      .partner-card:hover{
+        transform:translateY(-2px);
+        border-color:rgba(255,255,255,.13);
+        background:
+          radial-gradient(circle at top left, rgba(255,255,255,.06), transparent 45%),
+          rgba(24,32,52,.98);
       }
 
       .partner-card span{
+        position:relative;
+        z-index:2;
         padding:7px 12px;
         border-radius:8px;
         background:#1b2335;
@@ -3682,19 +3701,31 @@ app.get('/earn2', async (req, res) => {
         font-size:12px;
       }
 
-      .cpx-card{
-        background:linear-gradient(180deg,#172033 0%,#14543d 100%);
-      }
-
-      .cpx-card img{
-        max-width:118px;
+      .partner-card img{
+        position:relative;
+        z-index:2;
+        max-width:110px;
+        max-height:34px;
+        width:auto;
         height:auto;
+        display:block;
       }
 
-      .pollfish-card{
-        background:linear-gradient(180deg,#172033 0%,#5a294d 100%);
-        color:#ff4f8b;
-        font-size:18px;
+      .cpx-card{
+        background:
+          linear-gradient(to top, rgba(34,197,94,.34), rgba(34,197,94,.08) 48%, transparent 100%),
+          rgba(18,24,40,.92);
+      }
+
+      .polltastic-card{
+        background:
+          linear-gradient(to top, rgba(236,72,153,.32), rgba(236,72,153,.08) 48%, transparent 100%),
+          rgba(18,24,40,.92);
+      }
+
+      .polltastic-card img{
+        max-width:116px;
+        max-height:34px;
       }
     </style>
 
@@ -3789,11 +3820,11 @@ app.get('/earn2', async (req, res) => {
 
           <div class="partner-cards">
             <a href="/surveys/cpx" class="partner-card cpx-card">
-              <img src="/cpx-logo.png" alt="CPX Research">
+              <img src="/partners/cpx.png" alt="CPX Research">
             </a>
 
-            <a href="/surveys/pollfish" class="partner-card pollfish-card">
-              polltastic
+            <a href="/surveys/ayet" class="partner-card polltastic-card">
+              <img src="/partners/polltastic.png" alt="Polltastic">
             </a>
 
             <div class="partner-card"><span>Coming soon</span></div>
@@ -3813,6 +3844,8 @@ app.get('/earn2', async (req, res) => {
     )
   );
 });
+
+
 
 app.get('/ping', (req, res) => {
   res.send('ok');
