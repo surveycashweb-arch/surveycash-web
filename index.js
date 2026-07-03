@@ -3621,9 +3621,28 @@ app.get('/earn2', async (req, res) => {
         stroke-linejoin:round;
       }
 
-      .content{
-        background:#111827;
-      }
+.content{
+    background:#111827;
+    padding:40px 44px;
+}
+
+.hero h1{
+    margin:0;
+    color:#fff;
+    font-size:44px;
+    line-height:1.16;
+    letter-spacing:-.04em;
+}
+
+.hero h1 span{
+    color:#fbbf24;
+}
+
+.hero p{
+    margin:12px 0 0;
+    color:#e5e7eb;
+    font-size:18px;
+}
     </style>
 
     <div class="earn2-layout">
@@ -3693,8 +3712,12 @@ app.get('/earn2', async (req, res) => {
         </div>
       </aside>
 
-      <div class="content"></div>
-    </div>
+      <div class="content">
+  <section class="hero">
+    <h1>Explore offers and<br>earn <span>rewards</span></h1>
+    <p>Complete surveys, try apps, play games and more to earn cash.</p>
+  </section>
+</div>
   `;
 
   return res.send(
