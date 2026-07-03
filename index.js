@@ -3568,32 +3568,98 @@ app.get('/earn2', async (req, res) => {
         background:#111827;
       }
 
-      .earn2-page {
+      .earn2-layout{
+        display:grid;
+        grid-template-columns:280px 1fr;
         min-height:calc(100vh - 64px);
-        background:#111827;
-        color:#fff;
-        padding:40px;
       }
 
-      .earn2-title {
-        font-size:42px;
+      .sidebar{
+        background:#151c2e;
+        border-right:1px solid rgba(255,255,255,.08);
+      }
+
+      .sidebar-inner{
+        padding:34px 24px;
+      }
+
+      .sidebar-title{
+        font-size:28px;
         font-weight:900;
-        margin:0 0 12px;
+        color:#fff;
+        margin-bottom:28px;
       }
 
-      .earn2-title span {
+      .side-link{
+        display:flex;
+        align-items:center;
+        gap:14px;
+        height:52px;
+        padding:0 18px;
+        margin-bottom:8px;
+        border-radius:12px;
+        color:#fff;
+        text-decoration:none;
+        font-weight:700;
+        transition:.2s;
+      }
+
+      .side-link:hover{
+        background:#1f2937;
+      }
+
+      .side-link.active{
+        background:linear-gradient(90deg,#8b6407,#4a3510);
         color:#fbbf24;
       }
 
-      .earn2-text {
-        color:#9ca3af;
-        font-size:18px;
+      .content{
+        background:#111827;
       }
     </style>
 
-    <div class="earn2-page">
-      <h1 class="earn2-title">Explore offers and earn <span>rewards</span></h1>
-      <p class="earn2-text">This is the new Earn page we are building.</p>
+    <div class="earn2-layout">
+
+      <aside class="sidebar">
+
+        <div class="sidebar-inner">
+
+          <div class="sidebar-title">
+            Overview
+          </div>
+
+          <a href="#" class="side-link active">
+            💰 Earn
+          </a>
+
+          <a href="#" class="side-link">
+            🎮 My Games
+          </a>
+
+          <a href="#" class="side-link">
+            💳 Cash Out
+          </a>
+
+          <a href="#" class="side-link">
+            💬 Support
+          </a>
+
+          <a href="#" class="side-link">
+            🏆 Leaderboard
+          </a>
+
+          <a href="#" class="side-link">
+            👤 Profile
+          </a>
+
+        </div>
+
+      </aside>
+
+      <div class="content">
+
+      </div>
+
     </div>
   `;
 
