@@ -3607,7 +3607,6 @@ app.get('/earn2', async (req, res) => {
       .side-link.active{
         background:linear-gradient(90deg,#8d6508,#62450f);
         color:#fbbf24;
-        box-shadow:0 4px 16px rgba(251,191,36,.10);
       }
 
       .side-icon{
@@ -3621,28 +3620,82 @@ app.get('/earn2', async (req, res) => {
         stroke-linejoin:round;
       }
 
-.content{
-    background:#111827;
-    padding:40px 44px;
-}
+      .content{
+        background:#111827;
+        padding:40px 44px 70px;
+      }
 
-.hero h1{
-    margin:0;
-    color:#fff;
-    font-size:44px;
-    line-height:1.16;
-    letter-spacing:-.04em;
-}
+      .hero h1{
+        margin:0;
+        color:#fff;
+        font-size:44px;
+        line-height:1.16;
+        letter-spacing:-.04em;
+      }
 
-.hero h1 span{
-    color:#fbbf24;
-}
+      .hero h1 span{
+        color:#fbbf24;
+      }
 
-.hero p{
-    margin:12px 0 0;
-    color:#e5e7eb;
-    font-size:18px;
-}
+      .hero p{
+        margin:12px 0 0;
+        color:#e5e7eb;
+        font-size:18px;
+      }
+
+      .partners-section{
+        margin-top:54px;
+      }
+
+      .partners-section h2{
+        margin:0 0 16px;
+        color:#fff;
+        font-size:28px;
+        line-height:1;
+        letter-spacing:-.03em;
+      }
+
+      .partner-cards{
+        display:grid;
+        grid-template-columns:repeat(6, 168px);
+        gap:12px;
+      }
+
+      .partner-card{
+        height:236px;
+        border-radius:12px;
+        background:#151c2e;
+        border:1px solid rgba(255,255,255,.08);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-decoration:none;
+        color:#cbd5e1;
+        font-weight:800;
+      }
+
+      .partner-card span{
+        padding:7px 12px;
+        border-radius:8px;
+        background:#1b2335;
+        border:1px solid rgba(255,255,255,.08);
+        font-size:12px;
+      }
+
+      .cpx-card{
+        background:linear-gradient(180deg,#172033 0%,#14543d 100%);
+      }
+
+      .cpx-card img{
+        max-width:118px;
+        height:auto;
+      }
+
+      .pollfish-card{
+        background:linear-gradient(180deg,#172033 0%,#5a294d 100%);
+        color:#ff4f8b;
+        font-size:18px;
+      }
     </style>
 
     <div class="earn2-layout">
@@ -3713,11 +3766,42 @@ app.get('/earn2', async (req, res) => {
       </aside>
 
       <div class="content">
-  <section class="hero">
-    <h1>Explore offers and<br>earn <span>rewards</span></h1>
-    <p>Complete surveys, try apps, play games and more to earn cash.</p>
-  </section>
-</div>
+        <section class="hero">
+          <h1>Explore offers and<br>earn <span>rewards</span></h1>
+          <p>Complete surveys, try apps, play games and more to earn cash.</p>
+        </section>
+
+        <section class="partners-section">
+          <h2>Offers</h2>
+
+          <div class="partner-cards">
+            <div class="partner-card"><span>Coming soon</span></div>
+            <div class="partner-card"><span>Coming soon</span></div>
+            <div class="partner-card"><span>Coming soon</span></div>
+            <div class="partner-card"><span>Coming soon</span></div>
+            <div class="partner-card"><span>Coming soon</span></div>
+            <div class="partner-card"><span>Coming soon</span></div>
+          </div>
+        </section>
+
+        <section class="partners-section">
+          <h2>Surveys</h2>
+
+          <div class="partner-cards">
+            <a href="/surveys/cpx" class="partner-card cpx-card">
+              <img src="/cpx-logo.png" alt="CPX Research">
+            </a>
+
+            <a href="/surveys/pollfish" class="partner-card pollfish-card">
+              polltastic
+            </a>
+
+            <div class="partner-card"><span>Coming soon</span></div>
+            <div class="partner-card"><span>Coming soon</span></div>
+          </div>
+        </section>
+      </div>
+    </div>
   `;
 
   return res.send(
