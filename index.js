@@ -3559,6 +3559,7 @@ app.get('/earn2', async (req, res) => {
     <style>
       html, body{
         background:#111827;
+        font-family:'Inter',system-ui,sans-serif;
       }
 
       main{
@@ -3580,30 +3581,36 @@ app.get('/earn2', async (req, res) => {
       }
 
       .sidebar-inner{
-        padding:24px 18px;
+        padding:24px 16px;
       }
 
       .side-link{
         display:flex;
         align-items:center;
-        height:50px;
-        padding:0 16px;
+        gap:14px;
+        height:52px;
+        padding:0 18px;
         margin-bottom:8px;
         border-radius:12px;
-        color:#fff;
+
+        color:#f3f4f6;
         text-decoration:none;
-        font-size:18px;
-        font-weight:700;
-        transition:.2s;
+
+        font-size:17px;
+        font-weight:600;
+        letter-spacing:-0.01em;
+
+        transition:all .18s ease;
       }
 
       .side-link:hover{
-        background:#1f2937;
+        background:#20293b;
       }
 
       .side-link.active{
-        background:linear-gradient(90deg,#8b6407,#4a3510);
+        background:linear-gradient(90deg,#8d6508,#62450f);
         color:#fbbf24;
+        box-shadow:0 4px 14px rgba(251,191,36,.08);
       }
 
       .content{
@@ -3661,6 +3668,7 @@ app.get('/earn2', async (req, res) => {
     )
   );
 });
+
 
 app.get('/ping', (req, res) => {
   res.send('ok');
