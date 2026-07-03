@@ -3556,46 +3556,150 @@ app.get('/earn2', async (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
   const bodyHtml = `
-    <style>
-      html, body {
-        background:#111827;
-      }
+<style>
+  html, body { background:#08111d; }
+  main{ max-width:none!important; margin:0!important; padding:0!important; background:#08111d!important; }
 
-      main {
-        max-width:none !important;
-        margin:0 !important;
-        padding:0 !important;
-        background:#111827;
-      }
+  .earn2-shell{ display:grid; grid-template-columns:300px 1fr; min-height:calc(100vh - 64px); background:#08111d; color:#fff; }
+  .earn2-sidebar{ background:#0b1420; border-right:1px solid rgba(255,255,255,.08); padding:28px 22px; }
+  .side-item{ display:flex; align-items:center; gap:14px; padding:15px 18px; margin-bottom:10px; border-radius:12px; color:#fff; text-decoration:none; font-weight:800; }
+  .side-item.active{ color:#fbbf24; background:linear-gradient(90deg,rgba(251,191,36,.55),rgba(251,191,36,.16)); border-left:4px solid #fbbf24; }
 
-      .earn2-page {
-        min-height:calc(100vh - 64px);
-        background:#111827;
-        color:#fff;
-        padding:40px;
-      }
+  .help-box{ margin-top:260px; border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:22px; background:rgba(255,255,255,.025); }
 
-      .earn2-title {
-        font-size:42px;
-        font-weight:900;
-        margin:0 0 12px;
-      }
+  .earn2-main{ padding:42px 54px 0; background:radial-gradient(circle at 72% 17%, rgba(251,191,36,.12), transparent 25%), #08111d; }
+  .hero h1{ margin:0 0 12px; font-size:42px; line-height:1.12; font-weight:900; }
+  .yellow{ color:#fbbf24; }
+  .hero p{ margin:0 0 38px; color:#d1d5db; font-size:17px; }
 
-      .earn2-title span {
-        color:#fbbf24;
-      }
+  .section{ margin-bottom:28px; }
+  .section-title{ display:flex; align-items:center; gap:10px; font-size:23px; font-weight:900; margin:0 0 14px; }
 
-      .earn2-text {
-        color:#9ca3af;
-        font-size:18px;
-      }
-    </style>
+  .offer-row{ display:grid; grid-template-columns:repeat(5, 1fr); gap:22px; }
+  .offer-card{ border:1px solid rgba(255,255,255,.08); border-radius:13px; overflow:hidden; background:#0b1724; }
+  .offer-img{ height:135px; background:linear-gradient(135deg,#163b2a,#7c2d12); }
+  .offer-body{ padding:14px 16px 16px; }
+  .offer-title{ font-size:16px; font-weight:900; margin-bottom:8px; }
+  .offer-sub{ color:#cbd5e1; font-size:13px; margin-bottom:18px; }
+  .offer-bottom{ display:flex; justify-content:space-between; align-items:center; }
+  .reward{ background:#15803d; color:#fff; padding:6px 11px; border-radius:7px; font-weight:900; }
 
-    <div class="earn2-page">
-      <h1 class="earn2-title">Explore offers and earn <span>rewards</span></h1>
-      <p class="earn2-text">This is the new Earn page we are building.</p>
+  .partner-section{ border:1px solid rgba(255,255,255,.08); border-radius:16px; background:rgba(255,255,255,.018); padding:18px 16px; }
+  .partner-sub{ color:#d1d5db; margin:-6px 0 14px; }
+  .partner-row{ display:grid; grid-template-columns:repeat(6, 1fr); gap:12px; }
+  .partner-tile{ height:86px; border-radius:10px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.08); font-size:22px; font-weight:900; text-decoration:none; color:white; }
+
+  .blue{background:linear-gradient(180deg,#082f49,#0f172a);}
+  .green{background:linear-gradient(180deg,#064e3b,#0f172a);}
+  .gold{background:linear-gradient(180deg,#4a3508,#0f172a);}
+  .purple{background:linear-gradient(180deg,#2e1065,#0f172a);}
+  .pink{background:linear-gradient(180deg,#831843,#0f172a);}
+
+  .footer{ margin-top:40px; margin-left:-54px; margin-right:-54px; padding:32px 54px; background:#151c2e; border-top:1px solid rgba(255,255,255,.06); display:grid; grid-template-columns:2fr 1fr 1fr 1fr 1fr; gap:38px; }
+  .footer h3{ margin:0 0 16px; color:#fbbf24; }
+  .footer p, .footer a{ color:#e5e7eb; text-decoration:none; display:block; margin-bottom:12px; }
+</style>
+
+<div class="earn2-shell">
+  <aside class="earn2-sidebar">
+    <a class="side-item active">🏠 Overview</a>
+    <a class="side-item">▦ All Offers</a>
+    <a class="side-item">☑ Surveys</a>
+    <a class="side-item">🎮 Games</a>
+    <a class="side-item">💼 Apps</a>
+    <a class="side-item">🎯 Tasks</a>
+    <a class="side-item">▶ Videos</a>
+    <a class="side-item">👥 Referrals <span style="margin-left:auto;">10%</span></a>
+
+    <div class="help-box">
+      <strong>🎧 Need help?</strong>
+      <p style="color:#d1d5db;">Contact our support</p>
+      <button style="border:0;border-radius:20px;padding:10px 22px;background:#1f2937;color:white;font-weight:800;">Contact Support</button>
     </div>
-  `;
+  </aside>
+
+  <div class="earn2-main">
+    <section class="hero">
+      <h1>Explore offers and<br>earn <span class="yellow">rewards</span></h1>
+      <p>Complete surveys, try apps, play games and more to earn cash.</p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">🔥 Top Offers</h2>
+      <div class="offer-row">
+        ${['Idle Bank Tycoon','Solitaire Riches','Puzzles & Chaos','Bus Craze','Call of Dragons'].map((name, i) => `
+          <div class="offer-card">
+            <div class="offer-img"></div>
+            <div class="offer-body">
+              <div class="offer-title">${name}</div>
+              <div class="offer-sub">${i === 0 ? 'Play & Reach City 7' : 'Install & Complete Level 15'}</div>
+              <div class="offer-bottom">
+                <span>⭐ 4.${8 - i % 3}</span>
+                <span class="reward">$${[298,879,198,327,563][i]}</span>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+
+    <section class="section partner-section">
+      <h2 class="section-title">🎮 Game Offer Partners</h2>
+      <p class="partner-sub">Play games, reach goals and earn big rewards.</p>
+      <div class="partner-row">
+        <div class="partner-tile blue">AdGate</div>
+        <div class="partner-tile green">myChips</div>
+        <div class="partner-tile gold">MM WALL</div>
+        <div class="partner-tile purple">TOROX</div>
+        <div class="partner-tile pink">AYET</div>
+        <div class="partner-tile blue">RevU+</div>
+      </div>
+    </section>
+
+    <section class="section partner-section">
+      <h2 class="section-title">📋 Survey Offer Partners</h2>
+      <p class="partner-sub">Answer surveys and get paid for your time.</p>
+      <div class="partner-row">
+        <a href="/surveys/cpx" class="partner-tile green">CPX</a>
+        <a href="/surveys/ayet" class="partner-tile pink">pollfish</a>
+        <div class="partner-tile blue">BitLabs</div>
+        <div class="partner-tile green">timewall</div>
+        <div class="partner-tile purple">inBrain.ai</div>
+        <div class="partner-tile pink">yuno</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>
+        <h2>Survey<span class="yellow">Cash</span></h2>
+        <p>SurveyCash is built to make earning simple. Complete surveys, explore offers and turn your time online into real rewards with quick payouts.</p>
+        <p>Rate us on Trustpilot ⭐ Trustpilot</p>
+      </div>
+      <div>
+        <h3>SurveyCash</h3>
+        <a href="/">Earn</a>
+        <a href="/cashout">Cash Out</a>
+        <a href="/support">Support</a>
+      </div>
+      <div>
+        <h3>Help</h3>
+        <a href="/support">FAQ</a>
+        <a href="/support">Contact</a>
+      </div>
+      <div>
+        <h3>Info</h3>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+      <div>
+        <h3>Social</h3>
+        <a href="#">TikTok</a>
+        <a href="#">X</a>
+      </div>
+    </footer>
+  </div>
+</div>
+`;
 
   return res.send(
     page(
@@ -3606,7 +3710,6 @@ app.get('/earn2', async (req, res) => {
     )
   );
 });
-
 
 
 
