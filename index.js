@@ -3711,33 +3711,57 @@ app.get('/earn2', async (req, res) => {
       }
 
       .cpx-card{
-        background:
-          linear-gradient(to top, rgba(34,197,94,.34), rgba(34,197,94,.08) 48%, transparent 100%),
-          rgba(18,24,40,.92);
-      }
+  background:#182133;
+}
 
-      .cpx-card:hover{
-        background:
-          linear-gradient(to top, rgba(34,197,94,.34), rgba(34,197,94,.08) 48%, transparent 100%),
-          rgba(18,24,40,.92);
-      }
+.cpx-card::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:55%;
+  background:linear-gradient(
+    to top,
+    rgba(22,163,74,.35),
+    transparent
+  );
+  pointer-events:none;
+}
 
-      .polltastic-card{
-        background:
-          linear-gradient(to top, rgba(236,72,153,.32), rgba(236,72,153,.08) 48%, transparent 100%),
-          rgba(18,24,40,.92);
-      }
+.polltastic-card{
+  background:#182133;
+}
 
-      .polltastic-card:hover{
-        background:
-          linear-gradient(to top, rgba(236,72,153,.32), rgba(236,72,153,.08) 48%, transparent 100%),
-          rgba(18,24,40,.92);
-      }
+.polltastic-card::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:55%;
+  background:linear-gradient(
+    to top,
+    rgba(236,72,153,.30),
+    transparent
+  );
+  pointer-events:none;
+}
 
-      .polltastic-card img{
-        max-width:116px;
-        max-height:34px;
-      }
+.partner-card img{
+  position:relative;
+  z-index:2;
+  max-width:110px;
+  max-height:34px;
+  width:auto;
+  height:auto;
+  display:block;
+}
+
+.polltastic-card img{
+  max-width:116px;
+  max-height:34px;
+}
     </style>
 
     <div class="earn2-layout">
