@@ -3632,12 +3632,9 @@ app.get('/earn2', async (req, res) => {
 
           <a href="#" class="side-link active">
             <svg class="side-icon" viewBox="0 0 24 24">
-              <circle cx="8" cy="8" r="3"/>
-              <circle cx="16" cy="16" r="3"/>
-              <path d="M8 11v6"/>
-              <path d="M16 13V7"/>
-              <path d="M6.5 8h3"/>
-              <path d="M14.5 16h3"/>
+              <circle cx="12" cy="12" r="7"/>
+              <path d="M12 8v8"/>
+              <path d="M15 10c-.7-.8-1.8-1.2-3-1.2-1.7 0-2.8.8-2.8 2 0 1.3 1.1 1.8 2.8 2.1 1.8.4 2.8.8 2.8 2.1 0 1.3-1.2 2.1-3.1 2.1-1.4 0-2.5-.5-3.3-1.3"/>
             </svg>
             <span>Earn</span>
           </a>
@@ -3655,20 +3652,21 @@ app.get('/earn2', async (req, res) => {
 
           <a href="#" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
-              <path d="M3 7h16a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2V7z"/>
-              <path d="M16 12h5v5h-5a2.5 2.5 0 0 1 0-5z"/>
-              <path d="M7 7V5h10v2"/>
-              <circle cx="17.5" cy="14.5" r=".6"/>
+              <rect x="3" y="7" width="18" height="12" rx="2"/>
+              <path d="M3 10h18"/>
+              <path d="M7 15h4"/>
+              <path d="M17 13l2 2 2-2"/>
+              <path d="M19 11v4"/>
             </svg>
             <span>Cash Out</span>
           </a>
 
           <a href="#" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
-              <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H8l-5 2 1.6-4.2A8.5 8.5 0 1 1 21 11.5z"/>
-              <path d="M8.5 11.5h.01"/>
-              <path d="M12 11.5h.01"/>
-              <path d="M15.5 11.5h.01"/>
+              <path d="M20 11.5c0 4.2-3.6 7.5-8 7.5H8l-4 2 1.3-3.8A7.4 7.4 0 0 1 4 11.5C4 7.4 7.6 4 12 4s8 3.4 8 7.5z"/>
+              <circle cx="9" cy="11.5" r=".7"/>
+              <circle cx="12" cy="11.5" r=".7"/>
+              <circle cx="15" cy="11.5" r=".7"/>
             </svg>
             <span>Support</span>
           </a>
