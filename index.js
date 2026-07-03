@@ -3710,42 +3710,33 @@ app.get('/earn2', async (req, res) => {
         display:block;
       }
 
-      .cpx-card{
-  background:#182133;
-}
-
-.cpx-card::after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:55%;
-  background:linear-gradient(
-    to top,
-    rgba(22,163,74,.35),
-    transparent
-  );
-  pointer-events:none;
+.cpx-card{
+  background:
+    linear-gradient(
+      to top,
+      rgba(22,163,74,.42) 0%,
+      rgba(22,163,74,.26) 34%,
+      rgba(22,163,74,.10) 62%,
+      rgba(22,163,74,.03) 82%,
+      rgba(18,24,40,.92) 100%
+    );
 }
 
 .polltastic-card{
-  background:#182133;
+  background:
+    linear-gradient(
+      to top,
+      rgba(236,72,153,.36) 0%,
+      rgba(236,72,153,.24) 34%,
+      rgba(236,72,153,.10) 62%,
+      rgba(236,72,153,.03) 82%,
+      rgba(18,24,40,.92) 100%
+    );
 }
 
+.cpx-card::after,
 .polltastic-card::after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:55%;
-  background:linear-gradient(
-    to top,
-    rgba(236,72,153,.30),
-    transparent
-  );
-  pointer-events:none;
+  display:none;
 }
 
 .partner-card img{
