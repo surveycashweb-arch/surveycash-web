@@ -3571,7 +3571,7 @@ app.get('/earn2', async (req, res) => {
 
       .earn2-layout{
         display:grid;
-        grid-template-columns:245px 1fr;
+        grid-template-columns:260px 1fr;
         min-height:calc(100vh - 64px);
       }
 
@@ -3587,19 +3587,16 @@ app.get('/earn2', async (req, res) => {
       .side-link{
         display:flex;
         align-items:center;
-        gap:14px;
-        height:52px;
+        gap:16px;
+        height:58px;
         padding:0 18px;
-        margin-bottom:8px;
-        border-radius:12px;
-
+        margin-bottom:12px;
+        border-radius:13px;
         color:#f3f4f6;
         text-decoration:none;
-
-        font-size:17px;
-        font-weight:600;
+        font-size:18px;
+        font-weight:700;
         letter-spacing:-0.01em;
-
         transition:all .18s ease;
       }
 
@@ -3610,7 +3607,18 @@ app.get('/earn2', async (req, res) => {
       .side-link.active{
         background:linear-gradient(90deg,#8d6508,#62450f);
         color:#fbbf24;
-        box-shadow:0 4px 14px rgba(251,191,36,.08);
+        box-shadow:0 4px 16px rgba(251,191,36,.10);
+      }
+
+      .side-icon{
+        width:30px;
+        height:30px;
+        flex-shrink:0;
+        stroke:currentColor;
+        fill:none;
+        stroke-width:2;
+        stroke-linecap:round;
+        stroke-linejoin:round;
       }
 
       .content{
@@ -3621,40 +3629,71 @@ app.get('/earn2', async (req, res) => {
     <div class="earn2-layout">
 
       <aside class="sidebar">
-
         <div class="sidebar-inner">
 
           <a href="#" class="side-link active">
-            Earn
+            <svg class="side-icon" viewBox="0 0 24 24">
+              <path d="M6 9h12l-1.2 10.5a2 2 0 0 1-2 1.5H9.2a2 2 0 0 1-2-1.5L6 9z"/>
+              <path d="M9 9V7a3 3 0 0 1 6 0v2"/>
+              <path d="M12 12v5"/>
+              <path d="M10.5 13.5h3"/>
+            </svg>
+            <span>Earn</span>
           </a>
 
           <a href="#" class="side-link">
-            My Games
+            <svg class="side-icon" viewBox="0 0 24 24">
+              <rect x="3" y="8" width="18" height="10" rx="3"/>
+              <path d="M8 12v2"/>
+              <path d="M7 13h2"/>
+              <circle cx="16" cy="13" r=".8"/>
+              <circle cx="19" cy="11" r=".8"/>
+            </svg>
+            <span>My Games</span>
           </a>
 
           <a href="#" class="side-link">
-            Cash Out
+            <svg class="side-icon" viewBox="0 0 24 24">
+              <path d="M3 7h16a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2V7z"/>
+              <path d="M17 12h4v5h-4a2.5 2.5 0 0 1 0-5z"/>
+              <path d="M7 7V5h11v2"/>
+            </svg>
+            <span>Cash Out</span>
           </a>
 
           <a href="#" class="side-link">
-            Support
+            <svg class="side-icon" viewBox="0 0 24 24">
+              <path d="M21 12a8 8 0 0 1-8 8H8l-5 3 1.6-5.2A8 8 0 1 1 21 12z"/>
+              <path d="M8 12h.01"/>
+              <path d="M12 12h.01"/>
+              <path d="M16 12h.01"/>
+            </svg>
+            <span>Support</span>
           </a>
 
           <a href="#" class="side-link">
-            Leaderboard
+            <svg class="side-icon" viewBox="0 0 24 24">
+              <path d="M8 21h8"/>
+              <path d="M12 17v4"/>
+              <path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/>
+              <path d="M5 6H3v2a4 4 0 0 0 4 4"/>
+              <path d="M19 6h2v2a4 4 0 0 1-4 4"/>
+            </svg>
+            <span>Leaderboard</span>
           </a>
 
           <a href="#" class="side-link">
-            Profile
+            <svg class="side-icon" viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21a8 8 0 0 1 16 0"/>
+            </svg>
+            <span>Profile</span>
           </a>
 
         </div>
-
       </aside>
 
-      <div class="content">
-
-      </div>
+      <div class="content"></div>
 
     </div>
   `;
