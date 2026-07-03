@@ -3622,7 +3622,123 @@ app.get('/earn2', async (req, res) => {
       }
 
       .content{
-        background:#111827;
+        padding:36px 44px 60px;
+        background:
+          radial-gradient(circle at 70% 12%, rgba(22,163,74,.26), transparent 34%),
+          #111827;
+        overflow:hidden;
+      }
+
+      .hero{
+        padding:10px 0 28px;
+      }
+
+      .hero h1{
+        margin:0;
+        color:#fff;
+        font-size:44px;
+        line-height:1.16;
+        letter-spacing:-.04em;
+      }
+
+      .hero h1 span{
+        color:#fbbf24;
+      }
+
+      .hero p{
+        margin:12px 0 0;
+        color:#e5e7eb;
+        font-size:18px;
+      }
+
+      .top-section h2,
+      .partners-box h2{
+        margin:0;
+        color:white;
+        font-size:23px;
+      }
+
+      .offer-row{
+        margin-top:14px;
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:22px;
+      }
+
+      .offer-card{
+        background:#0b1420;
+        border:1px solid rgba(255,255,255,.08);
+        border-radius:12px;
+        overflow:hidden;
+      }
+
+      .offer-img{
+        height:138px;
+      }
+
+      .offer-img.green{background:linear-gradient(135deg,#65a30d,#14532d);}
+      .offer-img.yellow{background:linear-gradient(135deg,#facc15,#166534);}
+      .offer-img.orange{background:linear-gradient(135deg,#7f1d1d,#f97316);}
+      .offer-img.blue{background:linear-gradient(135deg,#0284c7,#2563eb);}
+      .offer-img.brown{background:linear-gradient(135deg,#431407,#92400e);}
+
+      .offer-card h3{
+        margin:16px 16px 8px;
+        color:#fff;
+        font-size:17px;
+      }
+
+      .offer-card p{
+        margin:0 16px 18px;
+        color:#d1d5db;
+        font-size:14px;
+      }
+
+      .offer-bottom{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:0 16px 16px;
+        color:white;
+      }
+
+      .offer-bottom b{
+        background:#15803d;
+        padding:7px 11px;
+        border-radius:6px;
+        font-size:17px;
+      }
+
+      .partners-box{
+        margin-top:30px;
+        padding:20px;
+        border-radius:16px;
+        background:rgba(8,13,24,.72);
+        border:1px solid rgba(255,255,255,.08);
+      }
+
+      .partners-box p{
+        margin:8px 0 14px;
+        color:#e5e7eb;
+      }
+
+      .partner-grid{
+        display:grid;
+        grid-template-columns:repeat(6,1fr);
+        gap:12px;
+      }
+
+      .partner-grid div{
+        height:84px;
+        border-radius:10px;
+        background:linear-gradient(135deg,rgba(16,185,129,.18),rgba(236,72,153,.16));
+        border:1px solid rgba(255,255,255,.08);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#fff;
+        font-size:22px;
+        font-weight:800;
       }
     </style>
 
@@ -3693,7 +3809,98 @@ app.get('/earn2', async (req, res) => {
         </div>
       </aside>
 
-      <div class="content"></div>
+      <div class="content">
+        <section class="hero">
+          <div>
+            <h1>Explore offers and<br>earn <span>rewards</span></h1>
+            <p>Complete surveys, try apps, play games and more to earn cash.</p>
+          </div>
+        </section>
+
+        <section class="top-section">
+          <h2>🔥 Top Offers</h2>
+
+          <div class="offer-row">
+            <div class="offer-card">
+              <div class="offer-img green"></div>
+              <h3>Idle Bank Tycoon</h3>
+              <p>Play & Reach City 7</p>
+              <div class="offer-bottom">
+                <span>⭐ 4.8</span>
+                <b>$298</b>
+              </div>
+            </div>
+
+            <div class="offer-card">
+              <div class="offer-img yellow"></div>
+              <h3>Solitaire Riches</h3>
+              <p>Install & Complete Level 15</p>
+              <div class="offer-bottom">
+                <span>⭐ 4.9</span>
+                <b>$879</b>
+              </div>
+            </div>
+
+            <div class="offer-card">
+              <div class="offer-img orange"></div>
+              <h3>Puzzles & Chaos</h3>
+              <p>Reach Stronghold 10</p>
+              <div class="offer-bottom">
+                <span>⭐ 4.7</span>
+                <b>$198</b>
+              </div>
+            </div>
+
+            <div class="offer-card">
+              <div class="offer-img blue"></div>
+              <h3>Bus Craze</h3>
+              <p>Install & Complete Level 20</p>
+              <div class="offer-bottom">
+                <span>⭐ 4.6</span>
+                <b>$327</b>
+              </div>
+            </div>
+
+            <div class="offer-card">
+              <div class="offer-img brown"></div>
+              <h3>Call of Dragons</h3>
+              <p>Reach City Hall 12</p>
+              <div class="offer-bottom">
+                <span>⭐ 4.8</span>
+                <b>$563</b>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="partners-box">
+          <h2>🎮 Game Offer Partners</h2>
+          <p>Play games, reach goals and earn big rewards.</p>
+
+          <div class="partner-grid">
+            <div>AdGate</div>
+            <div>myChips</div>
+            <div>MM WALL</div>
+            <div>TOROX</div>
+            <div>AYET STUDIOS</div>
+            <div>RevU+</div>
+          </div>
+        </section>
+
+        <section class="partners-box">
+          <h2>📋 Survey Offer Partners</h2>
+          <p>Answer surveys and get paid for your time.</p>
+
+          <div class="partner-grid">
+            <div>CPX RESEARCH</div>
+            <div>pollfish</div>
+            <div>BitLabs</div>
+            <div>timewall</div>
+            <div>inBrain.ai</div>
+            <div>yuno surveys</div>
+          </div>
+        </section>
+      </div>
     </div>
   `;
 
