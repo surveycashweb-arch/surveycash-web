@@ -3595,7 +3595,7 @@ app.get('/earn2', async (req, res) => {
     color:#f3f4f6;
     text-decoration:none;
     font-size:17px;
-    font-weight:700;
+    font-weight:600;
     letter-spacing:-0.01em;
     transition:all .18s ease;
 }
