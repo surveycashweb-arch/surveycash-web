@@ -3682,12 +3682,15 @@ app.get('/earn2', async (req, res) => {
         overflow:hidden;
         color:#cbd5e1;
         font-weight:800;
-        transition:transform .15s ease, border-color .15s ease;
+        transition:transform .15s ease, border-color .15s ease, background .15s ease;
       }
 
       .partner-card:hover{
         transform:translateY(-2px);
         border-color:rgba(255,255,255,.13);
+        background:
+          radial-gradient(circle at top left, rgba(255,255,255,.06), transparent 45%),
+          rgba(24,32,52,.98);
       }
 
       .partner-card span{
@@ -3710,49 +3713,49 @@ app.get('/earn2', async (req, res) => {
         display:block;
       }
 
-.cpx-card{
-  background:
-    linear-gradient(
-      to top,
-      rgba(22,163,74,.42) 0%,
-      rgba(22,163,74,.26) 34%,
-      rgba(22,163,74,.10) 62%,
-      rgba(22,163,74,.03) 82%,
-      rgba(18,24,40,.92) 100%
-    );
-}
+      .cpx-card,
+      .polltastic-card{
+        background:
+          radial-gradient(circle at top left, rgba(255,255,255,.04), transparent 45%),
+          rgba(18,24,40,.92);
+      }
 
-.polltastic-card{
-  background:
-    linear-gradient(
-      to top,
-      rgba(236,72,153,.36) 0%,
-      rgba(236,72,153,.24) 34%,
-      rgba(236,72,153,.10) 62%,
-      rgba(236,72,153,.03) 82%,
-      rgba(18,24,40,.92) 100%
-    );
-}
+      .cpx-bg,
+      .polltastic-bg{
+        position:absolute;
+        inset:0;
+        pointer-events:none;
+        z-index:1;
+      }
 
-.cpx-card::after,
-.polltastic-card::after{
-  display:none;
-}
+      .cpx-bg{
+        background:
+          linear-gradient(
+            to top,
+            rgba(34,197,94,.34) 0%,
+            rgba(34,197,94,.18) 28%,
+            rgba(34,197,94,.07) 52%,
+            rgba(34,197,94,.02) 72%,
+            transparent 100%
+          );
+      }
 
-.partner-card img{
-  position:relative;
-  z-index:2;
-  max-width:110px;
-  max-height:34px;
-  width:auto;
-  height:auto;
-  display:block;
-}
+      .polltastic-bg{
+        background:
+          linear-gradient(
+            to top,
+            rgba(236,72,153,.30) 0%,
+            rgba(236,72,153,.16) 28%,
+            rgba(236,72,153,.06) 52%,
+            rgba(236,72,153,.02) 72%,
+            transparent 100%
+          );
+      }
 
-.polltastic-card img{
-  max-width:116px;
-  max-height:34px;
-}
+      .polltastic-card img{
+        max-width:116px;
+        max-height:34px;
+      }
     </style>
 
     <div class="earn2-layout">
@@ -3778,7 +3781,6 @@ app.get('/earn2', async (req, res) => {
             </svg>
             <span>My Games</span>
           </a>
-
           <a href="/cashout" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
               <rect x="3" y="7" width="18" height="12" rx="2"/>
@@ -3846,10 +3848,12 @@ app.get('/earn2', async (req, res) => {
 
           <div class="partner-cards">
             <a href="/surveys/cpx" class="partner-card cpx-card">
+              <div class="cpx-bg"></div>
               <img src="/partners/cpx.png" alt="CPX Research">
             </a>
 
             <a href="/surveys/ayet" class="partner-card polltastic-card">
+              <div class="polltastic-bg"></div>
               <img src="/partners/polltastic.png" alt="Polltastic">
             </a>
 
