@@ -3570,7 +3570,7 @@ app.get('/earn2', async (req, res) => {
 
       .earn2-layout{
         display:grid;
-        grid-template-columns:220px 1fr;
+        grid-template-columns:245px 1fr;
         min-height:calc(100vh - 64px);
       }
 
@@ -3580,26 +3580,19 @@ app.get('/earn2', async (req, res) => {
       }
 
       .sidebar-inner{
-        padding:26px 16px;
-      }
-
-      .sidebar-title{
-        font-size:20px;
-        font-weight:900;
-        color:#fff;
-        margin-bottom:20px;
+        padding:24px 18px;
       }
 
       .side-link{
         display:flex;
         align-items:center;
-        height:46px;
-        padding:0 14px;
-        margin-bottom:6px;
+        height:50px;
+        padding:0 16px;
+        margin-bottom:8px;
         border-radius:12px;
         color:#fff;
         text-decoration:none;
-        font-size:15px;
+        font-size:18px;
         font-weight:700;
         transition:.2s;
       }
@@ -3623,10 +3616,6 @@ app.get('/earn2', async (req, res) => {
       <aside class="sidebar">
 
         <div class="sidebar-inner">
-
-          <div class="sidebar-title">
-            Overview
-          </div>
 
           <a href="#" class="side-link active">
             Earn
@@ -3672,7 +3661,6 @@ app.get('/earn2', async (req, res) => {
     )
   );
 });
-
 
 app.get('/ping', (req, res) => {
   res.send('ok');
