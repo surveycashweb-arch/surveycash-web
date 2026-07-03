@@ -3551,7 +3551,6 @@ app.get('/', async (req, res) => {
 
 
 
-
 app.get('/earn2', async (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
@@ -3622,7 +3621,7 @@ app.get('/earn2', async (req, res) => {
 
       .content{
         background:#111827;
-        padding:40px 44px 70px;
+        padding:40px 44px 0;
         overflow:hidden;
       }
 
@@ -3756,8 +3755,85 @@ app.get('/earn2', async (req, res) => {
         max-width:116px;
         max-height:34px;
       }
-    </style>
 
+      .earn2-footer{
+        margin-top:70px;
+        margin-left:-44px;
+        margin-right:-44px;
+        background:#151c2e;
+        border-top:1px solid rgba(255,255,255,.04);
+      }
+
+      .earn2-footer-inner{
+        padding:26px 36px;
+        display:grid;
+        grid-template-columns:1.7fr 1fr 1fr 1fr;
+        gap:36px;
+        box-sizing:border-box;
+      }
+
+      .footer-brand{
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .footer-logo{
+        font-size:22px;
+        font-weight:900;
+        line-height:1;
+        color:#fff;
+        margin-bottom:18px;
+      }
+
+      .footer-logo .white{ color:#fff; }
+      .footer-logo .accent{ color:#fbbf24; }
+
+      .footer-brand-text{
+        max-width:380px;
+        color:rgba(255,255,255,.62);
+        font-size:14px;
+        line-height:1.55;
+        margin-bottom:18px;
+      }
+
+      .footer-trust-link{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        color:#fff;
+        text-decoration:none;
+        font-size:12px;
+        font-weight:700;
+      }
+
+      .footer-trust-img{
+        height:42px;
+        width:auto;
+        display:block;
+      }
+
+      .footer-col-title{
+        color:#fbbf24;
+        font-size:16px;
+        font-weight:900;
+        margin:0 0 22px;
+      }
+
+      .footer-link{
+        display:block;
+        color:#fff;
+        text-decoration:none;
+        font-size:15px;
+        font-weight:700;
+        margin-bottom:22px;
+        opacity:.95;
+      }
+
+      .footer-link:hover{
+        opacity:1;
+      }
+    </style>
     <div class="earn2-layout">
       <aside class="sidebar">
         <div class="sidebar-inner">
@@ -3781,6 +3857,7 @@ app.get('/earn2', async (req, res) => {
             </svg>
             <span>My Games</span>
           </a>
+
           <a href="/cashout" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
               <rect x="3" y="7" width="18" height="12" rx="2"/>
@@ -3861,6 +3938,47 @@ app.get('/earn2', async (req, res) => {
             <div class="partner-card"><span>Coming soon</span></div>
           </div>
         </section>
+
+        <footer class="earn2-footer">
+          <div class="earn2-footer-inner">
+
+            <div class="footer-brand">
+              <div class="footer-logo">
+                <span class="white">Survey</span><span class="accent">Cash</span>
+              </div>
+
+              <div class="footer-brand-text">
+                SurveyCash is built to make earning simple.
+                Complete surveys, explore offers and turn your
+                time online into real rewards with quick payouts.
+              </div>
+
+              <a href="#" class="footer-trust-link">
+                <span>Rate us on Trustpilot</span>
+                <img class="footer-trust-img" src="/img/trustpilot.png" alt="Trustpilot">
+              </a>
+            </div>
+
+            <div class="footer-col">
+              <h4 class="footer-col-title">Help</h4>
+              <a class="footer-link" href="/support">FAQ</a>
+              <a class="footer-link" href="/support">Contact</a>
+            </div>
+
+            <div class="footer-col">
+              <h4 class="footer-col-title">Info</h4>
+              <a class="footer-link" href="/terms">Terms</a>
+              <a class="footer-link" href="/privacy">Privacy</a>
+            </div>
+
+            <div class="footer-col">
+              <h4 class="footer-col-title">Social</h4>
+              <a class="footer-link" href="#">TikTok</a>
+              <a class="footer-link" href="#">X</a>
+            </div>
+
+          </div>
+        </footer>
       </div>
     </div>
   `;
