@@ -3587,15 +3587,15 @@ app.get('/earn2', async (req, res) => {
       .side-link{
         display:flex;
         align-items:center;
-        gap:16px;
-        height:58px;
+        gap:14px;
+        height:56px;
         padding:0 18px;
-        margin-bottom:12px;
+        margin-bottom:10px;
         border-radius:13px;
         color:#f3f4f6;
         text-decoration:none;
-        font-size:18px;
-        font-weight:700;
+        font-size:16px;
+        font-weight:600;
         letter-spacing:-0.01em;
         transition:all .18s ease;
       }
@@ -3611,12 +3611,12 @@ app.get('/earn2', async (req, res) => {
       }
 
       .side-icon{
-        width:30px;
-        height:30px;
+        width:24px;
+        height:24px;
         flex-shrink:0;
         stroke:currentColor;
         fill:none;
-        stroke-width:2;
+        stroke-width:1.8;
         stroke-linecap:round;
         stroke-linejoin:round;
       }
@@ -3627,46 +3627,45 @@ app.get('/earn2', async (req, res) => {
     </style>
 
     <div class="earn2-layout">
-
       <aside class="sidebar">
         <div class="sidebar-inner">
 
           <a href="#" class="side-link active">
             <svg class="side-icon" viewBox="0 0 24 24">
-              <path d="M6 9h12l-1.2 10.5a2 2 0 0 1-2 1.5H9.2a2 2 0 0 1-2-1.5L6 9z"/>
-              <path d="M9 9V7a3 3 0 0 1 6 0v2"/>
-              <path d="M12 12v5"/>
-              <path d="M10.5 13.5h3"/>
+              <path d="M7 7h10"/>
+              <path d="M9 7V5.8A2.8 2.8 0 0 1 11.8 3h.4A2.8 2.8 0 0 1 15 5.8V7"/>
+              <rect x="6" y="7" width="12" height="14" rx="2"/>
+              <path d="M12 11v6"/>
             </svg>
             <span>Earn</span>
           </a>
 
           <a href="#" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
-              <rect x="3" y="8" width="18" height="10" rx="3"/>
-              <path d="M8 12v2"/>
-              <path d="M7 13h2"/>
-              <circle cx="16" cy="13" r=".8"/>
-              <circle cx="19" cy="11" r=".8"/>
+              <rect x="3" y="8" width="18" height="8" rx="4"/>
+              <path d="M8 12h-2"/>
+              <path d="M7 11v2"/>
+              <circle cx="16.5" cy="11.5" r="1"/>
+              <circle cx="18.8" cy="13.5" r="1"/>
             </svg>
             <span>My Games</span>
           </a>
 
           <a href="#" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
-              <path d="M3 7h16a2 2 0 0 1 2 2v10H5a2 2 0 0 1-2-2V7z"/>
-              <path d="M17 12h4v5h-4a2.5 2.5 0 0 1 0-5z"/>
-              <path d="M7 7V5h11v2"/>
+              <path d="M4 7h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4z"/>
+              <path d="M17 10h3v6h-3"/>
+              <circle cx="17.5" cy="13" r=".8"/>
             </svg>
             <span>Cash Out</span>
           </a>
 
           <a href="#" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
-              <path d="M21 12a8 8 0 0 1-8 8H8l-5 3 1.6-5.2A8 8 0 1 1 21 12z"/>
-              <path d="M8 12h.01"/>
-              <path d="M12 12h.01"/>
-              <path d="M16 12h.01"/>
+              <path d="M20 11.5c0 4.4-3.8 8-8.5 8H8l-4 2 1.2-3.6A7.9 7.9 0 0 1 4 11.5C4 7.4 7.6 4 12 4s8 3.4 8 7.5z"/>
+              <circle cx="9" cy="11.5" r=".7"/>
+              <circle cx="12" cy="11.5" r=".7"/>
+              <circle cx="15" cy="11.5" r=".7"/>
             </svg>
             <span>Support</span>
           </a>
@@ -3694,7 +3693,6 @@ app.get('/earn2', async (req, res) => {
       </aside>
 
       <div class="content"></div>
-
     </div>
   `;
 
@@ -3707,7 +3705,6 @@ app.get('/earn2', async (req, res) => {
     )
   );
 });
-
 
 app.get('/ping', (req, res) => {
   res.send('ok');
