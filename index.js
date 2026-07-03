@@ -3584,21 +3584,21 @@ app.get('/earn2', async (req, res) => {
         padding:24px 16px;
       }
 
-.side-link{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    height:56px;
-    padding:0 18px;
-    margin-bottom:10px;
-    border-radius:13px;
-    color:#f3f4f6;
-    text-decoration:none;
-    font-size:17px;
-    font-weight:600;
-    letter-spacing:-0.01em;
-    transition:all .18s ease;
-}
+      .side-link{
+        display:flex;
+        align-items:center;
+        gap:14px;
+        height:56px;
+        padding:0 18px;
+        margin-bottom:10px;
+        border-radius:13px;
+        color:#f3f4f6;
+        text-decoration:none;
+        font-size:17px;
+        font-weight:600;
+        letter-spacing:-0.01em;
+        transition:all .18s ease;
+      }
 
       .side-link:hover{
         background:#20293b;
@@ -3630,7 +3630,7 @@ app.get('/earn2', async (req, res) => {
       <aside class="sidebar">
         <div class="sidebar-inner">
 
-          <a href="#" class="side-link active">
+          <a href="/" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="7"/>
               <path d="M12 8v8"/>
@@ -3650,7 +3650,7 @@ app.get('/earn2', async (req, res) => {
             <span>My Games</span>
           </a>
 
-          <a href="#" class="side-link">
+          <a href="/cashout" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
               <rect x="3" y="7" width="18" height="12" rx="2"/>
               <path d="M3 10h18"/>
@@ -3661,7 +3661,7 @@ app.get('/earn2', async (req, res) => {
             <span>Cash Out</span>
           </a>
 
-          <a href="#" class="side-link">
+          <a href="/support" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
               <path d="M20 11.5c0 4.2-3.6 7.5-8 7.5H8l-4 2 1.3-3.8A7.4 7.4 0 0 1 4 11.5C4 7.4 7.6 4 12 4s8 3.4 8 7.5z"/>
               <circle cx="9" cy="11.5" r=".7"/>
@@ -3682,7 +3682,7 @@ app.get('/earn2', async (req, res) => {
             <span>Leaderboard</span>
           </a>
 
-          <a href="#" class="side-link">
+          <a href="/account" class="side-link">
             <svg class="side-icon" viewBox="0 0 24 24">
               <circle cx="12" cy="8" r="4"/>
               <path d="M4 21a8 8 0 0 1 16 0"/>
