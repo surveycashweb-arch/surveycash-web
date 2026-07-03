@@ -3584,21 +3584,21 @@ app.get('/earn2', async (req, res) => {
         padding:24px 16px;
       }
 
-      .side-link{
-        display:flex;
-        align-items:center;
-        gap:14px;
-        height:56px;
-        padding:0 18px;
-        margin-bottom:10px;
-        border-radius:13px;
-        color:#f3f4f6;
-        text-decoration:none;
-        font-size:16px;
-        font-weight:600;
-        letter-spacing:-0.01em;
-        transition:all .18s ease;
-      }
+.side-link{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    height:56px;
+    padding:0 18px;
+    margin-bottom:10px;
+    border-radius:13px;
+    color:#f3f4f6;
+    text-decoration:none;
+    font-size:17px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    transition:all .18s ease;
+}
 
       .side-link:hover{
         background:#20293b;
