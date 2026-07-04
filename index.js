@@ -3956,7 +3956,10 @@ app.get('/earn2', async (req, res) => {
             time online into real rewards with quick payouts.
           </div>
 
-          <a href="#" class="footer-trust-link">
+          <a href="https://www.trustpilot.com/review/surveycash.website"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="footer-trust-link">
             <span>Rate us on Trustpilot</span>
             <img
   class="footer-trust-img"
