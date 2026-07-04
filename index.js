@@ -3551,6 +3551,7 @@ app.get('/', async (req, res) => {
 
 
 
+
 app.get('/earn2', async (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
@@ -3621,7 +3622,7 @@ app.get('/earn2', async (req, res) => {
 
       .content{
         background:#111827;
-        padding:40px 44px 0;
+        padding:40px 44px 70px;
         overflow:hidden;
       }
 
@@ -3757,9 +3758,8 @@ app.get('/earn2', async (req, res) => {
       }
 
       .earn2-footer{
-        margin-top:70px;
-        margin-left:-44px;
-        margin-right:-44px;
+        width:100%;
+        margin-top:0;
         background:#151c2e;
         border-top:1px solid rgba(255,255,255,.04);
       }
@@ -3902,6 +3902,7 @@ app.get('/earn2', async (req, res) => {
       </aside>
 
       <div class="content">
+
         <section class="hero">
           <h1>Explore offers and<br>earn <span>rewards</span></h1>
           <p>Complete surveys, try apps, play games and more to earn cash.</p>
@@ -3939,48 +3940,48 @@ app.get('/earn2', async (req, res) => {
           </div>
         </section>
 
-        <footer class="earn2-footer">
-          <div class="earn2-footer-inner">
-
-            <div class="footer-brand">
-              <div class="footer-logo">
-                <span class="white">Survey</span><span class="accent">Cash</span>
-              </div>
-
-              <div class="footer-brand-text">
-                SurveyCash is built to make earning simple.
-                Complete surveys, explore offers and turn your
-                time online into real rewards with quick payouts.
-              </div>
-
-              <a href="#" class="footer-trust-link">
-                <span>Rate us on Trustpilot</span>
-                <img class="footer-trust-img" src="/img/trustpilot.png" alt="Trustpilot">
-              </a>
-            </div>
-
-            <div class="footer-col">
-              <h4 class="footer-col-title">Help</h4>
-              <a class="footer-link" href="/support">FAQ</a>
-              <a class="footer-link" href="/support">Contact</a>
-            </div>
-
-            <div class="footer-col">
-              <h4 class="footer-col-title">Info</h4>
-              <a class="footer-link" href="/terms">Terms</a>
-              <a class="footer-link" href="/privacy">Privacy</a>
-            </div>
-
-            <div class="footer-col">
-              <h4 class="footer-col-title">Social</h4>
-              <a class="footer-link" href="#">TikTok</a>
-              <a class="footer-link" href="#">X</a>
-            </div>
-
-          </div>
-        </footer>
       </div>
     </div>
+    <footer class="earn2-footer">
+      <div class="earn2-footer-inner">
+
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="white">Survey</span><span class="accent">Cash</span>
+          </div>
+
+          <div class="footer-brand-text">
+            SurveyCash is built to make earning simple.
+            Complete surveys, explore offers and turn your
+            time online into real rewards with quick payouts.
+          </div>
+
+          <a href="#" class="footer-trust-link">
+            <span>Rate us on Trustpilot</span>
+            <img class="footer-trust-img" src="/img/trustpilot.png" alt="Trustpilot">
+          </a>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Help</h4>
+          <a class="footer-link" href="/support">FAQ</a>
+          <a class="footer-link" href="/support">Contact</a>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Info</h4>
+          <a class="footer-link" href="/terms">Terms</a>
+          <a class="footer-link" href="/privacy">Privacy</a>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Social</h4>
+          <a class="footer-link" href="#">TikTok</a>
+          <a class="footer-link" href="#">X</a>
+        </div>
+
+      </div>
+    </footer>
   `;
 
   return res.send(
