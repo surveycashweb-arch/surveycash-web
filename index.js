@@ -3958,7 +3958,10 @@ app.get('/earn2', async (req, res) => {
 
           <a href="#" class="footer-trust-link">
             <span>Rate us on Trustpilot</span>
-            <img class="footer-trust-img" src="/img/trustpilot.png" alt="Trustpilot">
+            <img
+  class="footer-trust-img"
+  src="/img/trustpilot-mission.png"
+  alt="Trustpilot">
           </a>
         </div>
 
