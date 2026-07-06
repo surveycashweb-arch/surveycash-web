@@ -9352,6 +9352,56 @@ app.get('/logout', async (req, res) => {
 });
 
 
+// ---------- Cleanup: delete unverified users after 24 hours ----------
+async function deleteUnverifiedUsersOlderThan24Hours() {
+  try {
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers({
+      page: 1,
+      perPage: 1000,
+    });
+
+    if (error) {
+      console.error('Unverified cleanup listUsers error:', error);
+      return;
+    }
+
+    const now = Date.now();
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+
+    for (const user of data.users || []) {
+      const isVerified = !!user.email_confirmed_at;
+      const createdAt = new Date(user.created_at).getTime();
+
+      if (!isVerified && now - createdAt > TWENTY_FOUR_HOURS) {
+        console.log('Deleting unverified user after 24h:', user.email);
+
+        // Slet evt. profile først, så username/email bliver fri igen
+        await supabaseAdmin
+          .from('profiles')
+          .delete()
+          .eq('user_id', user.id);
+
+        // Slet auth user
+        const { error: delErr } =
+          await supabaseAdmin.auth.admin.deleteUser(user.id);
+
+        if (delErr) {
+          console.error('Delete unverified user error:', delErr);
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Unverified cleanup fatal error:', err);
+  }
+}
+
+// Kør cleanup når server starter
+deleteUnverifiedUsersOlderThan24Hours();
+
+// Kør cleanup hver time
+setInterval(deleteUnverifiedUsersOlderThan24Hours, 60 * 60 * 1000);
+
+
 // ---------- Start ----------
 app.listen(PORT, () => {
   console.log('SurveyCash (web) kører på ' + BASE_URL);
