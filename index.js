@@ -2354,9 +2354,9 @@ body {
 /* ===== Landing page redesign ===== */
 
 .landing-new{
-  max-width:1320px;
+  max-width:1500px;
   margin:0 auto;
-  padding:44px 28px 50px;
+  padding:38px 34px 40px;
 }
 
 .landing-hero-section{
@@ -2379,7 +2379,7 @@ body {
 
 .landing-title{
   margin:0;
-  font-size:52px;
+  font-size:54px;
   line-height:1.08;
   font-weight:900;
   color:#f8fafc;
@@ -2406,7 +2406,7 @@ body {
 .landing-signup,
 .landing-login{
   height:52px;
-  padding:0 30px;
+  padding:0 34px;
   border-radius:14px;
   font-size:15px;
   font-weight:900;
@@ -2433,9 +2433,14 @@ body {
   font-weight:700;
 }
 
+.landing-right{
+  display:flex;
+  justify-content:flex-end;
+}
+
 .landing-right img{
   width:100%;
-  max-width:680px;
+  max-width:720px;
   display:block;
 }
 
@@ -2452,7 +2457,7 @@ body {
 .why-title{
   text-align:center;
   font-size:30px;
-  margin:24px 0 18px;
+  margin:22px 0 18px;
   color:#fff;
   font-weight:900;
 }
@@ -2474,14 +2479,14 @@ body {
   background:rgba(8,12,22,.55);
   border:1px solid rgba(255,255,255,.06);
   border-radius:16px;
-  padding:20px;
-  min-height:110px;
+  padding:20px 22px;
+  min-height:96px;
   color:#fff;
 }
 
 .why-icon{
-  width:54px;
-  height:54px;
+  width:58px;
+  height:58px;
   border-radius:999px;
   display:flex;
   align-items:center;
@@ -2535,6 +2540,10 @@ body {
 }
 
 @media(max-width:900px){
+  .landing-new{
+    padding:26px 16px 40px;
+  }
+
   .landing-hero-section{
     grid-template-columns:1fr;
     gap:28px;
