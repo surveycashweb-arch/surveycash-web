@@ -2358,7 +2358,7 @@ main{
   width:100% !important;
   margin:0 !important;
   padding:0 !important;
-  background:#111827;
+  background:#07101F;
 }
 
 .landing-new{
@@ -2367,6 +2367,7 @@ main{
   margin:0 auto;
   padding:42px 0 40px;
   box-sizing:border-box;
+  background:#07101F;
 }
 
 .landing-hero-section{
@@ -2469,7 +2470,7 @@ main{
   align-items:center;
   gap:18px;
   padding:20px 28px;
-  background:rgba(8,12,22,.55);
+  background:rgba(14,22,38,.70);
   border:1px solid rgba(255,255,255,.06);
   border-radius:16px;
 }
@@ -2492,9 +2493,9 @@ main{
   flex-shrink:0;
 }
 
-.step-icon.blue{ background:rgba(59,130,246,.18); }
-.step-icon.purple{ background:rgba(168,85,247,.18); }
-.step-icon.green{ background:rgba(34,197,94,.18); }
+.step-icon.blue{background:rgba(59,130,246,.18);}
+.step-icon.purple{background:rgba(168,85,247,.18);}
+.step-icon.green{background:rgba(34,197,94,.18);}
 
 .step-number{
   position:absolute;
@@ -2558,7 +2559,7 @@ main{
   min-height:96px;
   padding:20px 22px;
   border-radius:16px;
-  background:rgba(8,12,22,.55);
+  background:rgba(14,22,38,.70);
   border:1px solid rgba(255,255,255,.06);
   color:#fff;
 }
@@ -2599,7 +2600,7 @@ main{
   justify-content:space-between;
   text-decoration:none;
   color:#fff;
-  background:rgba(8,12,22,.55);
+  background:rgba(14,22,38,.70);
   border:1px solid rgba(255,255,255,.06);
   border-radius:16px;
   padding:18px 24px;
@@ -2619,6 +2620,7 @@ main{
 }
 
 @media(max-width:900px){
+
   .landing-new{
     padding:26px 16px 40px;
   }
