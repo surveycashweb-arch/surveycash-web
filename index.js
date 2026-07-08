@@ -2371,7 +2371,7 @@ main{
 
 .landing-hero-section{
   display:grid;
-  grid-template-columns: 520px 1fr;
+  grid-template-columns:520px 1fr;
   align-items:center;
   gap:70px;
 }
@@ -2460,14 +2460,77 @@ main{
   display:block;
 }
 
-.how-img-wrap{
+/* ===== How it works ===== */
+
+.landing-steps{
   margin-top:20px;
+  display:grid;
+  grid-template-columns:1fr 80px 1fr 80px 1fr;
+  align-items:center;
+  gap:26px;
+  padding:34px 42px;
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,.05), transparent 45%),
+    rgba(10,15,25,.65);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
 }
 
-.how-img-wrap img{
-  width:100%;
-  display:block;
-  border-radius:18px;
+.step-item{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.step-icon{
+  width:72px;
+  height:72px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  flex-shrink:0;
+}
+
+.step-icon.blue{ background:rgba(59,130,246,.18); }
+.step-icon.purple{ background:rgba(168,85,247,.18); }
+.step-icon.green{ background:rgba(34,197,94,.18); }
+
+.step-number{
+  position:absolute;
+  left:54px;
+  top:-10px;
+  width:30px;
+  height:30px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fbbf24;
+  color:#111827;
+  font-weight:900;
+  font-size:15px;
+}
+
+.step-content h3{
+  margin:0 0 6px;
+  color:#fff;
+  font-size:24px;
+  font-weight:900;
+}
+
+.step-content p{
+  margin:0;
+  color:#cbd5e1;
+  font-size:15px;
+  line-height:1.45;
+}
+
+.step-divider{
+  border-top:3px dashed #fbbf24;
+  height:2px;
 }
 
 .why-title{
@@ -2589,6 +2652,16 @@ main{
   .landing-points{
     flex-direction:column;
     gap:10px;
+  }
+
+  .landing-steps{
+    grid-template-columns:1fr;
+    gap:26px;
+    padding:24px;
+  }
+
+  .step-divider{
+    display:none;
   }
 
   .why-grid{
@@ -2979,8 +3052,39 @@ function landingHtml() {
 
     </div>
 
-    <div class="how-img-wrap">
-      <img src="/img/steps.png" alt="How it works">
+    <div class="landing-steps">
+
+      <div class="step-item">
+        <div class="step-icon blue">👤</div>
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Sign up</h3>
+          <p>Create your free account.</p>
+        </div>
+      </div>
+
+      <div class="step-divider"></div>
+
+      <div class="step-item">
+        <div class="step-icon purple">📝</div>
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Complete tasks</h3>
+          <p>Complete surveys, games and offers.</p>
+        </div>
+      </div>
+
+      <div class="step-divider"></div>
+
+      <div class="step-item">
+        <div class="step-icon green">💵</div>
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Cash out</h3>
+          <p>Withdraw your earnings via PayPal.</p>
+        </div>
+      </div>
+
     </div>
 
     <h2 class="why-title">Why choose <span>SurveyCash?</span></h2>
@@ -3042,7 +3146,6 @@ function landingHtml() {
   </div>
   `;
 }
-
 
 // ---------- Routes ----------
 app.get('/', async (req, res) => {
