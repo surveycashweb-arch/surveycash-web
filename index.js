@@ -2862,14 +2862,13 @@ function landingHtml() {
         </div>
       </div>
 
-      <div class="landing-right">
-        <img src="/img/landing-hero.png" alt="SurveyCash rewards" />
-      </div>
-    </div>
+<div class="landing-right">
+  <img src="/img/hero.png" alt="SurveyCash rewards">
+</div>
 
-    <div class="how-img-wrap">
-      <img src="/img/how-it-works.png" alt="How it works" />
-    </div>
+<div class="how-img-wrap">
+  <img src="/img/steps.png" alt="How it works">
+</div>
 
     <h2 class="why-title">Why choose <span>SurveyCash?</span></h2>
 
