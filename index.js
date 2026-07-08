@@ -2351,36 +2351,153 @@ body {
   cursor: not-allowed;
 }
 
-/* ===== Landing Page ===== */
+/* ===== New Landing Page ===== */
 
-.landing-page{
+.landing-new{
   max-width:1500px;
   margin:0 auto;
-  padding:28px 24px 40px;
+  padding:42px 32px 50px;
 }
 
-.landing-full{
-  display:block;
+.landing-hero-section{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:40px;
+}
+
+.trust-badge{
+  display:inline-flex;
+  padding:9px 16px;
+  border-radius:999px;
+  background:rgba(251,191,36,.10);
+  color:#fbbf24;
+  font-weight:800;
+  font-size:14px;
+  margin-bottom:24px;
+}
+
+.landing-title{
+  margin:0;
+  font-size:56px;
+  line-height:1.08;
+  font-weight:900;
+  color:#f8fafc;
+}
+
+.landing-title span{
+  color:#fbbf24;
+}
+
+.landing-sub{
+  margin:18px 0 0;
+  color:#cbd5e1;
+  font-size:17px;
+  line-height:1.55;
+}
+
+.landing-buttons{
+  display:flex;
+  gap:16px;
+  margin-top:26px;
+}
+
+.landing-signup,
+.landing-login{
+  height:54px;
+  padding:0 32px;
+  border-radius:12px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.landing-signup{
+  background:#fbbf24;
+  color:#111827;
+  border:1px solid #d97706;
+}
+
+.landing-login{
+  background:transparent;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.22);
+}
+
+.landing-points{
+  display:flex;
+  gap:26px;
+  margin-top:20px;
+  color:#cbd5e1;
+  font-weight:700;
+}
+
+.landing-right img{
   width:100%;
-  height:auto;
+  display:block;
 }
 
-@media (max-width:1100px){
-  .landing-page{
-    padding:20px;
+.how-img-wrap{
+  margin-top:20px;
+}
+
+.how-img-wrap img{
+  width:100%;
+  display:block;
+  border-radius:18px;
+}
+
+.why-title{
+  text-align:center;
+  font-size:32px;
+  margin:28px 0 20px;
+  color:#fff;
+}
+
+.why-title span{
+  color:#fbbf24;
+}
+
+.why-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:16px;
+}
+
+.why-card{
+  background:rgba(8,12,22,.55);
+  border-radius:16px;
+  padding:20px;
+  color:#fff;
+}
+
+.why-card b{
+  display:block;
+  margin-top:8px;
+  font-size:16px;
+}
+
+.why-card p{
+  color:#cbd5e1;
+  font-size:13px;
+  line-height:1.5;
+}
+
+@media(max-width:900px){
+  .landing-hero-section{
+    grid-template-columns:1fr;
   }
-}
 
-@media (max-width:640px){
-  .landing-page{
-    padding:12px;
+  .landing-title{
+    font-size:40px;
   }
-}
 
+  .why-grid{
+    grid-template-columns:1fr;
+  }
 
-@media (max-width: 640px){
-  main{
-    padding:24px 0 50px;
+  .landing-points{
+    flex-direction:column;
+    gap:10px;
   }
 }
 
@@ -2712,15 +2829,56 @@ const escapeHtml = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 
+
 // ---------- Landing (for guests) ----------
 function landingHtml() {
   return `
-  <section class="landing-page">
+  <section class="landing-new">
 
-    <img
-      src="/images/landing-page.png"
-      class="landing-full"
-      alt="SurveyCash">
+    <div class="landing-hero-section">
+      <div class="landing-left">
+        <div class="trust-badge">☆ Trusted by thousands worldwide</div>
+
+        <h1 class="landing-title">
+          Get paid for testing<br/>
+          games, apps<br/>
+          and <span>answering surveys</span>
+        </h1>
+
+        <p class="landing-sub">
+          Earn rewards quickly by completing fun tasks.<br/>
+          Join for free and start earning today!
+        </p>
+
+        <div class="landing-buttons">
+          <button type="button" class="landing-signup" onclick="openAuth('signup')">Sign up for free →</button>
+          <button type="button" class="landing-login" onclick="openAuth('login')">Log in →</button>
+        </div>
+
+        <div class="landing-points">
+          <span>✓ 100% free</span>
+          <span>⚡ Fast payouts</span>
+          <span>♢ Trusted partners</span>
+        </div>
+      </div>
+
+      <div class="landing-right">
+        <img src="/img/landing-hero.png" alt="SurveyCash rewards" />
+      </div>
+    </div>
+
+    <div class="how-img-wrap">
+      <img src="/img/how-it-works.png" alt="How it works" />
+    </div>
+
+    <h2 class="why-title">Why choose <span>SurveyCash?</span></h2>
+
+    <div class="why-grid">
+      <div class="why-card">✅ <b>Verified partners</b><p>We work with trusted companies to bring you the best opportunities.</p></div>
+      <div class="why-card">⚡ <b>Fast payouts</b><p>Cash out your earnings quickly and securely via PayPal.</p></div>
+      <div class="why-card">🌍 <b>Global access</b><p>Join users from around the world and earn rewards.</p></div>
+      <div class="why-card">🎁 <b>More ways to earn</b><p>Surveys, games, offers and more. Always new opportunities.</p></div>
+    </div>
 
   </section>
 
@@ -2731,13 +2889,7 @@ function landingHtml() {
       <p>Enter your email and we’ll send you a reset link.</p>
 
       <form id="forgot-form">
-        <input
-          id="forgot-email"
-          type="email"
-          placeholder="Email address"
-          autocomplete="email"
-          required
-        />
+        <input id="forgot-email" type="email" placeholder="Email address" autocomplete="email" required />
         <button type="submit" id="forgot-submit">Send reset link</button>
       </form>
 
