@@ -2465,32 +2465,30 @@ main{
 .landing-steps{
   margin-top:20px;
   display:grid;
-  grid-template-columns:1fr 80px 1fr 80px 1fr;
+  grid-template-columns:1fr auto 1fr auto 1fr;
   align-items:center;
-  gap:26px;
-  padding:34px 42px;
-  background:
-    radial-gradient(circle at top left, rgba(255,255,255,.05), transparent 45%),
-    rgba(10,15,25,.65);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
+  gap:18px;
+  padding:20px 28px;
+  background:rgba(8,12,22,.55);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
 }
 
 .step-item{
   position:relative;
   display:flex;
   align-items:center;
-  gap:20px;
+  gap:16px;
 }
 
 .step-icon{
-  width:72px;
-  height:72px;
+  width:58px;
+  height:58px;
   border-radius:999px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:30px;
+  font-size:24px;
   flex-shrink:0;
 }
 
@@ -2500,37 +2498,39 @@ main{
 
 .step-number{
   position:absolute;
-  left:54px;
-  top:-10px;
-  width:30px;
-  height:30px;
+  top:-8px;
+  left:42px;
+  width:26px;
+  height:26px;
   border-radius:999px;
+  background:#fbbf24;
+  color:#111827;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:#fbbf24;
-  color:#111827;
+  font-size:13px;
   font-weight:900;
-  font-size:15px;
 }
 
 .step-content h3{
-  margin:0 0 6px;
+  margin:0 0 4px;
   color:#fff;
-  font-size:24px;
-  font-weight:900;
+  font-size:18px;
+  font-weight:800;
 }
 
 .step-content p{
   margin:0;
   color:#cbd5e1;
-  font-size:15px;
+  font-size:13px;
   line-height:1.45;
 }
 
 .step-divider{
+  width:72px;
+  height:0;
   border-top:3px dashed #fbbf24;
-  height:2px;
+  opacity:.9;
 }
 
 .why-title{
