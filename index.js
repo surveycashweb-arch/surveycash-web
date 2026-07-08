@@ -2375,6 +2375,10 @@ main{
   grid-template-columns:520px 1fr;
   align-items:center;
   gap:70px;
+
+  background:#041024;
+  border-radius:24px;
+  padding:40px 40px 34px;
 }
 
 .landing-left{
