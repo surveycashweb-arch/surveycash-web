@@ -2351,7 +2351,7 @@ body {
   cursor: not-allowed;
 }
 
-/* ===== New Landing Page ===== */
+/* ===== Landing page redesign ===== */
 
 .landing-new{
   max-width:1320px;
@@ -2361,9 +2361,20 @@ body {
 
 .landing-hero-section{
   display:grid;
-  grid-template-columns: 1fr 1.1fr;
+  grid-template-columns:560px 1fr;
   align-items:center;
   gap:70px;
+}
+
+.trust-badge{
+  display:inline-flex;
+  padding:9px 16px;
+  border-radius:999px;
+  background:rgba(251,191,36,.10);
+  color:#fbbf24;
+  font-weight:800;
+  font-size:14px;
+  margin-bottom:24px;
 }
 
 .landing-title{
@@ -2372,20 +2383,64 @@ body {
   line-height:1.08;
   font-weight:900;
   color:#f8fafc;
+  letter-spacing:-1px;
 }
 
 .landing-title span{
   color:#fbbf24;
 }
 
+.landing-sub{
+  margin:18px 0 0;
+  color:#cbd5e1;
+  font-size:17px;
+  line-height:1.55;
+}
+
+.landing-buttons{
+  display:flex;
+  gap:16px;
+  margin-top:26px;
+}
+
+.landing-signup,
+.landing-login{
+  height:52px;
+  padding:0 30px;
+  border-radius:14px;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.landing-signup{
+  background:#fbbf24;
+  color:#111827;
+  border:1px solid #d97706;
+}
+
+.landing-login{
+  background:transparent;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.22);
+}
+
+.landing-points{
+  display:flex;
+  gap:26px;
+  margin-top:20px;
+  color:#cbd5e1;
+  font-weight:700;
+}
+
 .landing-right img{
   width:100%;
-  max-width:620px;
+  max-width:680px;
   display:block;
 }
 
 .how-img-wrap{
-  margin-top:24px;
+  margin-top:22px;
 }
 
 .how-img-wrap img{
@@ -2399,6 +2454,7 @@ body {
   font-size:30px;
   margin:24px 0 18px;
   color:#fff;
+  font-weight:900;
 }
 
 .why-title span{
@@ -2412,11 +2468,70 @@ body {
 }
 
 .why-card{
+  display:flex;
+  align-items:center;
+  gap:18px;
   background:rgba(8,12,22,.55);
+  border:1px solid rgba(255,255,255,.06);
   border-radius:16px;
   padding:20px;
-  color:#fff;
   min-height:110px;
+  color:#fff;
+}
+
+.why-icon{
+  width:54px;
+  height:54px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  flex-shrink:0;
+}
+
+.why-icon.green{background:rgba(34,197,94,.18);}
+.why-icon.yellow{background:rgba(251,191,36,.18);}
+.why-icon.purple{background:rgba(168,85,247,.18);}
+.why-icon.blue{background:rgba(59,130,246,.18);}
+
+.why-card b{
+  display:block;
+  font-size:16px;
+  margin-bottom:6px;
+}
+
+.why-card p{
+  margin:0;
+  color:#cbd5e1;
+  font-size:13px;
+  line-height:1.45;
+}
+
+.landing-trustpilot{
+  margin-top:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  text-decoration:none;
+  color:#fff;
+  background:rgba(8,12,22,.55);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:18px 24px;
+}
+
+.landing-trustpilot span{
+  font-weight:900;
+  font-size:19px;
+}
+
+.landing-trustpilot strong{
+  background:#22c55e;
+  color:#fff;
+  padding:12px 22px;
+  border-radius:12px;
+  font-size:14px;
 }
 
 @media(max-width:900px){
@@ -2429,8 +2544,24 @@ body {
     font-size:38px;
   }
 
+  .landing-points{
+    flex-direction:column;
+    gap:10px;
+  }
+
   .why-grid{
     grid-template-columns:1fr;
+  }
+
+  .landing-trustpilot{
+    flex-direction:column;
+    gap:14px;
+    align-items:flex-start;
+  }
+
+  .landing-trustpilot strong{
+    width:100%;
+    text-align:center;
   }
 }
 
@@ -2795,21 +2926,26 @@ function landingHtml() {
       </div>
 
 <div class="landing-right">
-  <img src="/img/hero.png" alt="SurveyCash rewards">
+    <img src="/img/hero.png" alt="SurveyCash hero">
 </div>
 
 <div class="how-img-wrap">
-  <img src="/img/steps.png" alt="How it works">
+    <img src="/img/steps.png" alt="How it works">
 </div>
 
     <h2 class="why-title">Why choose <span>SurveyCash?</span></h2>
 
     <div class="why-grid">
-      <div class="why-card">✅ <b>Verified partners</b><p>We work with trusted companies to bring you the best opportunities.</p></div>
-      <div class="why-card">⚡ <b>Fast payouts</b><p>Cash out your earnings quickly and securely via PayPal.</p></div>
-      <div class="why-card">🌍 <b>Global access</b><p>Join users from around the world and earn rewards.</p></div>
-      <div class="why-card">🎁 <b>More ways to earn</b><p>Surveys, games, offers and more. Always new opportunities.</p></div>
+      <div class="why-card"><div class="why-icon green">✓</div><div><b>Verified partners</b><p>We work with trusted companies to bring you the best opportunities.</p></div></div>
+      <div class="why-card"><div class="why-icon yellow">⚡</div><div><b>Fast payouts</b><p>Cash out your earnings quickly and securely via PayPal.</p></div></div>
+      <div class="why-card"><div class="why-icon purple">🌐</div><div><b>Global access</b><p>Join thousands of users from around the world.</p></div></div>
+      <div class="why-card"><div class="why-icon blue">🎁</div><div><b>More ways to earn</b><p>Surveys, games, offers and more. Always new opportunities.</p></div></div>
     </div>
+
+    <a class="landing-trustpilot" href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener">
+      <div>See our reviews on <span>★ Trustpilot</span></div>
+      <strong>View on Trustpilot</strong>
+    </a>
 
   </section>
 
@@ -2829,7 +2965,6 @@ function landingHtml() {
   </div>
   `;
 }
-
 
 
 // ---------- Routes ----------
