@@ -7697,17 +7697,14 @@ app.get('/support', (req, res) => {
   flex:1;
 }
 
-    .support-shell{
-      position:relative;
-      z-index:2;
-      display:grid;
-      grid-template-columns:1.25fr .7fr;
-      gap:18px;
-      align-items:stretch;
-      max-width:1400px;
-      width:100%;
-      margin:0 auto;
-    }
+.support-shell{
+  position:relative;
+  z-index:2;
+  display:block;
+  max-width:1000px;
+  width:100%;
+  margin:0 auto;
+}
 
     .support-card{
       position:relative;
@@ -8266,19 +8263,6 @@ app.get('/support', (req, res) => {
           </div>
         </div>
 
-        <div class="support-card contact-card">
-          <div class="contact-top">
-            <div>
-              <div class="support-kicker">AI Support</div>
-              <h2 class="contact-title">AI Chat Support</h2>
-            </div>
-
-            <div class="ai-coming">
-              AI Chat Support<br>
-              Coming soon
-            </div>
-          </div>
-        </div>
 
       </div>
     </div>
