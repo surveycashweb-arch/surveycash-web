@@ -2356,14 +2356,18 @@ body {
 .landing-new{
   max-width:1500px;
   margin:0 auto;
-  padding:38px 34px 40px;
+  padding:20px 34px 30px;
 }
 
 .landing-hero-section{
   display:grid;
   grid-template-columns:560px 1fr;
   align-items:center;
-  gap:70px;
+  gap:30px;
+}
+
+.landing-left{
+  max-width:560px;
 }
 
 .trust-badge{
@@ -2374,16 +2378,16 @@ body {
   color:#fbbf24;
   font-weight:800;
   font-size:14px;
-  margin-bottom:24px;
+  margin-bottom:20px;
 }
 
 .landing-title{
   margin:0;
-  font-size:54px;
-  line-height:1.08;
+  font-size:72px;
+  line-height:1.05;
   font-weight:900;
+  letter-spacing:-2px;
   color:#f8fafc;
-  letter-spacing:-1px;
 }
 
 .landing-title span{
@@ -2393,8 +2397,8 @@ body {
 .landing-sub{
   margin:18px 0 0;
   color:#cbd5e1;
-  font-size:17px;
-  line-height:1.55;
+  font-size:18px;
+  line-height:1.6;
 }
 
 .landing-buttons{
@@ -2405,12 +2409,13 @@ body {
 
 .landing-signup,
 .landing-login{
-  height:52px;
-  padding:0 34px;
+  height:56px;
+  padding:0 42px;
   border-radius:14px;
-  font-size:15px;
-  font-weight:900;
+  font-size:18px;
+  font-weight:800;
   cursor:pointer;
+  transition:.2s;
 }
 
 .landing-signup{
@@ -2419,47 +2424,58 @@ body {
   border:1px solid #d97706;
 }
 
+.landing-signup:hover{
+  background:#f59e0b;
+}
+
 .landing-login{
   background:transparent;
   color:#fff;
-  border:1px solid rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.18);
+}
+
+.landing-login:hover{
+  background:rgba(255,255,255,.05);
 }
 
 .landing-points{
   display:flex;
-  gap:26px;
-  margin-top:20px;
-  color:#cbd5e1;
+  gap:28px;
+  margin-top:18px;
+  color:#d1d5db;
+  font-size:17px;
   font-weight:700;
 }
 
 .landing-right{
   display:flex;
   justify-content:flex-end;
+  align-items:center;
 }
 
 .landing-right img{
   width:100%;
-  max-width:720px;
+  max-width:820px;
   display:block;
 }
 
 .how-img-wrap{
-  margin-top:22px;
+  margin-top:8px;
 }
 
 .how-img-wrap img{
   width:100%;
+  max-width:1290px;
   display:block;
-  border-radius:18px;
+  margin:auto;
 }
 
 .why-title{
   text-align:center;
-  font-size:30px;
-  margin:22px 0 18px;
-  color:#fff;
+  font-size:54px;
   font-weight:900;
+  color:#fff;
+  margin:12px 0 18px;
 }
 
 .why-title span{
@@ -2468,94 +2484,108 @@ body {
 
 .why-grid{
   display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  gap:16px;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
 }
 
 .why-card{
   display:flex;
   align-items:center;
   gap:18px;
-  background:rgba(8,12,22,.55);
+  background:rgba(12,17,28,.75);
   border:1px solid rgba(255,255,255,.06);
-  border-radius:16px;
-  padding:20px 22px;
-  min-height:96px;
-  color:#fff;
+  border-radius:18px;
+  padding:24px;
+  min-height:108px;
 }
 
 .why-icon{
-  width:58px;
-  height:58px;
+  width:64px;
+  height:64px;
   border-radius:999px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:24px;
+  font-size:28px;
   flex-shrink:0;
 }
 
-.why-icon.green{background:rgba(34,197,94,.18);}
-.why-icon.yellow{background:rgba(251,191,36,.18);}
-.why-icon.purple{background:rgba(168,85,247,.18);}
-.why-icon.blue{background:rgba(59,130,246,.18);}
+.why-icon.green{background:rgba(34,197,94,.16);}
+.why-icon.yellow{background:rgba(251,191,36,.16);}
+.why-icon.purple{background:rgba(168,85,247,.16);}
+.why-icon.blue{background:rgba(59,130,246,.16);}
 
 .why-card b{
   display:block;
-  font-size:16px;
-  margin-bottom:6px;
+  color:#fff;
+  font-size:21px;
+  margin-bottom:8px;
 }
 
 .why-card p{
   margin:0;
   color:#cbd5e1;
-  font-size:13px;
-  line-height:1.45;
+  font-size:15px;
+  line-height:1.55;
 }
 
 .landing-trustpilot{
-  margin-top:20px;
   display:flex;
   align-items:center;
   justify-content:space-between;
+  margin-top:22px;
+  padding:22px 26px;
+  background:rgba(12,17,28,.75);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
   text-decoration:none;
   color:#fff;
-  background:rgba(8,12,22,.55);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:16px;
-  padding:18px 24px;
 }
 
 .landing-trustpilot span{
-  font-weight:900;
-  font-size:19px;
+  font-size:24px;
+  font-weight:800;
 }
 
 .landing-trustpilot strong{
   background:#22c55e;
   color:#fff;
-  padding:12px 22px;
-  border-radius:12px;
-  font-size:14px;
+  border-radius:14px;
+  padding:16px 30px;
+  font-size:16px;
 }
 
 @media(max-width:900px){
+
   .landing-new{
-    padding:26px 16px 40px;
+    padding:22px 16px 34px;
   }
 
   .landing-hero-section{
     grid-template-columns:1fr;
-    gap:28px;
+    gap:24px;
   }
 
   .landing-title{
-    font-size:38px;
+    font-size:42px;
+  }
+
+  .landing-buttons{
+    flex-direction:column;
+  }
+
+  .landing-signup,
+  .landing-login{
+    width:100%;
   }
 
   .landing-points{
     flex-direction:column;
     gap:10px;
+  }
+
+  .why-title{
+    font-size:34px;
   }
 
   .why-grid{
@@ -2564,8 +2594,7 @@ body {
 
   .landing-trustpilot{
     flex-direction:column;
-    gap:14px;
-    align-items:flex-start;
+    gap:16px;
   }
 
   .landing-trustpilot strong{
