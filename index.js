@@ -2354,32 +2354,21 @@ body {
 /* ===== New Landing Page ===== */
 
 .landing-new{
-  max-width:1500px;
+  max-width:1320px;
   margin:0 auto;
-  padding:42px 32px 50px;
+  padding:44px 28px 50px;
 }
 
 .landing-hero-section{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns: 1fr 1.1fr;
   align-items:center;
-  gap:40px;
-}
-
-.trust-badge{
-  display:inline-flex;
-  padding:9px 16px;
-  border-radius:999px;
-  background:rgba(251,191,36,.10);
-  color:#fbbf24;
-  font-weight:800;
-  font-size:14px;
-  margin-bottom:24px;
+  gap:70px;
 }
 
 .landing-title{
   margin:0;
-  font-size:56px;
+  font-size:52px;
   line-height:1.08;
   font-weight:900;
   color:#f8fafc;
@@ -2389,55 +2378,14 @@ body {
   color:#fbbf24;
 }
 
-.landing-sub{
-  margin:18px 0 0;
-  color:#cbd5e1;
-  font-size:17px;
-  line-height:1.55;
-}
-
-.landing-buttons{
-  display:flex;
-  gap:16px;
-  margin-top:26px;
-}
-
-.landing-signup,
-.landing-login{
-  height:54px;
-  padding:0 32px;
-  border-radius:12px;
-  font-weight:900;
-  cursor:pointer;
-}
-
-.landing-signup{
-  background:#fbbf24;
-  color:#111827;
-  border:1px solid #d97706;
-}
-
-.landing-login{
-  background:transparent;
-  color:#fff;
-  border:1px solid rgba(255,255,255,.22);
-}
-
-.landing-points{
-  display:flex;
-  gap:26px;
-  margin-top:20px;
-  color:#cbd5e1;
-  font-weight:700;
-}
-
 .landing-right img{
   width:100%;
+  max-width:620px;
   display:block;
 }
 
 .how-img-wrap{
-  margin-top:20px;
+  margin-top:24px;
 }
 
 .how-img-wrap img{
@@ -2448,8 +2396,8 @@ body {
 
 .why-title{
   text-align:center;
-  font-size:32px;
-  margin:28px 0 20px;
+  font-size:30px;
+  margin:24px 0 18px;
   color:#fff;
 }
 
@@ -2468,39 +2416,23 @@ body {
   border-radius:16px;
   padding:20px;
   color:#fff;
-}
-
-.why-card b{
-  display:block;
-  margin-top:8px;
-  font-size:16px;
-}
-
-.why-card p{
-  color:#cbd5e1;
-  font-size:13px;
-  line-height:1.5;
+  min-height:110px;
 }
 
 @media(max-width:900px){
   .landing-hero-section{
     grid-template-columns:1fr;
+    gap:28px;
   }
 
   .landing-title{
-    font-size:40px;
+    font-size:38px;
   }
 
   .why-grid{
     grid-template-columns:1fr;
   }
-
-  .landing-points{
-    flex-direction:column;
-    gap:10px;
-  }
 }
-
 
 /* ===== Mobile auth modal fix ===== */
 
