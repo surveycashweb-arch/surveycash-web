@@ -2385,24 +2385,6 @@ main{
   width:520px;
 }
 
-.trust-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:9px;
-  padding:9px 16px;
-  border-radius:999px;
-  background:rgba(251,191,36,.10);
-  border:1px solid rgba(251,191,36,.16);
-  color:#fbbf24;
-  font-weight:800;
-  font-size:14px;
-  margin-bottom:22px;
-}
-
-.trust-badge i{
-  color:#fbbf24;
-  filter:drop-shadow(0 0 8px rgba(251,191,36,.55));
-}
 
 .landing-title{
   margin:0;
@@ -3092,11 +3074,6 @@ function landingHtml() {
     <div class="landing-hero-section">
 
       <div class="landing-left">
-
-        <div class="trust-badge">
-          <i class="fa-solid fa-shield-halved"></i>
-          Trusted by thousands worldwide
-        </div>
 
         <h1 class="landing-title">
           Get paid for testing<br>
