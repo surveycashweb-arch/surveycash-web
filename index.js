@@ -2357,16 +2357,16 @@ body {
   width:100%;
   max-width:none;
   margin:0;
-  padding:20px 80px 30px;
+  padding:34px 150px 38px;
   box-sizing:border-box;
 }
 
 .landing-hero-section{
   width:100%;
   display:grid;
-  grid-template-columns:minmax(650px,0.95fr) minmax(700px,1.05fr);
+  grid-template-columns:560px 1fr;
   align-items:center;
-  gap:60px;
+  gap:90px;
 }
 
 .landing-left{
@@ -2381,15 +2381,15 @@ body {
   color:#fbbf24;
   font-weight:800;
   font-size:14px;
-  margin-bottom:20px;
+  margin-bottom:24px;
 }
 
 .landing-title{
   margin:0;
-  font-size:72px;
-  line-height:1.05;
+  font-size:52px;
+  line-height:1.08;
   font-weight:900;
-  letter-spacing:-2px;
+  letter-spacing:-1px;
   color:#f8fafc;
 }
 
@@ -2400,8 +2400,8 @@ body {
 .landing-sub{
   margin:18px 0 0;
   color:#cbd5e1;
-  font-size:18px;
-  line-height:1.6;
+  font-size:17px;
+  line-height:1.55;
 }
 
 .landing-buttons{
@@ -2412,11 +2412,11 @@ body {
 
 .landing-signup,
 .landing-login{
-  height:56px;
-  padding:0 42px;
+  height:52px;
+  padding:0 34px;
   border-radius:14px;
-  font-size:18px;
-  font-weight:800;
+  font-size:15px;
+  font-weight:900;
   cursor:pointer;
   transition:.2s;
 }
@@ -2434,7 +2434,7 @@ body {
 .landing-login{
   background:transparent;
   color:#fff;
-  border:1px solid rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.20);
 }
 
 .landing-login:hover{
@@ -2443,10 +2443,9 @@ body {
 
 .landing-points{
   display:flex;
-  gap:28px;
-  margin-top:18px;
-  color:#d1d5db;
-  font-size:17px;
+  gap:26px;
+  margin-top:20px;
+  color:#cbd5e1;
   font-weight:700;
 }
 
@@ -2458,27 +2457,28 @@ body {
 
 .landing-right img{
   width:100%;
-  max-width:820px;
+  max-width:670px;
   display:block;
 }
 
 .how-img-wrap{
-  margin-top:8px;
+  margin-top:22px;
 }
 
 .how-img-wrap img{
   width:100%;
-  max-width:1290px;
+  max-width:none;
   display:block;
-  margin:auto;
+  margin:0 auto;
+  border-radius:18px;
 }
 
 .why-title{
   text-align:center;
-  font-size:54px;
-  font-weight:900;
+  font-size:30px;
+  margin:22px 0 18px;
   color:#fff;
-  margin:12px 0 18px;
+  font-weight:900;
 }
 
 .why-title span{
@@ -2488,107 +2488,94 @@ body {
 .why-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:18px;
+  gap:16px;
 }
 
 .why-card{
   display:flex;
   align-items:center;
   gap:18px;
-  background:rgba(12,17,28,.75);
+  background:rgba(8,12,22,.55);
   border:1px solid rgba(255,255,255,.06);
-  border-radius:18px;
-  padding:24px;
-  min-height:108px;
+  border-radius:16px;
+  padding:20px 22px;
+  min-height:96px;
+  color:#fff;
 }
 
 .why-icon{
-  width:64px;
-  height:64px;
+  width:58px;
+  height:58px;
   border-radius:999px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:28px;
+  font-size:24px;
   flex-shrink:0;
 }
 
-.why-icon.green{background:rgba(34,197,94,.16);}
-.why-icon.yellow{background:rgba(251,191,36,.16);}
-.why-icon.purple{background:rgba(168,85,247,.16);}
-.why-icon.blue{background:rgba(59,130,246,.16);}
+.why-icon.green{background:rgba(34,197,94,.18);}
+.why-icon.yellow{background:rgba(251,191,36,.18);}
+.why-icon.purple{background:rgba(168,85,247,.18);}
+.why-icon.blue{background:rgba(59,130,246,.18);}
 
 .why-card b{
   display:block;
-  color:#fff;
-  font-size:21px;
-  margin-bottom:8px;
+  font-size:16px;
+  margin-bottom:6px;
 }
 
 .why-card p{
   margin:0;
   color:#cbd5e1;
-  font-size:15px;
-  line-height:1.55;
+  font-size:13px;
+  line-height:1.45;
 }
 
 .landing-trustpilot{
+  margin-top:20px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  margin-top:22px;
-  padding:22px 26px;
-  background:rgba(12,17,28,.75);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:18px;
   text-decoration:none;
   color:#fff;
+  background:rgba(8,12,22,.55);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:18px 24px;
 }
 
 .landing-trustpilot span{
-  font-size:24px;
-  font-weight:800;
+  font-weight:900;
+  font-size:19px;
 }
 
 .landing-trustpilot strong{
   background:#22c55e;
   color:#fff;
-  border-radius:14px;
-  padding:16px 30px;
-  font-size:16px;
+  padding:12px 22px;
+  border-radius:12px;
+  font-size:14px;
 }
 
 @media(max-width:900px){
 
   .landing-new{
-    padding:22px 16px 34px;
+    padding:26px 16px 40px;
   }
 
   .landing-hero-section{
     grid-template-columns:1fr;
-    gap:24px;
+    gap:28px;
   }
 
   .landing-title{
-    font-size:42px;
-  }
-
-  .landing-buttons{
-    flex-direction:column;
-  }
-
-  .landing-signup,
-  .landing-login{
-    width:100%;
+    font-size:38px;
   }
 
   .landing-points{
     flex-direction:column;
     gap:10px;
-  }
-
-  .why-title{
-    font-size:34px;
   }
 
   .why-grid{
@@ -2597,7 +2584,8 @@ body {
 
   .landing-trustpilot{
     flex-direction:column;
-    gap:16px;
+    gap:14px;
+    align-items:flex-start;
   }
 
   .landing-trustpilot strong{
@@ -2947,11 +2935,11 @@ function landingHtml() {
           ☆ Trusted by thousands worldwide
         </div>
 
-        <h1 class="landing-title">
-          Get paid for testing<br>
-          games, apps<br>
-          and <span>answering surveys</span>
-        </h1>
+<h1 class="landing-title">
+  Get paid for testing<br>
+  games, apps<br>
+  and <span>answering surveys</span>
+</h1>
 
         <p class="landing-sub">
           Earn rewards quickly by completing fun tasks.<br>
