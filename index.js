@@ -2351,97 +2351,39 @@ body {
   cursor: not-allowed;
 }
 
-/* ===== Landing page responsive fix ===== */
+/* ===== Landing Page ===== */
 
-@media (max-width: 1100px) {
-  body {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+.landing-page{
+  max-width:1500px;
+  margin:0 auto;
+  padding:28px 24px 40px;
+}
 
-  .hero-wrap{
-    margin-top: 30px;
-    padding: 0 18px;
-  }
+.landing-full{
+  display:block;
+  width:100%;
+  height:auto;
+}
 
-  .hero-title{
-    font-size: clamp(34px, 6vw, 56px);
-    line-height: 1.12;
-  }
-
-  .hero-sub{
-    font-size:15px;
-    max-width:620px;
-    margin:18px auto 0;
-  }
-
-  .hiw-grid{
-    grid-template-columns:1fr;
-    gap:16px;
-  }
-
-  .hiw-card{
-    min-height:auto;
-  }
-
-  .tp-wrap{
-    width:100%;
+@media (max-width:1100px){
+  .landing-page{
+    padding:20px;
   }
 }
 
-@media (max-width: 640px){
+@media (max-width:640px){
+  .landing-page{
+    padding:12px;
+  }
+}
 
+
+@media (max-width: 640px){
   main{
     padding:24px 0 50px;
   }
-
-  .hero-title{
-    font-size:34px;
-    line-height:1.15;
-  }
-
-  .hero-sub{
-    font-size:14px;
-    line-height:1.6;
-    padding:0 10px;
-  }
-
-  .hero-cta{
-    flex-direction:column;
-    width:100%;
-    max-width:240px;
-    margin:20px auto 0;
-  }
-
-  .hero-cta .btn{
-    width:100%;
-  }
-
-  .hiw-wrap{
-    margin-top:56px;
-    padding:0 18px;
-  }
-
-  .hiw-title{
-    font-size:30px;
-  }
-
-  .tp-wrap{
-    padding:0 18px 30px;
-  }
-
-  .tp-bar{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:16px;
-    padding:20px;
-  }
-
-  .tp-pill{
-    width:100%;
-    text-align:center;
-  }
 }
+
 
 /* ===== Mobile auth modal fix ===== */
 
@@ -2769,93 +2711,39 @@ const page = (req, title, active, inner) =>
 const escapeHtml = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+
 // ---------- Landing (for guests) ----------
 function landingHtml() {
   return `
-  <section class="hero-wrap">
-    <h1 class="hero-title">
-      Get <span class="green">paid</span> for testing games, apps<br/>
-      and answering surveys
-    </h1>
-    <p class="hero-sub">
-      Earn rewards quickly by completing fun tasks and surveys — start earning today.
-    </p>
-    <div class="hero-cta">
-      <button type="button" class="btn" onclick="openAuth('login')">Log in</button>
-      <button type="button" class="btn btn-signup" onclick="openAuth('signup')">Sign up</button>
-    </div>
+  <section class="landing-page">
 
-    <!-- How it works -->
-    <div class="hiw-wrap">
-      <h2 class="hiw-title">How it works</h2>
+    <img
+      src="/images/landing-page.png"
+      class="landing-full"
+      alt="SurveyCash">
 
-      <div class="hiw-grid">
-        <div class="hiw-card">
-          <div class="hiw-num">1</div>
-          <div class="hiw-head">Sign up</div>
-          <div class="hiw-text">Create your free account.</div>
-        </div>
-
-        <div class="hiw-card">
-          <div class="hiw-num">2</div>
-          <div class="hiw-head">Complete tasks</div>
-          <div class="hiw-text">Earn money by completing surveys & offers.</div>
-        </div>
-
-        <div class="hiw-card">
-          <div class="hiw-num">3</div>
-          <div class="hiw-head">Cash out</div>
-          <div class="hiw-text">Withdraw your earnings via PayPal.</div>
-        </div>
-      </div>
-    </div>
-
-<!-- Trustpilot (custom bar) -->
-<div class="tp-wrap">
-  <a class="tp-bar" href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener">
-
-    <div class="tp-bar-left">
-
-      <div class="tp-bar-text">
-        <div class="tp-bar-bottom">
-          <span class="tp-copy">See our reviews on</span>
-          <img src="/trustpilot-mark.svg" alt="Trustpilot" class="tp-mark-inline" />
-          <span class="tp-brand">Trustpilot</span>
-        </div>
-      </div>
-
-    </div>
-
-    <span class="tp-pill">View on Trustpilot</span>
-
-  </a>
-</div>
-
-
-
-<!-- End Trustpilot -->
   </section>
 
-<div id="forgot-backdrop" class="forgot-backdrop" hidden>
-  <div class="forgot-modal">
-    <button type="button" id="forgot-close" class="forgot-close">×</button>
-    <h2>Forgot password?</h2>
-    <p>Enter your email and we’ll send you a reset link.</p>
+  <div id="forgot-backdrop" class="forgot-backdrop" hidden>
+    <div class="forgot-modal">
+      <button type="button" id="forgot-close" class="forgot-close">×</button>
+      <h2>Forgot password?</h2>
+      <p>Enter your email and we’ll send you a reset link.</p>
 
-    <form id="forgot-form">
-      <input
-        id="forgot-email"
-        type="email"
-        placeholder="Email address"
-        autocomplete="email"
-        required
-      />
-      <button type="submit" id="forgot-submit">Send reset link</button>
-    </form>
+      <form id="forgot-form">
+        <input
+          id="forgot-email"
+          type="email"
+          placeholder="Email address"
+          autocomplete="email"
+          required
+        />
+        <button type="submit" id="forgot-submit">Send reset link</button>
+      </form>
 
-    <div id="forgot-message" class="forgot-message"></div>
+      <div id="forgot-message" class="forgot-message"></div>
+    </div>
   </div>
-</div>
   `;
 }
 
