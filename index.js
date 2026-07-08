@@ -978,6 +978,10 @@ document.addEventListener('click', function (e) {
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 <title>${title}</title>
 <meta name="description" content="Get paid for testing games, apps and answering surveys. Earn rewards quickly by completing tasks and surveys on SurveyCash.">
 <meta name="robots" content="index, follow">
@@ -2383,13 +2387,21 @@ main{
 
 .trust-badge{
   display:inline-flex;
+  align-items:center;
+  gap:9px;
   padding:9px 16px;
   border-radius:999px;
   background:rgba(251,191,36,.10);
+  border:1px solid rgba(251,191,36,.16);
   color:#fbbf24;
   font-weight:800;
   font-size:14px;
   margin-bottom:22px;
+}
+
+.trust-badge i{
+  color:#fbbf24;
+  filter:drop-shadow(0 0 8px rgba(251,191,36,.55));
 }
 
 .landing-title{
@@ -2399,6 +2411,7 @@ main{
   font-weight:900;
   letter-spacing:-1px;
   color:#f8fafc;
+  text-shadow:0 5px 20px rgba(0,0,0,.35);
 }
 
 .landing-title span{
@@ -2426,12 +2439,17 @@ main{
   font-size:15px;
   font-weight:900;
   cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
 }
 
 .landing-signup{
   background:#fbbf24;
   color:#111827;
   border:1px solid #d97706;
+  box-shadow:0 12px 30px rgba(251,191,36,.18);
 }
 
 .landing-login{
@@ -2448,6 +2466,20 @@ main{
   font-size:15px;
   font-weight:700;
 }
+
+.landing-points span{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.landing-points i{
+  font-size:15px;
+}
+
+.landing-points .point-green i{color:#22c55e;}
+.landing-points .point-yellow i{color:#fbbf24;}
+.landing-points .point-blue i{color:#60a5fa;}
 
 .landing-right{
   display:flex;
@@ -2471,7 +2503,7 @@ main{
   gap:18px;
   padding:20px 28px;
   background:rgba(14,22,38,.70);
-  border:1px solid rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.07);
   border-radius:16px;
 }
 
@@ -2483,24 +2515,39 @@ main{
 }
 
 .step-icon{
-  width:58px;
-  height:58px;
+  width:66px;
+  height:66px;
   border-radius:999px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:24px;
+  font-size:28px;
   flex-shrink:0;
+  border:1px solid rgba(255,255,255,.08);
 }
 
-.step-icon.blue{background:rgba(59,130,246,.18);}
-.step-icon.purple{background:rgba(168,85,247,.18);}
-.step-icon.green{background:rgba(34,197,94,.18);}
+.step-icon.blue{
+  color:#60a5fa;
+  background:rgba(59,130,246,.15);
+  box-shadow:0 0 28px rgba(59,130,246,.24);
+}
+
+.step-icon.purple{
+  color:#a855f7;
+  background:rgba(168,85,247,.15);
+  box-shadow:0 0 28px rgba(168,85,247,.24);
+}
+
+.step-icon.green{
+  color:#22c55e;
+  background:rgba(34,197,94,.15);
+  box-shadow:0 0 28px rgba(34,197,94,.24);
+}
 
 .step-number{
   position:absolute;
   top:-8px;
-  left:42px;
+  left:50px;
   width:26px;
   height:26px;
   border-radius:999px;
@@ -2511,13 +2558,14 @@ main{
   justify-content:center;
   font-size:13px;
   font-weight:900;
+  box-shadow:0 0 16px rgba(251,191,36,.45);
 }
 
 .step-content h3{
   margin:0 0 4px;
   color:#fff;
   font-size:18px;
-  font-weight:800;
+  font-weight:900;
 }
 
 .step-content p{
@@ -2560,30 +2608,51 @@ main{
   padding:20px 22px;
   border-radius:16px;
   background:rgba(14,22,38,.70);
-  border:1px solid rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.07);
   color:#fff;
 }
 
 .why-icon{
-  width:58px;
-  height:58px;
+  width:66px;
+  height:66px;
   border-radius:999px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:24px;
+  font-size:28px;
   flex-shrink:0;
+  border:1px solid rgba(255,255,255,.08);
 }
 
-.why-icon.green{background:rgba(34,197,94,.18);}
-.why-icon.yellow{background:rgba(251,191,36,.18);}
-.why-icon.purple{background:rgba(168,85,247,.18);}
-.why-icon.blue{background:rgba(59,130,246,.18);}
+.why-icon.green{
+  color:#22c55e;
+  background:rgba(34,197,94,.15);
+  box-shadow:0 0 28px rgba(34,197,94,.26);
+}
+
+.why-icon.yellow{
+  color:#fbbf24;
+  background:rgba(251,191,36,.15);
+  box-shadow:0 0 28px rgba(251,191,36,.26);
+}
+
+.why-icon.purple{
+  color:#a855f7;
+  background:rgba(168,85,247,.15);
+  box-shadow:0 0 28px rgba(168,85,247,.26);
+}
+
+.why-icon.blue{
+  color:#60a5fa;
+  background:rgba(59,130,246,.15);
+  box-shadow:0 0 28px rgba(59,130,246,.26);
+}
 
 .why-card b{
   display:block;
   font-size:16px;
   margin-bottom:6px;
+  font-weight:900;
 }
 
 .why-card p{
@@ -2601,7 +2670,7 @@ main{
   text-decoration:none;
   color:#fff;
   background:rgba(14,22,38,.70);
-  border:1px solid rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.07);
   border-radius:16px;
   padding:18px 24px;
 }
@@ -2609,6 +2678,11 @@ main{
 .landing-trustpilot span{
   font-weight:900;
   font-size:19px;
+}
+
+.landing-trustpilot i{
+  color:#00b67a;
+  margin-right:4px;
 }
 
 .landing-trustpilot strong{
@@ -3018,7 +3092,11 @@ function landingHtml() {
     <div class="landing-hero-section">
 
       <div class="landing-left">
-        <div class="trust-badge">☆ Trusted by thousands worldwide</div>
+
+        <div class="trust-badge">
+          <i class="fa-solid fa-shield-halved"></i>
+          Trusted by thousands worldwide
+        </div>
 
         <h1 class="landing-title">
           Get paid for testing<br>
@@ -3032,20 +3110,38 @@ function landingHtml() {
         </p>
 
         <div class="landing-buttons">
+
           <button type="button" class="landing-signup" onclick="openAuth('signup')">
-            Sign up for free →
+            Sign up for free
+            <i class="fa-solid fa-arrow-right"></i>
           </button>
 
           <button type="button" class="landing-login" onclick="openAuth('login')">
-            Log in →
+            Log in
+            <i class="fa-solid fa-arrow-right"></i>
           </button>
+
         </div>
 
         <div class="landing-points">
-          <span>✓ 100% free</span>
-          <span>⚡ Fast payouts</span>
-          <span>◇ Trusted partners</span>
+
+          <span class="point-green">
+            <i class="fa-solid fa-circle-check"></i>
+            100% free
+          </span>
+
+          <span class="point-yellow">
+            <i class="fa-solid fa-bolt"></i>
+            Fast payouts
+          </span>
+
+          <span class="point-blue">
+            <i class="fa-solid fa-shield-halved"></i>
+            Trusted partners
+          </span>
+
         </div>
+
       </div>
 
       <div class="landing-right">
@@ -3057,77 +3153,134 @@ function landingHtml() {
     <div class="landing-steps">
 
       <div class="step-item">
-        <div class="step-icon blue">👤</div>
+
+        <div class="step-icon blue">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+
         <div class="step-number">1</div>
+
         <div class="step-content">
           <h3>Sign up</h3>
           <p>Create your free account.</p>
         </div>
+
       </div>
 
       <div class="step-divider"></div>
 
       <div class="step-item">
-        <div class="step-icon purple">📝</div>
+
+        <div class="step-icon purple">
+          <i class="fa-solid fa-list-check"></i>
+        </div>
+
         <div class="step-number">2</div>
+
         <div class="step-content">
           <h3>Complete tasks</h3>
           <p>Complete surveys, games and offers.</p>
         </div>
+
       </div>
 
       <div class="step-divider"></div>
 
       <div class="step-item">
-        <div class="step-icon green">💵</div>
+
+        <div class="step-icon green">
+          <i class="fa-solid fa-money-bill-wave"></i>
+        </div>
+
         <div class="step-number">3</div>
+
         <div class="step-content">
           <h3>Cash out</h3>
           <p>Withdraw your earnings via PayPal.</p>
         </div>
+
       </div>
 
     </div>
 
-    <h2 class="why-title">Why choose <span>SurveyCash?</span></h2>
+    <h2 class="why-title">
+      Why choose <span>SurveyCash?</span>
+    </h2>
 
     <div class="why-grid">
+
       <div class="why-card">
-        <div class="why-icon green">✓</div>
+
+        <div class="why-icon green">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
         <div>
           <b>Verified partners</b>
           <p>We work with trusted companies to bring you the best opportunities.</p>
         </div>
+
       </div>
 
       <div class="why-card">
-        <div class="why-icon yellow">⚡</div>
+
+        <div class="why-icon yellow">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+
         <div>
           <b>Fast payouts</b>
           <p>Cash out your earnings quickly and securely via PayPal.</p>
         </div>
+
       </div>
 
       <div class="why-card">
-        <div class="why-icon purple">🌐</div>
+
+        <div class="why-icon purple">
+          <i class="fa-solid fa-globe"></i>
+        </div>
+
         <div>
           <b>Global access</b>
           <p>Join thousands of users from around the world.</p>
         </div>
+
       </div>
 
       <div class="why-card">
-        <div class="why-icon blue">🎁</div>
+
+        <div class="why-icon blue">
+          <i class="fa-solid fa-gift"></i>
+        </div>
+
         <div>
           <b>More ways to earn</b>
           <p>Surveys, games, offers and more. Always new opportunities.</p>
         </div>
+
       </div>
+
     </div>
 
-    <a class="landing-trustpilot" href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener">
-      <div>See our reviews on <span>★ Trustpilot</span></div>
-      <strong>View on Trustpilot</strong>
+    <a class="landing-trustpilot"
+       href="https://www.trustpilot.com/review/surveycash.website"
+       target="_blank"
+       rel="noopener">
+
+      <div>
+        See our reviews on
+        <span>
+          <i class="fa-solid fa-star"></i>
+          Trustpilot
+        </span>
+      </div>
+
+      <strong>
+        View on Trustpilot
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      </strong>
+
     </a>
 
   </section>
@@ -3148,6 +3301,7 @@ function landingHtml() {
   </div>
   `;
 }
+
 
 // ---------- Routes ----------
 app.get('/', async (req, res) => {
