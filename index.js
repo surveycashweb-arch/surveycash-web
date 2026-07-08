@@ -2354,16 +2354,19 @@ body {
 /* ===== Landing page redesign ===== */
 
 .landing-new{
-  max-width:1500px;
-  margin:0 auto;
-  padding:20px 34px 30px;
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:20px 80px 30px;
+  box-sizing:border-box;
 }
 
 .landing-hero-section{
+  width:100%;
   display:grid;
-  grid-template-columns:560px 1fr;
+  grid-template-columns:minmax(650px,0.95fr) minmax(700px,1.05fr);
   align-items:center;
-  gap:30px;
+  gap:60px;
 }
 
 .landing-left{
