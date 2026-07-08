@@ -2353,24 +2353,31 @@ body {
 
 /* ===== Landing page redesign ===== */
 
+main{
+  max-width:none !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+  background:#111827;
+}
+
 .landing-new{
   width:100%;
-  max-width:none;
-  margin:0;
-  padding:34px 150px 38px;
+  max-width:1320px;
+  margin:0 auto;
+  padding:42px 0 40px;
   box-sizing:border-box;
 }
 
 .landing-hero-section{
-  width:100%;
   display:grid;
-  grid-template-columns:560px 1fr;
+  grid-template-columns: 520px 1fr;
   align-items:center;
-  gap:90px;
+  gap:70px;
 }
 
 .landing-left{
-  max-width:560px;
+  width:520px;
 }
 
 .trust-badge{
@@ -2381,7 +2388,7 @@ body {
   color:#fbbf24;
   font-weight:800;
   font-size:14px;
-  margin-bottom:24px;
+  margin-bottom:22px;
 }
 
 .landing-title{
@@ -2400,7 +2407,7 @@ body {
 .landing-sub{
   margin:18px 0 0;
   color:#cbd5e1;
-  font-size:17px;
+  font-size:16px;
   line-height:1.55;
 }
 
@@ -2418,7 +2425,6 @@ body {
   font-size:15px;
   font-weight:900;
   cursor:pointer;
-  transition:.2s;
 }
 
 .landing-signup{
@@ -2427,18 +2433,10 @@ body {
   border:1px solid #d97706;
 }
 
-.landing-signup:hover{
-  background:#f59e0b;
-}
-
 .landing-login{
   background:transparent;
   color:#fff;
-  border:1px solid rgba(255,255,255,.20);
-}
-
-.landing-login:hover{
-  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.22);
 }
 
 .landing-points{
@@ -2446,6 +2444,7 @@ body {
   gap:26px;
   margin-top:20px;
   color:#cbd5e1;
+  font-size:15px;
   font-weight:700;
 }
 
@@ -2456,20 +2455,18 @@ body {
 }
 
 .landing-right img{
-  width:100%;
-  max-width:670px;
+  width:690px !important;
+  max-width:none !important;
   display:block;
 }
 
 .how-img-wrap{
-  margin-top:22px;
+  margin-top:20px;
 }
 
 .how-img-wrap img{
   width:100%;
-  max-width:none;
   display:block;
-  margin:0 auto;
   border-radius:18px;
 }
 
@@ -2495,11 +2492,11 @@ body {
   display:flex;
   align-items:center;
   gap:18px;
+  min-height:96px;
+  padding:20px 22px;
+  border-radius:16px;
   background:rgba(8,12,22,.55);
   border:1px solid rgba(255,255,255,.06);
-  border-radius:16px;
-  padding:20px 22px;
-  min-height:96px;
   color:#fff;
 }
 
@@ -2559,18 +2556,34 @@ body {
 }
 
 @media(max-width:900px){
-
   .landing-new{
     padding:26px 16px 40px;
   }
 
   .landing-hero-section{
     grid-template-columns:1fr;
-    gap:28px;
+    gap:24px;
+  }
+
+  .landing-left{
+    width:100%;
   }
 
   .landing-title{
     font-size:38px;
+  }
+
+  .landing-right img{
+    width:100% !important;
+  }
+
+  .landing-buttons{
+    flex-direction:column;
+  }
+
+  .landing-signup,
+  .landing-login{
+    width:100%;
   }
 
   .landing-points{
@@ -2930,16 +2943,13 @@ function landingHtml() {
     <div class="landing-hero-section">
 
       <div class="landing-left">
+        <div class="trust-badge">☆ Trusted by thousands worldwide</div>
 
-        <div class="trust-badge">
-          ☆ Trusted by thousands worldwide
-        </div>
-
-<h1 class="landing-title">
-  Get paid for testing<br>
-  games, apps<br>
-  and <span>answering surveys</span>
-</h1>
+        <h1 class="landing-title">
+          Get paid for testing<br>
+          games, apps<br>
+          and <span>answering surveys</span>
+        </h1>
 
         <p class="landing-sub">
           Earn rewards quickly by completing fun tasks.<br>
@@ -2947,17 +2957,11 @@ function landingHtml() {
         </p>
 
         <div class="landing-buttons">
-          <button
-            type="button"
-            class="landing-signup"
-            onclick="openAuth('signup')">
+          <button type="button" class="landing-signup" onclick="openAuth('signup')">
             Sign up for free →
           </button>
 
-          <button
-            type="button"
-            class="landing-login"
-            onclick="openAuth('login')">
+          <button type="button" class="landing-login" onclick="openAuth('login')">
             Log in →
           </button>
         </div>
@@ -2967,7 +2971,6 @@ function landingHtml() {
           <span>⚡ Fast payouts</span>
           <span>◇ Trusted partners</span>
         </div>
-
       </div>
 
       <div class="landing-right">
@@ -2980,19 +2983,14 @@ function landingHtml() {
       <img src="/img/steps.png" alt="How it works">
     </div>
 
-    <h2 class="why-title">
-      Why choose <span>SurveyCash?</span>
-    </h2>
+    <h2 class="why-title">Why choose <span>SurveyCash?</span></h2>
 
     <div class="why-grid">
-
       <div class="why-card">
         <div class="why-icon green">✓</div>
         <div>
           <b>Verified partners</b>
-          <p>
-            We work with trusted companies to bring you the best opportunities.
-          </p>
+          <p>We work with trusted companies to bring you the best opportunities.</p>
         </div>
       </div>
 
@@ -3000,9 +2998,7 @@ function landingHtml() {
         <div class="why-icon yellow">⚡</div>
         <div>
           <b>Fast payouts</b>
-          <p>
-            Cash out your earnings quickly and securely via PayPal.
-          </p>
+          <p>Cash out your earnings quickly and securely via PayPal.</p>
         </div>
       </div>
 
@@ -3010,9 +3006,7 @@ function landingHtml() {
         <div class="why-icon purple">🌐</div>
         <div>
           <b>Global access</b>
-          <p>
-            Join thousands of users from around the world.
-          </p>
+          <p>Join thousands of users from around the world.</p>
         </div>
       </div>
 
@@ -3020,71 +3014,35 @@ function landingHtml() {
         <div class="why-icon blue">🎁</div>
         <div>
           <b>More ways to earn</b>
-          <p>
-            Surveys, games, offers and more. Always new opportunities.
-          </p>
+          <p>Surveys, games, offers and more. Always new opportunities.</p>
         </div>
       </div>
-
     </div>
 
-    <a
-      class="landing-trustpilot"
-      href="https://www.trustpilot.com/review/surveycash.website"
-      target="_blank"
-      rel="noopener">
-
-      <div>
-        See our reviews on <span>★ Trustpilot</span>
-      </div>
-
+    <a class="landing-trustpilot" href="https://www.trustpilot.com/review/surveycash.website" target="_blank" rel="noopener">
+      <div>See our reviews on <span>★ Trustpilot</span></div>
       <strong>View on Trustpilot</strong>
-
     </a>
 
   </section>
 
   <div id="forgot-backdrop" class="forgot-backdrop" hidden>
-
     <div class="forgot-modal">
-
-      <button
-        type="button"
-        id="forgot-close"
-        class="forgot-close">
-        ×
-      </button>
-
+      <button type="button" id="forgot-close" class="forgot-close">×</button>
       <h2>Forgot password?</h2>
-
-      <p>
-        Enter your email and we'll send you a reset link.
-      </p>
+      <p>Enter your email and we'll send you a reset link.</p>
 
       <form id="forgot-form">
-
-        <input
-          id="forgot-email"
-          type="email"
-          placeholder="Email address"
-          autocomplete="email"
-          required>
-
-        <button
-          type="submit"
-          id="forgot-submit">
-          Send reset link
-        </button>
-
+        <input id="forgot-email" type="email" placeholder="Email address" autocomplete="email" required>
+        <button type="submit" id="forgot-submit">Send reset link</button>
       </form>
 
       <div id="forgot-message" class="forgot-message"></div>
-
     </div>
-
   </div>
   `;
 }
+
 
 // ---------- Routes ----------
 app.get('/', async (req, res) => {
