@@ -3107,10 +3107,12 @@ function landingHtml() {
             100% free
           </span>
 
-  <span class="point-yellow">
-    <i class="fa-solid fa-money-check-dollar"></i>
-    Trusted payouts
+<span class="point-yellow">
+  <span class="payout-icon">
+    <i class="fa-solid fa-dollar-sign"></i>
   </span>
+  Trusted payouts
+</span>
 
           <span class="point-blue">
             <i class="fa-solid fa-shield-halved"></i>
