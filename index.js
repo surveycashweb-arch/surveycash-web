@@ -2386,11 +2386,11 @@ main{
 .landing-title{
   margin:0;
   font-size:52px;
-  line-height:1.08;
+  line-height:1.06;
   font-weight:900;
-  letter-spacing:-1.4px;
+  letter-spacing:-1.6px;
   color:#f8fafc;
-  text-shadow:0 3px 14px rgba(0,0,0,.28);
+  text-shadow:0 3px 14px rgba(0,0,0,.26);
 }
 
 .landing-title span{color:#fbbf24;}
@@ -2480,7 +2480,7 @@ main{
   grid-template-columns:1fr auto 1fr auto 1fr;
   align-items:center;
   gap:18px;
-  padding:20px 28px;
+  padding:22px 30px;
   background:rgba(14,22,38,.70);
   border:1px solid rgba(255,255,255,.07);
   border-radius:16px;
@@ -2490,13 +2490,13 @@ main{
   position:relative;
   display:flex;
   align-items:center;
-  gap:16px;
+  gap:18px;
 }
 
 .step-icon,
 .why-icon{
-  width:66px;
-  height:66px;
+  width:68px;
+  height:68px;
   border-radius:999px;
   display:flex;
   align-items:center;
@@ -2510,33 +2510,33 @@ main{
 .why-icon.blue{
   color:#60a5fa;
   background:rgba(59,130,246,.13);
-  box-shadow:0 0 14px rgba(59,130,246,.12);
+  box-shadow:0 0 12px rgba(59,130,246,.10);
 }
 
 .step-icon.purple,
 .why-icon.purple{
   color:#a855f7;
   background:rgba(168,85,247,.13);
-  box-shadow:0 0 14px rgba(168,85,247,.12);
+  box-shadow:0 0 12px rgba(168,85,247,.10);
 }
 
 .step-icon.green,
 .why-icon.green{
   color:#22c55e;
   background:rgba(34,197,94,.13);
-  box-shadow:0 0 14px rgba(34,197,94,.12);
+  box-shadow:0 0 12px rgba(34,197,94,.10);
 }
 
 .why-icon.yellow{
   color:#fbbf24;
   background:rgba(251,191,36,.12);
-  box-shadow:0 0 14px rgba(251,191,36,.10);
+  box-shadow:0 0 12px rgba(251,191,36,.08);
 }
 
 .step-number{
   position:absolute;
   top:-8px;
-  left:50px;
+  left:52px;
   width:26px;
   height:26px;
   border-radius:999px;
@@ -2547,22 +2547,23 @@ main{
   justify-content:center;
   font-size:13px;
   font-weight:900;
-  box-shadow:0 0 10px rgba(251,191,36,.25);
+  box-shadow:0 0 8px rgba(251,191,36,.22);
 }
 
 .step-content h3{
-  margin:0 0 4px;
+  margin:0 0 6px;
   color:#fff;
-  font-size:18px;
+  font-size:20px;
   font-weight:850;
-  letter-spacing:-.2px;
+  line-height:1.12;
+  letter-spacing:-.35px;
 }
 
 .step-content p{
   margin:0;
-  color:#d6deeb;
-  font-size:13px;
-  line-height:1.45;
+  color:#cbd5e1;
+  font-size:14px;
+  line-height:1.5;
   font-weight:500;
 }
 
@@ -2570,17 +2571,18 @@ main{
   width:72px;
   height:0;
   border-top:3px dashed #fbbf24;
-  opacity:.8;
+  opacity:.78;
 }
 
 .why-title{
   text-align:center;
-  font-size:30px;
-  margin:26px 0 18px;
+  font-size:34px;
+  margin:30px 0 22px;
   color:#fff;
   font-weight:900;
-  letter-spacing:-.6px;
-  text-shadow:0 3px 12px rgba(0,0,0,.25);
+  line-height:1.1;
+  letter-spacing:-.9px;
+  text-shadow:0 3px 12px rgba(0,0,0,.22);
 }
 
 .why-title span{color:#fbbf24;}
@@ -2594,9 +2596,9 @@ main{
 .why-card{
   display:flex;
   align-items:center;
-  gap:18px;
-  min-height:96px;
-  padding:20px 22px;
+  gap:20px;
+  min-height:112px;
+  padding:24px 24px;
   border-radius:16px;
   background:rgba(14,22,38,.70);
   border:1px solid rgba(255,255,255,.07);
@@ -2605,17 +2607,18 @@ main{
 
 .why-card b{
   display:block;
-  font-size:16px;
-  margin-bottom:6px;
+  font-size:18px;
+  margin-bottom:8px;
   font-weight:850;
-  letter-spacing:-.2px;
+  line-height:1.14;
+  letter-spacing:-.35px;
 }
 
 .why-card p{
   margin:0;
-  color:#d6deeb;
-  font-size:13px;
-  line-height:1.45;
+  color:#cbd5e1;
+  font-size:14px;
+  line-height:1.52;
   font-weight:500;
 }
 
@@ -2632,9 +2635,15 @@ main{
   padding:18px 24px;
 }
 
+.landing-trustpilot div{
+  font-size:15px;
+  font-weight:650;
+}
+
 .landing-trustpilot span{
   font-weight:850;
-  font-size:19px;
+  font-size:20px;
+  letter-spacing:-.35px;
 }
 
 .landing-trustpilot i{
@@ -2685,6 +2694,11 @@ main{
 
   .why-grid{grid-template-columns:1fr;}
 
+  .why-card{
+    min-height:auto;
+    padding:22px;
+  }
+
   .landing-trustpilot{
     flex-direction:column;
     gap:14px;
@@ -2696,6 +2710,7 @@ main{
     text-align:center;
   }
 }
+
 
 /* ===== Mobile auth modal fix ===== */
 
