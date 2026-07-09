@@ -3203,9 +3203,11 @@ function landingHtml() {
 
       <div class="why-card">
 
-        <div class="why-icon yellow">
-          <i class="fa-solid fa-bolt"></i>
-        </div>
+<div class="why-icon yellow">
+  <span class="payout-icon-large">
+    <i class="fa-solid fa-dollar-sign"></i>
+  </span>
+</div>
 
         <div>
 <b>Trusted payouts</b>
