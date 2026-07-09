@@ -2551,20 +2551,21 @@ main{
 }
 
 .step-content h3{
-  margin:0 0 6px;
+  margin:0 0 8px;
   color:#fff;
-  font-size:20px;
-  font-weight:850;
-  line-height:1.12;
-  letter-spacing:-.35px;
+  font-size:21px;
+  font-weight:900;
+  line-height:1.08;
+  letter-spacing:-.55px;
+  text-shadow:0 2px 10px rgba(0,0,0,.28);
 }
 
 .step-content p{
   margin:0;
-  color:#cbd5e1;
+  color:#cfd8ea;
   font-size:14px;
-  line-height:1.5;
-  font-weight:500;
+  line-height:1.55;
+  font-weight:600;
 }
 
 .step-divider{
@@ -2576,13 +2577,13 @@ main{
 
 .why-title{
   text-align:center;
-  font-size:34px;
-  margin:30px 0 22px;
+  font-size:38px;
+  margin:34px 0 24px;
   color:#fff;
   font-weight:900;
-  line-height:1.1;
-  letter-spacing:-.9px;
-  text-shadow:0 3px 12px rgba(0,0,0,.22);
+  line-height:1.05;
+  letter-spacing:-1.1px;
+  text-shadow:0 3px 14px rgba(0,0,0,.25);
 }
 
 .why-title span{color:#fbbf24;}
@@ -2607,19 +2608,21 @@ main{
 
 .why-card b{
   display:block;
-  font-size:18px;
-  margin-bottom:8px;
-  font-weight:850;
-  line-height:1.14;
-  letter-spacing:-.35px;
+  font-size:20px;
+  margin-bottom:10px;
+  font-weight:900;
+  line-height:1.08;
+  letter-spacing:-.55px;
+  color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.28);
 }
 
 .why-card p{
   margin:0;
-  color:#cbd5e1;
+  color:#cfd8ea;
   font-size:14px;
-  line-height:1.52;
-  font-weight:500;
+  line-height:1.55;
+  font-weight:600;
 }
 
 .landing-trustpilot{
