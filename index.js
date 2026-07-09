@@ -3107,10 +3107,10 @@ function landingHtml() {
             100% free
           </span>
 
-          <span class="point-yellow">
-            <i class="fa-solid fa-bolt"></i>
-            Fast payouts
-          </span>
+  <span class="point-yellow">
+    <i class="fa-solid fa-money-check-dollar"></i>
+    Trusted payouts
+  </span>
 
           <span class="point-blue">
             <i class="fa-solid fa-shield-halved"></i>
@@ -3206,8 +3206,8 @@ function landingHtml() {
         </div>
 
         <div>
-          <b>Fast payouts</b>
-          <p>Cash out your earnings quickly and securely via PayPal.</p>
+<b>Trusted payouts</b>
+<p>Cash out safely with trusted payment methods.</p>
         </div>
 
       </div>
