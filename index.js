@@ -2386,11 +2386,11 @@ main{
 .landing-title{
   margin:0;
   font-size:52px;
-  line-height:1.06;
+  line-height:1.08;
   font-weight:900;
-  letter-spacing:-1.6px;
+  letter-spacing:-1.4px;
   color:#f8fafc;
-  text-shadow:0 3px 14px rgba(0,0,0,.26);
+  text-shadow:0 3px 14px rgba(0,0,0,.28);
 }
 
 .landing-title span{color:#fbbf24;}
@@ -2480,7 +2480,7 @@ main{
   grid-template-columns:1fr auto 1fr auto 1fr;
   align-items:center;
   gap:18px;
-  padding:22px 30px;
+  padding:20px 28px;
   background:rgba(14,22,38,.70);
   border:1px solid rgba(255,255,255,.07);
   border-radius:16px;
@@ -2490,13 +2490,13 @@ main{
   position:relative;
   display:flex;
   align-items:center;
-  gap:18px;
+  gap:16px;
 }
 
 .step-icon,
 .why-icon{
-  width:68px;
-  height:68px;
+  width:66px;
+  height:66px;
   border-radius:999px;
   display:flex;
   align-items:center;
@@ -2510,33 +2510,33 @@ main{
 .why-icon.blue{
   color:#60a5fa;
   background:rgba(59,130,246,.13);
-  box-shadow:0 0 12px rgba(59,130,246,.10);
+  box-shadow:0 0 14px rgba(59,130,246,.12);
 }
 
 .step-icon.purple,
 .why-icon.purple{
   color:#a855f7;
   background:rgba(168,85,247,.13);
-  box-shadow:0 0 12px rgba(168,85,247,.10);
+  box-shadow:0 0 14px rgba(168,85,247,.12);
 }
 
 .step-icon.green,
 .why-icon.green{
   color:#22c55e;
   background:rgba(34,197,94,.13);
-  box-shadow:0 0 12px rgba(34,197,94,.10);
+  box-shadow:0 0 14px rgba(34,197,94,.12);
 }
 
 .why-icon.yellow{
   color:#fbbf24;
   background:rgba(251,191,36,.12);
-  box-shadow:0 0 12px rgba(251,191,36,.08);
+  box-shadow:0 0 14px rgba(251,191,36,.10);
 }
 
 .step-number{
   position:absolute;
   top:-8px;
-  left:52px;
+  left:50px;
   width:26px;
   height:26px;
   border-radius:999px;
@@ -2547,43 +2547,40 @@ main{
   justify-content:center;
   font-size:13px;
   font-weight:900;
-  box-shadow:0 0 8px rgba(251,191,36,.22);
+  box-shadow:0 0 10px rgba(251,191,36,.25);
 }
 
 .step-content h3{
-  margin:0 0 8px;
+  margin:0 0 4px;
   color:#fff;
-  font-size:21px;
-  font-weight:900;
-  line-height:1.08;
-  letter-spacing:-.55px;
-  text-shadow:0 2px 10px rgba(0,0,0,.28);
+  font-size:18px;
+  font-weight:850;
+  letter-spacing:-.2px;
 }
 
 .step-content p{
   margin:0;
-  color:#cfd8ea;
-  font-size:14px;
-  line-height:1.55;
-  font-weight:600;
+  color:#d6deeb;
+  font-size:13px;
+  line-height:1.45;
+  font-weight:500;
 }
 
 .step-divider{
   width:72px;
   height:0;
   border-top:3px dashed #fbbf24;
-  opacity:.78;
+  opacity:.8;
 }
 
 .why-title{
   text-align:center;
-  font-size:38px;
-  margin:34px 0 24px;
+  font-size:30px;
+  margin:26px 0 18px;
   color:#fff;
   font-weight:900;
-  line-height:1.05;
-  letter-spacing:-1.1px;
-  text-shadow:0 3px 14px rgba(0,0,0,.25);
+  letter-spacing:-.6px;
+  text-shadow:0 3px 12px rgba(0,0,0,.25);
 }
 
 .why-title span{color:#fbbf24;}
@@ -2597,9 +2594,9 @@ main{
 .why-card{
   display:flex;
   align-items:center;
-  gap:20px;
-  min-height:112px;
-  padding:24px 24px;
+  gap:18px;
+  min-height:96px;
+  padding:20px 22px;
   border-radius:16px;
   background:rgba(14,22,38,.70);
   border:1px solid rgba(255,255,255,.07);
@@ -2608,21 +2605,18 @@ main{
 
 .why-card b{
   display:block;
-  font-size:20px;
-  margin-bottom:10px;
-  font-weight:900;
-  line-height:1.08;
-  letter-spacing:-.55px;
-  color:#fff;
-  text-shadow:0 2px 10px rgba(0,0,0,.28);
+  font-size:16px;
+  margin-bottom:6px;
+  font-weight:850;
+  letter-spacing:-.2px;
 }
 
 .why-card p{
   margin:0;
-  color:#cfd8ea;
-  font-size:14px;
-  line-height:1.55;
-  font-weight:600;
+  color:#d6deeb;
+  font-size:13px;
+  line-height:1.45;
+  font-weight:500;
 }
 
 .landing-trustpilot{
@@ -2638,15 +2632,9 @@ main{
   padding:18px 24px;
 }
 
-.landing-trustpilot div{
-  font-size:15px;
-  font-weight:650;
-}
-
 .landing-trustpilot span{
   font-weight:850;
-  font-size:20px;
-  letter-spacing:-.35px;
+  font-size:19px;
 }
 
 .landing-trustpilot i{
@@ -2697,11 +2685,6 @@ main{
 
   .why-grid{grid-template-columns:1fr;}
 
-  .why-card{
-    min-height:auto;
-    padding:22px;
-  }
-
   .landing-trustpilot{
     flex-direction:column;
     gap:14px;
@@ -2713,7 +2696,6 @@ main{
     text-align:center;
   }
 }
-
 
 /* ===== Mobile auth modal fix ===== */
 
