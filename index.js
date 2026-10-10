@@ -7871,97 +7871,115 @@ const ADMIN_EMAIL = 'surveycashweb@gmail.com';
 
 
 
-app.get('/admin/withdrawals', async (req, res) => {
+// SurveyCash admin: Web + Android App withdrawals. App credentials are server-only.
+function appWithdrawalClient() {
+  const url = process.env.SUPABASE_APP_URL;
+  const key = process.env.SUPABASE_APP_SERVICE_ROLE_KEY;
+  return url && key ? createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } }) : null;
+}
+function withdrawalAdmin(req, res) {
   if (!isLoggedIn(req) || req.user.email !== ADMIN_EMAIL) {
-    return res.sendStatus(403);
+    res.sendStatus(403);
+    return false;
   }
-
-  const status = String(req.query.status || 'pending').toLowerCase();
-
-  let query = supabaseAdmin
-    .from('withdrawals')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (status === 'pending') {
-    query = query.in('status', ['pending', 'processing']);
-  } else if (status === 'paid') {
-    query = query.eq('status', 'paid');
-  } else if (status === 'failed') {
-    query = query.eq('status', 'failed');
-  } else if (status === 'all') {
-    // ingen ekstra filter
-  } else {
-    query = query.in('status', ['pending', 'processing']);
+  return true;
+}
+function safeAdminPost(req, res) {
+  const origin = req.get('origin');
+  const referer = req.get('referer');
+  const expected = new URL(BASE_URL).origin;
+  try {
+    const submitted = origin || (referer && new URL(referer).origin);
+    if (!submitted || submitted !== expected) {
+      res.status(403).send('Invalid request origin');
+      return false;
+    }
+  } catch (_) {
+    res.status(403).send('Invalid request origin');
+    return false;
   }
+  return true;
+}
+function adminWithdrawalUrl(status, source) {
+  return '/admin/withdrawals?status=' + encodeURIComponent(status) + '&source=' + encodeURIComponent(source);
+}
 
-  const { data, error } = await query;
-
-  if (error) return res.status(500).send(error.message);
-
-  function timeAgo(value) {
-    if (!value) return '';
-    const then = new Date(value).getTime();
-    const now = Date.now();
-    const diff = Math.max(0, now - then);
-
-    const mins = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-
-    if (mins < 1) return 'just now';
-    if (mins < 60) return mins + ' min ago';
-    if (hours < 24) return hours + ' hour' + (hours !== 1 ? 's' : '') + ' ago';
-    return days + ' day' + (days !== 1 ? 's' : '') + ' ago';
+app.get('/admin/withdrawals', async (req, res) => {
+  if (!withdrawalAdmin(req, res)) return;
+  const status = ['pending','paid','failed','all'].includes(req.query.status) ? req.query.status : 'pending';
+  const source = ['all','web','app'].includes(req.query.source) ? req.query.source : 'all';
+  const rows = [];
+  let appWarning = '';
+  if (source !== 'app') {
+    let q = supabaseAdmin.from('withdrawals').select('*').order('created_at', { ascending: false });
+    if (status === 'pending') q = q.in('status', ['pending','processing']);
+    else if (status !== 'all') q = q.eq('status', status);
+    const { data, error } = await q;
+    if (error) return res.status(500).send('Could not load web withdrawals');
+    rows.push(...(data || []).map(w => ({ ...w, source: 'web' })));
   }
-
-  const rows = (data || []).map((w) => `
-    <tr>
-      <td>${w.id}</td>
+  if (source !== 'web') {
+    const client = appWithdrawalClient();
+    if (!client) {
+      appWarning = 'App connection not configured. Add SUPABASE_APP_URL and SUPABASE_APP_SERVICE_ROLE_KEY to Render.';
+    } else {
+      let q = client.from('app_withdrawals').select('*').order('created_at', { ascending: false });
+      if (status === 'pending') q = q.in('status', ['pending','processing']);
+      else if (status !== 'all') q = q.eq('status', status);
+      const { data, error } = await q;
+      if (error) {
+        console.error('App withdrawals load error:', error);
+        appWarning = 'Could not load App withdrawals. Check server logs.';
+      } else rows.push(...(data || []).map(w => ({ ...w, source: 'app' })));
+    }
+  }
+  rows.sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  const renderRows = rows.map(w => {
+    const action = w.source === 'web'
+      ? '/admin/withdrawals/' + encodeURIComponent(w.id)
+      : '/admin/withdrawals/app/' + encodeURIComponent(w.id);
+    const canProcess = w.status === 'pending' || w.status === 'processing';
+    return `<tr>
+      <td>${escapeHtml(w.source.toUpperCase())}</td>
+      <td>${escapeHtml(String(w.id))}</td>
       <td>${escapeHtml(w.paypal_email || '')}</td>
       <td>$${formatUsdFromCents(Number(w.amount_cents || 0))}</td>
       <td>${escapeHtml(w.status || '')}</td>
-      <td>${escapeHtml(String(w.created_at || ''))}<br><span style="opacity:.7;font-size:12px;">${timeAgo(w.created_at)}</span></td>
-      <td>
-        ${w.status === 'pending' || w.status === 'processing' ? `
-          <form method="POST" action="/admin/withdrawals/${w.id}/paid" style="display:inline">
-            <button type="submit">Mark paid</button>
-          </form>
-          <form method="POST" action="/admin/withdrawals/${w.id}/failed" style="display:inline; margin-left:8px;">
-            <button type="submit">Mark failed</button>
-          </form>
-        ` : '-'}
-      </td>
-    </tr>
-  `).join('');
+      <td>${escapeHtml(String(w.created_at || ''))}</td>
+      <td>${canProcess ? `
+        <form method="POST" action="${action}/paid" style="display:inline" onsubmit="return confirm('Have you already sent this PayPal payment?')"><button type="submit">Mark paid</button></form>
+        <form method="POST" action="${action}/failed" style="display:inline;margin-left:8px" onsubmit="return confirm('Mark this withdrawal failed and return funds?')"><button type="submit">Mark failed</button></form>
+      ` : '-'}</td>
+    </tr>`;
+  }).join('');
+  const statusLink = (v, label) => `<a href="${adminWithdrawalUrl(v,source)}" style="margin-right:14px;${status===v?'font-weight:900;text-decoration:underline;':''}">${label}</a>`;
+  const sourceLink = (v, label) => `<a href="${adminWithdrawalUrl(status,v)}" style="margin-right:14px;${source===v?'font-weight:900;text-decoration:underline;':''}">${label}</a>`;
+  res.set('Cache-Control', 'no-store');
+  res.send(`<h1>Withdrawals</h1>
+    <div style="margin-bottom:14px">${statusLink('pending','Pending')}${statusLink('paid','Paid')}${statusLink('failed','Failed')}${statusLink('all','All')}</div>
+    <div style="margin-bottom:14px">${sourceLink('all','All sources')}${sourceLink('web','Web')}${sourceLink('app','App')}</div>
+    ${appWarning ? `<p style="color:#b45309">${escapeHtml(appWarning)}</p>` : ''}
+    <table border="1" cellpadding="8" cellspacing="0"><tr><th>Source</th><th>ID</th><th>PayPal email</th><th>Amount</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+    ${renderRows || '<tr><td colspan="7">No withdrawals</td></tr>'}</table>`);
+});
 
-  const filterLink = (value, label) => {
-    const active = status === value ? 'font-weight:900;text-decoration:underline;' : '';
-    return `<a href="/admin/withdrawals?status=${value}" style="margin-right:14px;${active}">${label}</a>`;
-  };
-
-  res.send(`
-    <h1>Withdrawals</h1>
-
-    <div style="margin-bottom:14px;">
-      ${filterLink('pending', 'Pending')}
-      ${filterLink('paid', 'Paid')}
-      ${filterLink('failed', 'Failed')}
-      ${filterLink('all', 'All')}
-    </div>
-
-    <table border="1" cellpadding="8" cellspacing="0">
-      <tr>
-        <th>ID</th>
-        <th>PayPal email</th>
-        <th>Amount</th>
-        <th>Status</th>
-        <th>Created</th>
-        <th>Actions</th>
-      </tr>
-      ${rows || '<tr><td colspan="6">No withdrawals</td></tr>'}
-    </table>
-  `);
+// Explicit source in the URL prevents cross-project ID collisions.
+app.post('/admin/withdrawals/app/:id/:decision', async (req, res) => {
+  if (!withdrawalAdmin(req, res) || !safeAdminPost(req, res)) return;
+  const { id, decision } = req.params;
+  if (!['paid','failed'].includes(decision)) return res.sendStatus(400);
+  {
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) return res.sendStatus(400);
+    const client = appWithdrawalClient();
+    if (!client) return res.status(503).send('App database not configured');
+    const { data, error } = await client.rpc('admin_finish_app_withdrawal', { p_id: id, p_status: decision });
+    if (error) {
+      console.error('App withdrawal decision failed:', error);
+      return res.status(500).send('Could not process App withdrawal. Check logs.');
+    }
+    if (data !== true) return res.status(409).send('Withdrawal already processed. Refresh admin page.');
+    return res.redirect('/admin/withdrawals?status=pending&source=app');
+  }
 });
 
 
@@ -8029,6 +8047,10 @@ app.post('/admin/withdrawals/:id/failed', async (req, res) => {
 
   res.redirect('/admin/withdrawals');
 });
+
+
+
+
 
 
 
