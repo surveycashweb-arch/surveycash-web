@@ -7909,66 +7909,90 @@ app.get('/admin/withdrawals', async (req, res) => {
   const status = ['pending','paid','failed','all'].includes(req.query.status) ? req.query.status : 'pending';
   const source = ['all','web','app'].includes(req.query.source) ? req.query.source : 'all';
   const rows = [];
-  let appWarning = '';
+  const warnings = [];
   if (source !== 'app') {
-    let q = supabaseAdmin.from('withdrawals').select('*').order('created_at', { ascending: false });
+    let q = supabaseAdmin.from('withdrawals').select('*').order('created_at', { ascending: false }).limit(1000);
     if (status === 'pending') q = q.in('status', ['pending','processing']);
     else if (status !== 'all') q = q.eq('status', status);
     const { data, error } = await q;
-    if (error) return res.status(500).send('Could not load web withdrawals');
+    if (error) {
+      console.error('Web withdrawals load error:', error);
+      return res.status(500).send('Could not load Web withdrawals. Please check server logs.');
+    }
     rows.push(...(data || []).map(w => ({ ...w, source: 'web' })));
   }
   if (source !== 'web') {
     const client = appWithdrawalClient();
     if (!client) {
-      appWarning = 'App connection not configured. Add SUPABASE_APP_URL and SUPABASE_APP_SERVICE_ROLE_KEY to Render.';
+      warnings.push('App connection is not configured in Render.');
     } else {
-      let q = client.from('app_withdrawals').select('*').order('created_at', { ascending: false });
+      let q = client.from('app_withdrawals').select('*').order('created_at', { ascending: false }).limit(1000);
       if (status === 'pending') q = q.in('status', ['pending','processing']);
       else if (status !== 'all') q = q.eq('status', status);
       const { data, error } = await q;
       if (error) {
         console.error('App withdrawals load error:', error);
-        appWarning = 'Could not load App withdrawals. Check server logs.';
+        warnings.push('App withdrawals could not be loaded. Check Render logs.');
       } else rows.push(...(data || []).map(w => ({ ...w, source: 'app' })));
     }
   }
   rows.sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  const count = rows.length;
+  const totalCents = rows.reduce((n,w) => n + Number(w.amount_cents || 0), 0);
+  const webCount = rows.filter(w => w.source === 'web').length;
+  const appCount = count - webCount;
   const renderRows = rows.map(w => {
-    const action = w.source === 'web'
-      ? '/admin/withdrawals/' + encodeURIComponent(w.id)
-      : '/admin/withdrawals/app/' + encodeURIComponent(w.id);
+    const action = '/admin/withdrawals/' + encodeURIComponent(w.source) + '/' + encodeURIComponent(w.id);
     const canProcess = w.status === 'pending' || w.status === 'processing';
-    return `<tr>
-      <td>${escapeHtml(w.source.toUpperCase())}</td>
-      <td>${escapeHtml(String(w.id))}</td>
-      <td>${escapeHtml(w.paypal_email || '')}</td>
-      <td>$${formatUsdFromCents(Number(w.amount_cents || 0))}</td>
-      <td>${escapeHtml(w.status || '')}</td>
-      <td>${escapeHtml(String(w.created_at || ''))}</td>
-      <td>${canProcess ? `
-        <form method="POST" action="${action}/paid" style="display:inline" onsubmit="return confirm('Have you already sent this PayPal payment?')"><button type="submit">Mark paid</button></form>
-        <form method="POST" action="${action}/failed" style="display:inline;margin-left:8px" onsubmit="return confirm('Mark this withdrawal failed and return funds?')"><button type="submit">Mark failed</button></form>
-      ` : '-'}</td>
+    const email = escapeHtml(w.paypal_email || '—');
+    const id = escapeHtml(String(w.id));
+    const date = new Date(w.created_at);
+    const formattedDate = Number.isFinite(date.getTime()) ? date.toLocaleString('en-GB', { timeZone: 'UTC', year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit' }) + ' UTC' : escapeHtml(String(w.created_at || '—'));
+    const state = String(w.status || '').toLowerCase();
+    return `<tr data-search="${escapeHtml((String(w.paypal_email || '') + ' ' + String(w.id)).toLowerCase())}">
+      <td><span class="source-tag ${w.source}">${w.source === 'web' ? 'Website' : 'Android App'}</span></td>
+      <td><span class="id-text" title="${id}">${id}</span></td>
+      <td><span class="email-text">${email}</span></td>
+      <td class="amount">$${formatUsdFromCents(Number(w.amount_cents || 0))}</td>
+      <td><span class="status-tag ${escapeHtml(state)}">${escapeHtml(state)}</span></td>
+      <td class="date">${formattedDate}</td>
+      <td class="actions">${canProcess ? `
+        <form method="POST" action="${action}/paid" class="action-form" data-kind="paid" data-email="${email}" data-amount="$${formatUsdFromCents(Number(w.amount_cents || 0))}"><button type="submit" class="action-button paid-button">Mark paid</button></form>
+        <form method="POST" action="${action}/failed" class="action-form" data-kind="failed" data-email="${email}" data-amount="$${formatUsdFromCents(Number(w.amount_cents || 0))}"><button type="submit" class="action-button failed-button">Mark failed</button></form>
+      ` : '<span class="muted">Completed</span>'}</td>
     </tr>`;
   }).join('');
-  const statusLink = (v, label) => `<a href="${adminWithdrawalUrl(v,source)}" style="margin-right:14px;${status===v?'font-weight:900;text-decoration:underline;':''}">${label}</a>`;
-  const sourceLink = (v, label) => `<a href="${adminWithdrawalUrl(status,v)}" style="margin-right:14px;${source===v?'font-weight:900;text-decoration:underline;':''}">${label}</a>`;
+  const statusLink = (v, label) => `<a class="filter ${status===v?'active':''}" href="${adminWithdrawalUrl(v,source)}">${label}</a>`;
+  const sourceLink = (v, label) => `<a class="filter ${source===v?'active':''}" href="${adminWithdrawalUrl(status,v)}">${label}</a>`;
   res.set('Cache-Control', 'no-store');
-  res.send(`<h1>Withdrawals</h1>
-    <div style="margin-bottom:14px">${statusLink('pending','Pending')}${statusLink('paid','Paid')}${statusLink('failed','Failed')}${statusLink('all','All')}</div>
-    <div style="margin-bottom:14px">${sourceLink('all','All sources')}${sourceLink('web','Web')}${sourceLink('app','App')}</div>
-    ${appWarning ? `<p style="color:#b45309">${escapeHtml(appWarning)}</p>` : ''}
-    <table border="1" cellpadding="8" cellspacing="0"><tr><th>Source</th><th>ID</th><th>PayPal email</th><th>Amount</th><th>Status</th><th>Created</th><th>Actions</th></tr>
-    ${renderRows || '<tr><td colspan="7">No withdrawals</td></tr>'}</table>`);
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.send(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Withdrawals · SurveyCash Admin</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}*{box-sizing:border-box}body{margin:0;background:#07101f;color:#e5e7eb;min-height:100vh}a{color:inherit;text-decoration:none}.topbar{background:#111827;border-bottom:1px solid #273244;padding:19px max(24px,calc((100vw - 1360px)/2));display:flex;justify-content:space-between;align-items:center;gap:15px}.brand{font-size:25px;font-weight:850;letter-spacing:-.8px;color:white}.brand b{color:#fbbf24}.admin-label{border:1px solid #3b4559;color:#aebbd0;border-radius:20px;padding:6px 11px;font-size:11px;letter-spacing:1px;font-weight:800}.container{max-width:1408px;padding:34px 24px 60px;margin:auto}.heading{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:25px}h1{margin:0 0 6px;font-size:30px;letter-spacing:-.7px}.sub{color:#94a3b8;font-size:14px}.refresh{background:#182437;border:1px solid #37445a;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:750}.refresh:hover{background:#243249}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:24px}.stat{background:#111c2d;border:1px solid #253148;border-radius:15px;padding:20px}.stat-label{color:#98a8c1;font-size:12px;font-weight:700;margin-bottom:9px}.stat-value{font-size:27px;font-weight:800;letter-spacing:-.5px;color:#fff}.stat-value.gold{color:#fbbf24}.panel{background:#111c2d;border:1px solid #253148;border-radius:17px;overflow:hidden}.toolbar{padding:20px;display:flex;align-items:center;gap:18px;justify-content:space-between;flex-wrap:wrap;border-bottom:1px solid #263247}.filter-block{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.filter-label{color:#8fa0b9;font-size:12px;font-weight:800;margin-right:4px;text-transform:uppercase;letter-spacing:.5px}.filter{font-size:13px;font-weight:750;padding:9px 14px;border-radius:9px;border:1px solid transparent;color:#9eacc1}.filter:hover{background:#202e44;color:white}.filter.active{background:#fbbf24;color:#101827}.tools{padding:17px 20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}.search{background:#0b1525;border:1px solid #344258;border-radius:10px;padding:11px 13px;color:#fff;min-width:min(340px,100%);font-size:14px;outline:none}.search:focus{border-color:#fbbf24}.results-count{font-size:12px;color:#92a3bb}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:1000px}th{text-align:left;color:#94a3b8;text-transform:uppercase;letter-spacing:.6px;font-size:11px;font-weight:800;background:#0c1727;padding:15px 18px}td{padding:16px 18px;border-top:1px solid #243047;font-size:13px}tbody tr:hover{background:#162338}.source-tag,.status-tag{display:inline-block;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:850;white-space:nowrap}.source-tag.web{background:#223654;color:#a9c9ff}.source-tag.app{background:#3a2f15;color:#fcd779}.status-tag{background:#283446;color:#c5d0e0;text-transform:capitalize}.status-tag.pending,.status-tag.processing{background:#3c311a;color:#ffd16b}.status-tag.paid{background:#173d32;color:#7fe4b5}.status-tag.failed{background:#47252b;color:#ff9fa9}.id-text{font-family:ui-monospace,Consolas,monospace;font-size:11px;max-width:170px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;color:#a6b6cc}.email-text{color:#f0f5fd;font-weight:650}.amount{font-weight:850;color:#fff;white-space:nowrap}.date{white-space:nowrap;color:#a7b6ca}.actions{white-space:nowrap}.action-form{display:inline-block;margin:2px 5px 2px 0}.action-button{cursor:pointer;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:800;border:1px solid transparent}.paid-button{background:#fbbf24;color:#111827}.paid-button:hover{background:#f59e0b}.failed-button{background:#263246;color:#ffadb4;border-color:#62404a}.failed-button:hover{background:#382d3b}.action-button:disabled{opacity:.5;cursor:wait}.muted{color:#74849c}.warning{background:#382c17;border:1px solid #76571f;color:#ffd37b;border-radius:10px;padding:13px 16px;margin-bottom:18px;font-size:13px}.empty{text-align:center;padding:44px;color:#9caac1}.footnote{font-size:12px;color:#8292aa;margin-top:15px;line-height:1.5}@media(max-width:760px){.container{padding:22px 13px}.topbar{padding:15px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:15px}.stat-value{font-size:22px}.toolbar{gap:12px;padding:14px}.tools{padding:14px}.search{width:100%}h1{font-size:25px}}
+</style></head><body>
+<header class="topbar"><div class="brand">Survey<b>Cash</b></div><span class="admin-label">ADMIN PANEL</span></header>
+<main class="container"><div class="heading"><div><h1>Withdrawals</h1><div class="sub">Manage manual PayPal payouts from the website and Android app.</div></div><a class="refresh" href="${adminWithdrawalUrl(status,source)}">↻ Refresh</a></div>
+${warnings.map(w=>`<div class="warning">⚠ ${escapeHtml(w)}</div>`).join('')}
+<section class="stats"><div class="stat"><div class="stat-label">Withdrawals shown</div><div class="stat-value">${count}</div></div><div class="stat"><div class="stat-label">Total amount shown</div><div class="stat-value gold">$${formatUsdFromCents(totalCents)}</div></div><div class="stat"><div class="stat-label">Website</div><div class="stat-value">${webCount}</div></div><div class="stat"><div class="stat-label">Android App</div><div class="stat-value">${appCount}</div></div></section>
+<section class="panel"><div class="toolbar"><div class="filter-block"><span class="filter-label">Status</span>${statusLink('pending','Pending')}${statusLink('paid','Paid')}${statusLink('failed','Failed')}${statusLink('all','All')}</div><div class="filter-block"><span class="filter-label">Source</span>${sourceLink('all','All sources')}${sourceLink('web','Web')}${sourceLink('app','App')}</div></div>
+<div class="tools"><input id="search" class="search" type="search" placeholder="Search PayPal email or withdrawal ID" aria-label="Search withdrawals"><span class="results-count" id="results-count">${count} result${count===1?'':'s'}</span></div>
+<div class="table-scroll"><table><thead><tr><th>Source</th><th>Withdrawal ID</th><th>PayPal email</th><th>Amount</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody id="withdrawal-rows">${renderRows || '<tr class="no-records"><td colspan="7" class="empty">No withdrawals found for these filters.</td></tr>'}</tbody></table></div></section>
+<div class="footnote">Amounts are in USD. “Mark paid” is for payments already sent through PayPal; this panel does not send money automatically. Summary reflects the selected filters (up to 1,000 latest records per source).</div></main>
+<script>
+(function(){
+  var search=document.getElementById('search');var counter=document.getElementById('results-count');
+  search.addEventListener('input',function(){var term=search.value.toLowerCase().trim();var shown=0;document.querySelectorAll('#withdrawal-rows tr[data-search]').forEach(function(row){var match=row.getAttribute('data-search').includes(term);row.hidden=!match;if(match)shown++;});counter.textContent=shown+' result'+(shown===1?'':'s');});
+  document.querySelectorAll('.action-form').forEach(function(form){form.addEventListener('submit',function(e){var kind=form.getAttribute('data-kind');var email=form.getAttribute('data-email');var amount=form.getAttribute('data-amount');var msg=kind==='paid'?'Have you ALREADY sent '+amount+' to '+email+' via PayPal? This will mark the request paid but will NOT send money.':'Mark the '+amount+' withdrawal for '+email+' as failed? For app withdrawals this refunds the reserved balance.';if(!window.confirm(msg)){e.preventDefault();return;}form.querySelector('button').disabled=true;});});
+})();
+</script></body></html>`);
 });
 
 // Explicit source in the URL prevents cross-project ID collisions.
-app.post('/admin/withdrawals/app/:id/:decision', async (req, res) => {
+app.post('/admin/withdrawals/:source/:id/:decision', async (req, res) => {
   if (!withdrawalAdmin(req, res) || !safeAdminPost(req, res)) return;
-  const { id, decision } = req.params;
-  if (!['paid','failed'].includes(decision)) return res.sendStatus(400);
-  {
+  const { source, id, decision } = req.params;
+  if (!['paid','failed'].includes(decision) || !['web','app'].includes(source)) return res.sendStatus(400);
+  if (source === 'app') {
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) return res.sendStatus(400);
     const client = appWithdrawalClient();
     if (!client) return res.status(503).send('App database not configured');
@@ -7980,73 +8004,35 @@ app.post('/admin/withdrawals/app/:id/:decision', async (req, res) => {
     if (data !== true) return res.status(409).send('Withdrawal already processed. Refresh admin page.');
     return res.redirect('/admin/withdrawals?status=pending&source=app');
   }
-});
-
-
-app.post('/admin/withdrawals/:id/paid', async (req, res) => {
-  if (!isLoggedIn(req) || req.user.email !== ADMIN_EMAIL) {
-    return res.sendStatus(403);
-  }
-
-  const id = Number(req.params.id);
-  if (!id) return res.sendStatus(400);
-
-  const { data: w, error: wErr } = await supabaseAdmin
-    .from('withdrawals')
-    .select('*')
-    .eq('id', id)
-    .single();
-
+  // Existing Web payout behavior retained, but reject duplicate processing.
+  const webId = Number(id);
+  if (!Number.isSafeInteger(webId) || webId <= 0) return res.sendStatus(400);
+  const { data: w, error: wErr } = await supabaseAdmin.from('withdrawals').select('*').eq('id', webId).single();
   if (wErr || !w) return res.sendStatus(404);
-
-  await supabaseAdmin
-    .from('withdrawals')
-    .update({ status: 'paid', error_text: null })
-    .eq('id', id);
-
-  const { data: prof } = await supabaseAdmin
-    .from('profiles')
-    .select('pending_cents')
-    .eq('user_id', w.user_id)
-    .single();
-
-  const pendingNow = Number(prof?.pending_cents || 0);
-  const amount = Number(w.amount_cents || 0);
-
-  await supabaseAdmin
-    .from('profiles')
-    .update({
-      pending_cents: Math.max(0, pendingNow - amount),
-    })
-    .eq('user_id', w.user_id);
-
-  res.redirect('/admin/withdrawals');
-});
-
-
-
-app.post('/admin/withdrawals/:id/failed', async (req, res) => {
-  if (!isLoggedIn(req) || req.user.email !== ADMIN_EMAIL) {
-    return res.sendStatus(403);
+  if (!['pending','processing'].includes(w.status)) return res.status(409).send('Withdrawal already processed. Refresh admin page.');
+  const { data: changed, error: changeErr } = await supabaseAdmin.from('withdrawals')
+    .update({ status: decision, error_text: decision === 'failed' ? 'Manual payout failed' : null })
+    .eq('id', webId).in('status', ['pending','processing']).select('id');
+  if (changeErr) return res.status(500).send('Could not update Web withdrawal');
+  if (!changed || changed.length !== 1) return res.status(409).send('Withdrawal already processed. Refresh admin page.');
+  if (decision === 'paid') {
+    const { data: prof, error: profErr } = await supabaseAdmin.from('profiles').select('pending_cents').eq('user_id', w.user_id).single();
+    if (profErr) return res.status(500).send('Web withdrawal marked paid; pending balance update failed. Contact developer.');
+    const { error: balanceErr } = await supabaseAdmin.from('profiles').update({ pending_cents: Math.max(0, Number(prof.pending_cents || 0) - Number(w.amount_cents || 0)) }).eq('user_id', w.user_id);
+    if (balanceErr) return res.status(500).send('Web withdrawal marked paid; pending balance update failed. Contact developer.');
+  } else {
+    const { error: refundErr } = await supabaseAdmin.rpc('fail_cashout_return_funds', { p_withdrawal_id: webId });
+    if (refundErr) {
+      console.error('Web withdrawal refund error:', refundErr);
+      return res.status(500).send('Web withdrawal marked failed; refund needs manual review. Contact developer.');
+    }
   }
-
-  const id = Number(req.params.id);
-  if (!id) return res.sendStatus(400);
-
-  await supabaseAdmin
-    .from('withdrawals')
-    .update({
-      status: 'failed',
-      error_text: 'Manual payout failed',
-    })
-    .eq('id', id);
-
-  await supabaseAdmin.rpc('fail_cashout_return_funds', {
-    p_withdrawal_id: id,
-  });
-
-  res.redirect('/admin/withdrawals');
+  return res.redirect('/admin/withdrawals?status=pending&source=web');
 });
+
+
+
+
 
 
 
