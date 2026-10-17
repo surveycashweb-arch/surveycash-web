@@ -7198,6 +7198,37 @@ app.get('/cashout', async (req, res) => {
 
               ${msg}
 
+<div style="
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  background: #1c2435;
+  border: 1px solid #fbbf24;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 18px 0 24px;
+  color: #e5e7eb;
+  font-size: 14px;
+  line-height: 1.6;
+">
+  <div style="
+    color: #fbbf24;
+    font-weight: 800;
+    font-size: 16px;
+    margin-bottom: 6px;
+  ">
+    Payout Update
+  </div>
+
+  We're currently experiencing a temporary issue with payouts.
+  All pending withdrawals are expected to be processed on
+  <strong>Monday, October 19.</strong>
+
+  <div style="margin-top: 8px; color: #cbd5e1;">
+    We apologize for the delay and appreciate your patience.
+  </div>
+</div>
+
               ${hasOpenWithdrawal ? `
               <div class="payout-pending-box">
                 <div class="payout-title">Payout pending</div>
