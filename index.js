@@ -5631,159 +5631,144 @@ app.post('/api/notifications/remove', async (req, res) => {
   }
 });
 
+
+
+ // CPX Research – permanent postback
+ // Nye belønninger og reversals behandles i Supabase.
+
 app.get('/cpx/postback', async (req, res) => {
   try {
     const token = String(req.query.token || '');
-    if (token !== process.env.CPX_POSTBACK_TOKEN) {
-      return res.status(200).send('ok');
+
+    if (
+      !process.env.CPX_POSTBACK_TOKEN ||
+      token !== process.env.CPX_POSTBACK_TOKEN
+    ) {
+      return res.status(403).send('Forbidden');
     }
 
     const q = req.query || {};
-
-    const statusRaw = String(q.status || q.state || '').toLowerCase().trim();
-    const transId = String(q.trans_id || q.transaction_id || q.sid || q.subid || '').trim();
-    const userId = String(q.user_id || q.ext_user_id || q.uid || '').trim();
-    const type = String(q.type || 'complete').toLowerCase().trim();
-
-    const amountRaw =
-      q.amount_usd ??
-      q.amount_local ??
-      q.amount ??
-      q.reward ??
-      q.payout ??
-      q.value ??
-      '0';
-
-    const amount = Number(String(amountRaw).replace(',', '.')) || 0;
-
-    if (!transId || !userId) {
-      return res.status(200).send('ok');
-    }
-
-    const isCredit =
-      statusRaw === '1' ||
-      statusRaw === 'approved' ||
-      statusRaw === 'completed' ||
-      statusRaw === 'ok';
+    const status = String(q.status || q.state || '').trim().toLowerCase();
+    const transId = String(q.trans_id || q.transaction_id || '').trim();
+    const userId = String(q.user_id || q.ext_user_id || '').trim();
+    const type = String(q.type || 'complete').trim().toLowerCase();
 
     const isReversal =
-      statusRaw === '2' ||
-      statusRaw === 'reversed' ||
-      statusRaw === 'chargeback' ||
-      statusRaw === 'canceled' ||
-      statusRaw === 'cancelled';
+      type === 'reversal' ||
+      status === '2' ||
+      status === 'reversed' ||
+      status === 'chargeback' ||
+      status === 'cancelled' ||
+      status === 'canceled';
+
+    const isCredit =
+      !isReversal &&
+      ['1', 'approved', 'completed', 'ok'].includes(status);
+
+    if (
+      !transId ||
+      !userId ||
+      !['complete', 'out', 'bonus', 'reversal'].includes(type) ||
+      (!isCredit && !isReversal)
+    ) {
+      console.error('CPX invalid postback:', { transId, type, status });
+      return res.status(503).send('Retry');
+    }
+
+    // CPX amount_local matcher brugerens belønning
+    // i de kontrollerede postbacks.
+    const localRaw = q.amount_local;
+    const usdRaw = q.amount_usd;
+
+    const hasLocal =
+      localRaw !== undefined &&
+      localRaw !== null &&
+      String(localRaw).trim() !== '';
+
+    const rawAmount = hasLocal ? localRaw : usdRaw;
+    const amount = Number(String(rawAmount ?? '').replace(',', '.'));
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      console.error('CPX invalid amount:', { transId, type });
+      return res.status(503).send('Retry');
+    }
+
+    // amount_local er allerede brugerbeløbet.
+    // amount_usd er brutto og får derfor 70 %-faktor.
+    const cents = hasLocal
+      ? Math.round(amount * 100)
+      : Math.round(amount * 100 * 0.70);
+
+    if (cents <= 0) {
+      return res.status(503).send('Retry');
+    }
 
     const profile = await findProfileByUserIdOrEmailSupabase(userId);
+
     if (!profile) {
-      return res.status(200).send('ok');
+      console.error('CPX user not found:', { transId });
+      return res.status(503).send('Retry');
     }
 
-const USER_REWARD_FACTOR = 0.70;
-const cents = Math.round(Math.max(0, amount) * 100 * USER_REWARD_FACTOR);
+    const action = isReversal ? 'reverse' : 'credit';
 
-    const currentBalance = Number(profile.balance_cents || 0);
-    const currentTotal = Number(profile.total_earned_cents || 0);
-    const currentSurveys = Number(profile.completed_surveys || 0);
-
-    if (isCredit) {
-      const { error: insErr } = await supabaseAdmin
-        .from('cpx_transactions')
-        .insert({
-          user_id: profile.user_id,
-          trans_id: transId,
-          type,
-          cents,
-          status: 1,
-        });
-
-      if (insErr && insErr.code !== '23505') {
-        console.error('cpx_transactions insert error:', insErr);
-        return res.status(200).send('ok');
+    const { data: result, error } = await supabaseAdmin.rpc(
+      'apply_cpx_postback_v2',
+      {
+        p_user_id: profile.user_id,
+        p_trans_id: transId,
+        p_type: type,
+        p_cents: cents,
+        p_action: action
       }
+    );
 
-      if (!insErr && cents > 0) {
-        const next = {
-          balance_cents: currentBalance + cents,
-          total_earned_cents: currentTotal + cents,
-        };
-
-        if (type.includes('complete')) {
-          next.completed_surveys = currentSurveys + 1;
-        }
-
-        const { error: upErr } = await supabaseAdmin
-          .from('profiles')
-          .update(next)
-          .eq('user_id', profile.user_id);
-
-        if (upErr) {
-          console.error('CPX credit update error:', upErr);
-        } else {
-          let body = `You earned $${(cents / 100).toFixed(2)} from a CPX survey.`;
-
-          if (type === 'out') {
-            body = `You earned $${(cents / 100).toFixed(2)} from a CPX screenout.`;
-          } else if (type && !type.includes('complete')) {
-            body = `You earned $${(cents / 100).toFixed(2)} from CPX (${type}).`;
-          }
-
-          await createNotification(
-            profile.user_id,
-            'reward',
-            'Survey reward',
-            body
-          );
-        }
-      }
-
-      return res.status(200).send('ok');
+    if (error) {
+      console.error('CPX database error:', error);
+      return res.status(503).send('Retry');
     }
 
-    if (isReversal) {
-      const { data: tx } = await supabaseAdmin
-        .from('cpx_transactions')
-        .select('id, cents, status')
-        .eq('trans_id', transId)
-        .eq('type', type)
-        .maybeSingle();
+    console.log('CPX postback:', { transId, type, action, result });
 
-      if (tx && Number(tx.status) === 1) {
-        await supabaseAdmin
-          .from('cpx_transactions')
-          .update({ status: 2 })
-          .eq('id', tx.id);
-
-        const revCents = Number(tx.cents || 0);
-        if (revCents > 0) {
-          const newBalance = Math.max(0, currentBalance - revCents);
-
-          const { error: upErr } = await supabaseAdmin
-            .from('profiles')
-            .update({ balance_cents: newBalance })
-            .eq('user_id', profile.user_id);
-
-          if (upErr) {
-            console.error('CPX reversal update error:', upErr);
-          } else {
-            await createNotification(
-              profile.user_id,
-              'reward_reversal',
-              'Survey reward reversed',
-              `A CPX reward of $${(revCents / 100).toFixed(2)} was reversed.`
-            );
-          }
-        }
+    if (result === 'credited') {
+      try {
+        await createNotification(
+          profile.user_id,
+          'reward',
+          'Survey reward',
+          `You earned $${(cents / 100).toFixed(2)} from CPX.`
+        );
+      } catch (e) {
+        console.error('CPX notification error:', e);
       }
+    } else if (
+      typeof result === 'string' &&
+      result.startsWith('reversed:')
+    ) {
+      const reversedCents = Number(result.split(':')[1]);
 
-      return res.status(200).send('ok');
+      try {
+        await createNotification(
+          profile.user_id,
+          'reward_reversal',
+          'Survey reward reversed',
+          `A CPX reward of $${(reversedCents / 100).toFixed(2)} was reversed.`
+        );
+      } catch (e) {
+        console.error('CPX reversal notification error:', e);
+      }
+    } else if (result !== 'already_processed') {
+      console.error('CPX unresolved:', { transId, result });
+      return res.status(503).send('Retry');
     }
 
     return res.status(200).send('ok');
   } catch (e) {
-    console.error('CPX postback handler error:', e);
-    return res.status(200).send('ok');
+    console.error('CPX handler error:', e);
+    return res.status(503).send('Retry');
   }
 });
+
 
 
 app.get('/cashout', async (req, res) => {
@@ -7769,6 +7754,7 @@ app.get('/api/payments', async (req, res) => {
 });
 
 
+
 app.post('/withdraw', async (req, res) => {
   if (!isLoggedIn(req)) return res.redirect('/');
 
@@ -7777,94 +7763,60 @@ app.post('/withdraw', async (req, res) => {
     if (!user?.id) return res.redirect('/');
 
     const amountCents = Number(req.body.amountCents || 0);
-    const paypalEmail = String(req.body.paypalEmail || '').trim().toLowerCase();
+    const paypalEmail = String(req.body.paypalEmail || '')
+      .trim()
+      .toLowerCase();
 
+    // Behold de eksisterende tilladte beløb.
     if (!CASHOUT_ALLOWED_SET.has(amountCents)) {
       return res.redirect('/cashout?err=amount');
     }
 
+    // Behold den eksisterende PayPal-emailkontrol.
     if (!isValidEmail(paypalEmail)) {
       return res.redirect('/cashout?err=email');
     }
 
-    const { data: openWs, error: openErr } = await supabaseAdmin
-      .from('withdrawals')
-      .select('id,status')
-      .eq('user_id', user.id)
-      .in('status', ['pending', 'processing'])
-      .order('id', { ascending: false })
-      .limit(1);
+    // Supabase håndterer saldo og udbetaling samlet.
+    const { data: result, error } = await supabaseAdmin.rpc(
+      'create_web_withdrawal',
+      {
+        p_user_id: user.id,
+        p_amount_cents: amountCents,
+        p_paypal_email: paypalEmail,
+      }
+    );
 
-    if (openErr) {
-      console.error('open withdrawal check error:', openErr);
+    if (error) {
+      console.error('create_web_withdrawal error:', error);
       return res.redirect('/cashout?err=server');
     }
 
-    if (Array.isArray(openWs) && openWs.length > 0) {
+    if (result === 'already_open') {
       return res.redirect('/cashout?err=open');
     }
 
-    const { data: profile, error: pErr } = await supabaseAdmin
-      .from('profiles')
-      .select('balance_cents, pending_cents')
-      .eq('user_id', user.id)
-      .single();
-
-    if (pErr || !profile) {
-      console.error('profile fetch error:', pErr);
-      return res.redirect('/cashout?err=server');
-    }
-
-    const balance = Number(profile.balance_cents || 0);
-    const pending = Number(profile.pending_cents || 0);
-
-    if (balance < amountCents) {
+    if (result === 'insufficient_balance') {
       return res.redirect('/cashout?err=balance');
     }
 
-    const { error: balErr } = await supabaseAdmin
-      .from('profiles')
-      .update({
-        balance_cents: balance - amountCents,
-        pending_cents: pending + amountCents,
-      })
-      .eq('user_id', user.id);
-
-    if (balErr) {
-      console.error('profile update error:', balErr);
-      return res.redirect('/cashout?err=server');
+    if (result === 'invalid_amount') {
+      return res.redirect('/cashout?err=amount');
     }
 
-    const { error: wErr } = await supabaseAdmin
-      .from('withdrawals')
-      .insert({
-        user_id: user.id,
-        amount_cents: amountCents,
-        paypal_email: paypalEmail,
-        status: 'pending',
-        error_text: null,
-      });
-
-    if (wErr) {
-      console.error('withdraw insert error:', wErr);
-
-      await supabaseAdmin
-        .from('profiles')
-        .update({
-          balance_cents: balance,
-          pending_cents: pending,
-        })
-        .eq('user_id', user.id);
-
+    if (result !== 'success') {
+      console.error('Unexpected withdrawal result:', result);
       return res.redirect('/cashout?err=server');
     }
 
     return res.redirect('/cashout?ok=1');
+
   } catch (e) {
     console.error('manual withdraw error:', e);
     return res.redirect('/cashout?err=server');
   }
 });
+
 
 
 const ADMIN_EMAIL = 'surveycashweb@gmail.com';
@@ -9755,7 +9707,7 @@ async function deleteUnverifiedUsersOlderThan24Hours() {
           .delete()
           .eq('user_id', user.id);
 
-        // Slet auth user
+        // Slet auth userklar
         const { error: delErr } =
           await supabaseAdmin.auth.admin.deleteUser(user.id);
 
