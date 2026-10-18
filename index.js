@@ -956,6 +956,136 @@ if (err) {
     setInterval(loadNotifications, 15000);
   }
 
+
+
+// SURVEYCASH - LIVE BALANCE + REWARD ANIMATION
+(function () {
+  var amount = document.getElementById('liveBalanceAmount');
+  var bell = document.getElementById('notifBtn');
+  if (!amount) return;
+
+  var currentCents = Math.round(Number(amount.textContent || 0) * 100);
+  var initialized = false;
+  var busy = false;
+
+  var style = document.createElement('style');
+  style.textContent = \`
+    @keyframes scBellRing {
+      0%,100% { transform: rotate(0); }
+      15%,45% { transform: rotate(18deg); }
+      30%,60% { transform: rotate(-18deg); }
+    }
+    @keyframes scBalanceGlow {
+      0% { color: #fff; transform: scale(1); }
+      45% { color: #22c55e; transform: scale(1.22); }
+      100% { color: #fff; transform: scale(1); }
+    }
+    .sc-bell-ring svg {
+      animation: scBellRing .8s ease-in-out;
+      transform-origin: 50% 20%;
+    }
+    .sc-balance-up {
+      animation: scBalanceGlow 1.2s ease;
+    }
+    .sc-reward-toast {
+      position: fixed;
+      top: 85px;
+      right: 22px;
+      z-index: 99999;
+      padding: 16px 22px;
+      border-radius: 14px;
+      background: #172b24;
+      border: 1px solid #22c55e;
+      color: #86efac;
+      font-weight: 800;
+      box-shadow: 0 15px 40px rgba(0,0,0,.35);
+      transition: opacity .4s, transform .4s;
+    }
+  \`;
+  document.head.appendChild(style);
+
+  function animateBalance(from, to) {
+    var start = performance.now();
+    var duration = 1100;
+
+    amount.classList.remove('sc-balance-up');
+    void amount.offsetWidth;
+    amount.classList.add('sc-balance-up');
+
+    function frame(now) {
+      var progress = Math.min((now - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var value = Math.round(from + (to - from) * eased);
+      amount.textContent = (value / 100).toFixed(2);
+      if (progress < 1) requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  function rewardAnimation(increase) {
+    if (bell) {
+      bell.classList.remove('sc-bell-ring');
+      void bell.offsetWidth;
+      bell.classList.add('sc-bell-ring');
+    }
+
+    var toast = document.createElement('div');
+    toast.className = 'sc-reward-toast';
+    toast.textContent = '+$' + (increase / 100).toFixed(2) + ' added to your balance';
+    document.body.appendChild(toast);
+
+    setTimeout(function () {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-12px)';
+      setTimeout(function () { toast.remove(); }, 450);
+    }, 3500);
+  }
+
+  async function refreshBalance() {
+    if (busy || document.hidden) return;
+    busy = true;
+
+    try {
+      var response = await fetch('/api/live-balance', {
+        credentials: 'same-origin',
+        cache: 'no-store'
+      });
+
+      if (!response.ok) return;
+
+      var data = await response.json();
+      var next = Number(data.balanceCents);
+
+      if (!Number.isSafeInteger(next)) return;
+
+      if (!initialized) {
+        currentCents = next;
+        amount.textContent = (next / 100).toFixed(2);
+        initialized = true;
+        return;
+      }
+
+      if (next !== currentCents) {
+        var previous = currentCents;
+        currentCents = next;
+        animateBalance(previous, next);
+        if (next > previous) rewardAnimation(next - previous);
+      }
+    } catch (error) {
+      console.error('Balance refresh failed:', error);
+    } finally {
+      busy = false;
+    }
+  }
+
+  refreshBalance();
+  setInterval(refreshBalance, 5000);
+  window.addEventListener('focus', refreshBalance);
+})();
+
+
+
 // --- profil-menu til avatar i header ---
 window.toggleProfileMenu = function () {
   var menu = document.getElementById('profile-menu');
@@ -2873,7 +3003,8 @@ main{
 
     ${user ? `
 <nav>
-  ${tab('/', 'Earn')}
+  ${tab('/surveys', 'Surveys')}
+  ${tab('/games', 'Games')}
   ${tab('/cashout', 'Cash Out')}
   ${tab('/support', 'Support')}
 </nav>
@@ -2885,7 +3016,7 @@ main{
           <div class="profile-wrap">
             <div class="balance-pill">
               <span class="balance-symbol">$</span>
-              <span class="balance-amount">${balanceAmountText}</span>
+              <span class="balance-amount" id="liveBalanceAmount">${balanceAmountText}</span>
             </div>
 
 <div class="notif-wrap" id="notifWrap">
@@ -3244,7 +3375,21 @@ function landingHtml() {
 
 
 // ---------- Routes ----------
-app.get('/', async (req, res) => {
+
+// Gamle links fra CPX skal sendes til Surveys
+app.get('/earn', (req, res) => {
+  return res.redirect('/surveys');
+});
+
+app.get(['/', '/surveys'], async (req, res) => {
+  if (req.path === '/' && isLoggedIn(req)) {
+    return res.redirect('/surveys');
+  }
+
+  if (req.path === '/surveys' && !isLoggedIn(req)) {
+    return res.redirect('/');
+  }
+
   if (!isLoggedIn(req)) {
     return res.send(
       layout({
@@ -3824,49 +3969,932 @@ app.get('/', async (req, res) => {
     <div class="earn-area">
       <div class="earn-wrap">
 
-        <section class="earn-section">
-          <div class="earn-head">
-            <h2 class="earn-section-title">Offers</h2>
-          </div>
 
-          <div class="earn-grid">
 
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
 
-          </div>
-        </section>
+<style>
 
-        <section class="earn-section">
-          <div class="earn-head">
-            <h2 class="earn-section-title">Surveys</h2>
-          </div>
 
-          <div class="earn-grid">
 
-            <a href="/surveys/cpx" class="earn-card clickable cpx-card">
-              <div class="cpx-bg"></div>
-              <div class="earn-card-top">
-                <img src="/partners/cpx.png" alt="CPX Research" />
-              </div>
-            </a>
 
-            <a href="/surveys/ayet" class="earn-card clickable polltastic-card">
-  <div class="polltastic-bg"></div>
-  <div class="earn-card-top">
-    <img src="/partners/polltastic.png" alt="Polltastic" />
+/* ==========================================
+   SURVEYCASH - PREMIUM SURVEYS DESIGN
+   ========================================== */
+
+.earn-area {
+  padding-top: 0 !important;
+}
+
+.earn-wrap {
+  width: 100%;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* MAIN PAGE */
+
+.sc-surveys {
+  --sc-bg: #111827;
+  --sc-card: #172131;
+  --sc-card-hover: #1c293b;
+  --sc-border: rgba(148, 163, 184, .12);
+  --sc-muted: #9baac0;
+  --sc-yellow: #fbbf24;
+  --sc-green: #34d399;
+
+  width: 100%;
+  min-height: 70vh;
+  padding: 16px 30px 65px;
+
+  background: var(--sc-bg);
+  color: #f8fafc;
+}
+
+.sc-surveys-inner {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+/* ==========================================
+   SORTING NAVIGATION
+   ========================================== */
+
+.sc-sort-tabs {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 12px;
+
+  width: 100%;
+  margin: 0 0 30px;
+
+  border-bottom: 1px solid rgba(148, 163, 184, .16);
+}
+
+.sc-sort-btn {
+  position: relative;
+  min-width: 215px;
+  padding: 19px 24px 21px;
+
+  border: 0;
+  background: transparent;
+
+  color: #94a3b8;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .1px;
+
+  cursor: pointer;
+
+  transition:
+    color .2s ease,
+    background .2s ease;
+}
+
+.sc-sort-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+
+  background: var(--sc-yellow);
+
+  transform: scaleX(0);
+  transform-origin: center;
+
+  transition: transform .22s ease;
+}
+
+.sc-sort-btn:hover {
+  color: #f8fafc;
+}
+
+.sc-sort-btn.active {
+  color: #fff;
+}
+
+.sc-sort-btn.active::after {
+  transform: scaleX(1);
+}
+
+.sc-sort-btn:focus-visible {
+  outline: 2px solid var(--sc-yellow);
+  outline-offset: -4px;
+  border-radius: 6px;
+}
+
+/* ==========================================
+   SURVEY GRID - 6 CARDS PER ROW
+   ========================================== */
+
+.sc-survey-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* ==========================================
+   PREMIUM SURVEY CARDS
+   ========================================== */
+
+.sc-survey-card {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 172px;
+
+  padding: 21px 10px 19px;
+  gap: 14px;
+
+  overflow: hidden;
+  isolation: isolate;
+
+  border-radius: 16px;
+
+  background: linear-gradient(
+    155deg,
+    #1a2637 0%,
+    #172131 48%,
+    #151e2c 100%
+  );
+
+  border: 1px solid var(--sc-border);
+
+  color: #f8fafc;
+  text-decoration: none;
+
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, .08),
+    inset 0 1px 0 rgba(255, 255, 255, .025);
+
+  transition:
+    transform .22s ease,
+    border-color .22s ease,
+    background .22s ease,
+    box-shadow .22s ease;
+}
+
+/* Fine highlight along top edge */
+
+.sc-survey-card::before {
+  content: "";
+  position: absolute;
+
+  top: 0;
+  left: 18%;
+  right: 18%;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, .13),
+    transparent
+  );
+
+  pointer-events: none;
+}
+
+/* Small decorative glow on hover */
+
+.sc-survey-card::after {
+  content: "";
+  position: absolute;
+
+  top: -80px;
+  left: 50%;
+
+  width: 180px;
+  height: 110px;
+
+  transform: translateX(-50%);
+
+  background: radial-gradient(
+    ellipse,
+    rgba(251, 191, 36, .075) 0%,
+    transparent 70%
+  );
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity .25s ease;
+}
+
+/* Hover */
+
+.sc-survey-card:hover {
+  transform: translateY(-4px);
+
+  background: linear-gradient(
+    155deg,
+    #202e42 0%,
+    #1a2638 55%,
+    #172131 100%
+  );
+
+  border-color: rgba(251, 191, 36, .40);
+
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, .20),
+    inset 0 1px 0 rgba(255, 255, 255, .045);
+}
+
+.sc-survey-card:hover::after {
+  opacity: 1;
+}
+
+.sc-survey-card:focus-visible {
+  outline: 2px solid var(--sc-yellow);
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   SURVEY DURATION
+   ========================================== */
+
+.sc-survey-time {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  color: #a9b7ca;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+.sc-survey-time i {
+  color: #cbd5e1;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+/* ==========================================
+   CASH REWARD
+   ========================================== */
+
+.sc-survey-reward {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-width: 0;
+
+  color: var(--sc-green);
+
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.65px;
+
+  text-align: center;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  text-shadow: none;
+
+  transition:
+    color .2s ease,
+    transform .2s ease;
+}
+
+.sc-survey-card:hover .sc-survey-reward {
+  color: #6ee7b7;
+  transform: scale(1.035);
+}
+
+/* ==========================================
+   SURVEY RATING
+   ========================================== */
+
+.sc-survey-rating {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  color: #a5b3c7;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+.sc-survey-rating i {
+  color: var(--sc-yellow);
+  font-size: 16px;
+
+  filter: drop-shadow(
+    0 1px 3px rgba(251, 191, 36, .12)
+  );
+}
+
+/* ==========================================
+   LOADING / ERROR / EMPTY STATE
+   ========================================== */
+
+.sc-survey-status {
+  width: min(100%, 520px);
+  margin: 45px auto;
+
+  padding: 30px 25px;
+
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, .14);
+
+  background: linear-gradient(
+    145deg,
+    #192437,
+    #151e2d
+  );
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, .08);
+
+  color: #a9b7ca;
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.sc-survey-status[hidden] {
+  display: none !important;
+}
+
+/* RETRY BUTTON */
+
+.sc-retry {
+  display: block;
+
+  margin: 18px auto 0;
+  padding: 11px 24px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #fbbf24;
+  color: #111827;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 14px rgba(251, 191, 36, .12);
+
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    box-shadow .2s ease;
+}
+
+.sc-retry:hover {
+  background: #facc15;
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 7px 18px rgba(251, 191, 36, .20);
+}
+
+.sc-retry:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+/* 5 cards */
+
+@media (max-width: 1250px) {
+  .sc-survey-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 13px;
+  }
+}
+
+/* 4 cards */
+
+@media (max-width: 1050px) {
+  .sc-survey-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* 3 cards */
+
+@media (max-width: 750px) {
+  .sc-surveys {
+    padding: 10px 15px 40px;
+  }
+
+  .sc-sort-tabs {
+    gap: 0;
+    margin-bottom: 22px;
+  }
+
+  .sc-sort-btn {
+    flex: 1;
+    min-width: 0;
+    padding: 17px 5px 18px;
+    font-size: 12px;
+  }
+
+  .sc-survey-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .sc-survey-card {
+    min-height: 155px;
+    padding: 17px 7px 16px;
+    gap: 11px;
+    border-radius: 13px;
+  }
+
+  .sc-survey-reward {
+    font-size: 22px;
+  }
+
+  .sc-survey-time,
+  .sc-survey-rating {
+    font-size: 11px;
+  }
+}
+
+/* 2 cards */
+
+@media (max-width: 430px) {
+  .sc-survey-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .sc-sort-btn {
+    font-size: 11px;
+    padding: 15px 3px 17px;
+  }
+
+  .sc-survey-card {
+    min-height: 150px;
+  }
+
+  .sc-survey-reward {
+    font-size: 23px;
+  }
+}
+
+/* Reduced motion accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-survey-card,
+  .sc-survey-card::after,
+  .sc-survey-reward,
+  .sc-sort-btn,
+  .sc-sort-btn::after,
+  .sc-retry {
+    transition: none;
+  }
+
+  .sc-survey-card:hover,
+  .sc-retry:hover {
+    transform: none;
+  }
+
+  .sc-survey-card:hover .sc-survey-reward {
+    transform: none;
+  }
+}
+
+
+
+
+</style>
+
+<div class="sc-surveys">
+  <div class="sc-surveys-inner">
+
+    <div class="sc-sort-tabs">
+      <button
+        type="button"
+        class="sc-sort-btn active"
+        data-sort="match"
+      >Best Match</button>
+
+      <button
+        type="button"
+        class="sc-sort-btn"
+        data-sort="short"
+      >Short Surveys</button>
+
+      <button
+        type="button"
+        class="sc-sort-btn"
+        data-sort="pay"
+      >Highest Paying</button>
+    </div>
+
+    <div
+      class="sc-survey-status"
+      id="sc-survey-status"
+    >
+      Finding surveys for you...
+    </div>
+
+    <div
+      class="sc-survey-grid"
+      id="sc-survey-grid"
+    ></div>
+
   </div>
-</a>
+</div>
 
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
-            <div class="earn-card"><span class="earn-soon">Coming soon</span></div>
+<script>
+(function () {
+  var surveys = [];
+  var currentSort = 'match';
 
-          </div>
-        </section>
+  var grid = document.getElementById('sc-survey-grid');
+  var status = document.getElementById('sc-survey-status');
+
+  function showStatus(message, retry) {
+    status.hidden = false;
+    status.textContent = message;
+
+    if (retry) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'sc-retry';
+      button.textContent = 'Try again';
+
+      button.addEventListener('click', loadSurveys);
+
+      status.appendChild(button);
+    }
+  }
+
+  document.querySelectorAll('.sc-sort-btn').forEach(function (button) {
+    button.addEventListener('click', function () {
+      currentSort = button.dataset.sort;
+
+      document.querySelectorAll('.sc-sort-btn').forEach(function (b) {
+        b.classList.toggle('active', b === button);
+      });
+
+      renderSurveys();
+    });
+  });
+
+  function renderSurveys() {
+    grid.textContent = '';
+
+    if (!surveys.length) {
+      showStatus('No surveys available right now. Please check back later.', true);
+      return;
+    }
+
+    status.hidden = true;
+
+    var sorted = surveys.slice();
+
+    if (currentSort === 'short') {
+      sorted.sort(function (a, b) {
+        return a.minutes - b.minutes ||
+          b.reward - a.reward;
+      });
+    } else if (currentSort === 'pay') {
+      sorted.sort(function (a, b) {
+        return b.reward - a.reward ||
+          a.minutes - b.minutes;
+      });
+    } else {
+      sorted.sort(function (a, b) {
+        return Number(b.top) - Number(a.top) ||
+          b.score - a.score ||
+          b.conversionRate - a.conversionRate ||
+          b.reward - a.reward;
+      });
+    }
+
+    sorted.forEach(function (survey) {
+      var card = document.createElement('a');
+
+      try {
+        var url = new URL(survey.href);
+
+        if (url.protocol !== 'https:') return;
+
+        card.href = url.href;
+      } catch (e) {
+        return;
+      }
+
+      card.className = 'sc-survey-card';
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
+
+      // TIME
+      var time = document.createElement('div');
+      time.className = 'sc-survey-time';
+
+      var clock = document.createElement('i');
+      clock.className = 'fa-regular fa-clock';
+
+      time.appendChild(clock);
+time.appendChild(document.createTextNode(
+  survey.minutes !== null &&
+  survey.minutes !== undefined &&
+  Number.isFinite(Number(survey.minutes)) &&
+  Number(survey.minutes) > 0
+    ? Math.round(Number(survey.minutes)) + ' min'
+    : 'Time varies'
+));
+
+      // REWARD
+      var reward = document.createElement('div');
+      reward.className = 'sc-survey-reward';
+
+      reward.textContent =
+        '$' + Number(survey.reward).toFixed(2);
+
+      // RATING
+      var rating = document.createElement('div');
+      rating.className = 'sc-survey-rating';
+
+      var star = document.createElement('i');
+
+      var hasRating =
+        Number(survey.rating) > 0 &&
+        Number(survey.ratingCount) > 0;
+
+      star.className = hasRating
+        ? 'fa-solid fa-star'
+        : 'fa-regular fa-star';
+
+      rating.appendChild(star);
+
+      var ratingText = hasRating
+        ? Number(survey.rating).toFixed(1) +
+          ' (' + survey.ratingCount + ')'
+        : 'New';
+
+      rating.appendChild(
+        document.createTextNode(ratingText)
+      );
+
+      card.appendChild(time);
+      card.appendChild(reward);
+      card.appendChild(rating);
+
+      grid.appendChild(card);
+    });
+  }
+
+  async function loadSurveys() {
+    showStatus('Finding surveys for you...', false);
+
+    try {
+      var response = await fetch('/api/cpx-surveys', {
+        credentials: 'same-origin',
+        cache: 'no-store'
+      });
+
+      var data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'provider_unavailable');
+      }
+
+      surveys = Array.isArray(data.surveys)
+        ? data.surveys
+        : [];
+
+      renderSurveys();
+
+    } catch (error) {
+      if (surveys.length) {
+        status.hidden = true;
+        return;
+      }
+
+      var message = error.message === 'public_ip_required'
+        ? 'Live survey matching requires a public visitor IP.'
+        : 'Surveys could not be loaded right now.';
+
+      showStatus(message, true);
+    }
+  }
+
+  loadSurveys();
+
+  setInterval(loadSurveys, 120000);
+})();
+</script>
+
+<style>
+.sc-cpx-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(2, 6, 23, .78);
+  backdrop-filter: blur(6px);
+}
+
+.sc-cpx-popup {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  padding: 30px 24px 24px;
+  border-radius: 22px;
+  background: #151c2e;
+  border: 1px solid rgba(251, 191, 36, .25);
+  box-shadow: 0 30px 80px rgba(0,0,0,.5);
+  text-align: center;
+  animation: scCpxAppear .3s ease-out;
+}
+
+@keyframes scCpxAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.sc-cpx-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.sc-cpx-icon {
+  color: #fbbf24;
+  font-size: 38px;
+  margin-bottom: 12px;
+}
+
+.sc-cpx-heading {
+  color: white;
+  font-size: 23px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.sc-cpx-frame {
+  display: block;
+  width: 100%;
+  height: 180px;
+  border: 0;
+  background: #111827;
+  border-radius: 12px;
+}
+
+.sc-cpx-timer {
+  height: 3px;
+  background: #374151;
+  border-radius: 10px;
+  margin-top: 22px;
+  overflow: hidden;
+}
+
+.sc-cpx-timer-fill {
+  width: 100%;
+  height: 100%;
+  background: #fbbf24;
+  animation: scCpxTimer 5s linear forwards;
+}
+
+@keyframes scCpxTimer {
+  to { width: 0; }
+}
+</style>
+
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var messageId = params.get('cpx_message_id');
+
+  if (!messageId) return;
+
+  if (!/^[a-zA-Z0-9_-]{1,150}$/.test(messageId)) {
+    return;
+  }
+
+  var overlay = document.createElement('div');
+  overlay.className = 'sc-cpx-overlay';
+
+  var popup = document.createElement('div');
+  popup.className = 'sc-cpx-popup';
+
+  var closeBtn = document.createElement('button');
+  closeBtn.className = 'sc-cpx-close';
+  closeBtn.type = 'button';
+  closeBtn.textContent = '×';
+  closeBtn.setAttribute('aria-label', 'Close popup');
+
+  var icon = document.createElement('div');
+  icon.className = 'sc-cpx-icon';
+  icon.innerHTML = '<i class="fa-solid fa-clipboard-check"></i>';
+
+  var heading = document.createElement('div');
+  heading.className = 'sc-cpx-heading';
+  heading.textContent = 'Survey Result';
+
+  var frame = document.createElement('iframe');
+  frame.className = 'sc-cpx-frame';
+  frame.title = 'CPX Survey Result';
+  frame.src = '/surveys/cpx-result-frame?message_id=' +
+    encodeURIComponent(messageId);
+
+  var timer = document.createElement('div');
+  timer.className = 'sc-cpx-timer';
+
+  var timerFill = document.createElement('div');
+  timerFill.className = 'sc-cpx-timer-fill';
+
+  timer.appendChild(timerFill);
+
+  popup.appendChild(closeBtn);
+  popup.appendChild(icon);
+  popup.appendChild(heading);
+  popup.appendChild(frame);
+  popup.appendChild(timer);
+
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+
+  var timeout;
+
+  function closePopup() {
+    clearTimeout(timeout);
+    overlay.remove();
+  }
+
+  closeBtn.addEventListener('click', closePopup);
+
+  timeout = setTimeout(closePopup, 5000);
+
+  params.delete('cpx_message_id');
+
+  var newUrl = window.location.pathname +
+    (params.toString() ? '?' + params.toString() : '') +
+    window.location.hash;
+
+  window.history.replaceState(null, '', newUrl);
+})();
+</script>
+
+
+
 
       </div>
     </div>
@@ -3893,7 +4921,8 @@ app.get('/', async (req, res) => {
 
         <div class="footer-col">
           <div class="footer-col-title">SurveyCash</div>
-          <a href="/" class="footer-link">Earn</a>
+          <a href="/surveys" class="footer-link">Surveys</a>
+<a href="/games" class="footer-link">Games</a>
           <a href="/cashout" class="footer-link">Cash Out</a>
           <a href="/support" class="footer-link">Support</a>
         </div>
@@ -3924,8 +4953,8 @@ app.get('/', async (req, res) => {
   return res.send(
     page(
       req,
-      'Earn — SurveyCash',
-      '/',
+      'Surveys — SurveyCash',
+      '/surveys',
       bodyHtml,
     ),
   );
@@ -5129,8 +6158,208 @@ location.href = '/';
 
 
 
-app.get('/surveys', (req, res) => {
-  res.redirect('/earn');
+
+
+// CPX survey list - SurveyCashWeb
+const cpxSurveyListLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+app.get('/api/cpx-surveys', cpxSurveyListLimiter, async (req, res) => {
+  res.setHeader('Cache-Control', 'private, no-store');
+
+  const user = getUserFromReq(req);
+
+  if (!user || !user.id) {
+    return res.status(401).json({
+      error: 'login_required'
+    });
+  }
+
+  let ip = String(req.ip || '').replace(/^::ffff:/, '');
+
+  const privateIp =
+    /^(127\.|10\.|192\.168\.|169\.254\.|0\.|::1$)/.test(ip) ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(ip);
+
+if (!ip || privateIp) {
+  if (process.env.NODE_ENV !== 'production' && process.env.CPX_TEST_IP) {
+    ip = process.env.CPX_TEST_IP;
+  } else {
+    return res.status(503).json({
+      error: 'public_ip_required'
+    });
+  }
+}
+
+  const url = new URL(
+    'https://live-api.cpx-research.com/api/get-surveys.php'
+  );
+
+  url.searchParams.set('app_id', CPX_APP_ID);
+  url.searchParams.set('ext_user_id', String(user.id));
+  url.searchParams.set('subid_1', '');
+  url.searchParams.set('subid_2', '');
+  url.searchParams.set('output_method', 'api');
+  url.searchParams.set('ip_user', ip);
+  url.searchParams.set(
+    'user_agent',
+    String(req.get('user-agent') || 'SurveyCash-Web')
+  );
+  url.searchParams.set('limit', '60');
+
+  try {
+    const upstream = await fetch(url.toString(), {
+      headers: {
+        accept: 'application/json'
+      }
+    });
+
+    if (!upstream.ok) {
+      return res.status(502).json({
+        error: 'provider_unavailable'
+      });
+    }
+
+    const payload = await upstream.json();
+
+    if (payload?.status !== 'success') {
+      return res.status(502).json({
+        error: 'provider_unavailable'
+      });
+    }
+
+    const surveys = (
+      Array.isArray(payload.surveys) ? payload.surveys : []
+    ).map(function (s) {
+     // CPX payout is already the user's reward
+// in the currency configured in CPX.
+const rewardCents = Math.round(
+  (Number(s.payout) || 0) * 100
+);
+
+      return {
+        id: String(s.id || ''),
+        minutes: s.loi !== null &&
+         s.loi !== undefined &&
+         String(s.loi).trim() !== '' &&
+         Number.isFinite(Number(s.loi)) &&
+         Number(s.loi) > 0
+  ? Number(s.loi)
+  : null,
+        reward: rewardCents / 100,
+        score: Number(s.quality_score ?? s.score) || 0,
+        conversionRate: Number(s.conversion_rate) || 0,
+        rating: Number(s.statistics_rating_avg) || 0,
+        ratingCount: Number(s.statistics_rating_count) || 0,
+        top: Number(s.top) === 1,
+        href: String(s.href_new || s.href || '')
+      };
+    }).filter(function (s) {
+      return s.id &&
+        s.href.startsWith('https://') &&
+        s.reward > 0;
+    });
+
+    return res.json({ surveys });
+
+  } catch (error) {
+    console.error('CPX survey list error:', error.message);
+
+    return res.status(502).json({
+      error: 'provider_unavailable'
+    });
+  }
+});
+
+
+
+app.get('/games', (req, res) => {
+  if (!isLoggedIn(req)) return res.redirect('/');
+
+  const bodyHtml = `
+    <style>
+      .sc-games-placeholder {
+        min-height: 65vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+      }
+      .sc-games-placeholder i {
+        font-size: 42px;
+        color: #fbbf24;
+      }
+      .sc-games-placeholder h1 {
+        font-size: 26px;
+        color: #fff;
+        margin: 18px 0 8px;
+      }
+      .sc-games-placeholder p {
+        color: #94a3b8;
+      }
+    </style>
+
+    <div class="sc-games-placeholder">
+      <i class="fa-solid fa-gamepad"></i>
+      <h1>Games Coming Soon</h1>
+      <p>We're working on bringing game rewards to SurveyCash.</p>
+    </div>
+  `;
+
+  return res.send(
+    page(req, 'Games — SurveyCash', '/games', bodyHtml)
+  );
+});
+
+
+// CPX Message ID – vis CPX's officielle resultatbesked
+app.get('/surveys/cpx-result-frame', (req, res) => {
+  const user = getUserFromReq(req);
+
+  if (!user || !user.id) {
+    return res.status(401).send('Login required');
+  }
+
+  const messageId = String(req.query.message_id || '').trim();
+
+  if (!/^[a-zA-Z0-9_-]{1,150}$/.test(messageId)) {
+    return res.status(400).send('Invalid message ID');
+  }
+
+  const extUserId = String(user.id);
+
+  const qs = new URLSearchParams({
+    app_id: CPX_APP_ID,
+    ext_user_id: extUserId,
+    message_id: messageId
+  });
+
+  if (CPX_APP_SECURE_HASH) {
+    qs.set(
+      'secure_hash',
+      md5(extUserId + '-' + CPX_APP_SECURE_HASH)
+    );
+  }
+
+  if (user.username) {
+    qs.set('username', String(user.username));
+  }
+
+  if (user.email) {
+    qs.set('email', String(user.email));
+  }
+
+  res.setHeader('Cache-Control', 'no-store');
+
+  return res.redirect(
+    'https://offers.cpx-research.com/index.php?' + qs.toString()
+  );
 });
 
 
@@ -5549,6 +6778,39 @@ async function createNotification(userId, kind, title, body) {
     console.error('createNotification catch error:', err);
   }
 }
+
+
+
+app.get('/api/live-balance', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+
+  const user = getUserFromReq(req);
+
+  if (!user || !user.id) {
+    return res.status(401).json({ error: 'login_required' });
+  }
+
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('profiles')
+      .select('balance_cents')
+      .eq('user_id', user.id)
+      .single();
+
+    if (error || !data) {
+      return res.status(500).json({ error: 'balance_unavailable' });
+    }
+
+    return res.json({
+      balanceCents: Number(data.balance_cents || 0)
+    });
+  } catch (error) {
+    console.error('Live balance error:', error);
+    return res.status(500).json({ error: 'balance_unavailable' });
+  }
+});
+
+
 
 
 app.get('/api/notifications', async (req, res) => {
@@ -7333,7 +8595,8 @@ app.get('/cashout', async (req, res) => {
 
               <div class="footer-col">
                 <div class="footer-col-title">SurveyCash</div>
-                <a href="/" class="footer-link">Earn</a>
+                <a href="/surveys" class="footer-link">Surveys</a>
+<a href="/games" class="footer-link">Games</a>
                 <a href="/cashout" class="footer-link">Cash Out</a>
                 <a href="/support" class="footer-link">Support</a>
               </div>
@@ -8662,7 +9925,8 @@ app.get('/support', (req, res) => {
 
         <div class="footer-col">
           <div class="footer-col-title">SurveyCash</div>
-          <a href="/" class="footer-link">Earn</a>
+          <a href="/surveys" class="footer-link">Surveys</a>
+<a href="/games" class="footer-link">Games</a>
           <a href="/cashout" class="footer-link">Cash Out</a>
           <a href="/support" class="footer-link">Support</a>
         </div>
