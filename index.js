@@ -1043,7 +1043,7 @@ if (err) {
   }
 
   async function refreshBalance() {
-    if (busy || document.hidden) return;
+    if (busy || document.hidden || !document.hasFocus()) return;
     busy = true;
 
     try {
@@ -1066,6 +1066,8 @@ if (err) {
         return;
       }
 
+      if (document.hidden || !document.hasFocus()) return;
+
       if (next !== currentCents) {
         var previous = currentCents;
         currentCents = next;
@@ -1081,7 +1083,12 @@ if (err) {
 
   refreshBalance();
   setInterval(refreshBalance, 5000);
+
   window.addEventListener('focus', refreshBalance);
+
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) refreshBalance();
+  });
 })();
 
 
@@ -4630,6 +4637,12 @@ app.get(['/', '/surveys'], async (req, res) => {
       card.target = '_blank';
       card.rel = 'noopener noreferrer';
 
+      card.addEventListener('click', function () {
+        try {
+          localStorage.setItem('sc-cpx-survey-started', String(Date.now()));
+        } catch (e) {}
+      });
+
       // TIME
       var time = document.createElement('div');
       time.className = 'sc-survey-time';
@@ -4820,15 +4833,18 @@ time.appendChild(document.createTextNode(
 }
 </style>
 
+
+
+
 <script>
 (function () {
   var params = new URLSearchParams(window.location.search);
   var messageId = params.get('cpx_message_id');
 
   if (!messageId) return;
+  if (!/^[a-zA-Z0-9_-]{1,150}$/.test(messageId)) return;
 
   params.delete('cpx_message_id');
-
   window.history.replaceState(
     null,
     '',
@@ -4855,12 +4871,11 @@ time.appendChild(document.createTextNode(
 
   var heading = document.createElement('div');
   heading.className = 'sc-cpx-heading';
-  heading.textContent = 'Survey Result Pending';
+  heading.textContent = 'Checking Survey Result';
 
   var description = document.createElement('div');
   description.className = 'sc-cpx-description';
-  description.textContent =
-    'Waiting for confirmation of your survey result.';
+  description.textContent = 'Checking your reward...';
 
   var reward = document.createElement('div');
   reward.className = 'sc-cpx-reward';
@@ -4876,18 +4891,113 @@ time.appendChild(document.createTextNode(
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 
-  var timeout;
+  var pollTimer = null;
+  var closeTimer = null;
+  var attempts = 0;
+  var finished = false;
 
   function closePopup() {
-    clearTimeout(timeout);
+    finished = true;
+    clearInterval(pollTimer);
+    clearTimeout(closeTimer);
     overlay.remove();
   }
 
   closeBtn.addEventListener('click', closePopup);
-  timeout = setTimeout(closePopup, 5000);
+
+  function showResult(title, message, amount) {
+    if (finished) return;
+    finished = true;
+
+    clearInterval(pollTimer);
+
+    heading.textContent = title;
+    description.textContent = message;
+    reward.textContent = amount || '';
+
+    icon.innerHTML =
+      '<i class="fa-solid fa-circle-check"></i>';
+
+    closeTimer = setTimeout(closePopup, 5000);
+  }
+
+  var started = 0;
+
+  try {
+    started = Number(
+      localStorage.getItem('sc-cpx-survey-started') || 0
+    );
+  } catch (e) {}
+
+  async function checkResult() {
+    if (finished || document.hidden || !document.hasFocus()) return;
+
+    attempts++;
+
+    try {
+      var response = await fetch('/api/notifications', {
+        credentials: 'same-origin',
+        cache: 'no-store'
+      });
+
+      if (!response.ok) throw new Error('Request failed');
+
+      var notifications = await response.json();
+
+      if (!Array.isArray(notifications)) {
+        throw new Error('Invalid response');
+      }
+
+      var match = notifications.find(function (item) {
+        var created = Date.parse(item.created_at || '');
+        var title = String(item.title || '');
+
+        return started > 0 &&
+          created >= started &&
+          (
+            title === 'Survey completed' ||
+            title === 'Survey screened out bonus'
+          );
+      });
+
+      if (match) {
+        var bonus = match.title === 'Survey screened out bonus';
+
+        var amountMatch = String(match.body || '').match(
+          /\$([0-9]+(?:\.[0-9]{1,2})?)/
+        );
+
+        var amountText = amountMatch
+          ? '+$' + Number(amountMatch[1]).toFixed(2)
+          : '';
+
+        showResult(
+          bonus ? 'Survey Screened Out!' : 'Survey Completed!',
+          bonus
+            ? "You've earned a small bonus!"
+            : 'Your reward has been added to your balance!',
+          amountText
+        );
+
+        return;
+      }
+    } catch (error) {
+      console.error('Survey result check:', error);
+    }
+
+    if (attempts >= 10) {
+      showResult(
+        'Result Not Yet Confirmed',
+        'Your balance will update if a reward is confirmed.',
+        ''
+      );
+    }
+  }
+
+  pollTimer = setInterval(checkResult, 2000);
+  checkResult();
 })();
 </script>
-
 
 
 
@@ -7001,7 +7111,9 @@ app.get('/cpx/postback', async (req, res) => {
         await createNotification(
           profile.user_id,
           'reward',
-          'Survey reward',
+          type === 'out' || type === 'bonus'
+            ? 'Survey screened out bonus'
+            : 'Survey completed',
           `You earned $${(cents / 100).toFixed(2)} from CPX.`
         );
       } catch (e) {
