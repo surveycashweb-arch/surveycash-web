@@ -4633,9 +4633,8 @@ app.get(['/', '/surveys'], async (req, res) => {
         return;
       }
 
-      card.className = 'sc-survey-card';
-      card.target = '_blank';
-      card.rel = 'noopener noreferrer';
+card.className = 'sc-survey-card';
+card.target = '_self';
 
       card.addEventListener('click', function () {
         try {
