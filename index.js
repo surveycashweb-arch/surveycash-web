@@ -6181,6 +6181,13 @@ app.get('/api/cpx-surveys', cpxSurveyListLimiter, async (req, res) => {
 
   let ip = String(req.ip || '').replace(/^::ffff:/, '');
 
+console.log('CPX IP DEBUG:', {
+  ip: req.ip,
+  ips: req.ips,
+  xForwardedFor: req.get('x-forwarded-for'),
+  cfConnectingIp: req.get('cf-connecting-ip')
+});
+
   const privateIp =
     /^(127\.|10\.|192\.168\.|169\.254\.|0\.|::1$)/.test(ip) ||
     /^172\.(1[6-9]|2\d|3[01])\./.test(ip);
