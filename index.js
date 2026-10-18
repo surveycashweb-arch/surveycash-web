@@ -6179,14 +6179,16 @@ app.get('/api/cpx-surveys', cpxSurveyListLimiter, async (req, res) => {
     });
   }
 
-  let ip = String(req.ip || '').replace(/^::ffff:/, '');
+const forwardedIps = String(req.get('x-forwarded-for') || '')
+  .split(',')
+  .map(value => value.trim())
+  .filter(Boolean);
 
-console.log('CPX IP DEBUG:', {
-  ip: req.ip,
-  ips: req.ips,
-  xForwardedFor: req.get('x-forwarded-for'),
-  cfConnectingIp: req.get('cf-connecting-ip')
-});
+let ip = String(
+  forwardedIps.length >= 2
+    ? forwardedIps[forwardedIps.length - 2]
+    : req.ip || ''
+).replace(/^::ffff:/, '');
 
   const privateIp =
     /^(127\.|10\.|192\.168\.|169\.254\.|0\.|::1$)/.test(ip) ||
