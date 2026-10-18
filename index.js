@@ -4728,6 +4728,10 @@ time.appendChild(document.createTextNode(
 })();
 </script>
 
+
+
+
+
 <style>
 .sc-cpx-overlay {
   position: fixed;
@@ -4737,39 +4741,33 @@ time.appendChild(document.createTextNode(
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(2, 6, 23, .78);
-  backdrop-filter: blur(6px);
+  background: rgba(2,6,23,.75);
+  backdrop-filter: blur(5px);
 }
 
 .sc-cpx-popup {
   position: relative;
   width: 100%;
-  max-width: 450px;
-  padding: 30px 24px 24px;
-  border-radius: 22px;
-  background: #151c2e;
-  border: 1px solid rgba(251, 191, 36, .25);
-  box-shadow: 0 30px 80px rgba(0,0,0,.5);
+  max-width: 400px;
+  padding: 36px 26px 28px;
   text-align: center;
+  background: #182338;
+  border: 1px solid #34445c;
+  border-radius: 22px;
+  box-shadow: 0 25px 70px rgba(0,0,0,.5);
   animation: scCpxAppear .3s ease-out;
 }
 
 @keyframes scCpxAppear {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(.94);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(15px) scale(.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .sc-cpx-close {
   position: absolute;
   top: 12px;
   right: 15px;
-  background: none;
+  background: transparent;
   border: none;
   color: #94a3b8;
   font-size: 26px;
@@ -4777,43 +4775,47 @@ time.appendChild(document.createTextNode(
 }
 
 .sc-cpx-icon {
+  font-size: 42px;
   color: #fbbf24;
-  font-size: 38px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .sc-cpx-heading {
-  color: white;
   font-size: 23px;
   font-weight: 800;
-  margin-bottom: 12px;
+  color: white;
+  margin-bottom: 10px;
 }
 
-.sc-cpx-frame {
-  display: block;
-  width: 100%;
-  height: 180px;
-  border: 0;
-  background: #111827;
-  border-radius: 12px;
+.sc-cpx-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+
+.sc-cpx-reward {
+  margin-top: 15px;
+  font-size: 30px;
+  font-weight: 900;
+  color: #22c55e;
 }
 
 .sc-cpx-timer {
   height: 3px;
+  margin-top: 24px;
   background: #374151;
   border-radius: 10px;
-  margin-top: 22px;
   overflow: hidden;
 }
 
 .sc-cpx-timer-fill {
-  width: 100%;
   height: 100%;
   background: #fbbf24;
   animation: scCpxTimer 5s linear forwards;
 }
 
 @keyframes scCpxTimer {
+  from { width: 100%; }
   to { width: 0; }
 }
 </style>
@@ -4825,9 +4827,15 @@ time.appendChild(document.createTextNode(
 
   if (!messageId) return;
 
-  if (!/^[a-zA-Z0-9_-]{1,150}$/.test(messageId)) {
-    return;
-  }
+  params.delete('cpx_message_id');
+
+  window.history.replaceState(
+    null,
+    '',
+    window.location.pathname +
+      (params.toString() ? '?' + params.toString() : '') +
+      window.location.hash
+  );
 
   var overlay = document.createElement('div');
   overlay.className = 'sc-cpx-overlay';
@@ -4843,32 +4851,28 @@ time.appendChild(document.createTextNode(
 
   var icon = document.createElement('div');
   icon.className = 'sc-cpx-icon';
-  icon.innerHTML = '<i class="fa-solid fa-clipboard-check"></i>';
+  icon.innerHTML = '<i class="fa-solid fa-clock"></i>';
 
   var heading = document.createElement('div');
   heading.className = 'sc-cpx-heading';
-  heading.textContent = 'Survey Result';
+  heading.textContent = 'Survey Result Pending';
 
-  var frame = document.createElement('iframe');
-  frame.className = 'sc-cpx-frame';
-  frame.title = 'CPX Survey Result';
-  frame.src = '/surveys/cpx-result-frame?message_id=' +
-    encodeURIComponent(messageId);
+  var description = document.createElement('div');
+  description.className = 'sc-cpx-description';
+  description.textContent =
+    'Waiting for confirmation of your survey result.';
+
+  var reward = document.createElement('div');
+  reward.className = 'sc-cpx-reward';
 
   var timer = document.createElement('div');
   timer.className = 'sc-cpx-timer';
 
   var timerFill = document.createElement('div');
   timerFill.className = 'sc-cpx-timer-fill';
-
   timer.appendChild(timerFill);
 
-  popup.appendChild(closeBtn);
-  popup.appendChild(icon);
-  popup.appendChild(heading);
-  popup.appendChild(frame);
-  popup.appendChild(timer);
-
+  popup.append(closeBtn, icon, heading, description, reward, timer);
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 
@@ -4880,16 +4884,7 @@ time.appendChild(document.createTextNode(
   }
 
   closeBtn.addEventListener('click', closePopup);
-
   timeout = setTimeout(closePopup, 5000);
-
-  params.delete('cpx_message_id');
-
-  var newUrl = window.location.pathname +
-    (params.toString() ? '?' + params.toString() : '') +
-    window.location.hash;
-
-  window.history.replaceState(null, '', newUrl);
 })();
 </script>
 
